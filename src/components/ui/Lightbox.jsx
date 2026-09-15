@@ -1,53 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X, CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { lockBodyScroll } from '../../utils/dom';
+import { safeImageUrl } from '../../utils/urls';
 import './Lightbox.css';
 
 export function Lightbox({ images, selectedIndex, onClose, onPrev, onNext }) {
+  const closeRef = useRef(null);
+  const open = selectedIndex !== null && images.length > 0;
+
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft') onPrev();
-      if (e.key === 'ArrowRight') onNext();
+    if (!open) return undefined;
+    const previousFocus = document.activeElement;
+    const unlock = lockBodyScroll();
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+      if (event.key === 'ArrowLeft') onPrev();
+      if (event.key === 'ArrowRight') onNext();
     };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose, onPrev, onNext]);
+    closeRef.current?.focus();
+    return () => {
+      unlock();
+      window.removeEventListener('keydown', handleKeyDown);
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+  }, [open, onClose, onPrev, onNext]);
 
-  if (selectedIndex === null || !images.length) return null;
+  if (!open) return null;
+  const image = safeImageUrl(images[selectedIndex]);
+  if (!image) return null;
 
   return (
     <div className="lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label="Image viewer">
-      <button className="lightbox__close" onClick={onClose} aria-label="Close image viewer">
+      <button ref={closeRef} type="button" className="lightbox__close" onClick={onClose} aria-label="Close image viewer">
         <X weight="bold" size={28} />
       </button>
-
-      <button
-        className="lightbox__nav lightbox__nav--prev"
-        onClick={(e) => { e.stopPropagation(); onPrev(); }}
-        aria-label="Previous image"
-      >
+      <button type="button" className="lightbox__nav lightbox__nav--prev" onClick={(event) => { event.stopPropagation(); onPrev(); }} aria-label="Previous image">
         <CaretLeft weight="bold" size={32} />
       </button>
-
-      <div className="lightbox__image-wrap" onClick={(e) => e.stopPropagation()}>
-        <img
-          src={images[selectedIndex]}
-          alt={`Image ${selectedIndex + 1}`}
-          className="lightbox__image"
-        />
+      <div className="lightbox__image-wrap" onClick={(event) => event.stopPropagation()}>
+        <img src={image} alt={`Image ${selectedIndex + 1}`} className="lightbox__image" />
       </div>
-
-      <button
-        className="lightbox__nav lightbox__nav--next"
-        onClick={(e) => { e.stopPropagation(); onNext(); }}
-        aria-label="Next image"
-      >
+      <button type="button" className="lightbox__nav lightbox__nav--next" onClick={(event) => { event.stopPropagation(); onNext(); }} aria-label="Next image">
         <CaretRight weight="bold" size={32} />
       </button>
-
-      <div className="lightbox__counter">
-        {selectedIndex + 1} / {images.length}
-      </div>
+      <div className="lightbox__counter">{selectedIndex + 1} / {images.length}</div>
     </div>
   );
 }

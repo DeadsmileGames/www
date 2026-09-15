@@ -4,6 +4,8 @@ import { useSearch } from '../../hooks/useSearch';
 import { EmptyState } from '../ui/EmptyState';
 import { ErrorState } from '../ui/ErrorState';
 import { MagnifyingGlass, X } from '@phosphor-icons/react';
+import { lockBodyScroll } from '../../utils/dom';
+import { safeImageUrl } from '../../utils/urls';
 import './SearchOverlay.css';
 
 export function SearchOverlay({ open, onClose }) {
@@ -13,7 +15,7 @@ export function SearchOverlay({ open, onClose }) {
 
   useEffect(() => {
     if (!open) return;
-    document.body.style.overflow = 'hidden';
+    const unlock = lockBodyScroll();
     inputRef.current?.focus();
 
     function onKeyDown(e) {
@@ -21,7 +23,7 @@ export function SearchOverlay({ open, onClose }) {
     }
     document.addEventListener('keydown', onKeyDown);
     return () => {
-      document.body.style.overflow = '';
+      unlock();
       document.removeEventListener('keydown', onKeyDown);
     };
   }, [open, onClose]);
@@ -40,6 +42,7 @@ export function SearchOverlay({ open, onClose }) {
           placeholder="Search Deadsmile Games…"
           className="search-overlay__input"
           aria-label="Search games"
+          maxLength={80}
         />
         <button type="button" className="search-overlay__close" onClick={onClose} aria-label="Close search">
           <X weight="bold"/>
@@ -63,7 +66,7 @@ export function SearchOverlay({ open, onClose }) {
               <li key={game.id}>
                 <Link to={`/games/${game.slug}`} onClick={onClose} className="search-overlay__result">
                   <img
-                    src={game.coverImage || '/assets/placeholders/game-cover.svg'}
+                    src={safeImageUrl(game.coverImage) || '/assets/placeholders/game-cover.svg'}
                     alt=""
                     className="search-overlay__thumb"
                   />

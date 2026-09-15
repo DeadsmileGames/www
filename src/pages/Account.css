@@ -341,7 +341,7 @@
 .account-panel--danger {
   background: #140f0f;
 }
-.modal-overlay {
+.account-modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.72);
@@ -566,4 +566,39 @@
     width: 220px;
     height: 220px;
   }
+}
+
+.cloud-saves {
+  display: grid;
+  gap: 14px;
+}
+.cloud-saves select {
+  width: 100%;
+  border: 2px solid #3a3a3a;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #101010;
+  color: #fff;
+  outline: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  font-family: inherit;
+}
+.cloud-save-list p {
+  color: #888;
+  margin: 0;
+}
+.cloud-save-meta {
+  min-width: 0;
+}
+.cloud-save-meta strong,
+.cloud-save-meta p,
+.cloud-save-meta small {
+  overflow-wrap: anywhere;
+}
+.cloud-save-meta small {
+  display: block;
+  margin-top: 5px;
+  color: #5f5f5f;
+  font-size: 0.68rem;
 }

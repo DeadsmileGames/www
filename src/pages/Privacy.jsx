@@ -36,7 +36,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>3. Cookies and tracking</h2>
           <p>
-            We use essential cookies to ensure the site functions properly. We also use analytics cookies to understand how visitors interact with our site. You can manage your cookie preferences using the banner on our site.
+            We use essential session and security cookies when required to operate signed-in features. The site stores your cookie-banner preference locally in your browser, and protected forms may use third-party security services such as Google reCAPTCHA. We do not currently use an analytics-cookie integration in this website codebase.
           </p>
         </div>
 

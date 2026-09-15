@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { safeImageUrl } from '../../utils/urls';
 import './GameCard.css';
 
 export function GameCard({ game }) {
@@ -6,7 +7,7 @@ export function GameCard({ game }) {
     <Link to={`/games/${game.slug}`} className="game-card">
       <div className="game-card__image-wrap">
         <img
-          src={game.coverImage || '/assets/placeholders/game-cover.svg'}
+          src={safeImageUrl(game.coverImage) || '/assets/placeholders/game-cover.svg'}
           alt=""
           className="game-card__image"
           loading="lazy"

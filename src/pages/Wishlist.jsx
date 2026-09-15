@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../services/api';
@@ -13,7 +13,7 @@ export function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  const load = useCallback(() => {
     let cancelled = false;
     setLoading(true);
     setError('');
@@ -38,6 +38,16 @@ export function Wishlist() {
 
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => load(), [load]);
+
+  useEffect(() => {
+    const onLive = (event) => {
+      if (event.detail?.event_type === 'wishlist.updated') load();
+    };
+    window.addEventListener('deadsmile:live', onLive);
+    return () => window.removeEventListener('deadsmile:live', onLive);
+  }, [load]);
 
   if (loading) {
     return (

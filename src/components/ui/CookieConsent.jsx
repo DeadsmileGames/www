@@ -4,17 +4,28 @@ import { Link } from 'react-router-dom';
 
 const STORAGE_KEY = 'deadsmile-cookie-consent';
 
+function readPreference() {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writePreference(value) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, value);
+  } catch {}
+}
+
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
-  const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = readPreference();
     if (stored === 'accepted') {
-      setAccepted(true);
       setVisible(false);
     } else if (stored === 'declined') {
-      setAccepted(false);
       setVisible(false);
     } else {
       setVisible(true);
@@ -22,14 +33,12 @@ export function CookieConsent() {
   }, []);
 
   const handleAccept = () => {
-    localStorage.setItem(STORAGE_KEY, 'accepted');
-    setAccepted(true);
+    writePreference('accepted');
     setVisible(false);
   };
 
   const handleDecline = () => {
-    localStorage.setItem(STORAGE_KEY, 'declined');
-    setAccepted(false);
+    writePreference('declined');
     setVisible(false);
   };
 
@@ -40,8 +49,7 @@ export function CookieConsent() {
       <div className="cookie-consent__inner">
         <div className="cookie-consent__message">
           <p>
-            We use cookies to improve your experience and analyze site traffic.
-            By clicking “Accept”, you consent to the use of all cookies.
+            Deadsmile Games uses essential session and security cookies when you sign in. Your choice here stores this preference locally; third-party security services such as reCAPTCHA may still be required on protected forms.
           </p>
         </div>
         <div className="cookie-consent__actions">
@@ -50,14 +58,14 @@ export function CookieConsent() {
             className="cookie-consent__btn cookie-consent__btn--accept"
             onClick={handleAccept}
           >
-            Accept
+            Accept preference
           </button>
           <button
             type="button"
             className="cookie-consent__btn cookie-consent__btn--decline"
             onClick={handleDecline}
           >
-            Decline
+            Decline optional preference
           </button>
           <Link to="/privacy" className="cookie-consent__link">
             Learn more

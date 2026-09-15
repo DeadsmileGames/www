@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { api } from '../../services/api';
@@ -13,6 +14,7 @@ import {
   CheckCircle,
   WarningCircle,
   Gear,
+  RocketLaunch,
 } from '@phosphor-icons/react';
 import './AdminComposer.css';
 
@@ -159,9 +161,8 @@ export function AdminComposer() {
 
       await authedRequest(() => api.post(path, payload));
       setSaved(true);
-      setTimeout(() => {
+      window.setTimeout(() => {
         setType(null);
-        window.location.reload();
       }, 500);
     } catch (err) {
       setError(err?.message || 'Unable to publish.');
@@ -216,7 +217,7 @@ export function AdminComposer() {
       if (!endpoint) {
         throw new Error(`Unknown kind: ${kind}`);
       }
-      await authedRequest(() => api.delete(`/admin/${endpoint}/${id}`));
+      await authedRequest(() => api.delete(`/admin/${endpoint}/${encodeURIComponent(id)}`));
 
       setItems((current) => ({
         ...current,
@@ -262,6 +263,10 @@ export function AdminComposer() {
               <List weight="bold" />
               <span>Manage</span>
             </button>
+            <Link to="/admin/platform" role="menuitem" onClick={() => setMenuOpen(false)}>
+              <RocketLaunch weight="bold" />
+              <span>Release control</span>
+            </Link>
           </div>
         )}
 
@@ -296,23 +301,25 @@ export function AdminComposer() {
           <form onSubmit={submit}>
             {type === 'newsletter' && (
               <>
-                <Field label="Title" value={form.title} onChange={set('title')} required />
-                <Field label="Excerpt" value={form.excerpt} onChange={set('excerpt')} />
-                <Text label="Body" value={form.body} onChange={set('body')} required />
-                <Field label="Image URL" value={form.image} onChange={set('image')} />
+                <Field label="Title" value={form.title} onChange={set('title')} required minLength={2} maxLength={180} />
+                <Field label="Excerpt" value={form.excerpt} onChange={set('excerpt')} maxLength={500} />
+                <Text label="Body" value={form.body} onChange={set('body')} required maxLength={30000} />
+                <Field label="Image URL" value={form.image} onChange={set('image')} maxLength={2000} placeholder="https://… or /assets/…" />
               </>
             )}
 
             {type === 'video' && (
               <>
-                <Field label="Title" value={form.title} onChange={set('title')} required />
-                <Field label="Category" value={form.category} onChange={set('category')} required />
-                <Field label="Video URL" value={form.videoUrl} onChange={set('videoUrl')} />
-                <Field label="Thumbnail URL" value={form.thumbnail} onChange={set('thumbnail')} />
+                <Field label="Title" value={form.title} onChange={set('title')} required minLength={2} maxLength={180} />
+                <Field label="Category" value={form.category} onChange={set('category')} required maxLength={80} />
+                <Field label="Video URL" type="url" maxLength={2000} value={form.videoUrl} onChange={set('videoUrl')} />
+                <Field label="Thumbnail URL" maxLength={2000} value={form.thumbnail} onChange={set('thumbnail')} />
                 <Field
                   label="Duration (seconds)"
                   type="number"
                   min="0"
+                  max="86400"
+                  step="1"
                   value={form.durationSeconds}
                   onChange={set('durationSeconds')}
                 />
@@ -321,10 +328,10 @@ export function AdminComposer() {
 
             {type === 'game' && (
               <>
-                <Field label="Title" value={form.title} onChange={set('title')} required />
-                <Field label="Slug" value={form.slug} onChange={set('slug')} required />
-                <Text label="Short description" value={form.shortDescription} onChange={set('shortDescription')} required />
-                <Text label="Description" value={form.description} onChange={set('description')} />
+                <Field label="Title" value={form.title} onChange={set('title')} required minLength={2} maxLength={180} />
+                <Field label="Slug" value={form.slug} onChange={set('slug')} required minLength={2} maxLength={120} pattern="[a-z0-9-]+" />
+                <Text label="Short description" value={form.shortDescription} onChange={set('shortDescription')} required maxLength={500} />
+                <Text label="Description" value={form.description} onChange={set('description')} maxLength={30000} />
 
                 <div className="admin-modal__row">
                   <Field
@@ -337,14 +344,14 @@ export function AdminComposer() {
                   <Field label="Release date" type="date" value={form.releaseDate} onChange={set('releaseDate')} />
                 </div>
 
-                <Field label="Hero image URL" value={form.heroImage} onChange={set('heroImage')} />
-                <Field label="Cover image URL" value={form.coverImage} onChange={set('coverImage')} />
-                <Field label="Trailer URL" value={form.trailerUrl} onChange={set('trailerUrl')} />
-                <Field label="Purchase URL" value={form.purchaseUrl} onChange={set('purchaseUrl')} placeholder="https://deadsml.itch.io/game/purchase" />
+                <Field label="Hero image URL" maxLength={2000} value={form.heroImage} onChange={set('heroImage')} />
+                <Field label="Cover image URL" maxLength={2000} value={form.coverImage} onChange={set('coverImage')} />
+                <Field label="Trailer URL" type="url" maxLength={2000} value={form.trailerUrl} onChange={set('trailerUrl')} />
+                <Field label="Purchase URL" type="url" maxLength={2000} value={form.purchaseUrl} onChange={set('purchaseUrl')} placeholder="https://deadsml.itch.io/game/purchase" />
                 <Field label="itch.io game ID" type="number" min="1" value={form.itchGameId} onChange={set('itchGameId')} />
-                <Field label="Download URL" value={form.downloadUrl} onChange={set('downloadUrl')} placeholder="https://..." />
-                <Field label="Genres (comma separated)" value={form.genres} onChange={set('genres')} />
-                <Field label="Platforms (comma separated)" value={form.platforms} onChange={set('platforms')} />
+                <Field label="Download URL" type="url" maxLength={2000} value={form.downloadUrl} onChange={set('downloadUrl')} placeholder="https://..." />
+                <Field label="Genres (comma separated)" maxLength={509} value={form.genres} onChange={set('genres')} />
+                <Field label="Platforms (comma separated)" maxLength={509} value={form.platforms} onChange={set('platforms')} />
 
                 <label className="admin-check">
                   <input type="checkbox" checked={form.featured} onChange={set('featured')} />

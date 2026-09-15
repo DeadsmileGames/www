@@ -9,7 +9,7 @@ export function useSearch(query, { page = 1, limit = 10 } = {}) {
   const retry = useCallback(() => setRevision((value) => value + 1), []);
 
   useEffect(() => {
-    const trimmed = debouncedQuery.trim();
+    const trimmed = debouncedQuery.trim().slice(0, 80);
     if (!trimmed) {
       setState({ status: 'idle', results: [], pagination: null, error: null });
       return;

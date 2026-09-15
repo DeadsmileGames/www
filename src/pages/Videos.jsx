@@ -5,22 +5,8 @@ import { useAuth } from "../hooks/useAuth";
 import { Reveal } from "../components/ui/Reveal";
 import { ArrowLeft, ArrowUpRight, Play, Trash } from "@phosphor-icons/react";
 import { api } from "../services/api";
+import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../utils/urls";
 import "./MediaPages.css";
-
-function toEmbedUrl(url) {
-    try {
-        const u = new URL(url);
-        if (u.hostname.includes("youtu.be"))
-            return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
-        if (u.hostname.includes("youtube.com")) {
-            const id = u.searchParams.get("v");
-            if (id) return `https://www.youtube.com/embed/${id}`;
-        }
-        return url;
-    } catch {
-        return url;
-    }
-}
 
 export function Videos() {
     const { t } = useLanguage();
@@ -28,18 +14,18 @@ export function Videos() {
     const { user, refresh } = useAuth();
     const navigate = useNavigate();
     const data = useContent("/videos", { limit: 24 });
-    const detail = useContent(id ? `/videos/${id}` : null, {});
+    const detail = useContent(id ? `/videos/${encodeURIComponent(id)}` : null, {});
     const isAdmin = user?.role === "admin";
 
     async function remove(videoId, fromDetail = false) {
         if (!window.confirm("Delete this video permanently?")) return;
         try {
             try {
-                await api.delete(`/admin/video/${videoId}`);
+                await api.delete(`/admin/video/${encodeURIComponent(videoId)}`);
             } catch (err) {
                 if (err?.status === 401) {
                     await refresh();
-                    await api.delete(`/admin/video/${videoId}`);
+                    await api.delete(`/admin/video/${encodeURIComponent(videoId)}`);
                 } else throw err;
             }
             fromDetail ? navigate("/videos", { replace: true }) : data.retry();
@@ -49,7 +35,7 @@ export function Videos() {
     }
 
     if (id) {
-        if (detail.status === "loading")
+        if (detail.status === "idle" || detail.status === "loading" || !detail.data)
             return (
                 <div className="media-detail container">
                     <p>Loading…</p>
@@ -65,6 +51,8 @@ export function Videos() {
                 </div>
             );
         const v = detail.data;
+        const embedUrl = safeYoutubeEmbedUrl(v.video_url);
+        const externalVideoUrl = safeHttpsUrl(v.video_url);
         return (
             <div className="media-detail container">
                 <Link to="/videos" className="back-link">
@@ -82,16 +70,22 @@ export function Videos() {
                         <h1>{v.title}</h1>
                     </header>
                     <div className="media-detail__player">
-                        {v.video_url ? (
+                        {embedUrl ? (
                             <iframe
-                                src={toEmbedUrl(v.video_url)}
+                                src={embedUrl}
                                 title={v.title}
                                 allow="autoplay; encrypted-media; picture-in-picture"
+                                referrerPolicy="strict-origin-when-cross-origin"
                                 allowFullScreen
                             />
+                        ) : externalVideoUrl ? (
+                            <div className="media-detail__empty">
+                                <Play weight="bold" size={28} />
+                                <a href={externalVideoUrl} target="_blank" rel="noopener noreferrer">Open video</a>
+                            </div>
                         ) : (
                             <div className="media-detail__empty">
-                                <Play weight="fill" size={28} />
+                                <Play weight="bold" size={28} />
                                 <span>No video source available.</span>
                             </div>
                         )}
@@ -137,10 +131,10 @@ export function Videos() {
                         <div className="media-featured">
                             <Link to={`/videos/${featuredVideo.id}`} className="media-featured__visual">
                                 {featuredVideo.thumbnail && (
-                                    <img src={featuredVideo.thumbnail} alt="" loading="lazy" />
+                                    <img src={safeImageUrl(featuredVideo.thumbnail)} alt="" loading="lazy" />
                                 )}
                                 <span>
-                                    <Play weight="fill" size={26} />
+                                    <Play weight="bold" size={26} />
                                 </span>
                             </Link>
                             <div className="media-featured__meta">
@@ -175,10 +169,10 @@ export function Videos() {
                         <article className="media-tile">
                             <Link to={`/videos/${v.id}`} className="media-tile__visual">
                                 {v.thumbnail && (
-                                    <img src={v.thumbnail} alt="" loading="lazy" />
+                                    <img src={safeImageUrl(v.thumbnail)} alt="" loading="lazy" />
                                 )}
                                 <span>
-                                    <Play weight="fill" size={20} />
+                                    <Play weight="bold" size={20} />
                                 </span>
                             </Link>
                             <div className="media-tile__meta">

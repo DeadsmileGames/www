@@ -4,6 +4,7 @@ import { useContent } from "../hooks/useContent";
 import { Reveal } from "../components/ui/Reveal";
 import "./MediaPages.css";
 import { ArrowLeft } from "@phosphor-icons/react";
+import { safeImageUrl } from "../utils/urls";
 export function Store() {
     const { t } = useLanguage();
     const data = useContent("/products");
@@ -27,9 +28,9 @@ export function Store() {
                     <Reveal key={item.id} delay={i * 60}>
                         <article>
                             <div className="store-grid__visual">
-                                {item.image && (
+                                {safeImageUrl(item.image) && (
                                     <img
-                                        src={item.image}
+                                        src={safeImageUrl(item.image)}
                                         alt=""
                                         loading="lazy"
                                     />

@@ -5,6 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import { Reveal } from "../components/ui/Reveal";
 import { ArrowLeft, ArrowUpRight, Trash } from "@phosphor-icons/react";
 import { api } from "../services/api";
+import { safeImageUrl } from "../utils/urls";
 import "./News.css";
 
 export function News() {
@@ -13,18 +14,18 @@ export function News() {
     const { user, refresh } = useAuth();
     const navigate = useNavigate();
     const list = useContent("/news", { limit: 24 });
-    const detail = useContent(slug ? `/news/${slug}` : null, {});
+    const detail = useContent(slug ? `/news/${encodeURIComponent(slug)}` : null, {});
     const isAdmin = user?.role === "admin";
 
     async function remove(id, fromDetail = false) {
         if (!window.confirm("Delete this story permanently?")) return;
         try {
             try {
-                await api.delete(`/admin/newsletter/${id}`);
+                await api.delete(`/admin/newsletter/${encodeURIComponent(id)}`);
             } catch (err) {
                 if (err?.status === 401) {
                     await refresh();
-                    await api.delete(`/admin/newsletter/${id}`);
+                    await api.delete(`/admin/newsletter/${encodeURIComponent(id)}`);
                 } else throw err;
             }
             if (fromDetail) navigate("/news", { replace: true });
@@ -35,7 +36,7 @@ export function News() {
     }
 
     if (slug) {
-        if (detail.status === "loading")
+        if (detail.status === "idle" || detail.status === "loading" || !detail.data)
             return (
                 <div className="news-detail container">
                     <p>Loading…</p>
@@ -83,7 +84,7 @@ export function News() {
                     </header>
                     {item.image && (
                         <figure className="news-detail__image">
-                            <img src={item.image} alt="" />
+                            <img src={safeImageUrl(item.image)} alt="" />
                         </figure>
                     )}
                     <div className="news-detail__content">
@@ -132,7 +133,7 @@ export function News() {
                     <Reveal delay={0}>
                         <Link to={`/news/${featuredStory.slug}`} className="news-featured">
                             <div className="news-featured__visual">
-                                {featuredStory.image && <img src={featuredStory.image} alt="" />}
+                                {featuredStory.image && <img src={safeImageUrl(featuredStory.image)} alt="" />}
                             </div>
                             <div className="news-featured__meta">
                                 <div className="news-page__date">
@@ -156,7 +157,7 @@ export function News() {
                                         <button
                                             className="news-page__delete"
                                             type="button"
-                                            onClick={() => remove(featuredStory.id)}
+                                            onClick={(event) => { event.preventDefault(); event.stopPropagation(); remove(featuredStory.id); }}
                                             aria-label={`Delete ${featuredStory.title}`}
                                         >
                                             <Trash weight="bold" />
@@ -172,7 +173,7 @@ export function News() {
                         <Reveal key={story.id} delay={(i + 1) * 50}>
                             <Link to={`/news/${story.slug}`} className="news-card">
                                 <div className="news-card__visual">
-                                    {story.image && <img src={story.image} alt="" />}
+                                    {story.image && <img src={safeImageUrl(story.image)} alt="" />}
                                 </div>
                                 <div className="news-card__meta">
                                     <div className="news-card__info">
@@ -198,7 +199,7 @@ export function News() {
                                             <button
                                                 className="news-page__delete"
                                                 type="button"
-                                                onClick={() => remove(story.id)}
+                                                onClick={(event) => { event.preventDefault(); event.stopPropagation(); remove(story.id); }}
                                                 aria-label={`Delete ${story.title}`}
                                             >
                                                 <Trash weight="bold" />

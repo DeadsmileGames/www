@@ -33,10 +33,11 @@ export function Search() {
                     id="search-page-input"
                     type="search"
                     className="search-page__input"
-                    placeholder="Search DEADSMILE…"
+                    placeholder="Search Deadsmile Games…"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     autoFocus
+                    maxLength={80}
                 />
             </div>
 

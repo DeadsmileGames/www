@@ -10,7 +10,7 @@ import {
     GearSix,
     GameController,
     ShieldCheck,
-    Wrench,
+    CloudArrowUp,
     Heart,
     PencilSimple,
     ArrowCounterClockwise,
@@ -21,6 +21,9 @@ import {
     CaretRight,
     X,
 } from "@phosphor-icons/react";
+import { CloudSaves } from "../components/account/CloudSaves";
+import { safeImageUrl, safeOAuthItchUrl } from "../utils/urls";
+import { FOCUSABLE_SELECTOR, lockBodyScroll } from "../utils/dom";
 import "./Account.css";
 
 const TABS = [
@@ -28,7 +31,7 @@ const TABS = [
     { id: "account", label: "Account", icon: GearSix },
     { id: "security", label: "Security", icon: ShieldCheck },
     { id: "connections", label: "Connections", icon: GameController },
-    { id: "progress", label: "In progress", icon: Wrench },
+    { id: "cloud", label: "Cloud saves", icon: CloudArrowUp },
 ];
 
 const CROP_VIEWPORT = 260;
@@ -58,6 +61,7 @@ export function Account() {
     const [zoom, setZoom] = useState(1);
     const [pan, setPan] = useState({ x: 0, y: 0 });
     const dragState = useRef(null);
+    const modalRef = useRef(null);
     const [saveModal, setSaveModal] = useState({
         open: false,
         status: "saving",
@@ -98,6 +102,45 @@ export function Account() {
     }, []);
 
     useEffect(() => {
+        const modalOpen = Boolean(avatarDraft) || saveModal.open;
+        if (!modalOpen) return undefined;
+        const previousFocus = document.activeElement;
+        const unlock = lockBodyScroll();
+        const onKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                if (avatarDraft) cancelCrop();
+                else if (saveModal.status !== 'saving') closeSaveModal();
+                return;
+            }
+            if (event.key !== 'Tab' || !modalRef.current) return;
+            const focusable = [...modalRef.current.querySelectorAll(FOCUSABLE_SELECTOR)].filter(
+                (element) => element instanceof HTMLElement && !element.hasAttribute('disabled'),
+            );
+            if (!focusable.length) {
+                event.preventDefault();
+                modalRef.current.focus();
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        };
+        document.addEventListener('keydown', onKeyDown);
+        modalRef.current?.focus();
+        return () => {
+            unlock();
+            document.removeEventListener('keydown', onKeyDown);
+            if (previousFocus instanceof HTMLElement) previousFocus.focus();
+        };
+    }, [avatarDraft, saveModal.open, saveModal.status]);
+
+    useEffect(() => {
         let cancelled = false;
         api.get('/integrations/itch')
             .then((data) => {
@@ -116,7 +159,7 @@ export function Account() {
     async function setupTwoFactor() {
         setTwoFactorLoading(true);
         try {
-            const data = await api.get('/account/totp/setup');
+            const data = await api.post('/account/totp/setup');
             setTwoFactor({ qrCode: data.qrCodeDataUrl, secret: data.secret, enabled: false });
         } catch {
             setSettingsError('We could not prepare two-factor authentication right now.');
@@ -277,7 +320,14 @@ export function Account() {
                 -avatarDraft.height / 2,
             );
             ctx.restore();
-            const finalUrl = canvas.toDataURL("image/jpeg", 0.88);
+            const qualities = [0.88, 0.76, 0.64, 0.52];
+            const finalUrl = qualities
+                .map((quality) => canvas.toDataURL("image/jpeg", quality))
+                .find((value) => value.length <= 500_000);
+            if (!finalUrl) {
+                setProfileError("The cropped image is still too large. Choose a smaller source image.");
+                return;
+            }
             setForm((f) => ({ ...f, avatarUrl: finalUrl }));
             setAvatarDraft(null);
         };
@@ -340,7 +390,9 @@ export function Account() {
                 locale: 'en',
                 returnPath: '/account',
             });
-            window.location.assign(result.authorizeUrl);
+            const authorizeUrl = safeOAuthItchUrl(result.authorizeUrl);
+            if (!authorizeUrl) throw new Error('Invalid OAuth redirect.');
+            window.location.assign(authorizeUrl);
         } catch {
             setItchMessage('We could not start the itch.io connection. Please try again.');
             setItchBusy(false);
@@ -363,7 +415,7 @@ export function Account() {
     }
 
     async function disconnectItch() {
-        if (!window.confirm('Disconnect itch.io from your Deadsmile account?')) return;
+        if (!window.confirm('Disconnect itch.io from your Deadsmile Games account?')) return;
         setItchBusy(true);
         setItchMessage("");
         try {
@@ -420,8 +472,8 @@ export function Account() {
                         <div className="account-page__hero">
                             <div className="account-page__avatar">
                                 <div className="account-page__avatar-inner">
-                                    {form.avatarUrl ? (
-                                        <img src={form.avatarUrl} alt="" />
+                                    {safeImageUrl(form.avatarUrl) ? (
+                                        <img src={safeImageUrl(form.avatarUrl)} alt="" />
                                     ) : (
                                         user.username.slice(0, 1).toUpperCase()
                                     )}
@@ -476,8 +528,10 @@ export function Account() {
                                             value={form.username.toLowerCase()}
                                             onChange={set("username")}
                                             placeholder="@username"
+                                            required
                                             minLength={3}
                                             maxLength={24}
+                                            pattern="[A-Za-z0-9_]+"
                                         />
                                     </div>
                                     <div className="account-row">
@@ -497,6 +551,8 @@ export function Account() {
                                         </label>
                                         <input
                                             id="acc-website"
+                                            type="url"
+                                            maxLength={2000}
                                             value={form.websiteUrl}
                                             onChange={set("websiteUrl")}
                                             placeholder="https://…"
@@ -508,6 +564,7 @@ export function Account() {
                                         </label>
                                         <input
                                             id="acc-location"
+                                            maxLength={120}
                                             value={form.location}
                                             onChange={set("location")}
                                             placeholder="City, Country"
@@ -557,6 +614,8 @@ export function Account() {
                                         <input
                                             id="acc-email"
                                             type="email"
+                                            required
+                                            maxLength={254}
                                             value={form.email.toLowerCase()}
                                             onChange={set("email")}
                                         />
@@ -570,7 +629,7 @@ export function Account() {
                                             }}
                                             onClick={() => navigate('/forgot-password')}
                                             >
-                                            <LockKey size={22} weight="regular" />
+                                            <LockKey size={22} weight="bold" />
 
                                             <div
                                                 style={{
@@ -641,6 +700,9 @@ export function Account() {
                                             id="acc-password"
                                             type="password"
                                             required
+                                            minLength={8}
+                                            maxLength={128}
+                                            autoComplete="current-password"
                                             value={password}
                                             onChange={(e) =>
                                                 setPassword(e.target.value)
@@ -685,7 +747,7 @@ export function Account() {
                                             <div className="account-row account-row--inline">
                                                 <div>
                                                     <strong style={{ color: '#58a56b' }}>
-                                                        <CheckCircle weight="fill" size={16} style={{ marginRight: 8 }} />
+                                                        <CheckCircle weight="bold" size={16} style={{ marginRight: 8 }} />
                                                         2FA is enabled
                                                     </strong>
                                                     <p>Your account is protected with an authenticator app.</p>
@@ -700,7 +762,7 @@ export function Account() {
                                                     pattern="[0-9]*"
                                                     maxLength={6}
                                                     value={totpToken}
-                                                    onChange={(e) => setTotpToken(e.target.value)}
+                                                    onChange={(e) => setTotpToken(e.target.value.replace(/\D/g, "").slice(0, 6))}
                                                     placeholder="6-digit code"
                                                     required
                                                 />
@@ -722,7 +784,7 @@ export function Account() {
                                                     <div className="account-row">
                                                         <p>Scan the QR code with your authenticator app (Google Authenticator, Microsoft Authenticator, etc.).</p>
                                                         <img
-                                                            src={twoFactor.qrCode}
+                                                            src={safeImageUrl(twoFactor.qrCode)}
                                                             alt="QR Code for 2FA"
                                                             style={{ maxWidth: 200, margin: '10px 0' }}
                                                         />
@@ -741,7 +803,7 @@ export function Account() {
                                                             pattern="[0-9]*"
                                                             maxLength={6}
                                                             value={totpToken}
-                                                            onChange={(e) => setTotpToken(e.target.value)}
+                                                            onChange={(e) => setTotpToken(e.target.value.replace(/\D/g, "").slice(0, 6))}
                                                             placeholder="123456"
                                                             required
                                                         />
@@ -790,12 +852,12 @@ export function Account() {
                             <section className="account-block">
                                 <div className="account-block__head">
                                     <h2>Connected accounts</h2>
-                                    <p>Link itch.io to verify purchases and keep your Deadsmile library available on the site and launcher.</p>
+                                    <p>Link itch.io to verify purchases and keep your Deadsmile Games library available on the site and launcher.</p>
                                 </div>
                                 <div className="account-panel">
                                     <div className="account-row account-row--inline connection-row">
                                         <div className="connection-row__identity">
-                                            <span className="connection-row__icon"><GameController weight="fill" /></span>
+                                            <span className="connection-row__icon"><GameController weight="bold" /></span>
                                             <div>
                                                 <strong>itch.io</strong>
                                                 <p>
@@ -824,23 +886,14 @@ export function Account() {
                         </Reveal>
                     )}
 
-                    {activeTab === "progress" && (
-                        <Reveal key="progress">
+                    {activeTab === "cloud" && (
+                        <Reveal key="cloud">
                             <section className="account-block">
                                 <div className="account-block__head">
-                                    <h2>In progress</h2>
-                                    <p>
-                                        Something new is on the way.
-                                    </p>
+                                    <h2>Cloud saves</h2>
+                                    <p>Back up, restore and manage saves for supported games in your library.</p>
                                 </div>
-                                <div className="account-panel account-panel--placeholder">
-                                    <Wrench weight="light" />
-                                    <p>
-                                        This part of the account page is
-                                        currently being built. Check back
-                                        soon.
-                                    </p>
-                                </div>
+                                <CloudSaves />
                             </section>
                         </Reveal>
                     )}
@@ -848,10 +901,10 @@ export function Account() {
             </div>
 
             {avatarDraft && (
-                <div className="modal-overlay" role="dialog" aria-modal="true">
-                    <div className="modal-card crop-modal">
+                <div className="account-modal-overlay" role="dialog" aria-modal="true">
+                    <div className="modal-card crop-modal" ref={modalRef} tabIndex={-1} aria-labelledby="account-crop-title">
                         <div className="modal-card__head">
-                            <h3>Adjust photo</h3>
+                            <h3 id="account-crop-title">Adjust photo</h3>
                             <button
                                 type="button"
                                 className="modal-close"
@@ -945,12 +998,15 @@ export function Account() {
             )}
 
             {saveModal.open && (
-                <div className="modal-overlay" role="dialog" aria-modal="true">
+                <div className="account-modal-overlay" role="dialog" aria-modal="true">
                     <div
                         className={
                             "modal-card save-modal save-modal--" +
                             saveModal.status
                         }
+                        ref={modalRef}
+                        tabIndex={-1}
+                        aria-labelledby="account-save-title"
                     >
                         {saveModal.status !== "saving" && (
                             <button
@@ -964,13 +1020,13 @@ export function Account() {
                         )}
                         <div className="save-modal__icon">
                             {saveModal.status === "success" && (
-                                <CheckCircle weight="fill" />
+                                <CheckCircle weight="bold" />
                             )}
                             {saveModal.status === "error" && (
-                                <WarningCircle weight="fill" />
+                                <WarningCircle weight="bold" />
                             )}
                         </div>
-                        <h3>{saveModal.title}</h3>
+                        <h3 id="account-save-title">{saveModal.title}</h3>
                         {saveModal.status === "saving" && (
                             <div className="save-progress">
                                 <div className="save-progress__bar" />

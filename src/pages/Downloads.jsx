@@ -1,119 +1,62 @@
-import { Link } from "react-router-dom";
-import { Download, File, Image, Archive, HardDrives } from "@phosphor-icons/react";
-import { useLanguage } from "../context/LanguageContext";
-import { useContent } from "../hooks/useContent";
-import { Reveal } from "../components/ui/Reveal";
-import { ArrowLeft } from "@phosphor-icons/react";
-import "./Downloads.css";
+import { Link } from 'react-router-dom';
+import { AndroidLogo, AppleLogo, ArrowLeft, ArrowUpRight, Archive, DownloadSimple, File, HardDrives, Image, WindowsLogo } from '@phosphor-icons/react';
+import { useContent } from '../hooks/useContent';
+import { useToast } from '../components/ui/Toast';
+import { safeDownloadUrl } from '../utils/urls';
+import './Downloads.css';
 
-const CATEGORY_ICONS = {
-  'PRESS KIT': Archive,
-  'WALLPAPERS': Image,
-  'LAUNCHER': HardDrives,
-  'PATCH': Download,
-  'SOUNDTRACK': File,
+const iconFor = (category = '') => {
+  const value = category.toLowerCase();
+  if (value.includes('press')) return Archive;
+  if (value.includes('wallpaper') || value.includes('image')) return Image;
+  if (value.includes('launcher')) return HardDrives;
+  return File;
 };
 
 export function Downloads() {
-  const { t } = useLanguage();
-  const data = useContent("/downloads");
-  const itemsWithMeta = (data.data || []).map((item) => {
-    const category = item.category?.toUpperCase() || '';
-    const Icon = CATEGORY_ICONS[category] || File;
-    return { ...item, Icon };
-  });
-
+  const content = useContent('/downloads');
+  const { push } = useToast();
+  const items = content.data || [];
+  const launcher = items.find((item) => String(item.category || '').toLowerCase().includes('launcher'));
+  const launcherUrl = safeDownloadUrl(launcher?.file_url);
+  const resources = items.filter((item) => item !== launcher && !/android|ios/i.test(item.category || ''));
   return (
     <div className="downloads-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>Back</span>
-      </Link>
-
-      <Reveal>
-        <div className="downloads-header">
-          <h1>Downloads</h1>
-          <p className="downloads-page__intro">
-            Official files, launchers, patches, and media.
-            Everything you need in one place.
-          </p>
+      <Link to="/" className="back-link"><ArrowLeft weight="bold" /><span>Back</span></Link>
+      <header className="downloads-hero">
+        <div><h1>Downloads</h1><p>Install the launcher, get the companion apps and find every official Deadsmile Games file in one place.</p></div>
+        <HardDrives size={56} weight="bold" />
+      </header>
+      <section className="launcher-download-card">
+        <div><h2>Everything ready to play</h2><p>Install games, receive updates, synchronize supported saves and keep your library together.</p></div>
+        {launcherUrl ? (
+          <a className="btn btn--primary" href={launcherUrl} onClick={() => push('Your launcher download has started.', 'success')}><DownloadSimple size={18} weight="bold" /><span>Download for Windows</span></a>
+        ) : <a className="btn btn--primary" href="https://github.com/deadsmilegames/launcher/releases/latest"><ArrowUpRight size={18} weight="bold" /><span>View latest release</span></a>}
+      </section>
+      <section className="downloads-section">
+        <div className="downloads-section__head"><h2>Mobile companion</h2><p>Wishlist, releases and news without game downloads.</p></div>
+        <div className="mobile-download-grid">
+          <Link to="/downloads/app/android" className="mobile-download-card"><AndroidLogo size={30} weight="bold" /><div><strong>Android</strong><span>Availability and install</span></div><ArrowUpRight size={19} weight="bold" /></Link>
+          <Link to="/downloads/app/ios" className="mobile-download-card"><AppleLogo size={30} weight="bold" /><div><strong>iOS</strong><span>Availability and install</span></div><ArrowUpRight size={19} weight="bold" /></Link>
         </div>
-      </Reveal>
-
-      {data.status === "loading" && (
-        <div className="downloads-loading">
-          <div className="spinner" />
-          <p>Loading files…</p>
-        </div>
-      )}
-
-      {data.status === "error" && (
-        <div className="downloads-error">
-          <p>{data.error}</p>
-        </div>
-      )}
-
-      {data.status === "success" && (
-        <Reveal delay={60}>
+      </section>
+      <section className="downloads-section">
+        <div className="downloads-section__head"><h2>Files and resources</h2><p>Press materials, patches, wallpapers and extras.</p></div>
+        {content.status === 'loading' && <div className="downloads-state">Loading official files…</div>}
+        {content.status === 'error' && <div className="downloads-state downloads-state--error">Files are unavailable right now. Please try again shortly.</div>}
+        {content.status === 'success' && (
           <div className="download-list">
-            {itemsWithMeta.map((item) => {
-              const Icon = item.Icon;
-              return (
-                <div className="download-row" key={item.id}>
-                  <div className="download-row__icon">
-                    <Icon weight="bold" size={22} />
-                  </div>
-
-                  <div className="download-row__info">
-                    <span className="download-row__category">
-                      {item.category || "FILE"}
-                    </span>
-                    <h2 className="download-row__title">{item.title}</h2>
-                    <div className="download-row__meta">
-                      {item.file_type && (
-                        <span className="download-row__tag">
-                          {item.file_type}
-                        </span>
-                      )}
-                      {item.resolution && (
-                        <span className="download-row__tag">
-                          {item.resolution}
-                        </span>
-                      )}
-                      {item.file_size && (
-                        <span className="download-row__tag">
-                          {item.file_size}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="download-row__action">
-                    {item.file_url ? (
-                      <a
-                        className="download-row__btn"
-                        href={item.file_url}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Download weight="bold" size={15} />
-                        <span>Download</span>
-                      </a>
-                    ) : (
-                      <button
-                        className="download-row__btn download-row__btn--disabled"
-                        disabled
-                      >
-                        Soon
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            {resources.length ? resources.map((item) => {
+              const Icon = iconFor(item.category);
+              return <article className="download-row" key={item.id}>
+                <div className="download-row__icon"><Icon weight="bold" size={22} /></div>
+                <div className="download-row__info"><span>{item.category || 'Official file'}</span><h3>{item.title}</h3><small>{[item.file_type, item.resolution, item.file_size].filter(Boolean).join(' · ') || 'Deadsmile Games resource'}</small></div>
+                {safeDownloadUrl(item.file_url) ? <a href={safeDownloadUrl(item.file_url)} className="download-row__action" onClick={() => push(`${item.title} is ready to download.`, 'success')}><DownloadSimple size={18} weight="bold" /><span>Download</span></a> : <span className="download-row__soon">Coming soon</span>}
+              </article>;
+            }) : <div className="downloads-state">No additional files have been published yet.</div>}
           </div>
-        </Reveal>
-      )}
+        )}
+      </section>
     </div>
   );
 }

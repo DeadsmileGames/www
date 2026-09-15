@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Download, Envelope, GameController, File, X, CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { ArrowLeft, Download, Envelope, GameController, File } from '@phosphor-icons/react';
 import { Reveal } from '../components/ui/Reveal';
 import { api } from '../services/api';
+import { Lightbox } from '../components/ui/Lightbox';
 import './PressKit.css';
 
 export function PressKit() {
@@ -53,16 +54,7 @@ export function PressKit() {
     setSelectedIndex((selectedIndex + 1) % galleryImages.length);
   };
 
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (selectedIndex === null) return;
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowLeft') goPrev();
-      if (e.key === 'ArrowRight') goNext();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedIndex]);
+
 
   return (
     <div className="press-kit-page container">
@@ -181,45 +173,13 @@ export function PressKit() {
         </Reveal>
       </section>
 
-      {selectedIndex !== null && (
-        <div className="lightbox" onClick={closeLightbox} role="dialog" aria-modal="true" aria-label="Image viewer">
-          <button
-            className="lightbox__close"
-            onClick={closeLightbox}
-            aria-label="Close image viewer"
-          >
-            <X weight="bold" size={28} />
-          </button>
-
-          <button
-            className="lightbox__nav lightbox__nav--prev"
-            onClick={(e) => { e.stopPropagation(); goPrev(); }}
-            aria-label="Previous image"
-          >
-            <CaretLeft weight="bold" size={32} />
-          </button>
-
-          <div className="lightbox__image-wrap" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={galleryImages[selectedIndex]}
-              alt={`Press kit media ${selectedIndex + 1}`}
-              className="lightbox__image"
-            />
-          </div>
-
-          <button
-            className="lightbox__nav lightbox__nav--next"
-            onClick={(e) => { e.stopPropagation(); goNext(); }}
-            aria-label="Next image"
-          >
-            <CaretRight weight="bold" size={32} />
-          </button>
-
-          <div className="lightbox__counter">
-            {selectedIndex + 1} / {galleryImages.length}
-          </div>
-        </div>
-      )}
+      <Lightbox
+        images={galleryImages}
+        selectedIndex={selectedIndex}
+        onClose={closeLightbox}
+        onPrev={goPrev}
+        onNext={goNext}
+      />
     </div>
   );
 }

@@ -71,19 +71,6 @@ export function Header({ onOpenSearch }) {
                             alt=""
                             className="site-header__mark"
                         />
-
-                        {/* animal lembra de tirar isso quando estiver pronto */}
-                        {/* <span
-                            style={{
-                                fontWeight: 900,
-                                border: "2px solid #b1b1b1",
-                                padding: "3px 5px",
-                                borderRadius: "6px",
-                                color: "#cdcdcd",
-                            }}
-                            >
-                            BETA
-                        </span> */}
                     </Link>
                     <nav className="site-header__nav" aria-label="Primary">
                         {links.map(([to, label]) => (

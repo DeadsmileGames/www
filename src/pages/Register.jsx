@@ -64,6 +64,16 @@ export function Register() {
       return;
     }
 
+    if (!/^[A-Za-z0-9_]{3,24}$/.test(form.username.trim())) {
+      setError('Username may only contain letters, numbers and underscores.');
+      return;
+    }
+
+    if (!/[A-Za-z]/.test(form.password) || !/[0-9]/.test(form.password)) {
+      setError('Password must include at least one letter and one number.');
+      return;
+    }
+
     if (form.password !== form.confirmPassword) {
       setError('Passwords do not match.');
       return;
@@ -116,6 +126,7 @@ export function Register() {
               required
               minLength={3}
               maxLength={24}
+              pattern="[A-Za-z0-9_]+"
               value={form.username}
               onChange={update('username')}
               autoComplete="username"
@@ -131,6 +142,7 @@ export function Register() {
               id="reg-email"
               type="email"
               required
+              maxLength={254}
               value={form.email}
               onChange={update('email')}
               autoComplete="email"
@@ -147,6 +159,7 @@ export function Register() {
               type="password"
               required
               minLength={8}
+              maxLength={128}
               value={form.password}
               onChange={update('password')}
               autoComplete="new-password"
@@ -162,6 +175,8 @@ export function Register() {
               id="confirmPassword"
               type="password"
               required
+              minLength={8}
+              maxLength={128}
               value={form.confirmPassword}
               onChange={update('confirmPassword')}
               autoComplete="new-password"

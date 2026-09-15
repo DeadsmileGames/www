@@ -27,6 +27,15 @@ export function AuthProvider({ children }) {
     refresh();
   }, [refresh]);
 
+  useEffect(() => {
+    const invalidate = () => {
+      setUser(null);
+      setStatus('guest');
+    };
+    window.addEventListener('deadsmile:auth-invalidated', invalidate);
+    return () => window.removeEventListener('deadsmile:auth-invalidated', invalidate);
+  }, []);
+
   const login = useCallback(
     async (email, password, recaptchaToken) => {
       const result = await api.post('/auth/login', {

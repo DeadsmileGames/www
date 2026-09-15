@@ -11,6 +11,7 @@ import { Modal } from '../components/ui/Modal';
 import { useWishlist } from '../hooks/useWishlist';
 import { useAuth } from '../hooks/useAuth';
 import { useLanguage } from '../context/LanguageContext';
+import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from '../utils/urls';
 import { ArrowLeft, ShoppingCart, Heart, HeartStraight, Play, DownloadSimple, GameController } from '@phosphor-icons/react';
 import './GameDetails.css';
 
@@ -41,7 +42,7 @@ export function GameDetails() {
     let cancelled = false;
     setState({ status: 'loading', game: null, error: null });
 
-    api.get(`/games/${slug}`)
+    api.get(`/games/${encodeURIComponent(slug)}`)
       .then((game) => {
         if (!cancelled) setState({ status: 'success', game, error: null });
       })
@@ -59,10 +60,13 @@ export function GameDetails() {
   }, [slug, revision]);
 
   useEffect(() => {
-    if (authStatus !== 'authenticated' || !gameId) return;
+    setOwned(false);
+    if (authStatus !== 'authenticated' || !gameId) return undefined;
+    let active = true;
     api.get('/library')
-      .then((data) => setOwned((data?.items || []).some((item) => item.id === gameId)))
+      .then((data) => { if (active) setOwned((data?.items || []).some((item) => item.id === gameId)); })
       .catch(() => {});
+    return () => { active = false; };
   }, [authStatus, gameId]);
 
   async function verifyPurchase(openCheckout = true) {
@@ -79,7 +83,8 @@ export function GameDetails() {
         return;
       }
       setPurchase({ open: true, status: 'checkout', message: '' });
-      if (openCheckout && result.purchaseUrl) window.open(result.purchaseUrl, '_blank', 'noopener,noreferrer');
+      const checkoutUrl = safeItchUrl(result.purchaseUrl);
+      if (openCheckout && checkoutUrl) window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {
       if (error?.code === 'ITCH_NOT_CONNECTED') {
         setPurchase({ open: true, status: 'connect', message: '' });
@@ -96,14 +101,17 @@ export function GameDetails() {
         locale: 'en',
         returnPath: `/games/${slug}`,
       });
-      window.location.assign(result.authorizeUrl);
+      const authorizeUrl = safeOAuthItchUrl(result.authorizeUrl);
+      if (!authorizeUrl) throw new Error('Invalid OAuth redirect.');
+      window.location.assign(authorizeUrl);
     } catch {
       setPurchase({ open: true, status: 'error', message: 'We could not start the itch.io connection right now.' });
     }
   }
   function openInLauncher() {
     setLauncherMissing(false);
-    const url = `deadsmile://launch?gameId=${gameId}`;
+    if (!/^[0-9a-f-]{36}$/i.test(String(gameId || ''))) return;
+    const url = `deadsmile://launch?gameId=${encodeURIComponent(gameId)}`;
     window.location.href = url;
     const timer = setTimeout(() => setLauncherMissing(true), 2000);
     const cleanup = () => clearTimeout(timer);
@@ -118,13 +126,21 @@ export function GameDetails() {
     return () => window.removeEventListener('focus', onFocus);
   }, [purchase.open, purchase.status, gameId]);
 
-  const screenshots = game
+  const screenshots = (game
     ? (game.screenshots && game.screenshots.length > 0
         ? game.screenshots
         : Array.from({ length: 6 }, (_, i) =>
             `/assets/games/screenshots/${game.slug}/${i + 1}.png`
           ))
-    : [];
+    : []).map(safeImageUrl).filter(Boolean);
+  const gameVideos = game?.videos || [];
+  const trailerVideos = gameVideos.filter((video) => String(video.category || '').toLowerCase() === 'trailer');
+  const labelledVideos = gameVideos.map((video) => {
+    const category = String(video.category || 'Video').trim();
+    const peers = gameVideos.filter((item) => String(item.category || '').toLowerCase() === category.toLowerCase());
+    const index = peers.findIndex((item) => item.id === video.id);
+    return { ...video, label: peers.length > 1 ? `${category} ${index + 1}` : category };
+  });
 
   const openLightbox = (index) => setSelectedImageIndex(index);
   const closeLightbox = () => setSelectedImageIndex(null);
@@ -228,7 +244,7 @@ export function GameDetails() {
               >
                 {inWishlist ? (
                   <>
-                    <HeartStraight weight="fill" />
+                    <HeartStraight weight="bold" />
                     <span>Wishlisted</span>
                   </>
                 ) : (
@@ -240,21 +256,9 @@ export function GameDetails() {
               </button>
             )}
 
-            {game.trailerUrl && (
+            {!game.commerceEnabled && safeHttpsUrl(game.downloadUrl) && (
               <a
-                href={game.trailerUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn--secondary game-details__btn"
-              >
-                <Play weight="bold" />
-                <span>Trailer</span>
-              </a>
-            )}
-
-            {!game.commerceEnabled && game.downloadUrl && (
-              <a
-                href={game.downloadUrl}
+                href={safeHttpsUrl(game.downloadUrl)}
                 className="btn btn--secondary game-details__btn"
               >
                 <DownloadSimple weight="bold" />
@@ -283,21 +287,25 @@ export function GameDetails() {
               </div>
             </div>
           )}
+          {labelledVideos.length > 0 && (
+            <section className="game-details__videos">
+              <h3>Videos</h3>
+              <div>
+                {labelledVideos.map((video) => <Link to={`/videos/${video.id}`} key={video.id} className="game-video-card">
+                  <span className="game-video-card__visual">{safeImageUrl(video.thumbnail) && <img src={safeImageUrl(video.thumbnail)} alt="" loading="lazy" />}<i><Play size={20} weight="bold" /></i></span>
+                  <span><small>{video.label}</small><strong>{video.title}</strong></span>
+                </Link>)}
+              </div>
+            </section>
+          )}
         </div>
 
         <aside className="game-details__aside">
           <GameMeta game={game} />
-          {game.trailerUrl && (
-            <a
-              href={game.trailerUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="btn btn--primary game-details__trailer"
-            >
-              <Play weight="bold" />
-              Watch trailer
-            </a>
-          )}
+          <div className="game-details__trailer-list">
+            {trailerVideos.map((video, index) => <Link to={`/videos/${video.id}`} className="btn btn--primary game-details__trailer" key={video.id}><Play weight="bold" />{trailerVideos.length > 1 ? `Watch trailer ${index + 1}` : 'Watch trailer'}</Link>)}
+            {!trailerVideos.length && safeHttpsUrl(game.trailerUrl) && <a href={safeHttpsUrl(game.trailerUrl)} target="_blank" rel="noreferrer" className="btn btn--primary game-details__trailer"><Play weight="bold" />Watch trailer</a>}
+          </div>
         </aside>
       </div>
 
@@ -305,6 +313,12 @@ export function GameDetails() {
         <section className="container game-details__related">
           <h2>{t('games.related')}</h2>
           <GameGrid games={game.relatedGames} />
+        </section>
+      )}
+      {game.recommendedGame && (
+        <section className="container game-details__related game-details__recommended">
+          <h2>Recommended from Deadsmile Games</h2>
+          <GameGrid games={[game.recommendedGame]} />
         </section>
       )}
 
@@ -329,16 +343,16 @@ export function GameDetails() {
             {purchase.status === 'error' && 'Verification unavailable'}
           </h2>
           <p>
-            {purchase.status === 'connect' && 'Deadsmile uses your itch.io account only to verify games you purchased or claimed.'}
+            {purchase.status === 'connect' && 'Deadsmile Games uses your itch.io account only to verify games you purchased or claimed.'}
             {purchase.status === 'checking' && 'We are securely checking this game against your itch.io library.'}
             {purchase.status === 'checkout' && 'Complete the checkout on itch.io, then return to this tab. Your library will update automatically.'}
-            {purchase.status === 'owned' && 'This game is now available in your Deadsmile library and launcher.'}
+            {purchase.status === 'owned' && 'This game is now available in your Deadsmile Games library and launcher.'}
             {purchase.status === 'error' && purchase.message}
           </p>
           <div className="purchase-dialog__actions">
             {purchase.status === 'connect' && <button className="btn btn--primary" onClick={connectItch}>Connect itch.io</button>}
             {purchase.status === 'checkout' && <button className="btn btn--primary" onClick={() => verifyPurchase(false)}>Verify purchase</button>}
-            {purchase.status === 'checkout' && <a className="btn btn--secondary" href={game.purchaseUrl} target="_blank" rel="noreferrer">Open checkout</a>}
+            {purchase.status === 'checkout' && safeItchUrl(game.purchaseUrl) && <a className="btn btn--secondary" href={safeItchUrl(game.purchaseUrl)} target="_blank" rel="noreferrer">Open checkout</a>}
             {purchase.status === 'error' && <button className="btn btn--secondary" onClick={() => verifyPurchase(false)}>Try again</button>}
             {purchase.status === 'owned' && (
               <button className="btn btn--primary" onClick={() => { setPurchase((c) => ({ ...c, open: false })); openInLauncher(); }}>

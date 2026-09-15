@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useAuth } from "../hooks/useAuth";
@@ -21,13 +21,18 @@ export function Login() {
     const [error, setError] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
+    const recaptchaRef = useRef(null);
     const [recaptchaToken, setRecaptchaToken] = useState(null);
+    const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
     const [twoFactorRequired, setTwoFactorRequired] = useState(false);
     const [twoFactorCode, setTwoFactorCode] = useState("");
     const [twoFactorSubmitting, setTwoFactorSubmitting] = useState(false);
 
-    const from = location.state?.from?.pathname || "/account";
+    const fromLocation = location.state?.from;
+    const from = fromLocation?.pathname
+        ? `${fromLocation.pathname}${fromLocation.search || ""}${fromLocation.hash || ""}`
+        : "/account";
 
     function handleRecaptchaChange(token) {
         setRecaptchaToken(token);
@@ -46,6 +51,11 @@ export function Login() {
     async function handleSubmit(e) {
         e.preventDefault();
         setError(null);
+
+        if (!recaptchaSiteKey) {
+            setError("Security verification is not configured. Please try again later.");
+            return;
+        }
 
         if (!recaptchaToken) {
             setError("Please complete the reCAPTCHA verification.");
@@ -71,6 +81,7 @@ export function Login() {
         } catch (err) {
             setError(err?.message || "Unable to sign in. Please try again.");
             setRecaptchaToken(null);
+            recaptchaRef.current?.reset();
         } finally {
             setSubmitting(false);
         }
@@ -106,6 +117,7 @@ export function Login() {
         setTwoFactorRequired(false);
         setTwoFactorCode("");
         setRecaptchaToken(null);
+        recaptchaRef.current?.reset();
         setError(null);
     }
 
@@ -143,6 +155,7 @@ export function Login() {
                                 type="email"
                                 required
                                 autoComplete="email"
+                                maxLength={254}
                                 value={form.email}
                                 onChange={(e) =>
                                     setForm((current) => ({
@@ -163,6 +176,7 @@ export function Login() {
                                 type="password"
                                 required
                                 autoComplete="current-password"
+                                maxLength={128}
                                 value={form.password}
                                 onChange={(e) =>
                                     setForm((current) => ({
@@ -174,15 +188,18 @@ export function Login() {
                         </div>
 
                         <div className="auth-page__recaptcha">
-                            <ReCAPTCHA
-                                sitekey={
-                                    import.meta.env.VITE_RECAPTCHA_SITE_KEY
-                                }
-                                theme="dark"
-                                onChange={handleRecaptchaChange}
-                                onExpired={handleRecaptchaExpired}
-                                onErrored={handleRecaptchaError}
-                            />
+                            {recaptchaSiteKey ? (
+                                <ReCAPTCHA
+                                    ref={recaptchaRef}
+                                    sitekey={recaptchaSiteKey}
+                                    theme="dark"
+                                    onChange={handleRecaptchaChange}
+                                    onExpired={handleRecaptchaExpired}
+                                    onErrored={handleRecaptchaError}
+                                />
+                            ) : (
+                                <p className="auth-page__error" role="alert">Security verification is unavailable.</p>
+                            )}
                         </div>
 
                         <Button

@@ -12,6 +12,13 @@ export function AppLayout() {
   const [loading, setLoading] = useState(true);
   useEffect(() => { const id = window.setTimeout(() => setLoading(false), 420); return () => window.clearTimeout(id); }, []);
   const location = useLocation();
+  useEffect(() => {
+    const canonicalUrl = `https://deadsmilegames.vercel.app${location.pathname || '/'}`;
+    const canonical = document.querySelector('link[rel="canonical"]');
+    const openGraphUrl = document.querySelector('meta[property="og:url"]');
+    canonical?.setAttribute('href', canonicalUrl);
+    openGraphUrl?.setAttribute('content', canonicalUrl);
+  }, [location.pathname]);
   const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password'].includes(
   location.pathname,
 );

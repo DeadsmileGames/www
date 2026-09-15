@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import {
@@ -8,12 +9,32 @@ import {
     ArrowUpRight,
     Heart,
     ShieldCheck,
-    LockKey,
+    ArrowRight,
 } from "@phosphor-icons/react";
+import { api } from "../../services/api";
+import { useToast } from "../ui/Toast";
 import "./Footer.css";
 
 export function Footer() {
     const { t } = useLanguage();
+    const { push } = useToast();
+    const [email, setEmail] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+
+    async function subscribe(event) {
+        event.preventDefault();
+        if (submitting || !email.trim()) return;
+        setSubmitting(true);
+        try {
+            await api.post("/newsletter", { email: email.trim() });
+            push("Request received. Check your inbox if confirmation is needed.", "success");
+            setEmail("");
+        } catch (error) {
+            push(error?.message || "Newsletter signup is unavailable right now.", "error");
+        } finally {
+            setSubmitting(false);
+        }
+    }
 
     return (
         <footer className="site-footer">
@@ -43,6 +64,30 @@ export function Footer() {
 
                 <div className="site-footer__divider" />
 
+                <div className="site-footer__newsletter">
+                    <div>
+                        <h2>Keep up with the studio</h2>
+                        <p>New games, Newswire stories and videos. Confirm once, unsubscribe anytime.</p>
+                    </div>
+                    <form onSubmit={subscribe} className="site-footer__newsletter-form">
+                        <label className="sr-only" htmlFor="footer-newsletter-email">Email address</label>
+                        <input
+                            id="footer-newsletter-email"
+                            type="email"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            autoComplete="email"
+                            placeholder="you@example.com"
+                            maxLength={254}
+                            required
+                        />
+                        <button type="submit" disabled={submitting} aria-label="Subscribe to the newsletter">
+                            <span>{submitting ? "Sending…" : "Subscribe"}</span>
+                            <ArrowRight size={17} weight="bold" />
+                        </button>
+                    </form>
+                </div>
+
                 <div className="site-footer__links-row">
 
                     <div className="site-footer__social-column">
@@ -57,7 +102,7 @@ export function Footer() {
                                 rel="noopener noreferrer"
                                 aria-label="Instagram"
                             >
-                                <InstagramLogo size={19} weight="regular" />
+                                <InstagramLogo size={19} weight="bold" />
                             </a>
 
                             <a
@@ -66,7 +111,7 @@ export function Footer() {
                                 rel="noopener noreferrer"
                                 aria-label="itch.io"
                             >
-                                <GameController size={19} weight="regular" />
+                                <GameController size={19} weight="bold" />
                             </a>
 
                             <a
@@ -75,7 +120,7 @@ export function Footer() {
                                 rel="noopener noreferrer"
                                 aria-label="Linktree"
                             >
-                                <LinkSimple size={19} weight="regular" />
+                                <LinkSimple size={19} weight="bold" />
                             </a>
 
                             <a
@@ -84,7 +129,7 @@ export function Footer() {
                                 rel="noopener noreferrer"
                                 aria-label="GitHub"
                             >
-                                <GithubLogo size={19} weight="regular" />
+                                <GithubLogo size={19} weight="bold" />
                             </a>
                         </div>
                     </div>
@@ -170,7 +215,7 @@ export function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Deadsmile Team
+                                Deadsmile Games team
                             </a>
                         </span>
                     </div>
@@ -181,7 +226,7 @@ export function Footer() {
                         rel="noopener noreferrer"
                         className="site-footer__source"
                     >
-                        <GithubLogo size={15} weight="regular" />
+                        <GithubLogo size={15} weight="bold" />
                         <span>Source</span>
                         <ArrowUpRight size={13} weight="bold" />
                     </a>

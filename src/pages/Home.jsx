@@ -1,25 +1,29 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGames } from '../hooks/useGames';
+import { useContent } from '../hooks/useContent';
 import { useLanguage } from '../context/LanguageContext';
 import { GameHero } from '../components/games/GameHero';
 import { GameGrid } from '../components/games/GameGrid';
 import { Reveal } from '../components/ui/Reveal';
 import { api } from '../services/api';
 import { ArrowUpRight } from '@phosphor-icons/react';
-import { Download } from '@phosphor-icons/react';
+import { AndroidLogo, AppleLogo } from '@phosphor-icons/react';
+import { safeImageUrl } from '../utils/urls';
 import './Home.css';
 
 export function Home() {
   const { t } = useLanguage();
   const catalog = useGames({ limit: 8 });
   const games = catalog.games || [];
-  const [news, setNews] = useState([]);
-  const [newsStatus, setNewsStatus] = useState('loading');
-  const [newsError, setNewsError] = useState('');
-  const [videos, setVideos] = useState([]);
-  const [videosStatus, setVideosStatus] = useState('loading');
-  const [videosError, setVideosError] = useState('');
+  const newsContent = useContent('/news', { limit: 12 });
+  const videoContent = useContent('/videos', { limit: 12 });
+  const news = Array.isArray(newsContent.data) ? newsContent.data : [];
+  const newsStatus = newsContent.status;
+  const newsError = newsContent.error;
+  const videos = Array.isArray(videoContent.data) ? videoContent.data : [];
+  const videosStatus = videoContent.status;
+  const videosError = videoContent.error;
   const [slide, setSlide] = useState(0);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -31,98 +35,6 @@ export function Home() {
     featured.length > 0
       ? featured
       : games.slice(0, 3);
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadNews() {
-      setNewsStatus('loading');
-      setNewsError('');
-
-      try {
-        const response = await api.get('/news');
-
-        if (cancelled) return;
-        let data = [];
-
-        if (Array.isArray(response)) {
-          data = response;
-        } else if (Array.isArray(response?.items)) {
-          data = response.items;
-        } else if (Array.isArray(response?.news)) {
-          data = response.news;
-        } else if (Array.isArray(response?.data)) {
-          data = response.data;
-        } else if (Array.isArray(response?.data?.items)) {
-          data = response.data.items;
-        } else if (Array.isArray(response?.data?.news)) {
-          data = response.data.news;
-        }
-
-        setNews(data);
-        setNewsStatus('success');
-      } catch (error) {
-        if (cancelled) return;
-
-        setNews([]);
-        setNewsError(
-          error?.message || 'Unable to load news.'
-        );
-        setNewsStatus('error');
-      }
-    }
-
-    loadNews();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadVideos() {
-      setVideosStatus('loading');
-      setVideosError('');
-
-      try {
-        const response = await api.get('/videos');
-
-        if (cancelled) return;
-        let data = [];
-
-        if (Array.isArray(response)) {
-          data = response;
-        } else if (Array.isArray(response?.items)) {
-          data = response.items;
-        } else if (Array.isArray(response?.videos)) {
-          data = response.videos;
-        } else if (Array.isArray(response?.data)) {
-          data = response.data;
-        } else if (Array.isArray(response?.data?.items)) {
-          data = response.data.items;
-        } else if (Array.isArray(response?.data?.videos)) {
-          data = response.data.videos;
-        }
-
-        setVideos(data);
-        setVideosStatus('success');
-      } catch (error) {
-        if (cancelled) return;
-
-        setVideos([]);
-        setVideosError(
-          error?.message || 'Unable to load videos.'
-        );
-        setVideosStatus('error');
-      }
-    }
-
-    loadVideos();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
   useEffect(() => {
     if (heroGames.length < 2) {
       setSlide(0);
@@ -265,7 +177,7 @@ export function Home() {
 
                         {item.image ? (
                           <img
-                            src={item.image}
+                            src={safeImageUrl(item.image)}
                             alt=""
                             loading="lazy"
                           />
@@ -425,18 +337,16 @@ export function Home() {
         <div className="container home__download-inner">
           <div className="home__download-content">
             <h2>
-              Official mobile app <br />
-              <em>for Android.</em>
+              Deadsmile Games <br />
+              <em>on mobile.</em>
             </h2>
             <p>
-              Get the official Deadsmile mobile app for Android.
-              Stay connected to games, news, and updates on the go.
+              Follow games, news and releases wherever you are.
             </p>
-            <Link to="/downloads" className="btn btn--primary" style={{ maxWidth: '200px' }}>
-              <Download weight="bold" size={18} />
-              <span>Download App</span>
-              <ArrowUpRight weight="bold" size={16} />
-            </Link>
+            <div className="home__download-actions">
+              <Link to="/downloads/app/android" className="btn btn--primary"><AndroidLogo weight="bold" size={18} /><span>Android</span><ArrowUpRight weight="bold" size={16} /></Link>
+              <Link to="/downloads/app/ios" className="btn btn--secondary"><AppleLogo weight="bold" size={18} /><span>iOS</span><ArrowUpRight weight="bold" size={16} /></Link>
+            </div>
           </div>
           <div className="home__download-visual">
             <div className="home__download-phone">
@@ -508,7 +418,7 @@ export function Home() {
 
                       {video.thumbnail ? (
                         <img
-                          src={video.thumbnail}
+                          src={safeImageUrl(video.thumbnail)}
                           alt=""
                           loading="lazy"
                         />
@@ -584,6 +494,8 @@ export function Home() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 autoComplete="email"
+                maxLength={254}
+                required
               />
 
               <button type="submit">

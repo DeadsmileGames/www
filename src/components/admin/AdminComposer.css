@@ -88,7 +88,8 @@
   font-weight: 800;
 }
 
-.admin-composer__menu > button {
+.admin-composer__menu > button,
+.admin-composer__menu > a {
   width: 100%;
   height: 42px;
   display: flex;
@@ -112,13 +113,15 @@
 }
 
 
-.admin-composer__menu > button:hover {
+.admin-composer__menu > button:hover,
+.admin-composer__menu > a:hover {
   background: #f4f4f0;
   color: #090909;
   padding-left: 13px;
 }
 
-.admin-composer__menu > button svg {
+.admin-composer__menu > button svg,
+.admin-composer__menu > a svg {
   width: 17px;
   height: 17px;
 
@@ -127,7 +130,8 @@
   transition: color 160ms ease;
 }
 
-.admin-composer__menu > button:hover svg {
+.admin-composer__menu > button:hover svg,
+.admin-composer__menu > a:hover svg {
   color: #090909;
 }
 

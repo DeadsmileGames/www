@@ -58,12 +58,22 @@ export function useWishlist(gameId) {
     } finally {
       setLoading(false);
     }
-  }, [validGameId, inWishlist, gameId, isAuthenticated]);
+  }, [validGameId, inWishlist, isAuthenticated]);
 
   useEffect(() => {
     if (authStatus === 'loading') return;
     check();
   }, [check, authStatus]);
+
+  useEffect(() => {
+    const onLive = (event) => {
+      const detail = event.detail;
+      if (detail?.event_type !== 'wishlist.updated' || detail?.payload?.gameId !== validGameId) return;
+      setInWishlist(Boolean(detail.payload.inWishlist));
+    };
+    window.addEventListener('deadsmile:live', onLive);
+    return () => window.removeEventListener('deadsmile:live', onLive);
+  }, [validGameId]);
 
   return { inWishlist, loading, toggle };
 }

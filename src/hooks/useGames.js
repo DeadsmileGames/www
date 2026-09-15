@@ -24,5 +24,13 @@ export function useGames({ page = 1, limit = 12, featured, genre, platform, stat
     return () => { cancelled = true; };
   }, [page, limit, featured, genre, platform, status, revision]);
 
+  useEffect(() => {
+    const onLive = (event) => {
+      if (event.detail?.event_type === 'game.published') retry();
+    };
+    window.addEventListener('deadsmile:live', onLive);
+    return () => window.removeEventListener('deadsmile:live', onLive);
+  }, [retry]);
+
   return { ...state, retry };
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../context/LanguageContext';
 import { ArrowUpRight, MagnifyingGlass, X, Heart, File, LockKey, UserCircle } from '@phosphor-icons/react';
+import { FOCUSABLE_SELECTOR, lockBodyScroll } from '../../utils/dom';
 import './MobileMenu.css';
 
 export function MobileMenu({ open, onClose, onOpenSearch }) {
@@ -11,14 +12,39 @@ export function MobileMenu({ open, onClose, onOpenSearch }) {
     const panelRef = useRef(null);
 
     useEffect(() => {
-        if (!open) return;
-        document.body.style.overflow = 'hidden';
-        const key = (e) => e.key === 'Escape' && onClose();
+        if (!open) return undefined;
+        const previousFocus = document.activeElement;
+        const unlock = lockBodyScroll();
+        const key = (event) => {
+            if (event.key === 'Escape') {
+                onClose();
+                return;
+            }
+            if (event.key !== 'Tab' || !panelRef.current) return;
+            const focusable = [...panelRef.current.querySelectorAll(FOCUSABLE_SELECTOR)].filter(
+                (element) => !element.hasAttribute('disabled') && element.getAttribute('aria-hidden') !== 'true',
+            );
+            if (!focusable.length) {
+                event.preventDefault();
+                panelRef.current.focus();
+                return;
+            }
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+            }
+        };
         document.addEventListener('keydown', key);
         panelRef.current?.focus();
         return () => {
-            document.body.style.overflow = '';
+            unlock();
             document.removeEventListener('keydown', key);
+            if (previousFocus instanceof HTMLElement) previousFocus.focus();
         };
     }, [open, onClose]);
 
@@ -32,7 +58,7 @@ export function MobileMenu({ open, onClose, onOpenSearch }) {
     ];
 
     return (
-        <div className={`mobile-menu ${open ? 'mobile-menu--open' : ''}`} aria-hidden={!open}>
+        <div className={`mobile-menu ${open ? 'mobile-menu--open' : ''}`} aria-hidden={!open} inert={open ? undefined : ''}>
             <div className="mobile-menu__backdrop" onClick={onClose} />
             <div
                 className="mobile-menu__panel"

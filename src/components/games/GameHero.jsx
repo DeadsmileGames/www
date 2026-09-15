@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './GameHero.css';
-import { ArrowUpRight, Play } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from '@phosphor-icons/react';
+import { safeHttpsUrl, safeImageUrl } from '../../utils/urls';
 
 export function GameHero({
   game,
@@ -32,8 +33,9 @@ export function GameHero({
 
   if (!game) return null;
 
-  const backgroundSrc = game.heroImage || game.coverImage || '';
-  const logoSrc       = game.logo || '';
+  const backgroundSrc = safeImageUrl(game.heroImage) || safeImageUrl(game.coverImage) || '';
+  const logoSrc       = safeImageUrl(game.logo) || '';
+  const trailerUrl    = safeHttpsUrl(game.trailerUrl);
   const title         = game.title || '';
   const eyebrow       = game.genres?.[0] || game.shortDescription || '';
 
@@ -66,14 +68,14 @@ export function GameHero({
             <h1 className="rs-hero__title">{title}</h1>
 
             <div className="rs-hero__actions">
-              {game.trailerUrl && (
+              {trailerUrl && (
                 <a
-                  href={game.trailerUrl}
+                  href={trailerUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--primary"
                 >
-                  <Play weight="fill" />
+                  <Play weight="bold" />
                   <span>Watch Trailer</span>
                 </a>
               )}
@@ -101,13 +103,9 @@ export function GameHero({
             aria-label={paused ? 'Retomar' : 'Pausar'}
           >
             {paused ? (
-              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
+              <Play size={14} weight="bold" />
             ) : (
-              <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-              </svg>
+              <Pause size={14} weight="bold" />
             )}
           </button>
 
@@ -137,15 +135,11 @@ export function GameHero({
           </div>
 
           <button className="rs-hero__ctrl-btn" onClick={onPrev} aria-label="Anterior">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14">
-              <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <ArrowLeft size={14} weight="bold" />
           </button>
 
           <button className="rs-hero__ctrl-btn" onClick={onNext} aria-label="Próximo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="14" height="14">
-              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <ArrowRight size={14} weight="bold" />
           </button>
 
         </div>
