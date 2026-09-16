@@ -1,0 +1,212 @@
+.site-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+.site-header__inner {
+  height: 80px;
+  margin: auto;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(12, 12, 12, 0.72);
+  backdrop-filter: blur(20px);
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease,
+    transform 0.4s ease;
+}
+.site-header--scrolled .site-header__inner {
+  background: rgba(12, 12, 12, 0.94);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+.site-header__inner > * {
+  pointer-events: auto;
+}
+.site-header__brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+}
+.site-header__mark {
+  width: 70px;
+  height: 90px;
+  padding: 7px;
+  border-radius: 50%;
+}
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+.site-header__link {
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 800;
+  color: #a6a6a6;
+  font-size: 0.78rem;
+  transition:
+    color 0.25s ease,
+    background 0.25s ease;
+}
+.site-header__link:hover,
+.site-header__link.is-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.075);
+}
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.site-header__search,
+.site-header__account-pill,
+.site-header__menu-toggle {
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+.site-header__signin{ 
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #fff;
+  border-radius: 999px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+.site-header__search {
+  gap: 8px;
+  padding: 0 14px;
+  color: #aaa;
+  width:150px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.73rem;
+}
+.site-header__account-pill:hover,
+.site-header__signin:hover,
+.site-header__search:hover{ 
+  background: #fff;
+  color: #0a0a0a;
+  border-color: #fff;
+}
+.site-header__menu-toggle:hover {
+  background: #fff;
+  color: #0a0a0a;
+  border-color: #fff;
+  transform: translateY(-1px);
+}
+.site-header__account-wrap {
+  position: relative;
+}
+.site-header__account-pill {
+  padding: 0 13px 0 15px;
+  gap: 8px;
+  font-size: 0.73rem;
+  cursor: pointer;
+}
+.site-header__account-pill.is-open {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+.site-header__dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 220px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  background: #111;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+  animation: account-drop 0.2s ease both;
+}
+.site-header__dropdown a,
+.site-header__dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 12px 13px;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  color: #aaa;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 650;
+}
+.site-header__dropdown a:hover,
+.site-header__dropdown button:hover {
+  background: #fff;
+  color: #000;
+}
+.site-header__dropdown svg {
+  flex: none;
+}
+@keyframes account-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.site-header__signin {
+  padding: 0 16px;
+  font-size: 0.73rem;
+  font-weight: 700;
+}
+.site-header__menu-toggle {
+  display: none;
+  width: 42px;
+}
+.language-switcher {
+  border-radius: 999px !important;
+}
+.site-header .language-switcher {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+@media (max-width: 900px) {
+  .site-header__nav,
+  .site-header__signin,
+  .site-header__account-pill,
+  .site-header .language-switcher {
+    display: none;
+  }
+  .site-header__actions {
+    margin-left: auto;
+  }
+  .site-header__menu-toggle {
+    display: flex;
+  }
+}

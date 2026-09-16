@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+:root {
+  --color-background: #090909;
+  --color-background-alt: #101010;
+  --color-surface: #151515;
+  --color-surface-secondary: #1b1b1b;
+  --color-text: #f4f4f1;
+  --color-text-secondary: #9a9a96;
+  --color-text-muted: #646460;
+  --color-border: #262624;
+  --color-border-strong: #3b3b38;
+  --color-accent: #f4f4f1;
+  --color-accent-hover: #fff;
+  --color-danger: #d94a52;
+  --color-success: #58a56b;
+  --color-focus: #fff;
+  --color-overlay: rgba(0, 0, 0, 0.66);
+  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: 0.72rem;
+  --fs-sm: 0.86rem;
+  --fs-base: 1rem;
+  --fs-md: 1.1rem;
+  --fs-lg: 1.35rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: clamp(2rem, 3vw, 3rem);
+  --fs-3xl: clamp(2.8rem, 5vw, 5rem);
+  --fs-4xl: clamp(3.5rem, 7vw, 7rem);
+  --fs-5xl: clamp(4rem, 9vw, 9rem);
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+  --radius-pill: 999px;
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-fast: 160ms;
+  --t-medium: 300ms;
+  --t-slow: 650ms;
+  --header-height: 78px;
+  --header-height-mobile: 62px;
+  --content-max: 1240px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --t-fast: 0ms;
+    --t-medium: 0ms;
+    --t-slow: 0ms;
+  }
+}

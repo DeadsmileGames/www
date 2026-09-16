@@ -1,0 +1,111 @@
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: lightbox-in 0.25s ease;
+}
+
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 10;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+.lightbox__close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.lightbox__nav:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-50%) scale(1.05);
+}
+.lightbox__nav--prev {
+  left: 24px;
+}
+.lightbox__nav--next {
+  right: 24px;
+}
+
+.lightbox__image-wrap {
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox__image {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox__counter {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 16px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+@media (max-width: 768px) {
+  .lightbox__nav {
+    width: 44px;
+    height: 44px;
+  }
+  .lightbox__nav--prev {
+    left: 12px;
+  }
+  .lightbox__nav--next {
+    right: 12px;
+  }
+  .lightbox__close {
+    top: 16px;
+    right: 16px;
+  }
+  .lightbox__image-wrap {
+    max-width: 95vw;
+    max-height: 85vh;
+  }
+}

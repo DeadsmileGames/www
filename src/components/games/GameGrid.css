@@ -1,0 +1,22 @@
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 70px 28px;
+}
+.game-grid .game-card:nth-child(1) .game-card__image-wrap,
+.game-grid .game-card:nth-child(4n) .game-card__image-wrap {
+  aspect-ratio: 16/9;
+}
+.game-grid .game-card:nth-child(2n) {
+  transform: translateY(42px);
+}
+@media (max-width: 760px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .game-grid .game-card:nth-child(2n),
+  .game-grid .game-card:nth-child(2n):hover {
+    transform: none;
+  }
+}

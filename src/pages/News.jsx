@@ -1,0 +1,217 @@
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
+import { useContent } from "../hooks/useContent";
+import { useAuth } from "../hooks/useAuth";
+import { Reveal } from "../components/ui/Reveal";
+import { ArrowLeft, ArrowUpRight, Trash } from "@phosphor-icons/react";
+import { api } from "../services/api";
+import { safeImageUrl } from "../utils/urls";
+import "./News.css";
+
+export function News() {
+    const { t } = useLanguage();
+    const { slug } = useParams();
+    const { user, refresh } = useAuth();
+    const navigate = useNavigate();
+    const list = useContent("/news", { limit: 24 });
+    const detail = useContent(slug ? `/news/${encodeURIComponent(slug)}` : null, {});
+    const isAdmin = user?.role === "admin";
+
+    async function remove(id, fromDetail = false) {
+        if (!window.confirm("Delete this story permanently?")) return;
+        try {
+            try {
+                await api.delete(`/admin/newsletter/${encodeURIComponent(id)}`);
+            } catch (err) {
+                if (err?.status === 401) {
+                    await refresh();
+                    await api.delete(`/admin/newsletter/${encodeURIComponent(id)}`);
+                } else throw err;
+            }
+            if (fromDetail) navigate("/news", { replace: true });
+            else list.retry();
+        } catch (err) {
+            window.alert(err.message || "Unable to delete story.");
+        }
+    }
+
+    if (slug) {
+        if (detail.status === "idle" || detail.status === "loading" || !detail.data)
+            return (
+                <div className="news-detail container">
+                    <p>Loading…</p>
+                </div>
+            );
+        if (detail.status === "error")
+            return (
+                <div className="news-detail container">
+                    <Link to="/news" className="back-link">
+                        <ArrowLeft weight="bold" /> <span>Back</span>
+                    </Link>
+                    <h1>Story not found.</h1>
+                </div>
+            );
+        const item = detail.data;
+        const paragraphs = (item.body || "")
+            .split(/\n\s*\n|\n/)
+            .filter(Boolean);
+        return (
+            <article className="news-detail container">
+                <Link to="/news" className="back-link">
+                    <ArrowLeft weight="bold" /> <span>Back</span>
+                </Link>
+                <Reveal>
+                    <header className="news-detail__header">
+                        <div className="news-detail__eyebrow">
+                            <time>
+                                {new Date(
+                                    item.published_at,
+                                ).toLocaleDateString(
+                                    'en-US',
+                                    {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        timeZone: 'UTC',
+                                    }
+                                )}
+                            </time>
+                        </div>
+                        <h1>{item.title}</h1>
+                        {item.excerpt && (
+                            <p className="news-detail__lead">{item.excerpt}</p>
+                        )}
+                    </header>
+                    {item.image && (
+                        <figure className="news-detail__image">
+                            <img src={safeImageUrl(item.image)} alt="" />
+                        </figure>
+                    )}
+                    <div className="news-detail__content">
+                        <div className="news-detail__body">
+                            {paragraphs.map((p, i) => (
+                                <p key={i}>{p}</p>
+                            ))}
+                        </div>
+                    </div>
+                    {isAdmin && (
+                        <button
+                            className="news-detail__delete"
+                            type="button"
+                            onClick={() => remove(item.id, true)}
+                        >
+                            <Trash weight="bold" /> Delete story
+                        </button>
+                    )}
+                </Reveal>
+            </article>
+        );
+    }
+
+    const newsItems = list.status === "success" && Array.isArray(list.data) ? list.data : [];
+    const featuredStory = newsItems.length > 0 ? newsItems[0] : null;
+    const gridStories = newsItems.length > 1 ? newsItems.slice(1) : [];
+
+    return (
+        <div className="news-page container">
+            <Link to="/" className="back-link">
+                <ArrowLeft weight="bold" /> <span>Back</span>
+            </Link>
+            <Reveal>
+                <div className="news-page__heading">
+                    <div>
+                        <h1>{t("news.title")}</h1>
+                    </div>
+                    <p className="news-page__intro">{t("news.intro")}</p>
+                </div>
+            </Reveal>
+
+            <div className="news-page__list">
+                {list.status === "loading" && <p>Loading…</p>}
+                {list.status === "error" && <p>{list.error}</p>}
+                {featuredStory && (
+                    <Reveal delay={0}>
+                        <Link to={`/news/${featuredStory.slug}`} className="news-featured">
+                            <div className="news-featured__visual">
+                                {featuredStory.image && <img src={safeImageUrl(featuredStory.image)} alt="" />}
+                            </div>
+                            <div className="news-featured__meta">
+                                <div className="news-page__date">
+                                    <span>
+                                        {new Date(featuredStory.published_at).toLocaleDateString('en-US', {
+                                            day: '2-digit',
+                                            month: 'short',
+                                            year: 'numeric',
+                                            timeZone: 'UTC',
+                                        })}
+                                    </span>
+                                    <small>{featuredStory.category}</small>
+                                </div>
+                                <h2>{featuredStory.title}</h2>
+                                {featuredStory.excerpt && <p>{featuredStory.excerpt}</p>}
+                                <div className="news-card__actions" onClick={(e) => e.stopPropagation()}>
+                                    <span className="pill-link">
+                                        {t("common.readMore")} <ArrowUpRight weight="bold" />
+                                    </span>
+                                    {isAdmin && (
+                                        <button
+                                            className="news-page__delete"
+                                            type="button"
+                                            onClick={(event) => { event.preventDefault(); event.stopPropagation(); remove(featuredStory.id); }}
+                                            aria-label={`Delete ${featuredStory.title}`}
+                                        >
+                                            <Trash weight="bold" />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </Link>
+                    </Reveal>
+                )}
+                <div className="news-page__grid">
+                    {gridStories.map((story, i) => (
+                        <Reveal key={story.id} delay={(i + 1) * 50}>
+                            <Link to={`/news/${story.slug}`} className="news-card">
+                                <div className="news-card__visual">
+                                    {story.image && <img src={safeImageUrl(story.image)} alt="" />}
+                                </div>
+                                <div className="news-card__meta">
+                                    <div className="news-card__info">
+                                        <div className="news-page__date">
+                                            <span>
+                                                {new Date(story.published_at).toLocaleDateString('en-US', {
+                                                    day: '2-digit',
+                                                    month: 'short',
+                                                    year: 'numeric',
+                                                    timeZone: 'UTC',
+                                                })}
+                                            </span>
+                                            <small>{story.category}</small>
+                                        </div>
+                                        <h2>{story.title}</h2>
+                                        {story.excerpt && <p>{story.excerpt}</p>}
+                                    </div>
+                                    <div className="news-card__actions" onClick={(e) => e.stopPropagation()}>
+                                        <span className="pill-link">
+                                            {t("common.readMore")} <ArrowUpRight weight="bold" />
+                                        </span>
+                                        {isAdmin && (
+                                            <button
+                                                className="news-page__delete"
+                                                type="button"
+                                                onClick={(event) => { event.preventDefault(); event.stopPropagation(); remove(story.id); }}
+                                                aria-label={`Delete ${story.title}`}
+                                            >
+                                                <Trash weight="bold" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </Link>
+                        </Reveal>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
