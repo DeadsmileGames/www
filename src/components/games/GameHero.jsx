@@ -10,6 +10,7 @@ export function GameHero({
   carouselCount,
   onNext,
   onPrev,
+  trailerVideos,
 }) {
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -68,16 +69,14 @@ export function GameHero({
             <h1 className="rs-hero__title">{title}</h1>
 
             <div className="rs-hero__actions">
-              {trailerUrl && (
-                <a
-                  href={trailerUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+              {trailerVideos?.length > 0 && (
+                <Link
+                  to={`/videos/${trailerVideos[0].id}`}
                   className="btn btn--primary"
                 >
                   <Play weight="bold" />
                   <span>Watch Trailer</span>
-                </a>
+                </Link>
               )}
               {game.slug && (
                 <Link

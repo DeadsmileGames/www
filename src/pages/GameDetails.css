@@ -114,7 +114,9 @@
   background: #151515;
   border: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .game-details__screenshot-item:hover {
@@ -149,7 +151,71 @@
   border-radius: 28px;
   overflow: hidden;
 }
-.game-details__trailer-list{display:grid;gap:10px}.game-details__videos{margin-top:60px}.game-details__videos>h3{font:600 1.8rem/1 var(--font-display);letter-spacing:-.04em;margin-bottom:24px}.game-details__videos>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.game-video-card{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center;padding:10px;border:1px solid var(--color-border);border-radius:16px;background:#111}.game-video-card:hover{border-color:#464642}.game-video-card__visual{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:10px;background:#181818}.game-video-card__visual img{width:100%;height:100%;object-fit:cover}.game-video-card__visual i{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:rgba(0,0,0,.2)}.game-video-card>span:last-child{display:grid;gap:6px}.game-video-card small{color:#777772;font-size:.65rem;text-transform:uppercase}.game-video-card strong{font-size:.83rem;line-height:1.35}.game-details__recommended{border-top:1px solid var(--color-border)}
+.game-details__trailer-list {
+  display: grid;
+  gap: 10px;
+}
+.game-details__videos {
+  margin-top: 60px;
+}
+.game-details__videos > h3 {
+  font: 600 1.8rem/1 var(--font-display);
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+}
+.game-details__videos > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.game-video-card {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 16px;
+  background: #111;
+}
+.game-video-card:hover {
+  border-color: #464642;
+}
+.game-video-card__visual {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #181818;
+}
+.game-video-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.game-video-card__visual i {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.2);
+}
+.game-video-card > span:last-child {
+  display: grid;
+  gap: 6px;
+}
+.game-video-card small {
+  color: #777772;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+.game-video-card strong {
+  font-size: 0.83rem;
+  line-height: 1.35;
+}
+.game-details__recommended {
+  border-top: 1px solid var(--color-border);
+}
 
 .game-details__related {
   padding-top: 100px;
@@ -189,5 +255,10 @@
   .game-details__screenshots-grid {
     grid-template-columns: 1fr;
   }
-  .game-details__videos>div{grid-template-columns:1fr}.game-video-card{grid-template-columns:120px 1fr}
+  .game-details__videos > div {
+    grid-template-columns: 1fr;
+  }
+  .game-video-card {
+    grid-template-columns: 120px 1fr;
+  }
 }
