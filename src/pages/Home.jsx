@@ -31,6 +31,10 @@ export function Home() {
     () => games.filter((game) => game.featured).slice(0, 3),
     [games]
   );
+  const trailerVideos = (active?.videos || []).filter(
+    (video) =>
+      String(video.category || '').toLowerCase() === 'trailer'
+  );
   const heroGames =
     featured.length > 0
       ? featured
@@ -79,6 +83,7 @@ export function Home() {
         <GameHero
           game={active}
           carouselIndex={slide}
+          trailerVideos={trailerVideos}
           carouselCount={heroGames.length}
           onNext={() =>
             setSlide((current) =>
