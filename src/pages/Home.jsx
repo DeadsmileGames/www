@@ -11,6 +11,7 @@ import { ArrowUpRight } from '@phosphor-icons/react';
 import { AndroidLogo, AppleLogo } from '@phosphor-icons/react';
 import { safeImageUrl } from '../utils/urls';
 import './Home.css';
+import { getTrailerVideos } from '../utils/videos';
 
 export function Home() {
   const { t } = useLanguage();
@@ -31,7 +32,6 @@ export function Home() {
     () => games.filter((game) => game.featured).slice(0, 3),
     [games]
   );
-  
   const heroGames =
     featured.length > 0
       ? featured
@@ -73,10 +73,8 @@ export function Home() {
   }
 
   const active = heroGames[slide] || null;
-  const trailerVideos = (active?.videos || []).filter(
-    (video) =>
-      String(video.category || '').toLowerCase() === 'trailer'
-  );
+  const trailerVideos = getTrailerVideos(active);
+
   return (
     <div className="home">
       {active && (
