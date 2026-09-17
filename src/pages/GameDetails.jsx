@@ -193,7 +193,11 @@ export function GameDetails() {
 
   return (
     <div className="game-details">
-      <GameHero game={game} isDetail />
+      <GameHero
+        game={game}
+        isDetail
+        trailerVideos={trailerVideos}
+      />
 
       <div className="container game-details__body">
         <div className="game-details__main">

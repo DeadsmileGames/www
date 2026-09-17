@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './GameHero.css';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Pause, Play } from '@phosphor-icons/react';
-import { safeHttpsUrl, safeImageUrl } from '../../utils/urls';
+import { safeImageUrl } from '../../utils/urls';
 
 export function GameHero({
   game,
@@ -10,7 +10,7 @@ export function GameHero({
   carouselCount,
   onNext,
   onPrev,
-  trailerVideos,
+  trailerVideos = [],
 }) {
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -36,7 +36,6 @@ export function GameHero({
 
   const backgroundSrc = safeImageUrl(game.heroImage) || safeImageUrl(game.coverImage) || '';
   const logoSrc       = safeImageUrl(game.logo) || '';
-  const trailerUrl    = safeHttpsUrl(game.trailerUrl);
   const title         = game.title || '';
   const eyebrow       = game.genres?.[0] || game.shortDescription || '';
 
@@ -69,7 +68,7 @@ export function GameHero({
             <h1 className="rs-hero__title">{title}</h1>
 
             <div className="rs-hero__actions">
-              {trailerVideos?.length > 0 && (
+              {trailerVideos.length > 0 && (
                 <Link
                   to={`/videos/${trailerVideos[0].id}`}
                   className="btn btn--primary"
