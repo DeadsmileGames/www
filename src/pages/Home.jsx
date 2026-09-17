@@ -29,7 +29,6 @@ export function Home() {
   const [message, setMessage] = useState('');
   const trailerVideos = gameVideos.filter((video) => String(video.category || '').toLowerCase() === 'trailer');
   const gameVideos = game?.videos || [];
-  const trailerVideos = gameVideos.filter((video) => String(video.category || '').toLowerCase() === 'trailer');
   const labelledVideos = gameVideos.map((video) => {
     const category = String(video.category || 'Video').trim();
     const peers = gameVideos.filter((item) => String(item.category || '').toLowerCase() === category.toLowerCase());
