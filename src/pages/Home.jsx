@@ -11,7 +11,6 @@ import { ArrowUpRight } from '@phosphor-icons/react';
 import { AndroidLogo, AppleLogo } from '@phosphor-icons/react';
 import { safeImageUrl } from '../utils/urls';
 import './Home.css';
-import { getTrailerVideos } from '../utils/videos';
 
 export function Home() {
   const { t } = useLanguage();
@@ -73,7 +72,6 @@ export function Home() {
   }
 
   const active = heroGames[slide] || null;
-  const trailerVideos = getTrailerVideos(active);
 
   return (
     <div className="home">
@@ -81,7 +79,6 @@ export function Home() {
         <GameHero
           game={active}
           carouselIndex={slide}
-          trailerVideos={trailerVideos}
           carouselCount={heroGames.length}
           onNext={() =>
             setSlide((current) =>
