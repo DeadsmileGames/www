@@ -27,14 +27,20 @@ export function Home() {
   const [slide, setSlide] = useState(0);
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const trailerVideos = gameVideos.filter((video) => String(video.category || '').toLowerCase() === 'trailer');
+  const gameVideos = game?.videos || [];
+  const trailerVideos = gameVideos.filter((video) => String(video.category || '').toLowerCase() === 'trailer');
+  const labelledVideos = gameVideos.map((video) => {
+    const category = String(video.category || 'Video').trim();
+    const peers = gameVideos.filter((item) => String(item.category || '').toLowerCase() === category.toLowerCase());
+    const index = peers.findIndex((item) => item.id === video.id);
+    return { ...video, label: peers.length > 1 ? `${category} ${index + 1}` : category };
+  });
   const featured = useMemo(
     () => games.filter((game) => game.featured).slice(0, 3),
     [games]
   );
-  const trailerVideos = (active?.videos || []).filter(
-    (video) =>
-      String(video.category || '').toLowerCase() === 'trailer'
-  );
+  
   const heroGames =
     featured.length > 0
       ? featured
