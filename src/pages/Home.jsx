@@ -73,8 +73,10 @@ export function Home() {
   }
 
   const active = heroGames[slide] || null;
-  const trailerVideos = gameVideos.filter((video) => String(video.category || '').toLowerCase() === 'trailer');
-
+  const trailerVideos = (active?.videos || []).filter(
+    (video) =>
+      String(video.category || '').toLowerCase() === 'trailer'
+  );
   return (
     <div className="home">
       {active && (
