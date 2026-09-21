@@ -1112,8 +1112,9 @@ fieldset {
   font-size: 14px;
 }
 .account-page__layout {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 65px;
 }
 .account-page__layout > aside {
   display: flex;
@@ -1982,11 +1983,14 @@ fieldset {
   .game-details__body,
   .support-layout,
   .studio-page__grid,
-  .account-page__layout,
   .media-featured,
   .news-featured {
     grid-template-columns: 1fr;
     gap: 35px;
+  }
+  .account-page__layout {
+    display: flex;
+    flex-direction: column;
   }
   .studio-page__hero {
     min-height: 470px;
@@ -2119,6 +2123,7 @@ fieldset {
     font-size: 14px;
     padding: 12px;
   }
+  
   .account-nav-title {
     display: none;
   }
