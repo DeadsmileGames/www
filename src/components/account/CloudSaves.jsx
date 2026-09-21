@@ -346,6 +346,9 @@ export function CloudSaves() {
                                 background: "#ffffff0a",
                                 marginTop: "20px",
                                 borderRadius: "10px",
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
                             }}
                             key={item.slot}
                         >
