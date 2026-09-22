@@ -629,7 +629,6 @@ fieldset {
 .studio-footer {
   text-align: center;
   padding: 75px 0 30px;
-  margin-top: 100px;
   background: #151515;
 }
 .newsletter {
@@ -682,13 +681,24 @@ fieldset {
   font-size: 12px;
   color: #aaa;
 }
+.news-page,
+.support-page,
+.presskit-page,
+.wishlist-page,
+.privacy-page,
+.terms-page,
+.profile-page,
+.account-page,
+.games-page {
+  padding-top: 130px;
+  padding-bottom: 90px;
+}
 .games-page__head,
 .media-page__heading,
 .news-page__heading,
 .support-hero,
 .presskit-hero {
   margin-bottom: 50px;
-  margin-top: 100px;
 }
 .game-grid,
 .skeleton-grid {
@@ -1069,10 +1079,12 @@ fieldset {
 .privacy-page,
 .terms-page {
   max-width: 900px;
-  margin-top: 170px;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 .wishlist-page {
-  margin-top: 170px;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 .privacy-page section,
 .terms-page section,
@@ -1182,7 +1194,8 @@ fieldset {
   display: grid;
   grid-template-columns: 210px minmax(0, 1fr);
   gap: 65px;
-  margin-top: 100px;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 .account-page__layout > aside {
   display: flex;
@@ -1802,8 +1815,8 @@ fieldset {
   max-width: 900px;
 }
 .news-detail__header {
-  margin-bottom: 40px;
-  margin-top: 100px;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 .news-detail__lead {
   font-size: 22px;
@@ -1859,7 +1872,8 @@ fieldset {
   object-fit: cover;
 }
 .press-kit-page {
-  margin-top: 100px;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 .press-kit-page section {
   margin: 50px 0;
@@ -1884,7 +1898,8 @@ fieldset {
   object-fit: contain;
 }
 .profile-page {
-  margin-top: 100px;
+  padding-top: 130px;
+  padding-bottom: 90px;
 }
 .profile-page__hero {
   display: flex;
