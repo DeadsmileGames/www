@@ -1811,8 +1811,6 @@ fieldset {
 }
 .news-detail {
   max-width: 900px;
-}
-.news-detail__header {
   padding-top: 130px;
   padding-bottom: 90px;
 }
