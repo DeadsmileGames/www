@@ -10,23 +10,25 @@ import { Button } from "../ui/Button";
 
 const MAX_SAVE_BYTES = 1024;
 
+
 function validarSavePico8(file, conteudo) {
     if (!/\.p8d\.txt$/i.test(file.name)) {
-        throw new Error("Somente arquivos .p8d.txt do PICO-8 são permitidos.");
+        throw new Error("Only PICO-8 .p8d.txt files are allowed.");
     }
 
     if (file.size < 1 || file.size > MAX_SAVE_BYTES) {
-        throw new Error("O arquivo não possui o tamanho esperado para um save do PICO-8.");
+        throw new Error("The file size is invalid for a PICO-8 save.");
     }
 
     const linhas = conteudo.replace(/\r\n/g, "\n").replace(/\n$/, "").split("\n");
 
     if (linhas.length !== 8 || !linhas.every((linha) => /^[0-9a-fA-F]{64}$/.test(linha))) {
-        throw new Error("Save inválido: o arquivo deve conter 8 linhas de 64 caracteres hexadecimais.");
+        throw new Error("Invalid save file: the file must contain exactly 8 lines of 64 hexadecimal characters.");
     }
 
     return true;
 }
+
 
 function bytesToBase64(bytes) {
     let binary = "";
@@ -335,7 +337,7 @@ export function CloudSaves() {
                                 if (!/\.p8d\.txt$/i.test(selectedFile.name)) {
                                     setMessage({
                                         type: "error",
-                                        text: "Selecione somente arquivos .p8d.txt do PICO-8.",
+                                        text: "Please select a valid PICO-8 .p8d.txt file.",
                                     });
                                     event.target.value = "";
                                     return;
