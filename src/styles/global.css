@@ -1410,7 +1410,7 @@ fieldset {
   width: 100%;
   aspect-ratio: 16/9;
   border: 0;
-  border-raius: 10px;
+  border-radius: 10px;
   background: #000;
 }
 .dialog-close,
