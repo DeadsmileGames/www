@@ -568,9 +568,9 @@ fieldset {
   color: #aaa;
 }
 .studio-news {
-  background: #1d252e;
+  background: #1f1f1f;
 }
-.news-title {
+.news-tile {
   background: #151515;
   border-radius: 10px;
   padding: 20px;
@@ -1145,6 +1145,7 @@ fieldset {
 .account-nav-item.is-active,
 .account-nav-item--active {
   background: #001cff;
+  color:white
 }
 .account-nav-title {
   margin: 20px 14px 5px;
