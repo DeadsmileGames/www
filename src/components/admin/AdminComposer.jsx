@@ -405,10 +405,6 @@ export function AdminComposer() {
                     <h3>
                       {label}
                     </h3>
-                    <span>
-                      Total: 
-                      {list.length}
-                    </span>
                   </div>
 
                   {list.length === 0 ? (
