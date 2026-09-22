@@ -563,7 +563,7 @@ fieldset {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: #f0f0f0;
+  background: #fff;
   color: #111;
   border-radius: 50%;
   width: 60px;
@@ -572,7 +572,8 @@ fieldset {
   place-items: center;
 }
 .video-tile:hover .play-button {
-  background: #a4caff;
+  background: #ff0000;
+  color: #fff;
 }
 .video-tile h3 {
   font-size: 24px;
