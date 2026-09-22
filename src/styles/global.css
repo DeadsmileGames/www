@@ -1750,10 +1750,16 @@ fieldset {
   line-height: 1.9;
   white-space: pre-line;
 }
+.news-card {
+  background: #151515;
+  padding: 20px;
+  border-radius: 10px;
+}
 .news-card__visual img {
   aspect-ratio: 16/10;
   width: 100%;
   object-fit: cover;
+  border-radius: 10px;
 }
 .news-card__meta {
   padding: 22px 0;
