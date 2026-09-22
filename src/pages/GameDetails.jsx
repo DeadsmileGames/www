@@ -167,7 +167,7 @@ export function GameDetails() {
           title="GAME NOT FOUND"
           message="That title doesn't exist in our catalog."
         />
-        <Link to="/games" className="btn btn--secondary">
+        <Link to="/games" className="btn btn--primary">
           <ArrowLeft weight="bold" />
           <span>Browse games</span>
         </Link>
