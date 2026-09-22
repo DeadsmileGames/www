@@ -264,12 +264,7 @@ fieldset {
   padding-right: 30px;
   align-items: center;
   gap: 35px;
-  background: rgba(12, 12, 12, 0.72);
-  backdrop-filter: blur(20px);
-  transition:
-    background 0.4s ease,
-    border-color 0.4s ease,
-    transform 0.4s ease;
+  background: #151515;
 }
 .site-header__brand {
   width: 75px;
@@ -1424,12 +1419,7 @@ fieldset {
   max-height: calc(100svh - 80px);
   overflow: auto;
   padding: 24px max(30px, 8vw) 32px;
-  background: rgba(12, 12, 12, 0.72);
-  backdrop-filter: blur(20px);
-  transition:
-    background 0.4s ease,
-    border-color 0.4s ease,
-    transform 0.4s ease;
+  background: #151515;
 }
 .search-overlay__inner {
   display: grid;
