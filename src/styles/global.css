@@ -607,7 +607,6 @@ fieldset {
 }
 .full-page-about.studio-about {
   height: auto;
-  min-height: 620px;
   background-size: 330px;
   background-position: -140px center;
 }
