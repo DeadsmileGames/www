@@ -125,7 +125,7 @@ export function Register() {
               required
               minLength={3}
               maxLength={24}
-              pattern="[A-Za-z0-9_]+"
+              pattern="[A-Za-z0-9_\-]+"
               value={form.username}
               onChange={update('username')}
               autoComplete="username"

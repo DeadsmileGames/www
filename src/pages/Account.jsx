@@ -530,7 +530,7 @@ export function Account() {
                                             required
                                             minLength={3}
                                             maxLength={24}
-                                            pattern="[A-Za-z0-9_]+"
+                                            pattern="[A-Za-z0-9_\-]+"
                                         />
                                     </div>
                                     <div className="account-row">
