@@ -147,7 +147,6 @@ export function News() {
                                             timeZone: 'UTC',
                                         })}
                                     </span>
-                                    <small>{featuredStory.category}</small>
                                 </div>
                                 <h2>{featuredStory.title}</h2>
                                 {featuredStory.excerpt && <p>{featuredStory.excerpt}</p>}
