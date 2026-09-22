@@ -416,7 +416,6 @@ export function AdminComposer() {
                         <div className="admin-manage__item" key={item.id}>
                           <div>
                             <strong>{item.title}</strong>
-                            <small>{item.category || item.slug || item.status || 'Published'}</small>
                           </div>
                           <button
                             type="button"
