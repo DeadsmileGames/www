@@ -1,6 +1,6 @@
 
-import { useEffect, useState } from 'react';
-import { Outlet, useLocation, useOutlet } from 'react-router-dom';
+import { Suspense, useEffect, useState } from 'react';
+import { useLocation, useOutlet } from 'react-router-dom';
 import {
   AnimatePresence,
   motion,
@@ -33,7 +33,11 @@ export function AppLayout() {
       return () => cancelAnimationFrame(frame);
     }
 
-    window.scrollTo(0, 0);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'instant'
+    });
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
@@ -59,6 +63,43 @@ export function AppLayout() {
     '/reset-password'
   ].includes(location.pathname);
 
+  // Transição cinematográfica:
+  // Fade + Zoom + Blur, sem movimento vertical.
+
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      scale: reducedMotion ? 1 : 0.97,
+      filter: reducedMotion
+        ? 'blur(0px)'
+        : 'blur(8px)'
+    },
+
+    animate: {
+      opacity: 1,
+      scale: 1,
+      filter: 'blur(0px)',
+
+      transition: {
+        duration: reducedMotion ? 0.12 : 0.48,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    },
+
+    exit: {
+      opacity: 0,
+      scale: reducedMotion ? 1 : 1.015,
+      filter: reducedMotion
+        ? 'blur(0px)'
+        : 'blur(5px)',
+
+      transition: {
+        duration: reducedMotion ? 0.1 : 0.24,
+        ease: [0.4, 0, 1, 1]
+      }
+    }
+  };
+
   return (
     <>
       <a href="#main-content" className="skip-link">
@@ -72,24 +113,26 @@ export function AppLayout() {
       )}
 
       <main id="main-content">
+        <Suspense
+          fallback={
+            <div
+              className="app-loader"
+              role="status"
+              aria-label="Loading"
+            />
+          }
+        >
+          
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
+            className="page-transition"
             key={location.pathname}
-            initial={{
-              opacity: 0,
-              y: reducedMotion ? 0 : 18
-            }}
-            animate={{
-              opacity: 1,
-              y: 0
-            }}
-            exit={{
-              opacity: 0,
-              y: reducedMotion ? 0 : -12
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{
-              duration: reducedMotion ? 0.01 : 0.3,
-              ease: [0.22, 1, 0.36, 1]
+              duration: reducedMotion ? 0.01 : 0.2,
+              ease: 'easeInOut'
             }}
             style={{
               width: '100%',
@@ -99,6 +142,8 @@ export function AppLayout() {
             {outlet}
           </motion.div>
         </AnimatePresence>
+
+        </Suspense>
       </main>
 
       {!isAuthPage && <Footer />}

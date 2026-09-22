@@ -1194,8 +1194,6 @@ fieldset {
   display: grid;
   grid-template-columns: 210px minmax(0, 1fr);
   gap: 65px;
-  padding-top: 130px;
-  padding-bottom: 90px;
 }
 .account-page__layout > aside {
   display: flex;
