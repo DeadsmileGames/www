@@ -100,11 +100,9 @@ export function Footer() {
                 </a>
                 <nav className="footer-links" aria-label="Footer">
                     <Link to="/games">Games</Link>
-                    <Link to="/store">Store</Link>
                     <Link to="/news">News</Link>
                     <Link to="/about">About</Link>
                     <Link to="/support">Support</Link>
-                    <Link to="/presskit">Press kit</Link>
                     <Link to="/privacy">Privacy</Link>
                     <Link to="/terms">Terms</Link>
                 </nav>
