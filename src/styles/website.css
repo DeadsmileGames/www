@@ -247,7 +247,7 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at center, transparent 0%, #111 100%), url('/assets/games/screenshots/abbys-restless-heart/2.png');
+  background-image: radial-gradient(circle at center, #000000a9 20%, #000 100%), url('/assets/games/screenshots/abbys-restless-heart/2.png');
   background-size: auto;
   background-repeat: repeat;
 }

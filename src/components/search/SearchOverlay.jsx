@@ -64,16 +64,6 @@ useEffect(() => {
           />
         </div>
         <div className="search-overlay__filters" aria-label="Search type">
-          {['games', 'news', 'videos'].map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={filter === item ? 'is-active' : ''}
-              onClick={() => setFilter(item)}
-            >
-              {item}
-            </button>
-          ))}
         </div>
         <button type="button" className="search-overlay__close" onClick={onClose} aria-label="Close search">
           <X weight="bold"/>

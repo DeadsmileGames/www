@@ -117,6 +117,7 @@ small {
 }
 main {
   min-height: 65vh;
+  
 }
 main > .container,
 .studio-page__hero {
@@ -243,10 +244,8 @@ fieldset {
 }
 .eyebrow {
   display: block;
-  font: 700 12px/1.5 var(--font-body);
   text-transform: uppercase;
-  letter-spacing: 2px;
-  margin: 0 0 16px;
+  font-size: 12px;
 }
 .content-state,
 .state {
@@ -463,6 +462,7 @@ fieldset {
 .full-page-mh.studio-games {
   height: auto;
   min-height: 85vh;
+  background: #131313;
   padding: 110px 0 75px;
 }
 .game-spotlight {
@@ -504,10 +504,13 @@ fieldset {
   gap: 8px;
 }
 .studio-game-strip {
-  display: grid;
+ display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
   margin: 45px 0;
+  background: #252525;
+  padding: 40px;
+  border-radius: 10px;
 }
 .studio-game-strip img {
   aspect-ratio: 16/10;
@@ -578,10 +581,10 @@ fieldset {
   color: #aaa;
 }
 .studio-news {
-  background: #1f1f1f;
+  background: #131313;
 }
 .news-tile {
-  background: #151515;
+  background: #252525;
   border-radius: 10px;
   padding: 20px;
   justify-content: space-between;
@@ -626,6 +629,7 @@ fieldset {
 .studio-footer {
   text-align: center;
   padding: 75px 0 30px;
+  margin-top: 100px;
   background: #151515;
 }
 .newsletter {
@@ -680,9 +684,11 @@ fieldset {
 }
 .games-page__head,
 .media-page__heading,
+.news-page__heading,
 .support-hero,
 .presskit-hero {
   margin-bottom: 50px;
+  margin-top: 100px;
 }
 .game-grid,
 .skeleton-grid {
@@ -881,22 +887,55 @@ fieldset {
   margin-bottom: 35px;
 }
 .studio-page__hero {
-  min-height: 560px;
-  display: grid;
-  align-items: center;
-  background: red;
-  text-align: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: auto;
+    display: grid;
+    align-items: center;
+    padding: clamp(110px, 12vh, 150px) 0 clamp(50px, 8vh, 90px);
+    background: red;
+    text-align: center;
 }
+.studio-page__hero .container {
+    width: min(90%, 1120px);
+    min-width: 0;
+}
+.studio-page__hero .reveal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+}
+
 .studio-page__hero h1 {
   max-width: 10ch;
   margin: 0 auto;
   font-size: clamp(54px, 8vw, 112px);
   line-height: 0.9;
 }
+.studio-page__hero img {
+    display: block;
+
+    width: min(100%, 850px);
+    height: auto;
+    max-height: 55svh;
+
+    object-fit: contain;
+    margin: 0 auto;
+}
+
 .studio-page__hero p {
-  max-width: 760px;
-  margin: 30px auto;
-  font-size: 21px;
+    width: 100%;
+    max-width: 760px;
+
+    margin: 30px auto 0;
+
+    font-size: clamp(16px, 1.5vw, 21px);
+    line-height: 1.6;
+
+    overflow-wrap: break-word;
 }
 .studio-page__story {
   padding: 95px 0 30px;
@@ -1351,6 +1390,7 @@ fieldset {
   width: 100%;
   aspect-ratio: 16/9;
   border: 0;
+  border-raius: 10px;
   background: #000;
 }
 .dialog-close,
@@ -1758,6 +1798,7 @@ fieldset {
 }
 .news-detail__header {
   margin-bottom: 40px;
+  margin-top: 100px;
 }
 .news-detail__lead {
   font-size: 22px;
@@ -2035,7 +2076,7 @@ fieldset {
     flex-direction: column;
   }
   .studio-page__hero {
-    min-height: 470px;
+    min-height: 100vh;
   }
   .studio-page__hero h1 {
     max-width: 9ch;

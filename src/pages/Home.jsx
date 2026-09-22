@@ -4,6 +4,7 @@ import { useContent } from "../hooks/useContent";
 import { safeImageUrl, safeHttpsUrl, safeYoutubeEmbedUrl } from "../utils/urls";
 import { Modal } from "../components/ui/Modal";
 import { Play, ArrowDown, X } from "@phosphor-icons/react";
+import { Reveal } from "../components/ui/Reveal";
 
 function ContentState({ resource, empty, children }) {
   if (resource.status === "loading")
@@ -54,8 +55,11 @@ export function Home() {
         id="home"
         className="full-page landing-page studio-landing"
       >
-        <div className="logo-quote">
-        </div>
+                <div className="container" style={{ zIndex: 10 }}>
+                    <Reveal>
+                            <img src="/assets/branding/typo.svg" className="hero-logo" alt="Deadsmile Games logo" style={{ width: "100%", maxWidth: "1000px", margin: "0 auto", objectFit: "contain" }} />
+                    </Reveal>
+                </div>
         <a href="#games" className="landing-next">
           Discover our games <ArrowDown size={18} />
         </a>

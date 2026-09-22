@@ -6,7 +6,7 @@ export function About() {
             <div className="studio-page__hero">
                 <div className="container">
                     <Reveal>
-                            <h1>Deadsmile Games</h1>
+                            <img src="/assets/branding/typo.svg" alt="Deadsmile Games logo" />
                             <p>Deadsmile Games was founded by Lucas Eduardo Duarte Pereira with a simple idea: build games that become part of people's lives, not just something they finish and forget.</p>
                     </Reveal>
                 </div>
