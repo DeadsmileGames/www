@@ -347,7 +347,7 @@ export function CloudSaves() {
                                 marginTop: "20px",
                                 borderRadius: "10px",
                                 display: 'flex',
-                                justifyContent: 'flex-start',
+                                justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}
                             key={item.slot}
@@ -366,7 +366,7 @@ export function CloudSaves() {
                             <div className="connection-row__actions">
                                 <Button
                                     type="button"
-                                    variant="secondary"
+                                    variant="primary"
                                     disabled={busy}
                                     onClick={() => downloadSave(item)}
                                 >
@@ -375,7 +375,7 @@ export function CloudSaves() {
                                 </Button>
                                 <Button
                                     type="button"
-                                    variant="ghost"
+                                    variant="danger"
                                     disabled={busy}
                                     onClick={() => deleteSave(item)}
                                 >
