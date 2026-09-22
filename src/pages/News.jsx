@@ -107,110 +107,115 @@ export function News() {
         );
     }
 
-    const newsItems = list.status === "success" && Array.isArray(list.data) ? list.data : [];
-    const featuredStory = newsItems.length > 0 ? newsItems[0] : null;
-    const gridStories = newsItems.length > 1 ? newsItems.slice(1) : [];
+    
+    const newsItems =
+        list.status === "success" && Array.isArray(list.data)
+            ? list.data
+            : [];
 
     return (
         <div className="news-page container">
             <Link to="/" className="back-link">
-                <ArrowLeft weight="bold" /> <span>Back</span>
+                <ArrowLeft weight="bold" />
+                <span>Back</span>
             </Link>
+
             <Reveal>
                 <div className="news-page__heading">
                     <div>
                         <h1>{t("news.title")}</h1>
                     </div>
-                    <p className="news-page__intro">{t("news.intro")}</p>
+
+                    <p className="news-page__intro">
+                        {t("news.intro")}
+                    </p>
                 </div>
             </Reveal>
 
-            <div className="news-page__list">
-                {list.status === "loading" && <p>Loading…</p>}
-                {list.status === "error" && <p>{list.error}</p>}
-                {featuredStory && (
-                    <Reveal 
-                        delay={0}
+            <div
+                className="news-page__list"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "32px"
+                }}
+            >
+                {list.status === "loading" && (
+                    <p>Loading…</p>
+                )}
+
+                {list.status === "error" && (
+                    <p>{list.error}</p>
+                )}
+
+                {newsItems.map((story, i) => (
+                    <Reveal
+                        key={story.id}
+                        delay={Math.min(i * 50, 250)}
                         className="news-card"
                     >
-                        <Link to={`/news/${featuredStory.slug}`} className="news-featured">
+                        <Link
+                            to={`/news/${story.slug}`}
+                            className="news-featured"
+                        >
                             <div className="news-featured__visual">
-                                {featuredStory.image && <img src={safeImageUrl(featuredStory.image)} alt="" />}
+                                {story.image && (
+                                    <img
+                                        src={safeImageUrl(story.image)}
+                                        alt=""
+                                        loading={i === 0 ? "eager" : "lazy"}
+                                    />
+                                )}
                             </div>
+
                             <div className="news-featured__meta">
                                 <div className="news-page__date">
                                     <span>
-                                        {new Date(featuredStory.published_at).toLocaleDateString('en-US', {
-                                            day: '2-digit',
-                                            month: 'short',
-                                            year: 'numeric',
-                                            timeZone: 'UTC',
-                                        })}
+                                        {new Date(
+                                            story.published_at
+                                        ).toLocaleDateString(
+                                            "en-US",
+                                            {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                                timeZone: "UTC"
+                                            }
+                                        )}
                                     </span>
                                 </div>
-                                <h2>{featuredStory.title}</h2>
-                                {featuredStory.excerpt && <p>{featuredStory.excerpt}</p>}
-                                <div className="news-card__actions" onClick={(e) => e.stopPropagation()}>
+
+                                <h2>{story.title}</h2>
+
+                                {story.excerpt && (
+                                    <p>{story.excerpt}</p>
+                                )}
+
+                                <div className="news-card__actions">
                                     <span className="btn btn--primary">
-                                        {t("common.readMore")} <ArrowUpRight weight="bold" />
+                                        {t("common.readMore")}
+                                        <ArrowUpRight weight="bold" />
                                     </span>
-                                    {isAdmin && (
-                                        <button
-                                            className="btn btn--danger"
-                                            type="button"
-                                            onClick={(event) => { event.preventDefault(); event.stopPropagation(); remove(featuredStory.id); }}
-                                            aria-label={`Delete ${featuredStory.title}`}
-                                        >
-                                            <Trash weight="bold" />
-                                        </button>
-                                    )}
                                 </div>
                             </div>
                         </Link>
+
+                        {isAdmin && (
+                            <button
+                                className="btn btn--danger"
+                                type="button"
+                                onClick={() => remove(story.id)}
+                                aria-label={`Delete ${story.title}`}
+                                style={{
+                                    marginTop: "12px"
+                                }}
+                            >
+                                <Trash weight="bold" />
+                                Delete story
+                            </button>
+                        )}
                     </Reveal>
-                )}
-                <div className="news-page__grid">
-                    {gridStories.map((story, i) => (
-                        <Reveal key={story.id} delay={(i + 1) * 50}>
-                            <Link to={`/news/${story.slug}`} className="news-card">
-                                <div className="news-card__visual">
-                                    {story.image && <img src={safeImageUrl(story.image)} alt="" />}
-                                </div>
-                                <div className="news-card__meta">
-                                    <div className="news-card__info">
-                                        <div className="news-page__date">
-                                            <span>
-                                                {new Date(story.published_at).toLocaleDateString('en-US', {
-                                                    day: '2-digit',
-                                                    month: 'short',
-                                                    year: 'numeric',
-                                                    timeZone: 'UTC',
-                                                })}
-                                            </span>
-                                        </div>
-                                        <h2>{story.title}</h2>
-                                        {story.excerpt && <p>{story.excerpt}</p>}
-                                    </div>
-                                    <div className="news-card__actions" onClick={(e) => e.stopPropagation()}>
-                                        <span className="btn btn--primary">
-                                            {t("common.readMore")} <ArrowUpRight weight="bold" />
-                                        </span>
-                                        {isAdmin && (
-                                            <button
-                                                className="btn btn--danger"
-                                                type="button"
-                                                onClick={(event) => { event.preventDefault(); event.stopPropagation(); remove(story.id); }}
-                                                aria-label={`Delete ${story.title}`}
-                                            >
-                                                <Trash weight="bold" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </Link>
-                        </Reveal>
-                    ))}
-                </div>
+                ))}
             </div>
         </div>
     );
