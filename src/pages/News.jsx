@@ -129,7 +129,10 @@ export function News() {
                 {list.status === "loading" && <p>Loading…</p>}
                 {list.status === "error" && <p>{list.error}</p>}
                 {featuredStory && (
-                    <Reveal delay={0}>
+                    <Reveal 
+                        delay={0}
+                        className="news-card"
+                    >
                         <Link to={`/news/${featuredStory.slug}`} className="news-featured">
                             <div className="news-featured__visual">
                                 {featuredStory.image && <img src={safeImageUrl(featuredStory.image)} alt="" />}
@@ -185,7 +188,6 @@ export function News() {
                                                     timeZone: 'UTC',
                                                 })}
                                             </span>
-                                            <small>{story.category}</small>
                                         </div>
                                         <h2>{story.title}</h2>
                                         {story.excerpt && <p>{story.excerpt}</p>}
