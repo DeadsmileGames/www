@@ -151,7 +151,7 @@ export function News() {
                                 <h2>{featuredStory.title}</h2>
                                 {featuredStory.excerpt && <p>{featuredStory.excerpt}</p>}
                                 <div className="news-card__actions" onClick={(e) => e.stopPropagation()}>
-                                    <span className="pill-link">
+                                    <span className="btn btn--primary">
                                         {t("common.readMore")} <ArrowUpRight weight="bold" />
                                     </span>
                                     {isAdmin && (
@@ -192,7 +192,7 @@ export function News() {
                                         {story.excerpt && <p>{story.excerpt}</p>}
                                     </div>
                                     <div className="news-card__actions" onClick={(e) => e.stopPropagation()}>
-                                        <span className="pill-link">
+                                        <span className="btn btn--primary">
                                             {t("common.readMore")} <ArrowUpRight weight="bold" />
                                         </span>
                                         {isAdmin && (
