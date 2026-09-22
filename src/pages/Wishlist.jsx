@@ -101,7 +101,7 @@ export function Wishlist() {
           }
         />
       ) : (
-        <div className="wishlist-page__grid">
+        <div className="game-grid">
           {games.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
