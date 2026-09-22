@@ -230,9 +230,9 @@ export function AdminComposer() {
   }
 
   const sections = [
-    { key: 'news', label: 'Newswire', icon: Newspaper },
-    { key: 'videos', label: 'Videos', icon: FilmStrip },
-    { key: 'games', label: 'Games', icon: GameController },
+    { key: 'news', label: 'Newswire' },
+    { key: 'videos', label: 'Videos' },
+    { key: 'games', label: 'Games' },
   ];
 
   return (
@@ -403,10 +403,12 @@ export function AdminComposer() {
                 <section key={key} className="admin-manage__section">
                   <div className="admin-manage__section-head">
                     <h3>
-                      <Icon weight="bold" />
                       {label}
                     </h3>
-                    <span>{list.length}</span>
+                    <span>
+                      Total: 
+                      {list.length}
+                    </span>
                   </div>
 
                   {list.length === 0 ? (
