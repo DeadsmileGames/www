@@ -674,6 +674,7 @@ fieldset {
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
+  border-radius: 10px;
 }
 .game-card__badge {
   position: absolute;
@@ -749,7 +750,7 @@ fieldset {
 .game-details__screenshots-grid,
 .game-details__videos > div {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 18px;
 }
 .game-details__screenshot-item img {
@@ -789,6 +790,7 @@ fieldset {
 }
 .game-video-card img {
   aspect-ratio: 16/9;
+  border-radius: 10px;
   object-fit: cover;
   width: 100%;
 }
@@ -1042,7 +1044,7 @@ fieldset {
   padding: 70px 24px;
   display: grid;
   place-items: center;
-  background: url("/assets/games/screenshots/abbys-restless-heart/1.png");
+  background: url("/assets/games/screenshots/abbys-restless-heart/2.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -1829,17 +1831,19 @@ fieldset {
 .profile-games,
 .profile-achievements {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.5fr 1fr;
   gap: 25px;
 }
 .profile-games article {
   background: #222;
+  border-radius: 10px;
 }
 .profile-games article > div {
   padding: 20px;
 }
 .profile-games img {
   width: 100%;
+  border-radius: 10px 10px 0 0;
   aspect-ratio: 16/9;
   object-fit: cover;
 }
@@ -1852,6 +1856,7 @@ fieldset {
   display: flex;
   gap: 18px;
   padding: 25px;
+  border-radius: 10px;
   background: #222;
 }
 .profile-achievements span {

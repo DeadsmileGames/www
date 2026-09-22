@@ -296,7 +296,7 @@ export function GameDetails() {
               <div>
                 {labelledVideos.map((video) => <Link to={`/?video=${encodeURIComponent(video.id)}#videos`} key={video.id} className="game-video-card">
                   <span className="game-video-card__visual">{safeImageUrl(video.thumbnail) && <img src={safeImageUrl(video.thumbnail)} alt="" loading="lazy" />}<i><Play size={20} weight="bold" /></i></span>
-                  <span><small>{video.label}</small><strong>{video.title}</strong></span>
+                  <span><strong>{video.title}</strong></span>
                 </Link>)}
               </div>
             </section>
