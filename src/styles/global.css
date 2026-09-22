@@ -1739,6 +1739,7 @@ fieldset {
   padding: 18px;
   background: #292929;
   border: 1px solid #777;
+  border-radius: 10px;
   display: flex;
   gap: 15px;
   align-items: center;
