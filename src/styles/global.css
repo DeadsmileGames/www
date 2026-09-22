@@ -742,6 +742,10 @@ fieldset {
 .game-details {
   padding-top: 76px;
 }
+.game-details__notfound {
+  padding-top: 130px;
+  padding-bottom: 90px;
+}
 .game-hero {
   position: relative;
   min-height: 550px;
