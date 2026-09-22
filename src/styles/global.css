@@ -471,8 +471,10 @@ fieldset {
 }
 .spotlight-art img {
   width: 100%;
+  aspect-ratio: 16/9;
   max-height: 550px;
-  object-fit: contain;
+  border-radius:10px;
+  object-fit: cover;
 }
 .studio-actions {
   display: flex;
@@ -500,6 +502,7 @@ fieldset {
 .studio-game-strip img {
   aspect-ratio: 16/10;
   width: 100%;
+  border-radius: 10px;
   object-fit: cover;
   margin-bottom: 18px;
 }
@@ -533,10 +536,12 @@ fieldset {
   aspect-ratio: 16/9;
   background: #282828;
   position: relative;
+  border-radius: 10px;
   margin-bottom: 22px;
 }
 .video-visual img {
   height: 100%;
+  border-radius: 10px;
   width: 100%;
   object-fit: cover;
 }
@@ -565,9 +570,18 @@ fieldset {
 .studio-news {
   background: #1d252e;
 }
+.news-title {
+  background: #151515;
+  border-radius: 10px;
+  padding: 20px;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+}
 .news-tile img {
   aspect-ratio: 16/10;
   width: 100%;
+  border-radius: 10px;
   object-fit: cover;
   margin-bottom: 20px;
 }
@@ -750,7 +764,7 @@ fieldset {
 .game-details__screenshots-grid,
 .game-details__videos > div {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 .game-details__screenshot-item img {

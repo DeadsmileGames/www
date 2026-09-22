@@ -55,13 +55,6 @@ export function Home() {
         className="full-page landing-page studio-landing"
       >
         <div className="logo-quote">
-          <h1>
-            <img
-              className="studio-logo"
-              src="/assets/branding/fullVLogo.svg"
-              alt="Deadsmile Games"
-            />
-          </h1>
         </div>
         <a href="#games" className="landing-next">
           Discover our games <ArrowDown size={18} />
