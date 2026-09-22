@@ -1178,6 +1178,7 @@ fieldset {
   display: grid;
   grid-template-columns: 210px minmax(0, 1fr);
   gap: 65px;
+  margin-top: 100px;
 }
 .account-page__layout > aside {
   display: flex;
@@ -1855,6 +1856,7 @@ fieldset {
 }
 .press-kit-page section {
   margin: 50px 0;
+  margin-top: 100px;
 }
 .press-kit__game-card {
   padding: 25px;

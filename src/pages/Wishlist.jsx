@@ -50,7 +50,9 @@ export function Wishlist() {
 
   if (loading) {
     return (
-      <div className="wishlist-page container">
+      <div className="wishlist-page container"
+        style={{ marginTop: 100 }}
+      >
         <Link to="/" className="back-link">
           <ArrowLeft weight="bold" />
           <span>Back</span>
