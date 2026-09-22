@@ -106,7 +106,7 @@ small {
   outline-offset: 5px;
 }
 ::selection {
-  background: #2a5488;
+  background: #ff0000b6;
   color: #fff;
 }
 .container {

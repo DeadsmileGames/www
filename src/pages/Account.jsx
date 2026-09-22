@@ -871,11 +871,11 @@ export function Account() {
                                         <div className="connection-row__actions">
                                             {itch.connected ? (
                                                 <>
-                                                    <Button type="button" variant="secondary" onClick={syncItch} disabled={itchBusy}>Refresh library</Button>
-                                                    <Button type="button" variant="ghost" onClick={disconnectItch} disabled={itchBusy}>Disconnect</Button>
+                                                    <Button type="button" variant="primary" onClick={syncItch} disabled={itchBusy}>Refresh library</Button>
+                                                    <Button type="button" variant="danger" onClick={disconnectItch} disabled={itchBusy}>Disconnect</Button>
                                                 </>
                                             ) : (
-                                                <Button type="button" variant="secondary" onClick={connectItch} disabled={itchBusy || itch.loading || itch.unavailable}>Connect itch.io</Button>
+                                                <Button type="button" variant="primary" onClick={connectItch} disabled={itchBusy || itch.loading || itch.unavailable}>Connect itch.io</Button>
                                             )}
                                         </div>
                                     </div>
