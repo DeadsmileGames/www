@@ -1217,8 +1217,8 @@ fieldset {
 }
 .account-nav-item.is-active,
 .account-nav-item--active {
-  background: #001cff;
-  color:white
+  background: #fff;
+  color:black
 }
 .account-nav-title {
   margin: 20px 14px 5px;
