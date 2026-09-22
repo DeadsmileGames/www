@@ -106,7 +106,7 @@ export function AppLayout() {
         Skip to content
       </a>
 
-      {!isAuthPage && (
+      {!isAuthPage &&  (
         <Header
           onOpenSearch={() => setSearchOpen(true)}
         />
