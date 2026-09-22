@@ -33,7 +33,7 @@ export function PublicProfile() {
         setError(false);
         setGallery(null);
         setSelected(null);
-        api.get(`/account/profile/${encodeURIComponent(username)}`)
+        api.get(`/account/profile/${encodeURIComponent(username.trim().toLowerCase())}`)
             .then((data) => {
                 if (!active) return;
                 if (!data || typeof data.username !== "string") setError(true);
