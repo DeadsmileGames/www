@@ -1626,6 +1626,7 @@ fieldset {
   padding: 42px 20px;
   text-align: center;
   background: #1b1b1b;
+  margin-bottom: 30px;
   border-radius: 8px;
 }
 .state-block__title {

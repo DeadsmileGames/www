@@ -10,7 +10,7 @@ export function ErrorState({
       <h3 className="state-block__title">{title}</h3>
       <p className="state-block__message">{message}</p>
       {onRetry && (
-        <Button variant="secondary" onClick={onRetry}>
+        <Button variant="primary" onClick={onRetry}>
           Try again
         </Button>
       )}
