@@ -1778,7 +1778,7 @@ fieldset {
 .rs-hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg, #0f0f0ff0, transparent);
+  background: linear-gradient(0deg, #000000f0, transparent);
 }
 .rs-hero__content {
   position: relative;
