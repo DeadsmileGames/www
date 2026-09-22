@@ -83,7 +83,7 @@ h2 {
   font-size: clamp(28px, 3.4vw, 44px);
 }
 h3 {
-  font-size: 24px;
+  font-size: 1.8rem;
 }
 p {
   margin: 0 0 22px;
@@ -812,6 +812,10 @@ fieldset {
   position: absolute;
   top: 40%;
   left: 45%;
+}
+.game-video-card strong {
+  margin-top: 10px;
+  font-size: 1.3rem;
 }
 .game-video-card strong,
 .game-video-card small {
