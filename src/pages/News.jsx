@@ -196,24 +196,23 @@ export function News() {
                                         {t("common.readMore")}
                                         <ArrowUpRight weight="bold" />
                                     </span>
+                                    {isAdmin && (
+                                        <button
+                                            className="btn btn--danger"
+                                            type="button"
+                                            onClick={() => remove(story.id)}
+                                            aria-label={`Delete ${story.title}`}
+                                            style={{
+                                                marginTop: "12px"
+                                            }}
+                                        >
+                                            <Trash weight="bold" />
+                                            Delete story
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </Link>
-
-                        {isAdmin && (
-                            <button
-                                className="btn btn--danger"
-                                type="button"
-                                onClick={() => remove(story.id)}
-                                aria-label={`Delete ${story.title}`}
-                                style={{
-                                    marginTop: "12px"
-                                }}
-                            >
-                                <Trash weight="bold" />
-                                Delete story
-                            </button>
-                        )}
                     </Reveal>
                 ))}
             </div>
