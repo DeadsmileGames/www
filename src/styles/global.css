@@ -1633,70 +1633,168 @@ fieldset {
   margin: 0 auto 20px;
   color: #b8b8b8;
 }
+
+/* Botão flutuante do admin */
 .admin-composer {
   position: fixed;
-  bottom: 25px;
-  right: 25px;
+  bottom: 20px;
+  right: 20px;
   z-index: 100;
 }
+
+/* Botão principal */
 .admin-composer__toggle {
-  width: 55px;
-  height: 55px;
+  width: 42px;
+  height: 42px;
   display: grid;
   place-items: center;
-  border: 0;
-  border-radius: 50%;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
   background: #2a5488;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+.admin-composer__toggle:hover {
+  background: #3569a5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.admin-composer__toggle:active {
+  transform: scale(0.96);
+}
+
+.admin-composer__toggle svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* Menu flutuante */
 .admin-composer__menu {
   position: absolute;
   right: 0;
-  bottom: 65px;
-  width: 230px;
-  padding: 15px;
-  background: #242424;
-  border: 1px solid #555;
+  bottom: 52px;
+  width: 205px;
+  max-width: calc(100vw - 32px);
+  padding: 6px;
+  background: #202024;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
 }
+
+/* Botões e links do menu */
 .admin-composer__menu button,
 .admin-composer__menu a {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 9px;
   width: 100%;
-  background: none;
+  min-height: 36px;
+  padding: 8px 10px;
+  background: transparent;
   border: 0;
-  padding: 12px;
+  border-radius: 7px;
+  color: #e5e5e5;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
   text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.admin-composer__menu button:hover,
+.admin-composer__menu a:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.admin-composer__menu svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 .admin-composer__label {
-  color: #aaa;
-  font-size: 12px;
-  padding: 10px;
+  padding: 8px 10px 5px;
+  color: #85858f;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
 }
 .admin-modal__row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 .admin-check {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.admin-check input {
+  width: 15px;
+  height: 15px;
+  accent-color: #2a5488;
 }
 .admin-manage__section {
-  margin: 30px 0;
+  margin: 18px 0;
 }
+
 .admin-manage__item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  border-bottom: 1px solid #444;
-  padding: 15px 0;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 12px;
 }
+
 .admin-manage__item img {
-  width: 65px;
-  height: 45px;
+  width: 52px;
+  height: 36px;
   object-fit: cover;
+  border-radius: 5px;
+  flex-shrink: 0;
 }
+@media (max-width: 480px) {
+  .admin-composer {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .admin-composer__menu {
+    bottom: 50px;
+    width: 195px;
+  }
+
+  .admin-modal__row {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-composer__toggle,
+  .admin-composer__menu button,
+  .admin-composer__menu a {
+    transition: none;
+  }
+}
+
 .cookie-consent {
   position: fixed;
   bottom: 20px;
