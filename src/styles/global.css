@@ -749,7 +749,7 @@ fieldset {
 .game-details__screenshots-grid,
 .game-details__videos > div {
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
 }
 .game-details__screenshot-item img {
@@ -1053,12 +1053,7 @@ fieldset {
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 0 100px #000;
-  background: rgba(12, 12, 12, 0.72);
-  backdrop-filter: blur(20px);
-  transition:
-    background 0.4s ease,
-    border-color 0.4s ease,
-    transform 0.4s ease;
+  background: #111;
 }
 .auth-page h1 {
   text-align: center;
