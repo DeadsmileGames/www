@@ -8,7 +8,25 @@ import {
 import { api } from "../../services/api";
 import { Button } from "../ui/Button";
 
-const MAX_SAVE_BYTES = 256 * 1024;
+const MAX_SAVE_BYTES = 1024;
+
+function validarSavePico8(file, conteudo) {
+    if (!/\.p8d\.txt$/i.test(file.name)) {
+        throw new Error("Somente arquivos .p8d.txt do PICO-8 são permitidos.");
+    }
+
+    if (file.size < 1 || file.size > MAX_SAVE_BYTES) {
+        throw new Error("O arquivo não possui o tamanho esperado para um save do PICO-8.");
+    }
+
+    const linhas = conteudo.replace(/\r\n/g, "\n").replace(/\n$/, "").split("\n");
+
+    if (linhas.length !== 8 || !linhas.every((linha) => /^[0-9a-fA-F]{64}$/.test(linha))) {
+        throw new Error("Save inválido: o arquivo deve conter 8 linhas de 64 caracteres hexadecimais.");
+    }
+
+    return true;
+}
 
 function bytesToBase64(bytes) {
     let binary = "";
@@ -186,20 +204,16 @@ export function CloudSaves() {
             });
             return;
         }
-        if (file.size < 1 || file.size > MAX_SAVE_BYTES) {
-            setMessage({
-                type: "error",
-                text: "Cloud save files must be 256 KiB or smaller.",
-            });
-            return;
-        }
         setBusy(true);
         try {
+            const conteudo = await file.text();
+            validarSavePico8(file, conteudo);
             const bytes = new Uint8Array(await file.arrayBuffer());
             const existing = saves.find((item) => item.slot === slot);
             await api.put(
                 `/platform/saves/${encodeURIComponent(gameId)}/${encodeURIComponent(slot)}`,
                 {
+                    filename: file.name,
                     payload: bytesToBase64(bytes),
                     revision: existing?.revision ?? null,
                 },
@@ -304,15 +318,31 @@ export function CloudSaves() {
                     </div>
                     <div className="account-row account-row--last">
                         <label htmlFor="cloud-file">
-                            Save file · max 256 KiB
+                            Save file · .p8d.txt only · max 1 KiB
                         </label>
                         <input
                             ref={fileRef}
                             id="cloud-file"
                             type="file"
-                            onChange={(event) =>
-                                setFile(event.target.files?.[0] || null)
-                            }
+                            accept=".p8d.txt"
+                            onChange={(event) => {
+                                const selectedFile = event.target.files?.[0] || null;
+                                setFile(null);
+                                setMessage({ type: "", text: "" });
+
+                                if (!selectedFile) return;
+
+                                if (!/\.p8d\.txt$/i.test(selectedFile.name)) {
+                                    setMessage({
+                                        type: "error",
+                                        text: "Selecione somente arquivos .p8d.txt do PICO-8.",
+                                    });
+                                    event.target.value = "";
+                                    return;
+                                }
+
+                                setFile(selectedFile);
+                            }}
                             required
                         />
                     </div>
