@@ -69,12 +69,21 @@ export function AuthProvider({ children }) {
   }, []);
 
   const register = useCallback(async (payload) => {
-    const me = await api.post('/auth/register', payload);
+      const result = await api.post(
+          "/auth/register",
+          payload
+      );
 
-    setUser(me);
-    setStatus('authenticated');
+      if (result?.verificationRequired) {
+          setUser(null);
+          setStatus("guest");
 
-    return me;
+          return result;
+      }
+      setUser(result);
+      setStatus("authenticated");
+
+      return result;
   }, []);
 
   const logout = useCallback(async () => {

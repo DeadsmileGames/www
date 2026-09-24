@@ -126,11 +126,15 @@ export function PublicProfile() {
                                 />
                                 <div>
                                     <h3>{game.title}</h3>
-                                    <p>
-                                        <Clock size={14} weight="bold" />
-                                        {duration(game.totalMs)} ·{" "}
-                                        {game.sessions} sessions
-                                    </p>
+                                    {game.totalMs != null &&
+                                        game.sessions != null && (
+                                            <p>
+                                                <Clock size={14} weight="bold" />
+
+                                                {duration(game.totalMs)} ·{" "}
+                                                {game.sessions} sessions
+                                            </p>
+                                        )}
                                     <div className="profile-game-actions">
                                         <Link to={`/games/${game.slug}`} className="btn btn--primary">
                                             View game

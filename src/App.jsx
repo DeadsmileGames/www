@@ -10,6 +10,10 @@ const GameDetails = page(() => import('./pages/GameDetails'), 'GameDetails');
 const Search = page(() => import('./pages/Search'), 'Search');
 const Login = page(() => import('./pages/Login'), 'Login');
 const Register = page(() => import('./pages/Register'), 'Register');
+const VerifyEmail = page(
+    () => import('./pages/VerifyEmail'),
+    'VerifyEmail'
+);
 const Account = page(() => import('./pages/Account'), 'Account');
 const Privacy = page(() => import('./pages/Privacy'), 'Privacy');
 const Terms = page(() => import('./pages/Terms'), 'Terms');
@@ -41,6 +45,10 @@ export default function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+            path="/verify-email"
+            element={<VerifyEmail />}
+        />
         <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
         <Route path="/profile/:username" element={<PublicProfile />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

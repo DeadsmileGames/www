@@ -2,6 +2,18 @@ const CODE_MESSAGES = {
   CSRF_INIT_FAILED: 'Refresh the page and try again.',
   CSRF_VALIDATION_FAILED: 'Refresh the page and try again.',
   EMAIL_TAKEN: 'That email is already registered.',
+  EMAIL_NOT_VERIFIED:
+  'Confirm your email address before signing in.',
+  EMAIL_CONFIRMATION_INVALID:
+    'This email confirmation link is invalid or has expired.',
+  EMAIL_CONFIRMATION_COOLDOWN:
+    'Please wait one minute before requesting another confirmation email.',
+  EMAIL_CHANGE_REQUIRES_VERIFICATION:
+    'Use the email confirmation form to change your email address.',
+  EMAIL_UNCHANGED:
+    'Enter a different email address.',
+  INVALID_PASSWORD:
+    'Your current account password is incorrect.',
   FORBIDDEN: 'You do not have permission to do that.',
   GAME_ACCESS_REQUIRED: 'This game is not available in your library.',
   GAME_NOT_FOUND: 'That game could not be found.',

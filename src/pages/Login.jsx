@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useAuth } from "../hooks/useAuth";
+import { api } from "../services/api";
 import { Button } from "../components/ui/Button";
 import { ArrowLeft, ShieldCheck } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
@@ -18,6 +19,16 @@ export function Login() {
     });
 
     const [error, setError] = useState(null);
+    const [
+        needsEmailVerification,
+        setNeedsEmailVerification
+    ] = useState(false);
+
+    const [emailResent, setEmailResent] =
+        useState(false);
+
+    const [resending, setResending] =
+        useState(false);
     const [submitting, setSubmitting] = useState(false);
 
     const recaptchaRef = useRef(null);
@@ -49,7 +60,10 @@ export function Login() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+
         setError(null);
+        setNeedsEmailVerification(false);
+        setEmailResent(false);
 
         if (!recaptchaSiteKey) {
             setError("Security verification is not configured. Please try again later.");
@@ -78,11 +92,52 @@ export function Login() {
 
             navigate(from, { replace: true });
         } catch (err) {
-            setError(err?.message || "Unable to sign in. Please try again.");
+            if (err?.code === "EMAIL_NOT_VERIFIED") {
+                setNeedsEmailVerification(true);
+
+                setError(
+                    "Your email address has not been confirmed. " +
+                    "Check your inbox or request another confirmation link."
+                );
+            } else {
+                setNeedsEmailVerification(false);
+
+                setError(
+                    err?.message ||
+                    "Unable to sign in. Please try again."
+                );
+            }
+
             setRecaptchaToken(null);
             recaptchaRef.current?.reset();
         } finally {
             setSubmitting(false);
+        }
+    }
+
+    async function resendConfirmation() {
+        if (resending) {
+            return;
+        }
+
+        setResending(true);
+        setEmailResent(false);
+        setError(null);
+
+        try {
+            await api.post("/auth/resend-email", {
+                email: form.email.trim().toLowerCase(),
+                password: form.password
+            });
+
+            setEmailResent(true);
+        } catch (err) {
+            setError(
+                err?.message ||
+                "Unable to resend your confirmation email."
+            );
+        } finally {
+            setResending(false);
         }
     }
 
@@ -142,6 +197,39 @@ export function Login() {
                     >
                         {error}
                     </p>
+                )}
+
+                {needsEmailVerification && !twoFactorRequired && (
+                    <div className="account-panel">
+
+                        <p>
+                            Didn't receive your confirmation email?
+                        </p>
+
+                        <p>
+                            Check your spam folder or request another link.
+                        </p>
+
+                        <button
+                            type="button"
+                            className="btn btn--secondary"
+                            onClick={resendConfirmation}
+                            disabled={resending}
+                        >
+                            {resending
+                                ? "Sending..."
+                                : "Resend confirmation email"}
+                        </button>
+
+                        {emailResent && (
+                            <p role="status">
+                                If your credentials are valid and your
+                                email is still unverified, a new
+                                confirmation link has been sent.
+                            </p>
+                        )}
+
+                    </div>
                 )}
 
                 {!twoFactorRequired ? (

@@ -88,7 +88,12 @@ export function Register() {
         recaptchaToken,
       });
 
-      navigate('/account', { replace: true });
+      navigate("/verify-email", {
+          replace: true,
+          state: {
+              registered: true
+          }
+      });
     } catch (err) {
       setError(err?.message || 'Unable to create your account.');
       setRecaptchaToken(null);

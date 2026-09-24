@@ -50,6 +50,28 @@ export function Account() {
         avatarUrl: user?.avatarUrl || null,
     });
     const [password, setPassword] = useState("");
+    const [emailPassword, setEmailPassword] =
+        useState("");
+
+    const [emailMessage, setEmailMessage] =
+        useState("");
+    const [privacy, setPrivacy] = useState({
+        shareGameActivity: false,
+        sharePlaytime: false,
+        shareAchievements: false
+    });
+
+    const [privacyLoading, setPrivacyLoading] =
+        useState(true);
+
+    const [privacySaving, setPrivacySaving] =
+        useState(false);
+
+    const [privacyMessage, setPrivacyMessage] =
+        useState("");
+
+    const [privacyError, setPrivacyError] =
+        useState("");
     const [profileError, setProfileError] = useState("");
     const [settingsError, setSettingsError] = useState("");
     const [deleteError, setDeleteError] = useState("");
@@ -75,6 +97,53 @@ export function Account() {
     const [itch, setItch] = useState({ loading: true, connected: false });
     const [itchBusy, setItchBusy] = useState(false);
     const [itchMessage, setItchMessage] = useState("");
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function loadPrivacy() {
+            setPrivacyLoading(true);
+            setPrivacyError("");
+
+            try {
+                const result = await api.get(
+                    "/account/privacy"
+                );
+
+                if (cancelled) {
+                    return;
+                }
+
+                setPrivacy({
+                    shareGameActivity:
+                        Boolean(result.shareGameActivity),
+
+                    sharePlaytime:
+                        Boolean(result.sharePlaytime),
+
+                    shareAchievements:
+                        Boolean(result.shareAchievements)
+                });
+            } catch (err) {
+                if (!cancelled) {
+                    setPrivacyError(
+                        err?.message ||
+                        "Unable to load your privacy preferences."
+                    );
+                }
+            } finally {
+                if (!cancelled) {
+                    setPrivacyLoading(false);
+                }
+            }
+        }
+
+        loadPrivacy();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
@@ -342,8 +411,7 @@ export function Account() {
                 bio: form.bio,
                 websiteUrl: form.websiteUrl,
                 location: form.location,
-                avatarUrl: form.avatarUrl,
-                email: form.email,
+                avatarUrl: form.avatarUrl
             });
             await refresh();
         });
@@ -351,18 +419,112 @@ export function Account() {
 
     async function saveSettings(e) {
         e.preventDefault();
+
         setSettingsError("");
-        await withSaveModal("Saving settings", setSaving, async () => {
-            await api.patch("/account", {
-                username: form.username,
-                email: form.email,
-                bio: form.bio,
-                websiteUrl: form.websiteUrl,
-                location: form.location,
-                avatarUrl: form.avatarUrl,
+        setEmailMessage("");
+
+        const newEmail = form.email
+            .trim()
+            .toLowerCase();
+
+        const currentEmail = user.email
+            .trim()
+            .toLowerCase();
+
+        if (newEmail === currentEmail) {
+            setSettingsError(
+                "Enter a new email address."
+            );
+
+            return;
+        }
+
+        if (!emailPassword) {
+            setSettingsError(
+                "Enter your current account password."
+            );
+
+            return;
+        }
+
+        setSaving(true);
+
+        try {
+            await api.post(
+                "/account/email/change",
+                {
+                    email: newEmail,
+                    password: emailPassword
+                }
+            );
+
+            setEmailPassword("");
+
+            setEmailMessage(
+                "A confirmation link has been sent to " +
+                newEmail +
+                ". Your current email address will remain " +
+                "active until you confirm the new one."
+            );
+        } catch (err) {
+            setSettingsError(
+                err?.message ||
+                "Unable to request the email change."
+            );
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    async function savePrivacy() {
+        if (privacySaving || privacyLoading) {
+            return;
+        }
+
+        setPrivacySaving(true);
+        setPrivacyMessage("");
+        setPrivacyError("");
+
+        try {
+            const result = await api.put(
+                "/account/privacy",
+                {
+                    shareGameActivity:
+                        privacy.shareGameActivity,
+
+                    sharePlaytime:
+                        privacy.shareGameActivity &&
+                        privacy.sharePlaytime,
+
+                    shareAchievements:
+                        privacy.shareAchievements
+                }
+            );
+
+            setPrivacy({
+                shareGameActivity:
+                    Boolean(result.shareGameActivity),
+
+                sharePlaytime:
+                    Boolean(result.sharePlaytime),
+
+                shareAchievements:
+                    Boolean(result.shareAchievements)
             });
+
             await refresh();
-        });
+
+            setPrivacyMessage(
+                "Your privacy preferences have been saved."
+            );
+        } catch (err) {
+            setPrivacyError(
+                err?.message ||
+                "Unable to save your privacy preferences."
+            );
+        } finally {
+            setPrivacySaving(false);
+        }
     }
 
     async function del(e) {
@@ -610,14 +772,48 @@ export function Account() {
                                         <label htmlFor="acc-email">
                                             Email
                                         </label>
+                                        
                                         <input
                                             id="acc-email"
                                             type="email"
                                             required
                                             maxLength={254}
-                                            value={form.email.toLowerCase()}
+                                            autoComplete="email"
+                                            value={form.email}
                                             onChange={set("email")}
                                         />
+
+                                        <p>
+                                            Current email: {user.email}
+                                        </p>
+
+                                        <p>
+                                            Enter your new email address and your
+                                            current password to request the change.
+                                        </p>
+
+                                        <label htmlFor="acc-email-password">
+                                            Current account password
+                                        </label>
+
+                                        <input
+                                            id="acc-email-password"
+                                            type="password"
+                                            required
+                                            minLength={1}
+                                            maxLength={128}
+                                            autoComplete="current-password"
+                                            value={emailPassword}
+                                            onChange={(e) =>
+                                                setEmailPassword(e.target.value)
+                                            }
+                                        />
+
+                                        {emailMessage && (
+                                            <p role="status">
+                                                {emailMessage}
+                                            </p>
+                                        )}
                                         <button
                                             type="button"
                                             className="btn btn--primary"
@@ -658,10 +854,158 @@ export function Account() {
                                             variant="secondary"
                                             disabled={saving}
                                         >
-                                            Save settings
+                                            {saving
+                                                ? "Sending confirmation..."
+                                                : "Request email change"}
                                         </Button>
                                     </div>
                                 </form>
+
+                                <section
+                                    className="account-panel"
+                                    style={{ marginTop: 20 }}
+                                    aria-label="Privacy preferences"
+                                >
+                                    <h3>Privacy preferences</h3>
+
+                                    <p>
+                                        Choose what other people can see
+                                        on your public profile.
+                                    </p>
+
+                                    <p>
+                                        Your game activity and achievements
+                                        are private by default.
+                                    </p>
+
+                                    {privacyLoading ? (
+                                        <p>Loading preferences...</p>
+                                    ) : (
+                                        <>
+                                            <div className="account-row">
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={
+                                                            privacy.shareGameActivity
+                                                        }
+                                                        onChange={(e) => {
+                                                            const checked =
+                                                                e.target.checked;
+
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                shareGameActivity:
+                                                                    checked,
+
+                                                                sharePlaytime:
+                                                                    checked
+                                                                        ? current.sharePlaytime
+                                                                        : false
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Share recently played games
+                                                </label>
+
+                                                <p>
+                                                    Allow other people to see
+                                                    which games you have played.
+                                                </p>
+                                            </div>
+
+                                            <div className="account-row">
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={
+                                                            privacy.sharePlaytime
+                                                        }
+                                                        disabled={
+                                                            !privacy.shareGameActivity
+                                                        }
+                                                        onChange={(e) => {
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                sharePlaytime:
+                                                                    e.target.checked
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Show playtime and session count
+                                                </label>
+
+                                                <p>
+                                                    Show how long you have played
+                                                    and how many sessions you have completed.
+                                                </p>
+                                            </div>
+
+                                            <div className="account-row">
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={
+                                                            privacy.shareAchievements
+                                                        }
+                                                        onChange={(e) => {
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                shareAchievements:
+                                                                    e.target.checked
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Share achievements
+                                                </label>
+
+                                                <p>
+                                                    Allow other people to see
+                                                    your unlocked achievements.
+                                                </p>
+                                            </div>
+
+                                            <div className="account-block__foot">
+
+                                                {privacyError && (
+                                                    <p
+                                                        className="account-page__error"
+                                                        role="alert"
+                                                    >
+                                                        {privacyError}
+                                                    </p>
+                                                )}
+
+                                                {privacyMessage && (
+                                                    <p role="status">
+                                                        {privacyMessage}
+                                                    </p>
+                                                )}
+
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+                                                    onClick={savePrivacy}
+                                                    disabled={
+                                                        privacySaving ||
+                                                        privacyLoading
+                                                    }
+                                                >
+                                                    {privacySaving
+                                                        ? "Saving..."
+                                                        : "Save privacy preferences"}
+                                                </Button>
+
+                                            </div>
+                                        </>
+                                    )}
+                                </section>
 
                                 <div className="account-panel" style={{marginTop: 20}}>
                                     <div className="account-row account-row--last account-row--inline">
