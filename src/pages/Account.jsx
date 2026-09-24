@@ -12,6 +12,7 @@ import {
     ShieldCheck,
     CloudArrowUp,
     Heart,
+    Eye,
     PencilSimple,
     ArrowCounterClockwise,
     ArrowClockwise,
@@ -28,6 +29,7 @@ import { FOCUSABLE_SELECTOR, lockBodyScroll } from "../utils/dom";
 const TABS = [
     { id: "profile", label: "Profile", icon: User },
     { id: "account", label: "Account", icon: GearSix },
+    { id: "privacy", label: "Privacy", icon: Eye },
     { id: "security", label: "Security", icon: ShieldCheck },
     { id: "connections", label: "Connections", icon: GameController },
     { id: "cloud", label: "Cloud saves", icon: CloudArrowUp },
@@ -861,152 +863,6 @@ export function Account() {
                                     </div>
                                 </form>
 
-                                <section
-                                    className="account-panel"
-                                    style={{ marginTop: 20 }}
-                                    aria-label="Privacy preferences"
-                                >
-                                    <h3>Privacy preferences</h3>
-
-                                    <p>
-                                        Choose what other people can see
-                                        on your public profile.
-                                    </p>
-
-                                    <p>
-                                        Your game activity and achievements
-                                        are private by default.
-                                    </p>
-
-                                    {privacyLoading ? (
-                                        <p>Loading preferences...</p>
-                                    ) : (
-                                        <>
-                                            <div className="account-row">
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={
-                                                            privacy.shareGameActivity
-                                                        }
-                                                        onChange={(e) => {
-                                                            const checked =
-                                                                e.target.checked;
-
-                                                            setPrivacy((current) => ({
-                                                                ...current,
-
-                                                                shareGameActivity:
-                                                                    checked,
-
-                                                                sharePlaytime:
-                                                                    checked
-                                                                        ? current.sharePlaytime
-                                                                        : false
-                                                            }));
-                                                        }}
-                                                    />
-
-                                                    Share recently played games
-                                                </label>
-
-                                                <p>
-                                                    Allow other people to see
-                                                    which games you have played.
-                                                </p>
-                                            </div>
-
-                                            <div className="account-row">
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={
-                                                            privacy.sharePlaytime
-                                                        }
-                                                        disabled={
-                                                            !privacy.shareGameActivity
-                                                        }
-                                                        onChange={(e) => {
-                                                            setPrivacy((current) => ({
-                                                                ...current,
-
-                                                                sharePlaytime:
-                                                                    e.target.checked
-                                                            }));
-                                                        }}
-                                                    />
-
-                                                    Show playtime and session count
-                                                </label>
-
-                                                <p>
-                                                    Show how long you have played
-                                                    and how many sessions you have completed.
-                                                </p>
-                                            </div>
-
-                                            <div className="account-row">
-                                                <label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={
-                                                            privacy.shareAchievements
-                                                        }
-                                                        onChange={(e) => {
-                                                            setPrivacy((current) => ({
-                                                                ...current,
-
-                                                                shareAchievements:
-                                                                    e.target.checked
-                                                            }));
-                                                        }}
-                                                    />
-
-                                                    Share achievements
-                                                </label>
-
-                                                <p>
-                                                    Allow other people to see
-                                                    your unlocked achievements.
-                                                </p>
-                                            </div>
-
-                                            <div className="account-block__foot">
-
-                                                {privacyError && (
-                                                    <p
-                                                        className="account-page__error"
-                                                        role="alert"
-                                                    >
-                                                        {privacyError}
-                                                    </p>
-                                                )}
-
-                                                {privacyMessage && (
-                                                    <p role="status">
-                                                        {privacyMessage}
-                                                    </p>
-                                                )}
-
-                                                <Button
-                                                    type="button"
-                                                    variant="secondary"
-                                                    onClick={savePrivacy}
-                                                    disabled={
-                                                        privacySaving ||
-                                                        privacyLoading
-                                                    }
-                                                >
-                                                    {privacySaving
-                                                        ? "Saving..."
-                                                        : "Save privacy preferences"}
-                                                </Button>
-
-                                            </div>
-                                        </>
-                                    )}
-                                </section>
-
                                 <div className="account-panel" style={{marginTop: 20}}>
                                     <div className="account-row account-row--last account-row--inline">
                                         <div>
@@ -1071,6 +927,178 @@ export function Account() {
                                         </Button>
                                     </div>
                                 </form>
+                            </section>
+                        </Reveal>
+                    )}
+
+                    {activeTab === "privacy" && (
+                        <Reveal key="privacy">
+                            <section className="account-block">
+
+                                <div className="account-block__head">
+                                    <h2>Privacy</h2>
+
+                                    <p>
+                                        Manage what other people can see
+                                        on your public profile.
+                                    </p>
+                                </div>
+
+                                <div className="account-panel">
+
+                                    <h3>Privacy preferences</h3>
+
+                                    <p>
+                                        Your game activity and achievements
+                                        are private by default.
+                                    </p>
+
+                                    {privacyLoading ? (
+                                        <p>Loading preferences...</p>
+                                    ) : (
+                                        <>
+                                            <div className="account-row">
+
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+
+                                                        checked={
+                                                            privacy.shareGameActivity
+                                                        }
+
+                                                        onChange={(e) => {
+                                                            const checked =
+                                                                e.target.checked;
+
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                shareGameActivity:
+                                                                    checked,
+
+                                                                sharePlaytime:
+                                                                    checked
+                                                                        ? current.sharePlaytime
+                                                                        : false
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Share recently played games
+                                                </label>
+
+                                                <p>
+                                                    Allow other people to see
+                                                    which games you have played.
+                                                </p>
+
+                                            </div>
+
+                                            <div className="account-row">
+
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+
+                                                        checked={
+                                                            privacy.sharePlaytime
+                                                        }
+
+                                                        disabled={
+                                                            !privacy.shareGameActivity
+                                                        }
+
+                                                        onChange={(e) => {
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                sharePlaytime:
+                                                                    e.target.checked
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Show playtime and session count
+                                                </label>
+
+                                                <p>
+                                                    Show how long you have played
+                                                    and how many sessions you
+                                                    have completed.
+                                                </p>
+
+                                            </div>
+
+                                            <div className="account-row account-row--last">
+
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+
+                                                        checked={
+                                                            privacy.shareAchievements
+                                                        }
+
+                                                        onChange={(e) => {
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                shareAchievements:
+                                                                    e.target.checked
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Share achievements
+                                                </label>
+
+                                                <p>
+                                                    Allow other people to see
+                                                    your unlocked achievements.
+                                                </p>
+
+                                            </div>
+
+                                            <div className="account-block__foot">
+
+                                                {privacyError && (
+                                                    <p
+                                                        className="account-page__error"
+                                                        role="alert"
+                                                    >
+                                                        {privacyError}
+                                                    </p>
+                                                )}
+
+                                                {privacyMessage && (
+                                                    <p role="status">
+                                                        {privacyMessage}
+                                                    </p>
+                                                )}
+
+                                                <Button
+                                                    type="button"
+                                                    variant="secondary"
+
+                                                    onClick={savePrivacy}
+
+                                                    disabled={
+                                                        privacySaving ||
+                                                        privacyLoading
+                                                    }
+                                                >
+                                                    {privacySaving
+                                                        ? "Saving..."
+                                                        : "Save privacy preferences"}
+                                                </Button>
+
+                                            </div>
+                                        </>
+                                    )}
+
+                                </div>
+
                             </section>
                         </Reveal>
                     )}
