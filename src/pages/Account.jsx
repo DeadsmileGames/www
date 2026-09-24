@@ -840,6 +840,15 @@ export function Account() {
 
                                             <CaretRight size={20} />
                                         </button>
+                                        <Button
+                                            type="submit"
+                                            variant="primary"
+                                            disabled={saving}
+                                        >
+                                            {saving
+                                                ? "Sending confirmation..."
+                                                : "Request email change"}
+                                        </Button>
                                     </div>
                                     <div className="account-block__foot">
                                         {settingsError && (
@@ -851,15 +860,6 @@ export function Account() {
                                                 {settingsError}
                                             </p>
                                         )}
-                                        <Button
-                                            type="submit"
-                                            variant="secondary"
-                                            disabled={saving}
-                                        >
-                                            {saving
-                                                ? "Sending confirmation..."
-                                                : "Request email change"}
-                                        </Button>
                                     </div>
                                 </form>
 
@@ -1079,7 +1079,7 @@ export function Account() {
 
                                                 <Button
                                                     type="button"
-                                                    variant="secondary"
+                                                    variant="primary"
 
                                                     onClick={savePrivacy}
 
