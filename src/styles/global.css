@@ -804,6 +804,7 @@ fieldset {
   width: 100%;
   aspect-ratio: 16/9;
   object-fit: cover;
+  border-radius: 10px;
   cursor: zoom-in;
 }
 .game-meta {
@@ -2156,6 +2157,9 @@ fieldset {
   .search-overlay__filters button {
     min-height: 40px;
     white-space: nowrap;
+  }
+  .game-details__screenshots-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
   .search-overlay__close {
     grid-column: 2;
