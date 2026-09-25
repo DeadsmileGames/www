@@ -1011,6 +1011,7 @@ fieldset {
 .support-quick-grid a {
   display: flex;
   align-items: center;
+  border-radius: 10px;
   gap: 16px;
   padding: 22px;
   background: #232323;
