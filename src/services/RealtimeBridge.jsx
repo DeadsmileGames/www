@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api, API_BASE_URL } from './api';
+import { useToast } from '../components/ui/Toast';
 
 function emit(event) {
   window.dispatchEvent(new CustomEvent('deadsmile:live', { detail: event }));
@@ -23,6 +24,7 @@ function writeCursor(key, value) {
 
 export function RealtimeBridge() {
   const { status, user } = useAuth();
+  const { push } = useToast();
 
   useEffect(() => {
     if (status === 'loading' || typeof WebSocket === 'undefined') return undefined;
@@ -45,6 +47,9 @@ export function RealtimeBridge() {
       after = id;
       writeCursor(cursorKey, after);
       emit(event);
+      if (event?.event_type?.endsWith('.published')) {
+        push(`${event.payload?.title || 'New content'} is now available.`, 'info');
+      }
     };
 
     const poll = async () => {
