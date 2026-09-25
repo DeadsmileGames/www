@@ -2326,3 +2326,16 @@ display: flex;
     transition: none !important;
   }
 }
+.game-details__launcher-hint {
+  flex-basis: 100%;
+  margin: 8px 0 0;
+  color: white;
+  padding: 10px 20px;
+  background: #ffa70040;
+  border-radius: 5px;
+}
+
+.game-details__launcher-hint a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
