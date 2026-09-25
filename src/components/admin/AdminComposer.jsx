@@ -14,6 +14,7 @@ import {
   CheckCircle,
   WarningCircle,
   Gear,
+  PencilSimple,
   RocketLaunch,
 } from '@phosphor-icons/react';
 
@@ -55,7 +56,8 @@ function normalizeList(response) {
 
 export function AdminComposer() {
   const { user, refresh } = useAuth();
-
+  const [editing, setEditing] = useState(null);
+  const [openingEdit, setOpeningEdit] = useState(null);
   const [type, setType] = useState(null);
   const [form, setForm] = useState({ ...initial });
   const [saving, setSaving] = useState(false);
@@ -82,6 +84,7 @@ export function AdminComposer() {
 
   function open(typeName) {
     setType(typeName);
+    setEditing(null);
     setMenuOpen(false);
     setForm({ ...initial });
     setError('');
@@ -91,6 +94,7 @@ export function AdminComposer() {
   function closeComposer() {
     if (saving) return;
     setType(null);
+    setEditing(null);
     setError('');
     setSaved(false);
   }
@@ -106,6 +110,92 @@ export function AdminComposer() {
       throw err;
     }
   }
+
+  async function edit(kind, item) {
+    if (openingEdit) return;
+
+    setOpeningEdit(`${kind}:${item.id}`);
+    setError("");
+
+    try {
+        let detail;
+        let nextType;
+        let nextForm = { ...initial };
+
+        if (kind === "news") {
+            detail = await authedRequest(() =>
+                api.get(`/news/${encodeURIComponent(item.slug)}`)
+            );
+
+            nextType = "newsletter";
+
+            nextForm = {
+                ...nextForm,
+                title: detail.title || "",
+                excerpt: detail.excerpt || "",
+                body: detail.body || "",
+                image: detail.image || "",
+            };
+        } else if (kind === "videos") {
+            detail = await authedRequest(() =>
+                api.get(`/videos/${encodeURIComponent(item.id)}`)
+            );
+
+            nextType = "video";
+
+            nextForm = {
+                ...nextForm,
+                title: detail.title || "",
+                category: detail.category || "",
+                thumbnail: detail.thumbnail || "",
+                videoUrl: detail.video_url || "",
+                durationSeconds: detail.duration_seconds ?? "",
+            };
+        } else if (kind === "games") {
+            detail = await authedRequest(() =>
+                api.get(`/games/${encodeURIComponent(item.slug)}`)
+            );
+
+            nextType = "game";
+
+            nextForm = {
+                ...nextForm,
+                title: detail.title || "",
+                slug: detail.slug || "",
+                shortDescription: detail.shortDescription || "",
+                description: detail.description || "",
+                status: detail.status || "announced",
+                releaseDate: detail.releaseDate
+                    ? String(detail.releaseDate).slice(0, 10)
+                    : "",
+                heroImage: detail.heroImage || "",
+                coverImage: detail.coverImage || "",
+                trailerUrl: detail.trailerUrl || "",
+                featured: Boolean(detail.featured),
+                genres: (detail.genres || []).join(", "),
+                platforms: (detail.platforms || []).join(", "),
+                purchaseUrl: detail.purchaseUrl || "",
+                itchGameId: detail.itchGameId ?? "",
+                downloadUrl: detail.downloadUrl || "",
+            };
+        } else {
+            return;
+        }
+
+        setForm(nextForm);
+        setEditing({ kind, id: item.id });
+        setSaved(false);
+        setManage(false);
+        setType(nextType);
+    } catch (err) {
+        setError(
+            err?.message ||
+            "Unable to load this item for editing."
+        );
+    } finally {
+        setOpeningEdit(null);
+    }
+}
 
   async function submit(event) {
     event.preventDefault();
@@ -158,10 +248,18 @@ export function AdminComposer() {
         };
       }
 
-      await authedRequest(() => api.post(path, payload));
+      await authedRequest(() =>
+          editing
+              ? api.put(
+                    `${path}/${encodeURIComponent(editing.id)}`,
+                    payload
+                )
+              : api.post(path, payload)
+      );
       setSaved(true);
       window.setTimeout(() => {
         setType(null);
+        setEditing(null);
       }, 500);
     } catch (err) {
       setError(err?.message || 'Unable to publish.');
@@ -280,7 +378,9 @@ export function AdminComposer() {
         <div className="admin-modal">
           <header>
             <div>
-              <h2 id="admin-composer-title">Publish {type}</h2>
+              <h2 id="admin-composer-title">
+                  {editing ? "Edit" : "Publish"} {type}
+              </h2>
             </div>
             <button
               type="button"
@@ -365,12 +465,18 @@ export function AdminComposer() {
             {saved && (
               <p className="admin-modal__saved">
                 <CheckCircle weight="bold" />
-                <span>Published successfully.</span>
+                <span>
+                    {editing ? "Changes saved." : "Published successfully."}
+                </span>
               </p>
             )}
 
             <Button type="submit" disabled={saving}>
-              {saving ? 'Saving…' : 'Save & publish'}
+              {saving
+                ? "Saving…"
+                : editing
+                  ? "Save changes"
+                  : "Save & publish"}
             </Button>
           </form>
         </div>
@@ -417,6 +523,22 @@ export function AdminComposer() {
                           <div>
                             <strong>{item.title}</strong>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => edit(key, item)}
+                            disabled={
+                                Boolean(openingEdit) ||
+                                deleting === deleteKey
+                            }
+                            className="btn btn--primary"
+                            aria-label={`Edit ${item.title}`}
+                        >
+                            {openingEdit === deleteKey ? (
+                                <span>…</span>
+                            ) : (
+                                <PencilSimple weight="bold" />
+                            )}
+                        </button>
                           <button
                             type="button"
                             onClick={() => remove(key, item.id)}

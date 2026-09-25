@@ -7,6 +7,55 @@ import { ArrowLeft, ArrowUpRight, Trash } from "@phosphor-icons/react";
 import { api } from "../services/api";
 import { safeImageUrl } from "../utils/urls";
 
+function NewswireBody({ body }) {
+    const text = String(body || "");
+
+    const badgePattern =
+        /<a\b[^>]*href=["']https:\/\/get\.microsoft\.com\/installer\/download\/([a-z0-9]{12})\?referrer=appbadge["'][^>]*>\s*<img\b[^>]*src=["']https:\/\/get\.microsoft\.com\/images\/en-us(?:%20| )light\.svg["'][^>]*\/?>\s*<\/a>/gi;
+
+    const nodes = [];
+    let offset = 0;
+
+    function addText(value) {
+        value
+            .split(/\n\s*\n|\n/)
+            .filter(Boolean)
+            .forEach((paragraph) => {
+                nodes.push(
+                    <p key={nodes.length}>{paragraph}</p>
+                );
+            });
+    }
+
+    for (const match of text.matchAll(badgePattern)) {
+        addText(text.slice(offset, match.index));
+
+        const productId = match[1].toUpperCase();
+
+        nodes.push(
+            <a
+                key={nodes.length}
+                href={`https://get.microsoft.com/installer/download/${productId}?referrer=appbadge`}
+                target="_self"
+                aria-label="Get it from Microsoft Store"
+            >
+                <img
+                    src="https://get.microsoft.com/images/en-us%20light.svg"
+                    width="200"
+                    alt="Get it from Microsoft Store"
+                    loading="lazy"
+                />
+            </a>
+        );
+
+        offset = match.index + match[0].length;
+    }
+
+    addText(text.slice(offset));
+
+    return <>{nodes}</>;
+}
+
 export function News() {
     const { t } = useLanguage();
     const { slug } = useParams();
@@ -51,9 +100,6 @@ export function News() {
                 </div>
             );
         const item = detail.data;
-        const paragraphs = (item.body || "")
-            .split(/\n\s*\n|\n/)
-            .filter(Boolean);
         return (
             <article className="news-detail container">
                 <Link to="/news" className="back-link">
@@ -87,10 +133,8 @@ export function News() {
                         </figure>
                     )}
                     <div className="news-detail__content">
-                        <div className="news-detail__body support-card support-contact-panel" style={{ marginBottom: '32px' }}>
-                            {paragraphs.map((p, i) => (
-                                <p key={i}>{p}</p>
-                            ))}
+                       <div className="news-detail__body">
+                            <NewswireBody body={item.body} />
                         </div>
                     </div>
                     {isAdmin && (
