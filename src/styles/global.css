@@ -2077,7 +2077,7 @@ fieldset {
   .game-grid,
   .media-page__grid,
   .news-page__grid {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px 18px;
   }
   .full-page-about.studio-about {
