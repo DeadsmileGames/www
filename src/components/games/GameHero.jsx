@@ -76,15 +76,6 @@ export function GameHero({
                   <span>Watch Trailer</span>
                 </Link>
               )}
-              {game.slug && (
-                <Link
-                  to={`/games/${game.slug}`}
-                  className="btn btn--secondary watch-trailer"
-                >
-                  Explore Game
-                  <ArrowUpRight weight="bold" />
-                </Link>
-              )}
             </div>
           </div>
 

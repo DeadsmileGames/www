@@ -194,7 +194,7 @@ export function Home() {
         <div className="container">
           <header className="section-heading">
             <h2>Latest from the studio</h2>
-            <Link className="btn btn--primary" to="/news">
+            <Link className="btn btn--primary" style={{ marginTop: '1rem' }} to="/news">
               All news →
             </Link>
           </header>
@@ -241,7 +241,7 @@ export function Home() {
               <br />
               Every challenge is better with you in it.
             </p>
-            <Link to="/about" className="btn btn--secondary">
+            <Link to="/about" className="btn btn--primary">
               Meet Deadsmile Games →
             </Link>
           </div>

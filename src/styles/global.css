@@ -790,6 +790,9 @@ fieldset {
 .game-details__screenshots,
 .game-details__videos {
   margin-top: 45px;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
 }
 .game-details__screenshots-grid,
 .game-details__videos > div {
@@ -1801,6 +1804,7 @@ fieldset {
 }
 .rs-hero__title {
   font-size: clamp(38px, 5vw, 68px);
+  margin-bottom: 20px;
 }
 .rs-hero__actions {
   display: flex;
