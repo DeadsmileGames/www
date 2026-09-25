@@ -2323,3 +2323,223 @@ display: flex;
     transition: none !important;
   }
 }
+/* HOME — acrescente estas regras ao final do src/styles/global.css existente.
+   O visual e os estilos das outras páginas permanecem inalterados. */
+.home .studio-landing.home-hero {
+  min-height: 100svh;
+  isolation: isolate;
+  padding: 145px 0 86px;
+  background: #090909;
+  overflow: hidden;
+}
+.home .home-hero::before {
+  display: none; /* substitui a imagem estática definida em website.css */
+}
+.home-hero__media,
+.home-hero__poster,
+.home-hero__shade {
+  position: absolute;
+  inset: 0;
+}
+.home-hero__media {
+  z-index: -1;
+  overflow: hidden;
+  background: #090909;
+}
+.home-hero__poster {
+  background-position: center;
+  background-size: cover;
+  opacity: .5;
+}
+.home-hero__video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100vw, 177.78vh);
+  height: max(100vh, 56.25vw);
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
+}
+.home-hero__shade {
+  background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.63) 52%, rgba(0,0,0,.25) 100%),
+              linear-gradient(0deg, #090909 0%, transparent 23%, rgba(0,0,0,.25) 100%);
+}
+.home-hero__content {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 48px));
+  margin: auto;
+}
+.home-hero__content .reveal {
+  max-width: 660px;
+}
+.home-hero__logo {
+  display: block;
+  width: min(350px, 75%);
+  max-height: 120px;
+  object-fit: contain;
+  object-position: left;
+  margin: 0 0 24px;
+  filter: drop-shadow(0 8px 35px rgba(0,0,0,.65));
+}
+.home-hero__content h1 {
+  max-width: 14ch;
+  font-size: clamp(42px, 6vw, 78px);
+  line-height: 1.04;
+  margin: 0 0 18px;
+  text-shadow: 0 3px 30px rgba(0,0,0,.65);
+}
+.home-hero__description {
+  max-width: 50ch;
+  font-size: clamp(17px, 1.7vw, 21px);
+  color: #e4e4e4;
+  margin: 0;
+  text-shadow: 0 2px 18px #000;
+}
+.home-hero__actions {
+  margin-top: 28px;
+}
+.home-hero__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+.home-hero__next {
+  position: absolute;
+  z-index: 2;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  padding: 0;
+}
+.home .home-section {
+  padding: 82px 0;
+}
+.home .home-section__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 22px;
+  text-align: left;
+  margin-bottom: 36px;
+}
+.home-section__heading h2 {
+  margin-bottom: 8px;
+}
+.home-section__heading p {
+  margin: 0;
+}
+.home-section__heading .btn {
+  flex-shrink: 0;
+}
+.home .studio-games {
+  min-height: auto;
+}
+.home .game-spotlight {
+  gap: clamp(24px, 5vw, 60px);
+  padding: clamp(22px, 4vw, 38px);
+  margin-bottom: 24px;
+  border: 1px solid #373737;
+  border-radius: 12px;
+  background: #202020;
+}
+.home .game-spotlight h3 {
+  font-size: clamp(32px, 4vw, 58px);
+}
+.home .game-spotlight p {
+  font-size: 18px;
+}
+.home .studio-game-strip {
+  margin: 0;
+  padding: 0;
+  gap: 18px;
+  background: none;
+}
+.home .studio-game-strip > a,
+.home .video-tile,
+.home .news-tile {
+  overflow: hidden;
+  padding: 14px;
+  border: 1px solid #373737;
+  border-radius: 12px;
+  background: #202020;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.home .studio-game-strip > a:hover,
+.home .video-tile:hover,
+.home .news-tile:hover {
+  transform: translateY(-3px);
+  border-color: #777;
+}
+.home .studio-game-strip img,
+.home .video-visual,
+.home .news-tile img {
+  margin-bottom: 12px;
+}
+.home .studio-game-strip h3,
+.home .video-tile h3 {
+  font-size: clamp(18px, 2vw, 23px);
+  margin: 0;
+}
+.home .news-tile {
+  padding: 16px;
+}
+.home .news-tile .btn {
+  align-self: flex-start;
+  margin-top: auto;
+}
+.home .studio-about .sec-about {
+  padding: 0;
+}
+.home .studio-about .div-about-us {
+  width: min(760px, calc(100% - 40px));
+  margin: 0 auto;
+}
+@media (max-width: 760px) {
+  .home .studio-landing.home-hero {
+    min-height: 90svh;
+    padding: 125px 0 95px;
+  }
+  .home-hero__content {
+    width: calc(100% - 40px);
+  }
+  .home-hero__shade {
+    background: linear-gradient(0deg, #090909, rgba(0,0,0,.44) 60%, rgba(0,0,0,.65));
+  }
+  .home-hero__logo {
+    width: min(290px, 75%);
+  }
+  .home-hero__content h1 {
+    font-size: clamp(38px, 10vw, 56px);
+  }
+  .home-hero__actions .btn {
+    width: 100%;
+  }
+  .home .home-section {
+    padding: 60px 0;
+  }
+  .home .home-section__heading {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .home .game-spotlight {
+    padding: 20px;
+    text-align: left;
+  }
+  .home .game-spotlight p {
+    margin-left: 0;
+  }
+  .home .studio-actions {
+    justify-content: flex-start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home .studio-game-strip > a,
+  .home .video-tile,
+  .home .news-tile {
+    transition: none;
+    transform: none;
+  }
+}
