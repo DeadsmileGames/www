@@ -21,6 +21,9 @@ import {
     LockKey,
     CaretRight,
     X,
+    Devices,
+    Desktop,
+    DeviceMobile,
 } from "@phosphor-icons/react";
 import { CloudSaves } from "../components/account/CloudSaves";
 import { safeImageUrl, safeOAuthItchUrl } from "../utils/urls";
@@ -31,6 +34,7 @@ const TABS = [
     { id: "account", label: "Account", icon: GearSix },
     { id: "privacy", label: "Privacy", icon: Eye },
     { id: "security", label: "Security", icon: ShieldCheck },
+    { id: "devices", label: "Connected devices", icon: Devices },
     { id: "connections", label: "Connections", icon: GameController },
     { id: "cloud", label: "Cloud saves", icon: CloudArrowUp },
 ];
@@ -42,6 +46,12 @@ export function Account() {
     const { user, logout, refresh } = useAuth();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("profile");
+    const [sessions, setSessions] = useState([]);
+    const [sessionsLoading, setSessionsLoading] = useState(false);
+    const [sessionsLoaded, setSessionsLoaded] = useState(false);
+    const [sessionsError, setSessionsError] = useState("");
+    const [sessionsMessage, setSessionsMessage] = useState("");
+    const [revokingSessionId, setRevokingSessionId] = useState(null);
 
     const [form, setForm] = useState({
         username: user?.username || "",
@@ -91,7 +101,7 @@ export function Account() {
         title: "",
         message: "",
     });
-    
+
 
     const [twoFactor, setTwoFactor] = useState({ qrCode: null, secret: null, enabled: false });
     const [totpToken, setTotpToken] = useState('');
@@ -161,7 +171,7 @@ export function Account() {
                         secret: data?.enabled ? null : current.secret,
                     }));
                 }
-            } catch {}
+            } catch { }
         }
 
         loadTwoFactorStatus();
@@ -222,7 +232,126 @@ export function Account() {
         return () => { cancelled = true; };
     }, []);
 
+    useEffect(() => {
+        if (activeTab !== "devices" || !user?.id) {
+            return;
+        }
+
+        let cancelled = false;
+
+        async function loadOnTabOpen() {
+            setSessionsLoading(true);
+            setSessionsLoaded(false);
+            setSessionsError("");
+            setSessionsMessage("");
+
+            try {
+                const result = await api.get("/account/sessions");
+
+                if (cancelled) return;
+
+                setSessions(
+                    Array.isArray(result?.sessions)
+                        ? result.sessions
+                        : []
+                );
+
+                setSessionsLoaded(true);
+            } catch {
+                if (cancelled) return;
+
+                setSessions([]);
+                setSessionsError(
+                    "We could not load your connected devices."
+                );
+            } finally {
+                if (!cancelled) {
+                    setSessionsLoading(false);
+                }
+            }
+        }
+
+        loadOnTabOpen();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [activeTab, user?.id]);
+
     if (!user) return null;
+
+    async function refreshSessions() {
+        if (sessionsLoading || revokingSessionId) return;
+
+        setSessionsLoading(true);
+        setSessionsError("");
+        setSessionsMessage("");
+
+        try {
+            const result = await api.get("/account/sessions");
+
+            setSessions(
+                Array.isArray(result?.sessions)
+                    ? result.sessions
+                    : []
+            );
+
+            setSessionsLoaded(true);
+        } catch {
+            setSessionsError(
+                "We could not refresh your connected devices."
+            );
+        } finally {
+            setSessionsLoading(false);
+        }
+    }
+
+    async function revokeDeviceSession(session) {
+        if (
+            !session?.id ||
+            session.isCurrent ||
+            revokingSessionId
+        ) {
+            return;
+        }
+
+        const confirmed = window.confirm(
+            "Disconnect this device? It will need to sign in again."
+        );
+
+        if (!confirmed) return;
+
+        setRevokingSessionId(session.id);
+        setSessionsError("");
+        setSessionsMessage("");
+
+        try {
+            await api.delete(
+                `/account/sessions/${encodeURIComponent(session.id)}`
+            );
+
+            // Remove imediatamente a sessão encerrada da lista.
+            setSessions((current) =>
+                current.filter((item) => item.id !== session.id)
+            );
+
+            setSessionsMessage(
+                "The selected device has been disconnected."
+            );
+        } catch (error) {
+            if (error?.code === "SESSION_NOT_FOUND") {
+                setSessionsError(
+                    "This session is no longer active. Refresh the list."
+                );
+            } else {
+                setSessionsError(
+                    "We could not disconnect this device. Please try again."
+                );
+            }
+        } finally {
+            setRevokingSessionId(null);
+        }
+    }
 
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -774,7 +903,7 @@ export function Account() {
                                         <label htmlFor="acc-email">
                                             Email
                                         </label>
-                                        
+
                                         <input
                                             id="acc-email"
                                             type="email"
@@ -835,7 +964,7 @@ export function Account() {
                                                 marginTop: 12,
                                             }}
                                             onClick={() => navigate('/forgot-password')}
-                                            >
+                                        >
                                             <LockKey size={22} weight="bold" />
 
                                             <div
@@ -864,7 +993,7 @@ export function Account() {
                                     </div>
                                 </form>
 
-                                <div className="account-panel" style={{marginTop: 20}}>
+                                <div className="account-panel" style={{ marginTop: 20 }}>
                                     <div className="account-row account-row--last account-row--inline">
                                         <div>
                                             <strong>Session</strong>
@@ -879,7 +1008,7 @@ export function Account() {
                                     </div>
                                 </div>
 
-                                <div className="account-block__head account-block__head--danger" style={{marginTop: 20}}>
+                                <div className="account-block__head account-block__head--danger" style={{ marginTop: 20 }}>
                                     <h2>Delete account</h2>
                                     <p>
                                         This is permanent. You will lose
@@ -1213,6 +1342,177 @@ export function Account() {
                                                 </div>
                                             )}
                                         </>
+                                    )}
+                                </div>
+                            </section>
+                        </Reveal>
+                    )}
+
+                    {activeTab === "devices" && (
+                        <Reveal key="devices">
+                            <section className="account-block">
+                                <div className="account-block__head">
+                                    <h2>Connected devices</h2>
+
+                                    <p>
+                                        Review the sessions currently signed in to your
+                                        Deadsmile Games account. You can disconnect
+                                        another device without signing out here.
+                                    </p>
+                                </div>
+
+                                <div className="account-panel">
+                                    <div className="account-row account-row--inline">
+                                        <div>
+                                            <strong>Active sessions</strong>
+                                            <p>
+                                                A session may remain active even if its
+                                                browser or Launcher is closed.
+                                            </p>
+                                        </div>
+
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            onClick={refreshSessions}
+                                            disabled={
+                                                sessionsLoading ||
+                                                Boolean(revokingSessionId)
+                                            }
+                                        >
+                                            <ArrowClockwise
+                                                size={18}
+                                                weight="bold"
+                                            />
+                                            {sessionsLoading ? "Refreshing…" : "Refresh"}
+                                        </Button>
+                                    </div>
+
+                                    {sessionsError && (
+                                        <p
+                                            className="account-page__error"
+                                            role="alert"
+                                        >
+                                            {sessionsError}
+                                        </p>
+                                    )}
+
+                                    {sessionsMessage && (
+                                        <p
+                                            className="connection-message"
+                                            role="status"
+                                        >
+                                            {sessionsMessage}
+                                        </p>
+                                    )}
+
+                                    {sessionsLoading && !sessionsLoaded ? (
+                                        <div className="account-row">
+                                            <p>Loading connected devices…</p>
+                                        </div>
+                                    ) : sessionsLoaded && sessions.length === 0 ? (
+                                        <div className="account-row">
+                                            <p>No active sessions found.</p>
+                                        </div>
+                                    ) : (
+                                        sessions.map((session) => {
+                                            const isLauncher =
+                                                session.client === "launcher";
+
+                                            const isMobile =
+                                                /android|ios|iphone|ipad/i.test(
+                                                    session.platform || ""
+                                                );
+
+                                            const DeviceIcon = isLauncher
+                                                ? GameController
+                                                : isMobile
+                                                    ? DeviceMobile
+                                                    : Desktop;
+
+                                            const clientName = isLauncher
+                                                ? "Deadsmile Games Launcher"
+                                                : "Web browser";
+
+                                            const platformName =
+                                                session.platform || "Unknown device";
+
+                                            const createdDate = session.createdAt
+                                                ? new Date(session.createdAt)
+                                                : null;
+
+                                            const validCreatedDate =
+                                                createdDate &&
+                                                !Number.isNaN(createdDate.getTime());
+
+                                            return (
+                                                <div
+                                                    key={session.id}
+                                                    className="account-row account-row--inline connection-row"
+                                                >
+                                                    <div className="connection-row__identity">
+                                                        <span className="connection-row__icon">
+                                                            <DeviceIcon
+                                                                size={22}
+                                                                weight="bold"
+                                                            />
+                                                        </span>
+
+                                                        <div>
+                                                            <strong>
+                                                                {clientName} · {platformName}
+                                                            </strong>
+
+                                                            <p>
+                                                                {session.isCurrent
+                                                                    ? "This device · Current session"
+                                                                    : "Active session"}
+                                                            </p>
+
+                                                            {validCreatedDate && (
+                                                                <p>
+                                                                    Signed in:{" "}
+                                                                    {createdDate.toLocaleString(
+                                                                        undefined,
+                                                                        {
+                                                                            dateStyle: "medium",
+                                                                            timeStyle: "short",
+                                                                        }
+                                                                    )}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="connection-row__actions">
+                                                        {session.isCurrent ? (
+                                                            <span
+                                                                className="connection-message"
+                                                                aria-label="Current session"
+                                                            >
+                                                                Current session
+                                                            </span>
+                                                        ) : (
+                                                            <Button
+                                                                type="button"
+                                                                variant="danger"
+                                                                disabled={
+                                                                    Boolean(revokingSessionId) ||
+                                                                    sessionsLoading
+                                                                }
+                                                                onClick={() =>
+                                                                    revokeDeviceSession(session)
+                                                                }
+                                                            >
+                                                                {revokingSessionId === session.id
+                                                                    ? "Disconnecting…"
+                                                                    : "Disconnect"}
+                                                            </Button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
                                     )}
                                 </div>
                             </section>
