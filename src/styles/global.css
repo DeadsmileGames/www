@@ -1845,6 +1845,10 @@ display: flex;
   line-height: 1.9;
   white-space: pre-line;
 }
+.admin-manage__item-actions {
+  display: flex;
+  gap: 10px;
+}
 .news-card__visual img {
   aspect-ratio: 16/10;
   width: 100%;
@@ -2238,6 +2242,9 @@ display: flex;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 5px;
+  }
+  .admin-manage__item-actions {
+    flex-direction: column;
   }
   .studio-page__hero p {
     font-size: 16px;
