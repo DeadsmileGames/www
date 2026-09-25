@@ -1595,11 +1595,15 @@ fieldset {
   margin: 0;
 }
 .search-overlay__result {
-  display: flex;
+display: flex;
   align-items: center;
   gap: 25px;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #111;
+  border-radius: 10px;
+  padding: 20px;
+}
+.search-overlay__result:hover {
+  background: #222;
 }
 .search-overlay__thumb {
   width: 100px;

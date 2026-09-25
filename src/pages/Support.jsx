@@ -38,7 +38,6 @@ export function Support() {
       <div className="support-layout">
         <section className="support-contact-panel support-card">
           <div className="support-section-title">
-            <ChatCircle size={28} weight="bold" />
             <div>
               <h2>Contact support</h2>
               <p>Tell us what happened. Please do not include passwords, tokens or payment details.</p>
