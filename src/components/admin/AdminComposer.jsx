@@ -523,31 +523,33 @@ export function AdminComposer() {
                           <div>
                             <strong>{item.title}</strong>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => edit(key, item)}
-                            disabled={
-                                Boolean(openingEdit) ||
-                                deleting === deleteKey
-                            }
-                            className="btn btn--primary"
-                            aria-label={`Edit ${item.title}`}
-                        >
-                            {openingEdit === deleteKey ? (
-                                <span>…</span>
-                            ) : (
-                                <PencilSimple weight="bold" />
-                            )}
-                        </button>
-                          <button
-                            type="button"
-                            onClick={() => remove(key, item.id)}
-                            disabled={deleting === deleteKey}
-                            className='btn btn--primary'
-                            aria-label={`Delete ${item.title}`}
+                          <div className="admin-manage__item-actions">
+                            <button
+                              type="button"
+                              onClick={() => edit(key, item)}
+                              disabled={
+                                  Boolean(openingEdit) ||
+                                  deleting === deleteKey
+                              }
+                              className="btn btn--primary"
+                              aria-label={`Edit ${item.title}`}
                           >
-                            {deleting === deleteKey ? <span>…</span> : <Trash weight="bold" />}
+                              {openingEdit === deleteKey ? (
+                                  <span>…</span>
+                              ) : (
+                                  <PencilSimple weight="bold" />
+                              )}
                           </button>
+                            <button
+                              type="button"
+                              onClick={() => remove(key, item.id)}
+                              disabled={deleting === deleteKey}
+                              className='btn btn--primary'
+                              aria-label={`Delete ${item.title}`}
+                            >
+                              {deleting === deleteKey ? <span>…</span> : <Trash weight="bold" />}
+                            </button>
+                          </div>
                         </div>
                       );
                     })
