@@ -2441,7 +2441,6 @@ display: flex;
   gap: clamp(24px, 5vw, 60px);
   padding: clamp(22px, 4vw, 38px);
   margin-bottom: 24px;
-  border: 1px solid #373737;
   border-radius: 12px;
   background: #202020;
 }
@@ -2462,7 +2461,6 @@ display: flex;
 .home .news-tile {
   overflow: hidden;
   padding: 14px;
-  border: 1px solid #373737;
   border-radius: 12px;
   background: #202020;
   transition: border-color .2s ease, transform .2s ease;
