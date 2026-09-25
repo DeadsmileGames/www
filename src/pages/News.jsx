@@ -133,7 +133,7 @@ export function News() {
                         </figure>
                     )}
                     <div className="news-detail__content">
-                       <div className="news-detail__body">
+                       <div className="news-detail__body support-card support-contact-panel" style={{ marginBottom: '32px' }}>
                             <NewswireBody body={item.body} />
                         </div>
                     </div>
