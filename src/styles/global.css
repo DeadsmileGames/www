@@ -703,7 +703,7 @@ fieldset {
 .game-grid,
 .skeleton-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 45px 30px;
 }
 .game-card__image-wrap {
@@ -712,7 +712,7 @@ fieldset {
 }
 .game-card__image {
   width: 100%;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/4;
   object-fit: cover;
   border-radius: 10px;
 }
