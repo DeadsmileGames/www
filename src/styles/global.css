@@ -2158,7 +2158,8 @@ fieldset {
     min-height: 40px;
     white-space: nowrap;
   }
-  .game-details__screenshots-grid {
+  .game-details__screenshots-grid,
+  .game-details__videos > div {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
   .search-overlay__close {
