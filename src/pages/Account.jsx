@@ -794,6 +794,16 @@ export function Account() {
                                             current password to request the change.
                                         </p>
 
+                                        <Button
+                                            type="submit"
+                                            variant="primary"
+                                            disabled={saving}
+                                        >
+                                            {saving
+                                                ? "Sending confirmation..."
+                                                : "Request email change"}
+                                        </Button>
+
                                         <label htmlFor="acc-email-password">
                                             Current account password
                                         </label>
@@ -840,15 +850,6 @@ export function Account() {
 
                                             <CaretRight size={20} />
                                         </button>
-                                        <Button
-                                            type="submit"
-                                            variant="primary"
-                                            disabled={saving}
-                                        >
-                                            {saving
-                                                ? "Sending confirmation..."
-                                                : "Request email change"}
-                                        </Button>
                                     </div>
                                     <div className="account-block__foot">
                                         {settingsError && (
@@ -870,7 +871,7 @@ export function Account() {
                                             <p>Sign out from this device.</p>
                                         </div>
                                         <Button
-                                            variant="secondary"
+                                            variant="danger"
                                             onClick={signOut}
                                         >
                                             Log out
