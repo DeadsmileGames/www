@@ -28,7 +28,6 @@ import {
 import { CloudSaves } from "../components/account/CloudSaves";
 import { safeImageUrl, safeOAuthItchUrl } from "../utils/urls";
 import { FOCUSABLE_SELECTOR, lockBodyScroll } from "../utils/dom";
-import "../styles/account-cards.css";
 
 const TABS = [
     { id: "profile", label: "Profile", icon: User },
@@ -37,21 +36,6 @@ const TABS = [
     { id: "security", label: "Security", icon: ShieldCheck },
     { id: "games", label: "Games & saves", icon: GameController },
 ];
-
-function AccountCard({ icon: Icon, title, description, children, danger = false }) {
-    return (
-        <section className={"account-settings-card support-card" + (danger ? " account-settings-card--danger" : "")}>
-            <header className="account-settings-card__head">
-                {Icon && <span className="account-settings-card__icon" aria-hidden="true"><Icon size={23} weight="bold" /></span>}
-                <div>
-                    <h2>{title}</h2>
-                    {description && <p>{description}</p>}
-                </div>
-            </header>
-            <div className="account-settings-card__body">{children}</div>
-        </section>
-    );
-}
 
 const CROP_VIEWPORT = 260;
 const OUTPUT_SIZE = 420;
@@ -89,7 +73,6 @@ export function Account() {
 
     const [privacyLoading, setPrivacyLoading] =
         useState(true);
-    const [privacyLoaded, setPrivacyLoaded] = useState(false);
 
     const [privacySaving, setPrivacySaving] =
         useState(false);
@@ -101,7 +84,6 @@ export function Account() {
         useState("");
     const [profileError, setProfileError] = useState("");
     const [settingsError, setSettingsError] = useState("");
-    const [securityError, setSecurityError] = useState("");
     const [deleteError, setDeleteError] = useState("");
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -142,7 +124,6 @@ export function Account() {
                     return;
                 }
 
-                setPrivacyLoaded(true);
                 setPrivacy({
                     shareGameActivity:
                         Boolean(result.shareGameActivity),
@@ -155,7 +136,6 @@ export function Account() {
                 });
             } catch (err) {
                 if (!cancelled) {
-                    setPrivacyLoaded(false);
                     setPrivacyError(
                         err?.message ||
                         "Unable to load your privacy preferences."
@@ -374,13 +354,12 @@ export function Account() {
     const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
     async function setupTwoFactor() {
-        setSecurityError("");
         setTwoFactorLoading(true);
         try {
             const data = await api.post('/account/totp/setup');
             setTwoFactor({ qrCode: data.qrCodeDataUrl, secret: data.secret, enabled: false });
         } catch {
-            setSecurityError('We could not prepare two-factor authentication right now.');
+            setSettingsError('We could not prepare two-factor authentication right now.');
         } finally {
             setTwoFactorLoading(false);
         }
@@ -388,14 +367,13 @@ export function Account() {
 
     async function enableTwoFactor(e) {
         e.preventDefault();
-        setSecurityError("");
         setTwoFactorLoading(true);
         try {
             await api.post('/account/totp/enable', { token: totpToken });
             setTwoFactor(prev => ({ ...prev, enabled: true }));
             setTotpToken('');
         } catch {
-            setSecurityError('We could not enable two-factor authentication. Check the code and try again.');
+            setSettingsError('We could not enable two-factor authentication. Check the code and try again.');
         } finally {
             setTwoFactorLoading(false);
         }
@@ -404,14 +382,13 @@ export function Account() {
     async function disableTwoFactor(e) {
         e.preventDefault();
         if (!window.confirm('Disable 2FA? You will lose the extra security.')) return;
-        setSecurityError("");
         setTwoFactorLoading(true);
         try {
             await api.delete('/account/totp/disable', { token: totpToken });
             setTwoFactor({ qrCode: null, secret: null, enabled: false });
             setTotpToken('');
         } catch {
-            setSecurityError('We could not disable two-factor authentication. Check the code and try again.');
+            setSettingsError('We could not disable two-factor authentication. Check the code and try again.');
         } finally {
             setTwoFactorLoading(false);
         }
@@ -629,7 +606,7 @@ export function Account() {
     }
 
     async function savePrivacy() {
-        if (privacySaving || privacyLoading || !privacyLoaded) {
+        if (privacySaving || privacyLoading) {
             return;
         }
 
@@ -743,426 +720,867 @@ export function Account() {
     }
 
     return (
-        <div className="account-page container account-settings">
+        <div className="account-page container">
             <Link to="/" className="back-link">
                 <ArrowLeft weight="bold" />
                 <span>Back</span>
             </Link>
 
-            <header className="account-settings__intro">
-                <span className="account-settings__eyebrow">DEADSMILE GAMES</span>
-                <h1>Account settings</h1>
-                <p>Manage your profile, privacy, security and games in one place.</p>
-            </header>
-
-            <div className="account-page__layout account-settings__layout">
-                <aside aria-label="Account settings sections" className="account-settings__sidebar">
-                    <nav aria-label="Account settings" className="account-settings__nav">
-                        {TABS.map((tab) => {
-                            const Icon = tab.icon;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    type="button"
-                                    className={"account-nav-item" + (activeTab === tab.id ? " is-active" : "")}
-                                    aria-pressed={activeTab === tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                >
-                                    <Icon size={20} weight="bold" />
-                                    <span>{tab.label}</span>
-                                    <CaretRight className="account-settings__nav-arrow" size={15} weight="bold" />
-                                </button>
-                            );
-                        })}
-                    </nav>
-                    <div className="account-settings__related">
-                        <span className="account-nav-title">Related</span>
-                        <Link to="/wishlist" className="account-nav-item account-page__wishlist">
-                            <Heart size={20} weight="bold" />
-                            <span>Wishlist</span>
-                            <CaretRight className="account-settings__nav-arrow" size={15} weight="bold" />
-                        </Link>
-                    </div>
+            <div className="account-page__layout">
+                <aside>
+                    {TABS.map((tab) => {
+                        const Icon = tab.icon;
+                        return (
+                            <button
+                                key={tab.id}
+                                type="button"
+                                className={
+                                    "account-nav-item" +
+                                    (activeTab === tab.id
+                                        ? " is-active"
+                                        : "")
+                                }
+                                onClick={() => setActiveTab(tab.id)}
+                            >
+                                <Icon weight="bold" />
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
+                    <span className="account-nav-title">Related</span>
+                    <Link
+                        to="/wishlist"
+                        className="account-nav-item account-page__wishlist"
+                    >
+                        <Heart weight="bold" />
+                        <span>Wishlist</span>
+                    </Link>
                 </aside>
 
-                <main className="account-page__content account-settings__content" id="account-settings-content">
+                <div className="account-page__content">
+                    <Reveal>
+                        <div className="account-page__hero support-card support-faq-panel">
+                            <div className="account-page__avatar">
+                                <div className="account-page__avatar-inner">
+                                    {safeImageUrl(form.avatarUrl) ? (
+                                        <img src={safeImageUrl(form.avatarUrl)} alt="" />
+                                    ) : (
+                                        user.username.slice(0, 1).toUpperCase()
+                                    )}
+                                </div>
+                                <label className="avatar-upload-dot">
+                                    <PencilSimple size={24} weight="bold" />
+                                    <input
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/webp"
+                                        onChange={onAvatarSelect}
+                                    />
+                                </label>
+                            </div>
+                            <div>
+                                <h1>{user.username}</h1>
+                                {user.createdAt && (
+                                    <span>
+                                        Created on{" "}
+                                        {new Date(
+                                            user.createdAt,
+                                        ).toLocaleDateString(undefined, {
+                                            month: "short",
+                                            day: "2-digit",
+                                            year: "numeric",
+                                        })}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </Reveal>
+
                     {activeTab === "profile" && (
                         <Reveal key="profile">
-                            <div className="account-settings__stack">
-                                <AccountCard
-                                    icon={User}
-                                    title="Profile picture"
-                                    description="Choose the picture shown on your public profile."
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Profile Details</h2>
+                                    <p>
+                                        Manage how your public profile
+                                        appears across the site.
+                                    </p>
+                                </div>
+                                <form
+                                    className="account-panel"
+                                    onSubmit={saveProfile}
                                 >
-                                    <div className="account-settings__avatar-row">
-                                        <div className="account-page__avatar">
-                                            <div className="account-page__avatar-inner">
-                                                {safeImageUrl(form.avatarUrl) ? (
-                                                    <img src={safeImageUrl(form.avatarUrl)} alt="Your profile picture" />
-                                                ) : (
-                                                    user.username.slice(0, 1).toUpperCase()
-                                                )}
-                                            </div>
-                                            <label className="avatar-upload-dot" title="Change profile picture">
-                                                <PencilSimple size={22} weight="bold" />
-                                                <input
-                                                    type="file"
-                                                    accept="image/png,image/jpeg,image/webp"
-                                                    onChange={onAvatarSelect}
-                                                    aria-label="Change profile picture"
-                                                />
-                                            </label>
-                                        </div>
-                                        <div className="account-settings__avatar-copy">
-                                            <strong>{user.username}</strong>
-                                            {user.createdAt && (
-                                                <p>Member since {new Date(user.createdAt).toLocaleDateString(undefined, { month: "short", year: "numeric" })}</p>
-                                            )}
-                                            <p>PNG, JPG or WEBP · Maximum 5 MB</p>
-                                        </div>
+                                    <div className="account-row">
+                                        <label htmlFor="acc-username">
+                                            Username
+                                        </label>
+                                        <input
+                                            id="acc-username"
+                                            value={form.username.toLowerCase()}
+                                            onChange={set("username")}
+                                            placeholder="@username"
+                                            required
+                                            minLength={3}
+                                            maxLength={24}
+                                            pattern="[A-Za-z0-9_\-]+"
+                                        />
                                     </div>
-                                    {profileError && <p className="account-page__error" role="alert">{profileError}</p>}
-                                </AccountCard>
-
-                                <AccountCard
-                                    icon={PencilSimple}
-                                    title="Profile details"
-                                    description="Choose what appears on your public profile."
-                                >
-                                    <form className="account-settings__form" onSubmit={saveProfile}>
-                                        <div className="account-settings__fields">
-                                            <label className="account-settings__field" htmlFor="acc-username">
-                                                <span>Username</span>
-                                                <input id="acc-username" value={form.username.toLowerCase()}
-                                                    onChange={set("username")} placeholder="@username"
-                                                    required minLength={3} maxLength={24} pattern="[A-Za-z0-9_\-]+" />
-                                            </label>
-                                            <label className="account-settings__field" htmlFor="acc-bio">
-                                                <span>Bio</span>
-                                                <textarea id="acc-bio" value={form.bio} onChange={set("bio")}
-                                                    placeholder="Write something about yourself." maxLength={500} rows={3} />
-                                            </label>
-                                            <div className="account-settings__field-grid">
-                                                <label className="account-settings__field" htmlFor="acc-website">
-                                                    <span>Website</span>
-                                                    <input id="acc-website" type="url" maxLength={2000}
-                                                        value={form.websiteUrl} onChange={set("websiteUrl")} placeholder="https://…" />
-                                                </label>
-                                                <label className="account-settings__field" htmlFor="acc-location">
-                                                    <span>Location</span>
-                                                    <input id="acc-location" maxLength={120} value={form.location}
-                                                        onChange={set("location")} placeholder="City, Country" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="account-settings__actions">
-                                            <Button type="submit" variant="primary" disabled={saving}>
-                                                {saving ? "Saving…" : "Save profile"}
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </AccountCard>
-                            </div>
+                                    <div className="account-row">
+                                        <label htmlFor="acc-bio">Bio</label>
+                                        <textarea
+                                            id="acc-bio"
+                                            value={form.bio}
+                                            onChange={set("bio")}
+                                            placeholder="Write something about yourself."
+                                            maxLength={500}
+                                            rows="3"
+                                        />
+                                    </div>
+                                    <div className="account-row">
+                                        <label htmlFor="acc-website">
+                                            Website
+                                        </label>
+                                        <input
+                                            id="acc-website"
+                                            type="url"
+                                            maxLength={2000}
+                                            value={form.websiteUrl}
+                                            onChange={set("websiteUrl")}
+                                            placeholder="https://…"
+                                        />
+                                    </div>
+                                    <div className="account-row account-row--last">
+                                        <label htmlFor="acc-location">
+                                            Location
+                                        </label>
+                                        <input
+                                            id="acc-location"
+                                            maxLength={120}
+                                            value={form.location}
+                                            onChange={set("location")}
+                                            placeholder="City, Country"
+                                        />
+                                    </div>
+                                    <div className="account-block__foot">
+                                        {profileError && (
+                                            <p
+                                                className="account-page__error"
+                                                role="alert"
+                                                aria-live="polite"
+                                            >
+                                                {profileError}
+                                            </p>
+                                        )}
+                                        <Button
+                                            type="submit"
+                                            variant="secondary"
+                                            disabled={saving}
+                                        >
+                                            Save profile
+                                        </Button>
+                                    </div>
+                                </form>
+                            </section>
                         </Reveal>
                     )}
 
                     {activeTab === "account" && (
                         <Reveal key="account">
-                            <div className="account-settings__stack">
-                                <AccountCard
-                                    icon={GearSix}
-                                    title="Email address"
-                                    description="Confirm a new address before your account email is changed."
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Account</h2>
+                                    <p>
+                                        Manage your login email and active
+                                        session.
+                                    </p>
+                                </div>
+                                <form
+                                    className="account-panel"
+                                    onSubmit={saveSettings}
                                 >
-                                    <form className="account-settings__form" onSubmit={saveSettings}>
-                                        <div className="account-settings__fields">
-                                            <p className="account-settings__hint">Current email: <strong>{user.email}</strong></p>
-                                            <label className="account-settings__field" htmlFor="acc-email">
-                                                <span>New email address</span>
-                                                <input id="acc-email" type="email" required maxLength={254}
-                                                    autoComplete="email" value={form.email} onChange={set("email")} />
-                                            </label>
-                                            <label className="account-settings__field" htmlFor="acc-email-password">
-                                                <span>Current account password</span>
-                                                <input id="acc-email-password" type="password" required minLength={1}
-                                                    maxLength={128} autoComplete="current-password" value={emailPassword}
-                                                    onChange={(event) => setEmailPassword(event.target.value)} />
-                                            </label>
-                                            {emailMessage && <p className="account-settings__success" role="status">{emailMessage}</p>}
-                                            {settingsError && <p className="account-page__error" role="alert">{settingsError}</p>}
-                                        </div>
-                                        <div className="account-settings__actions">
-                                            <Button type="submit" variant="primary" disabled={saving}>
-                                                {saving ? "Sending confirmation…" : "Request email change"}
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </AccountCard>
+                                    <div className="account-row account-row--last">
+                                        <label htmlFor="acc-email">
+                                            Email
+                                        </label>
 
-                                <AccountCard
-                                    icon={LockKey}
-                                    title="Password & recovery"
-                                    description="Forgot your password or want to reset it? Use the secure recovery page."
-                                >
-                                    <div className="account-settings__actions account-settings__actions--standalone">
-                                        <Button type="button" variant="secondary" onClick={() => navigate("/forgot-password")}>
-                                            Reset your password <CaretRight size={17} weight="bold" />
+                                        <input
+                                            id="acc-email"
+                                            type="email"
+                                            required
+                                            maxLength={254}
+                                            autoComplete="email"
+                                            value={form.email}
+                                            onChange={set("email")}
+                                        />
+
+                                        <p>
+                                            Current email: {user.email}
+                                        </p>
+
+                                        <p>
+                                            Enter your new email address and your
+                                            current password to request the change.
+                                        </p>
+
+
+
+                                        <label htmlFor="acc-email-password">
+                                            Current account password
+                                        </label>
+
+                                        <input
+                                            id="acc-email-password"
+                                            type="password"
+                                            required
+                                            minLength={1}
+                                            maxLength={128}
+                                            autoComplete="current-password"
+                                            value={emailPassword}
+                                            onChange={(e) =>
+                                                setEmailPassword(e.target.value)
+                                            }
+                                        />
+
+                                        <Button
+                                            type="submit"
+                                            variant="primary"
+                                            disabled={saving}
+                                        >
+                                            {saving
+                                                ? "Sending confirmation..."
+                                                : "Request email change"}
+                                        </Button>
+
+                                        {emailMessage && (
+                                            <p role="status">
+                                                {emailMessage}
+                                            </p>
+                                        )}
+
+                                    </div>
+                                    <div className="account-block__foot">
+                                        {settingsError && (
+                                            <p
+                                                className="account-page__error"
+                                                role="alert"
+                                                aria-live="polite"
+                                            >
+                                                {settingsError}
+                                            </p>
+                                        )}
+                                    </div>
+                                </form>
+                            </section>
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Password recovery</h2>
+                                </div>
+                                <div className="account-panel">
+                                        <button
+                                            type="button"
+                                            className="btn btn--primary"
+                                            style={{
+                                                width: '100%',
+                                                justifyContent: 'center',
+                                                marginTop: 12,
+                                            }}
+                                            onClick={() => navigate('/forgot-password')}
+                                        >
+                                            <LockKey size={22} weight="bold" />
+
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: 8,
+                                                }}
+                                            >
+                                                <span>Reset your password.</span>
+                                            </div>
+
+                                            <CaretRight size={20} />
+                                        </button>
+                                </div>
+                            </section>
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-panel">
+                                    <div className="account-row account-row--last account-row--inline">
+                                        <div>
+                                            <strong>Session</strong>
+                                            <p>Sign out from this device.</p>
+                                        </div>
+                                        <Button
+                                            variant="danger"
+                                            onClick={signOut}
+                                        >
+                                            Log out
                                         </Button>
                                     </div>
-                                </AccountCard>
-
-                                <AccountCard
-                                    icon={ArrowLeft}
-                                    title="Sign out"
-                                    description="End your session on this browser without disconnecting your other devices."
+                                </div>
+                            </section>
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head account-block__head--danger">
+                                    <h2>Delete account</h2>
+                                    <p>
+                                        This is permanent. You will lose
+                                        access to your public profile and
+                                        cannot undo this action.
+                                    </p>
+                                </div>
+                                <form
+                                    className="account-panel account-panel--danger"
+                                    onSubmit={del}
                                 >
-                                    <div className="account-settings__actions account-settings__actions--standalone">
-                                        <Button type="button" variant="secondary" onClick={signOut}>Log out</Button>
+                                    <div className="account-row account-row--last">
+                                        <label htmlFor="acc-password">
+                                            Current password
+                                        </label>
+                                        <input
+                                            id="acc-password"
+                                            type="password"
+                                            required
+                                            minLength={8}
+                                            maxLength={128}
+                                            autoComplete="current-password"
+                                            value={password}
+                                            onChange={(e) =>
+                                                setPassword(e.target.value)
+                                            }
+                                        />
                                     </div>
-                                </AccountCard>
+                                    <div className="account-block__foot">
+                                        {deleteError && (
+                                            <p
+                                                className="account-page__error"
+                                                role="alert"
+                                                aria-live="polite"
+                                            >
+                                                {deleteError}
+                                            </p>
+                                        )}
+                                        <Button
+                                            type="submit"
+                                            variant="danger"
+                                            className="btn btn--danger"
+                                            disabled={deleting}
+                                        >
+                                            Delete account
+                                        </Button>
+                                    </div>
+                                </form>
+                            </section>
 
-                                <AccountCard
-                                    icon={WarningCircle}
-                                    title="Delete account"
-                                    description="This action is permanent and removes access to your profile."
-                                    danger
-                                >
-                                    <form className="account-settings__form" onSubmit={del}>
-                                        <div className="account-settings__fields">
-                                            <label className="account-settings__field" htmlFor="acc-password">
-                                                <span>Current password</span>
-                                                <input id="acc-password" type="password" required minLength={1} maxLength={128}
-                                                    autoComplete="current-password" value={password}
-                                                    onChange={(event) => setPassword(event.target.value)} />
-                                            </label>
-                                            {deleteError && <p className="account-page__error" role="alert">{deleteError}</p>}
-                                        </div>
-                                        <div className="account-settings__actions">
-                                            <Button type="submit" variant="danger" disabled={deleting}>
-                                                {deleting ? "Deleting…" : "Delete account"}
-                                            </Button>
-                                        </div>
-                                    </form>
-                                </AccountCard>
-                            </div>
                         </Reveal>
                     )}
 
                     {activeTab === "privacy" && (
                         <Reveal key="privacy">
-                            <div className="account-settings__stack">
-                                {privacyLoading ? (
-                                    <div className="account-settings-card support-card" role="status">Loading privacy preferences…</div>
-                                ) : (
-                                    <>
-                                        <AccountCard icon={GameController} title="Game activity"
-                                            description="Decide whether other people can see which games you have played.">
-                                            <label className="account-settings__toggle">
-                                                <span>
-                                                    <strong>Share recently played games</strong>
-                                                    <small>When disabled, your game activity remains private.</small>
-                                                </span>
-                                                <input type="checkbox" checked={privacy.shareGameActivity}
-                                                    disabled={!privacyLoaded || privacySaving}
-                                                    onChange={(event) => {
-                                                        const checked = event.target.checked;
-                                                        setPrivacy((current) => ({
-                                                            ...current,
-                                                            shareGameActivity: checked,
-                                                            sharePlaytime: checked ? current.sharePlaytime : false,
-                                                        }));
-                                                    }} />
-                                            </label>
-                                        </AccountCard>
-                                        <AccountCard icon={ArrowClockwise} title="Playtime & sessions"
-                                            description="Control whether your playtime and session count are visible.">
-                                            <label className="account-settings__toggle">
-                                                <span>
-                                                    <strong>Show playtime and session count</strong>
-                                                    <small>You must share game activity to enable this option.</small>
-                                                </span>
-                                                <input type="checkbox" checked={privacy.sharePlaytime}
-                                                    disabled={!privacyLoaded || privacySaving || !privacy.shareGameActivity}
-                                                    onChange={(event) => setPrivacy((current) => ({
-                                                        ...current, sharePlaytime: event.target.checked,
-                                                    }))} />
-                                            </label>
-                                        </AccountCard>
-                                        <AccountCard icon={CheckCircle} title="Achievements"
-                                            description="Choose whether others can see your unlocked achievements.">
-                                            <label className="account-settings__toggle">
-                                                <span>
-                                                    <strong>Share achievements</strong>
-                                                    <small>Turn this off to keep your unlocked achievements private.</small>
-                                                </span>
-                                                <input type="checkbox" checked={privacy.shareAchievements}
-                                                    disabled={!privacyLoaded || privacySaving}
-                                                    onChange={(event) => setPrivacy((current) => ({
-                                                        ...current, shareAchievements: event.target.checked,
-                                                    }))} />
-                                            </label>
-                                        </AccountCard>
-                                        <div className="account-settings__privacy-footer">
-                                            {privacyError && <p className="account-page__error" role="alert">{privacyError}</p>}
-                                            {privacyMessage && <p className="account-settings__success" role="status">{privacyMessage}</p>}
-                                            <Button type="button" variant="primary" onClick={savePrivacy}
-                                                disabled={privacySaving || privacyLoading || !privacyLoaded}>
-                                                {privacySaving ? "Saving…" : "Save privacy preferences"}
-                                            </Button>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
+                            <section className="account-block support-card support-faq-panel">
+
+                                <div className="account-block__head">
+                                    <h2>Privacy</h2>
+
+                                    <p>
+                                        Manage what other people can see
+                                        on your public profile.
+                                    </p>
+                                </div>
+
+                                <div className="account-panel">
+
+                                    <h3>Privacy preferences</h3>
+
+                                    <p>
+                                        Your game activity and achievements
+                                        are private by default.
+                                    </p>
+
+                                    {privacyLoading ? (
+                                        <p>Loading preferences...</p>
+                                    ) : (
+                                        <>
+                                            <div className="account-row support-card support-contact-panel">
+
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+
+                                                        checked={
+                                                            privacy.shareGameActivity
+                                                        }
+
+                                                        onChange={(e) => {
+                                                            const checked =
+                                                                e.target.checked;
+
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                shareGameActivity:
+                                                                    checked,
+
+                                                                sharePlaytime:
+                                                                    checked
+                                                                        ? current.sharePlaytime
+                                                                        : false
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Share recently played games
+                                                </label>
+
+                                                <p>
+                                                    Allow other people to see
+                                                    which games you have played.
+                                                </p>
+
+                                            </div>
+
+                                            <div className="account-row support-card support-contact-panel">
+
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+
+                                                        checked={
+                                                            privacy.sharePlaytime
+                                                        }
+
+                                                        disabled={
+                                                            !privacy.shareGameActivity
+                                                        }
+
+                                                        onChange={(e) => {
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                sharePlaytime:
+                                                                    e.target.checked
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Show playtime and session count
+                                                </label>
+
+                                                <p>
+                                                    Show how long you have played
+                                                    and how many sessions you
+                                                    have completed.
+                                                </p>
+
+                                            </div>
+
+                                            <div className="account-row account-row--last support-card support-contact-panel">
+
+                                                <label>
+                                                    <input
+                                                        type="checkbox"
+
+                                                        checked={
+                                                            privacy.shareAchievements
+                                                        }
+
+                                                        onChange={(e) => {
+                                                            setPrivacy((current) => ({
+                                                                ...current,
+
+                                                                shareAchievements:
+                                                                    e.target.checked
+                                                            }));
+                                                        }}
+                                                    />
+
+                                                    Share achievements
+                                                </label>
+
+                                                <p>
+                                                    Allow other people to see
+                                                    your unlocked achievements.
+                                                </p>
+
+                                            </div>
+
+                                            <div className="account-block__foot">
+
+                                                {privacyError && (
+                                                    <p
+                                                        className="account-page__error"
+                                                        role="alert"
+                                                    >
+                                                        {privacyError}
+                                                    </p>
+                                                )}
+
+                                                {privacyMessage && (
+                                                    <p role="status">
+                                                        {privacyMessage}
+                                                    </p>
+                                                )}
+
+                                                <Button
+                                                    type="button"
+                                                    variant="primary"
+
+                                                    onClick={savePrivacy}
+
+                                                    disabled={
+                                                        privacySaving ||
+                                                        privacyLoading
+                                                    }
+                                                >
+                                                    {privacySaving
+                                                        ? "Saving..."
+                                                        : "Save privacy preferences"}
+                                                </Button>
+
+                                            </div>
+                                        </>
+                                    )}
+
+                                </div>
+
+                            </section>
                         </Reveal>
                     )}
 
                     {activeTab === "security" && (
                         <Reveal key="security">
-                            <div className="account-settings__stack">
-                                <AccountCard icon={ShieldCheck} title="Two-factor authentication"
-                                    description="Add an extra layer of protection using an authenticator app.">
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Two-Factor Authentication</h2>
+                                    <p>
+                                        Add an extra layer of security to your account.
+                                    </p>
+                                </div>
+                                <div className="account-panel">
                                     {twoFactor.enabled ? (
-                                        <form className="account-settings__form" onSubmit={disableTwoFactor}>
-                                            <div className="account-settings__fields">
-                                                <p className="account-settings__success"><CheckCircle size={17} weight="bold" /> 2FA is enabled</p>
-                                                <p className="account-settings__hint">Your account is protected with an authenticator app.</p>
-                                                <label className="account-settings__field" htmlFor="totp-disable">
-                                                    <span>Enter the current six-digit code to disable 2FA</span>
-                                                    <input id="totp-disable" type="text" inputMode="numeric" pattern="[0-9]{6}"
-                                                        maxLength={6} value={totpToken} autoComplete="one-time-code"
-                                                        onChange={(event) => setTotpToken(event.target.value.replace(/\D/g, "").slice(0, 6))}
-                                                        placeholder="6-digit code" required />
-                                                </label>
+                                        <form onSubmit={disableTwoFactor}>
+                                            <div className="account-row account-row--inline">
+                                                <div>
+                                                    <strong style={{ color: '#58a56b' }}>
+                                                        <CheckCircle weight="bold" size={16} style={{ marginRight: 8 }} />
+                                                        2FA is enabled
+                                                    </strong>
+                                                    <p>Your account is protected with an authenticator app.</p>
+                                                </div>
                                             </div>
-                                            <div className="account-settings__actions">
-                                                <Button type="submit" variant="danger" disabled={twoFactorLoading}>
-                                                    {twoFactorLoading ? "Disabling…" : "Disable 2FA"}
-                                                </Button>
+                                            <div className="account-row">
+                                                <label htmlFor="totp-disable">Enter current TOTP code to disable</label>
+                                                <input
+                                                    id="totp-disable"
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    pattern="[0-9]*"
+                                                    maxLength={6}
+                                                    value={totpToken}
+                                                    onChange={(e) => setTotpToken(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                                                    placeholder="6-digit code"
+                                                    required
+                                                />
                                             </div>
-                                        </form>
-                                    ) : twoFactor.qrCode ? (
-                                        <form className="account-settings__form" onSubmit={enableTwoFactor}>
-                                            <div className="account-settings__fields">
-                                                <p>Scan this QR code with your authenticator app.</p>
-                                                <img className="account-settings__qr" src={safeImageUrl(twoFactor.qrCode)} alt="QR code to set up two-factor authentication" />
-                                                <p className="account-settings__hint">Secret (backup): <strong className="account-settings__secret">{twoFactor.secret}</strong></p>
-                                                <label className="account-settings__field" htmlFor="totp-enable">
-                                                    <span>Enter the six-digit code from your app</span>
-                                                    <input id="totp-enable" type="text" inputMode="numeric" pattern="[0-9]{6}"
-                                                        maxLength={6} value={totpToken} autoComplete="one-time-code"
-                                                        onChange={(event) => setTotpToken(event.target.value.replace(/\D/g, "").slice(0, 6))}
-                                                        placeholder="123456" required />
-                                                </label>
-                                            </div>
-                                            <div className="account-settings__actions">
-                                                <Button type="submit" variant="primary" disabled={twoFactorLoading}>
-                                                    {twoFactorLoading ? "Enabling…" : "Enable 2FA"}
-                                                </Button>
-                                                <Button type="button" variant="ghost"
-                                                    onClick={() => { setTwoFactor({ qrCode: null, secret: null, enabled: false }); setTotpToken(""); }}>
-                                                    Cancel
+                                            <div className="account-block__foot">
+                                                <Button
+                                                    type="submit"
+                                                    variant="danger"
+                                                    disabled={twoFactorLoading}
+                                                >
+                                                    {twoFactorLoading ? 'Disabling…' : 'Disable 2FA'}
                                                 </Button>
                                             </div>
                                         </form>
                                     ) : (
-                                        <div className="account-settings__actions account-settings__actions--split">
-                                            <p className="account-settings__hint">Use an authenticator app to protect your account.</p>
-                                            <Button type="button" variant="primary" onClick={setupTwoFactor} disabled={twoFactorLoading}>
-                                                {twoFactorLoading ? "Loading…" : "Set up 2FA"}
-                                            </Button>
-                                        </div>
+                                        <>
+                                            {twoFactor.qrCode ? (
+                                                <form onSubmit={enableTwoFactor}>
+                                                    <div className="account-row">
+                                                        <p>Scan the QR code with your authenticator app (Google Authenticator, Microsoft Authenticator, etc.).</p>
+                                                        <img
+                                                            src={safeImageUrl(twoFactor.qrCode)}
+                                                            alt="QR Code for 2FA"
+                                                            style={{ maxWidth: 200, margin: '10px 0' }}
+                                                        />
+                                                        <p>
+                                                            <small>
+                                                                Secret (backup): <strong>{twoFactor.secret}</strong>
+                                                            </small>
+                                                        </p>
+                                                    </div>
+                                                    <div className="account-row">
+                                                        <label htmlFor="totp-enable">Enter the 6-digit code from the app</label>
+                                                        <input
+                                                            id="totp-enable"
+                                                            type="text"
+                                                            inputMode="numeric"
+                                                            pattern="[0-9]*"
+                                                            maxLength={6}
+                                                            value={totpToken}
+                                                            onChange={(e) => setTotpToken(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                                                            placeholder="123456"
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="account-block__foot">
+                                                        <Button
+                                                            type="submit"
+                                                            variant="secondary"
+                                                            disabled={twoFactorLoading}
+                                                        >
+                                                            {twoFactorLoading ? 'Enabling…' : 'Enable 2FA'}
+                                                        </Button>
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            onClick={() => setTwoFactor({ qrCode: null, secret: null, enabled: false })}
+                                                        >
+                                                            Cancel
+                                                        </Button>
+                                                    </div>
+                                                </form>
+                                            ) : (
+                                                <div className="account-row account-row--inline">
+                                                    <div>
+                                                        <strong>Protect your account</strong>
+                                                        <p>Set up two‑factor authentication using an authenticator app.</p>
+                                                    </div>
+                                                    <Button
+                                                        variant="secondary"
+                                                        onClick={setupTwoFactor}
+                                                        disabled={twoFactorLoading}
+                                                    >
+                                                        {twoFactorLoading ? 'Loading…' : 'Set up 2FA'}
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </>
                                     )}
-                                    {securityError && <p className="account-page__error" role="alert">{securityError}</p>}
-                                </AccountCard>
+                                </div>
+                            </section>
+                        </Reveal>
+                    )}
 
-                                <AccountCard icon={Devices} title="Connected devices"
-                                    description="Only valid sign-ins are listed. A session can remain active even when its browser is closed.">
-                                    <div className="account-settings__actions account-settings__actions--standalone">
-                                        <Button type="button" variant="secondary" onClick={refreshSessions}
-                                            disabled={sessionsLoading || Boolean(revokingSessionId)}>
-                                            <ArrowClockwise size={17} weight="bold" />
-                                            {sessionsLoading ? "Refreshing…" : "Refresh sessions"}
+                    {activeTab === "security" && (
+                        <Reveal key="devices">
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Connected devices</h2>
+
+                                    <p>
+                                        Review the sessions currently signed in to your
+                                        Deadsmile Games account. You can disconnect
+                                        another device without signing out here.
+                                    </p>
+                                </div>
+
+                                <div className="account-panel">
+                                    <div className="account-row account-row--inline">
+                                        <div>
+                                            <strong>Active sessions</strong>
+                                            <p>
+                                                A session may remain active even if its
+                                                browser or Launcher is closed.
+                                            </p>
+                                        </div>
+
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            onClick={refreshSessions}
+                                            disabled={
+                                                sessionsLoading ||
+                                                Boolean(revokingSessionId)
+                                            }
+                                        >
+                                            <ArrowClockwise
+                                                size={18}
+                                                weight="bold"
+                                            />
+                                            {sessionsLoading ? "Refreshing…" : "Refresh"}
                                         </Button>
                                     </div>
-                                    {sessionsError && <p className="account-page__error" role="alert">{sessionsError}</p>}
-                                    {sessionsMessage && <p className="account-settings__success" role="status">{sessionsMessage}</p>}
+
+                                    {sessionsError && (
+                                        <p
+                                            className="account-page__error"
+                                            role="alert"
+                                        >
+                                            {sessionsError}
+                                        </p>
+                                    )}
+
+                                    {sessionsMessage && (
+                                        <p
+                                            className="connection-message"
+                                            role="status"
+                                        >
+                                            {sessionsMessage}
+                                        </p>
+                                    )}
+
                                     {sessionsLoading && !sessionsLoaded ? (
-                                        <p className="account-settings__hint" role="status">Loading connected devices…</p>
+                                        <div className="account-row">
+                                            <p>Loading connected devices…</p>
+                                        </div>
                                     ) : sessionsLoaded && sessions.length === 0 ? (
-                                        <p className="account-settings__hint">No active sessions found.</p>
-                                    ) : sessionsLoaded && (
-                                        <div className="account-settings__devices">
-                                            {sessions.map((session) => {
-                                                const isLauncher = session.client === "launcher";
-                                                const isMobile = /android|ios|iphone|ipad/i.test(session.platform || "");
-                                                const DeviceIcon = isLauncher ? GameController : isMobile ? DeviceMobile : Desktop;
-                                                const clientName = isLauncher ? "Deadsmile Games Launcher" : "Web browser";
-                                                const createdDate = session.createdAt ? new Date(session.createdAt) : null;
-                                                const validCreatedDate = createdDate && !Number.isNaN(createdDate.getTime());
-                                                return (
-                                                    <article className="account-settings__device" key={session.id}>
-                                                        <div className="account-settings__device-main">
-                                                            <span className="account-settings__device-icon" aria-hidden="true"><DeviceIcon size={23} weight="bold" /></span>
-                                                            <div className="account-settings__device-info">
-                                                                <strong>{clientName} · {session.platform || "Unknown device"}</strong>
-                                                                <span>{session.isCurrent ? "This device · Current session" : "Active session"}</span>
-                                                                {validCreatedDate && <small>Signed in: {createdDate.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</small>}
-                                                            </div>
+                                        <div className="account-row">
+                                            <p>No active sessions found.</p>
+                                        </div>
+                                    ) : (
+                                        sessions.map((session) => {
+                                            const isLauncher =
+                                                session.client === "launcher";
+
+                                            const isMobile =
+                                                /android|ios|iphone|ipad/i.test(
+                                                    session.platform || ""
+                                                );
+
+                                            const DeviceIcon = isLauncher
+                                                ? GameController
+                                                : isMobile
+                                                    ? DeviceMobile
+                                                    : Desktop;
+
+                                            const clientName = isLauncher
+                                                ? "Deadsmile Games Launcher"
+                                                : "Web browser";
+
+                                            const platformName =
+                                                session.platform || "Unknown device";
+
+                                            const createdDate = session.createdAt
+                                                ? new Date(session.createdAt)
+                                                : null;
+
+                                            const validCreatedDate =
+                                                createdDate &&
+                                                !Number.isNaN(createdDate.getTime());
+
+                                            return (
+                                                <div
+                                                    key={session.id}
+                                                    className="account-row account-row--inline connection-row support-card support-contact-panel"
+                                                >
+                                                    <div className="connection-row__identity">
+                                                        <span className="connection-row__icon">
+                                                            <DeviceIcon
+                                                                size={22}
+                                                                weight="bold"
+                                                            />
+                                                        </span>
+
+                                                        <div>
+                                                            <strong>
+                                                                {clientName} · {platformName}
+                                                            </strong>
+
+                                                            <p>
+                                                                {session.isCurrent
+                                                                    ? "This device · Current session"
+                                                                    : "Active session"}
+                                                            </p>
+
+                                                            {validCreatedDate && (
+                                                                <p>
+                                                                    Signed in:{" "}
+                                                                    {createdDate.toLocaleString(
+                                                                        undefined,
+                                                                        {
+                                                                            dateStyle: "medium",
+                                                                            timeStyle: "short",
+                                                                        }
+                                                                    )}
+                                                                </p>
+                                                            )}
                                                         </div>
+                                                    </div>
+
+                                                    <div className="connection-row__actions">
                                                         {session.isCurrent ? (
-                                                            <span className="account-settings__current">Current</span>
+                                                            <span
+                                                                className="connection-message"
+                                                                aria-label="Current session"
+                                                            >
+                                                                Current session
+                                                            </span>
                                                         ) : (
-                                                            <Button type="button" variant="danger" disabled={Boolean(revokingSessionId) || sessionsLoading}
-                                                                onClick={() => revokeDeviceSession(session)}>
-                                                                {revokingSessionId === session.id ? "Disconnecting…" : "Disconnect"}
+                                                            <Button
+                                                                type="button"
+                                                                variant="danger"
+                                                                disabled={
+                                                                    Boolean(revokingSessionId) ||
+                                                                    sessionsLoading
+                                                                }
+                                                                onClick={() =>
+                                                                    revokeDeviceSession(session)
+                                                                }
+                                                            >
+                                                                {revokingSessionId === session.id
+                                                                    ? "Disconnecting…"
+                                                                    : "Disconnect"}
                                                             </Button>
                                                         )}
-                                                    </article>
-                                                );
-                                            })}
-                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
                                     )}
-                                </AccountCard>
-                            </div>
+                                </div>
+                            </section>
                         </Reveal>
                     )}
 
                     {activeTab === "games" && (
-                        <Reveal key="games">
-                            <div className="account-settings__stack">
-                                <AccountCard icon={GameController} title="Connected accounts"
-                                    description="Link itch.io to verify purchases and synchronize your game library.">
-                                    <div className="account-settings__connection">
-                                        <span className="account-settings__device-icon" aria-hidden="true"><GameController size={23} weight="bold" /></span>
-                                        <div>
-                                            <strong>itch.io</strong>
-                                            <p className="account-settings__hint">
-                                                {itch.loading ? "Checking connection…" : itch.connected ? `Connected as ${itch.username}` : "Not connected"}
-                                            </p>
+                        <Reveal key="connections">
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Connected accounts</h2>
+                                    <p>Link itch.io to verify purchases and keep your Deadsmile Games library available on the site and launcher.</p>
+                                </div>
+                                <div className="account-panel">
+                                    <div className="account-row account-row--inline connection-row">
+                                        <div className="connection-row__identity">
+                                            <span className="connection-row__icon"><GameController weight="bold" /></span>
+                                            <div>
+                                                <strong>itch.io</strong>
+                                                <p>
+                                                    {itch.loading
+                                                        ? 'Checking connection…'
+                                                        : itch.connected
+                                                            ? `Connected as ${itch.username}`
+                                                            : 'Not connected'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="connection-row__actions">
+                                            {itch.connected ? (
+                                                <>
+                                                    <Button type="button" variant="primary" onClick={syncItch} disabled={itchBusy}>Refresh library</Button>
+                                                    <Button type="button" variant="danger" onClick={disconnectItch} disabled={itchBusy}>Disconnect</Button>
+                                                </>
+                                            ) : (
+                                                <Button type="button" variant="primary" onClick={connectItch} disabled={itchBusy || itch.loading || itch.unavailable}>Connect itch.io</Button>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className="account-settings__actions">
-                                        {itch.connected ? (
-                                            <>
-                                                <Button type="button" variant="secondary" onClick={syncItch} disabled={itchBusy}>Refresh library</Button>
-                                                <Button type="button" variant="danger" onClick={disconnectItch} disabled={itchBusy}>Disconnect</Button>
-                                            </>
-                                        ) : (
-                                            <Button type="button" variant="primary" onClick={connectItch}
-                                                disabled={itchBusy || itch.loading || itch.unavailable}>Connect itch.io</Button>
-                                        )}
-                                    </div>
-                                    {itchMessage && <p className="account-settings__hint" role="status">{itchMessage}</p>}
-                                </AccountCard>
-
-                                <AccountCard icon={CloudArrowUp} title="Cloud saves"
-                                    description="Back up, restore and manage saves for supported games in your library.">
-                                    <CloudSaves />
-                                </AccountCard>
-                            </div>
+                                    {itchMessage && <div className="connection-message" role="status">{itchMessage}</div>}
+                                </div>
+                            </section>
                         </Reveal>
                     )}
-                </main>
+
+                    {activeTab === "games" && (
+                        <Reveal key="cloud">
+                            <section className="account-block support-card support-faq-panel">
+                                <div className="account-block__head">
+                                    <h2>Cloud saves</h2>
+                                    <p>Back up, restore and manage saves for supported games in your library.</p>
+                                </div>
+                                <CloudSaves />
+                            </section>
+                        </Reveal>
+                    )}
+                </div>
             </div>
 
             {avatarDraft && (
