@@ -505,7 +505,7 @@ fieldset {
 }
 .studio-game-strip {
  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
   margin: 45px 0;
   background: #252525;
@@ -712,7 +712,7 @@ fieldset {
 }
 .game-card__image {
   width: 100%;
-  aspect-ratio: 3/4;
+  aspect-ratio: 4/3;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -2081,7 +2081,7 @@ display: flex;
   .game-grid,
   .media-page__grid,
   .news-page__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 28px 18px;
   }
   .full-page-about.studio-about {
@@ -2273,6 +2273,9 @@ display: flex;
   }
   .newsletter-input button {
     width: 100%;
+  }
+  .studio-game-strip {
+    grid-template-columns: repeat(1,minmax(0,1fr))
   }
   .studio-footer {
     padding-top: 55px;
