@@ -1033,7 +1033,7 @@ fieldset {
 }
 .support-card {
   padding: clamp(24px, 3vw, 38px);
-  border-radius: 8px;
+  border-radius: 15px;
 }
 .support-contact-panel {
   background: #202020;
