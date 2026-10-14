@@ -1,26 +1,32 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { api } from '../services/api';
-import { GameCard } from '../components/games/GameCard';
-import { EmptyState } from '../components/ui/EmptyState';
-import { ArrowLeft, HeartStraight } from '@phosphor-icons/react';
+import { useLanguage } from "../context/LanguageContext";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { api, friendlyErrorMessage } from "../services/api";
+import { SkeletonGameGrid } from "../components/ui/Skeleton";
+import { GameCard } from "../components/games/GameCard";
+import { ErrorState } from "../components/ui/ErrorState";
+import { EmptyState } from "../components/ui/EmptyState";
+import { ArrowLeft } from "@phosphor-icons/react";
 
 export function Wishlist() {
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const requestId = useRef(0);
 
   const load = useCallback(() => {
-    let cancelled = false;
+    const id = ++requestId.current;
     setLoading(true);
-    setError('');
+    setError("");
 
-    api.get('/wishlist')
+    api
+      .get("/wishlist")
       .then((data) => {
-        if (!cancelled) {
-          const mapped = (Array.isArray(data) ? data : []).map(game => ({
+        if (id === requestId.current) {
+          const mapped = (Array.isArray(data) ? data : []).map((game) => ({
             ...game,
             coverImage: game.cover_image || game.coverImage || game.heroImage,
           }));
@@ -29,77 +35,83 @@ export function Wishlist() {
         }
       })
       .catch((err) => {
-        if (!cancelled) {
-          setError(err.message || 'Unable to load wishlist.');
+        if (id === requestId.current) {
+          setError(friendlyErrorMessage(err));
           setLoading(false);
         }
       });
 
-    return () => { cancelled = true; };
-  }, []);
+    return () => {
+      requestId.current += 1;
+    };
+  }, [language, user?.id]);
 
   useEffect(() => load(), [load]);
 
   useEffect(() => {
     const onLive = (event) => {
-      if (event.detail?.event_type === 'wishlist.updated') load();
+      if (
+        event.detail?.event_type === "wishlist.updated" ||
+        /^game\.(published|updated|deleted)$/.test(event.detail?.event_type || "")
+      )
+        load();
     };
-    window.addEventListener('deadsmile:live', onLive);
-    return () => window.removeEventListener('deadsmile:live', onLive);
+    window.addEventListener("deadsmile:live", onLive);
+    return () => window.removeEventListener("deadsmile:live", onLive);
   }, [load]);
 
   if (loading) {
     return (
-      <div className="wishlist-page container"
-      >
+      <div className="wishlist-page container">
         <Link to="/" className="back-link">
           <ArrowLeft weight="bold" />
-          <span>Back</span>
+          <span>{t("Back")}</span>
         </Link>
-        <h1>Your Wishlist</h1>
-        <p className="wishlist-page__intro">Loading your saved games...</p>
+        <h1>{t("Your Wishlist")}</h1>
+        <SkeletonGameGrid count={6} />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="wishlist-page container"
-      >
+      <div className="wishlist-page container">
         <Link to="/" className="back-link">
           <ArrowLeft weight="bold" />
-          <span>Back</span>
+          <span>{t("Back")}</span>
         </Link>
-        <h1>Your Wishlist</h1>
-        <p className="wishlist-page__error">{error}</p>
+        <h1>{t("Your Wishlist")}</h1>
+        <ErrorState message={error} onRetry={load} />
       </div>
     );
   }
 
   return (
-    <div className="wishlist-page container"
-    >
+    <div className="wishlist-page container">
       <Link to="/" className="back-link">
         <ArrowLeft weight="bold" />
-        <span>Back</span>
+        <span>{t("Back")}</span>
       </Link>
 
       <div className="wishlist-page__header">
-        <h1>Your Wishlist</h1>
+        <h1>{t("Your Wishlist")}</h1>
         <p className="wishlist-page__intro">
           {games.length === 0
-            ? "You haven't added any games yet."
-            : `You have ${games.length} game${games.length > 1 ? 's' : ''} in your wishlist.`}
+            ? t("You haven't added any games yet.")
+            : t("You have {0} game{1} in your wishlist.", {
+                0: games.length,
+                1: games.length > 1 ? "s" : "",
+              })}
         </p>
       </div>
 
       {games.length === 0 ? (
         <EmptyState
-          title="WISHLIST EMPTY"
-          message="Start adding games you're interested in!"
+          title={t("WISHLIST EMPTY")}
+          message={t("Start adding games you're interested in!")}
           action={
             <Link to="/games" className="btn btn--primary">
-              Browse games
+              {t("Browse games")}
             </Link>
           }
         />

@@ -1,4 +1,4 @@
-import { GameCard } from './GameCard';
+import { GameCard } from "./GameCard";
 
 export function GameGrid({ games }) {
   return (

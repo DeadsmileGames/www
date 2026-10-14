@@ -1,79 +1,75 @@
-import { useCallback, useEffect, useState, useMemo } from 'react';
-import { api } from '../services/api';
-import { useAuth } from './useAuth';
-
-function isValidUUID(str) {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(str);
-}
+import { useCallback, useEffect, useRef, useState } from "react";
+import { api, friendlyErrorMessage } from "../services/api";
+import { useAuth } from "./useAuth";
 
 export function useWishlist(gameId) {
-  const { status: authStatus } = useAuth();
+  const { status: authStatus, user } = useAuth();
+  const validGameId =
+    typeof gameId === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      gameId,
+    )
+      ? gameId
+      : null;
   const [inWishlist, setInWishlist] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const validGameId = useMemo(() => {
-    if (!gameId || typeof gameId !== 'string') return null;
-    return isValidUUID(gameId) ? gameId : null;
-  }, [gameId]);
-
-  const isAuthenticated = authStatus === 'authenticated';
-
+  const [error, setError] = useState("");
+  const requestId = useRef(0);
+  const busy = useRef(false);
+  const authenticated = authStatus === "authenticated";
   const check = useCallback(async () => {
-    if (!validGameId || !isAuthenticated) {
+    const id = ++requestId.current;
+    setError("");
+    if (!validGameId || !authenticated) {
       setInWishlist(false);
       setLoading(false);
       return;
     }
     setLoading(true);
     try {
-      const res = await api.get(`/wishlist/${validGameId}/check`);
-      setInWishlist(res.inWishlist);
-    } catch {
-      setInWishlist(false);
+      const result = await api.get(`/wishlist/${validGameId}/check`);
+      if (id === requestId.current) setInWishlist(Boolean(result.inWishlist));
+    } catch (error) {
+      if (id === requestId.current) setError(friendlyErrorMessage(error));
     } finally {
-      setLoading(false);
+      if (id === requestId.current) setLoading(false);
     }
-  }, [validGameId, isAuthenticated]);
-
+  }, [validGameId, authenticated, user?.id]);
   const toggle = useCallback(async () => {
-    if (!validGameId) {
-      return false;
-    }
-    if (!isAuthenticated) {
-      return false;
-    }
+    if (!validGameId || !authenticated || busy.current) return false;
+    busy.current = true;
+    const id = ++requestId.current;
     setLoading(true);
+    setError("");
     try {
-      if (inWishlist) {
-        await api.delete(`/wishlist/${validGameId}`);
-        setInWishlist(false);
-      } else {
-        await api.post('/wishlist', { gameId: validGameId });
-        setInWishlist(true);
-      }
+      if (inWishlist) await api.delete(`/wishlist/${validGameId}`);
+      else await api.post("/wishlist", { gameId: validGameId });
+      if (id === requestId.current) setInWishlist(!inWishlist);
       return true;
-    } catch {
+    } catch (error) {
+      if (id === requestId.current) setError(friendlyErrorMessage(error));
       return false;
     } finally {
-      setLoading(false);
+      busy.current = false;
+      if (id === requestId.current) setLoading(false);
     }
-  }, [validGameId, inWishlist, isAuthenticated]);
-
+  }, [validGameId, inWishlist, authenticated]);
   useEffect(() => {
-    if (authStatus === 'loading') return;
-    check();
+    if (authStatus !== "loading") check();
+    return () => {
+      requestId.current += 1;
+    };
   }, [check, authStatus]);
-
   useEffect(() => {
     const onLive = (event) => {
-      const detail = event.detail;
-      if (detail?.event_type !== 'wishlist.updated' || detail?.payload?.gameId !== validGameId) return;
-      setInWishlist(Boolean(detail.payload.inWishlist));
+      if (
+        event.detail?.event_type === "wishlist.updated" &&
+        event.detail?.payload?.gameId === validGameId
+      )
+        setInWishlist(Boolean(event.detail.payload.inWishlist));
     };
-    window.addEventListener('deadsmile:live', onLive);
-    return () => window.removeEventListener('deadsmile:live', onLive);
+    window.addEventListener("deadsmile:live", onLive);
+    return () => window.removeEventListener("deadsmile:live", onLive);
   }, [validGameId]);
-
-  return { inWishlist, loading, toggle };
+  return { inWishlist, loading, error, toggle };
 }

@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
-import { api, API_BASE_URL } from './api';
-import { useToast } from '../components/ui/Toast';
+import { useLanguage } from "../context/LanguageContext";
+import { useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
+import { api, API_BASE_URL } from "./api";
+import { useToast } from "../components/ui/Toast";
 
 function emit(event) {
-  window.dispatchEvent(new CustomEvent('deadsmile:live', { detail: event }));
+  window.dispatchEvent(new CustomEvent("deadsmile:live", { detail: event }));
 }
 
 function readCursor(key) {
@@ -23,11 +24,12 @@ function writeCursor(key, value) {
 }
 
 export function RealtimeBridge() {
+  const { t } = useLanguage();
   const { status, user } = useAuth();
   const { push } = useToast();
 
   useEffect(() => {
-    if (status === 'loading' || typeof WebSocket === 'undefined') return undefined;
+    if (status === "loading" || typeof WebSocket === "undefined") return undefined;
     let active = true;
     let socket = null;
     let retryTimer = null;
@@ -35,9 +37,10 @@ export function RealtimeBridge() {
     let retryAttempt = 0;
     let polling = false;
     let connecting = false;
-    const cursorKey = status === 'authenticated' && user?.id
-      ? `deadsmile.live.after.user.${user.id}`
-      : 'deadsmile.live.after.public';
+    const cursorKey =
+      status === "authenticated" && user?.id
+        ? `deadsmile.live.after.user.${user.id}`
+        : "deadsmile.live.after.public";
     let after = readCursor(cursorKey);
     let initialized = after > 0;
 
@@ -47,17 +50,20 @@ export function RealtimeBridge() {
       after = id;
       writeCursor(cursorKey, after);
       emit(event);
-      if (event?.event_type?.endsWith('.published')) {
-        push(`${event.payload?.title || 'New content'} is now available.`, 'info');
+      if (event?.event_type?.endsWith(".published")) {
+        push(
+          t("{0} is now available.", { 0: event.payload?.title || "New content" }),
+          "info",
+        );
       }
     };
 
     const poll = async () => {
-      if (!navigator.onLine || polling) return;
+      if (!active || !navigator.onLine || polling) return;
       polling = true;
       try {
         for (let batch = 0; batch < 5 && active; batch += 1) {
-          const events = await api.get('/platform/events', { after, limit: 100 });
+          const events = await api.get("/platform/events", { after, limit: 100 });
           if (!active || !Array.isArray(events)) return;
           if (!initialized) {
             for (const event of events) {
@@ -71,14 +77,15 @@ export function RealtimeBridge() {
           }
           if (events.length < 100) break;
         }
-      } catch {} finally {
+      } catch {
+      } finally {
         polling = false;
       }
     };
 
     const scheduleReconnect = () => {
       if (!active || retryTimer) return;
-      const baseDelay = Math.min(30_000, 1_500 * (2 ** Math.min(retryAttempt, 4)));
+      const baseDelay = Math.min(30_000, 1_500 * 2 ** Math.min(retryAttempt, 4));
       const delay = baseDelay + Math.floor(Math.random() * 750);
       retryAttempt += 1;
       retryTimer = window.setTimeout(() => {
@@ -88,21 +95,31 @@ export function RealtimeBridge() {
     };
 
     const connect = async () => {
-      if (!active || !navigator.onLine || connecting || socket?.readyState === WebSocket.OPEN || socket?.readyState === WebSocket.CONNECTING) return;
+      if (
+        !active ||
+        !navigator.onLine ||
+        connecting ||
+        socket?.readyState === WebSocket.OPEN ||
+        socket?.readyState === WebSocket.CONNECTING
+      )
+        return;
       connecting = true;
-      let ticket = '';
+      let ticket = "";
       try {
-        if (status === 'authenticated') {
+        if (status === "authenticated") {
           try {
-            const result = await api.get('/platform/live-ticket');
-            ticket = result?.ticket || '';
+            const result = await api.get("/platform/live-ticket");
+            ticket = result?.ticket || "";
           } catch {}
         }
         if (!active) return;
-        const apiUrl = new URL(API_BASE_URL);
-        apiUrl.protocol = apiUrl.protocol === 'https:' ? 'wss:' : 'ws:';
-        apiUrl.pathname = `${apiUrl.pathname.replace(/\/$/, '')}/live`;
-        apiUrl.search = ticket ? `?ticket=${encodeURIComponent(ticket)}` : '';
+        const apiUrl = new URL(
+          import.meta.env.VITE_REALTIME_URL ||
+            (import.meta.env.DEV ? API_BASE_URL : "https://api-ust8.onrender.com/api"),
+        );
+        apiUrl.protocol = apiUrl.protocol === "https:" ? "wss:" : "ws:";
+        apiUrl.pathname = `${apiUrl.pathname.replace(/\/$/, "")}/live`;
+        apiUrl.search = ticket ? `?ticket=${encodeURIComponent(ticket)}` : "";
         socket = new WebSocket(apiUrl.toString());
       } catch {
         socket = null;
@@ -117,7 +134,7 @@ export function RealtimeBridge() {
       socket.onmessage = (message) => {
         try {
           const event = JSON.parse(message.data);
-          if (event.type !== 'connected') consume(event);
+          if (event.type !== "connected") consume(event);
         } catch {}
       };
       socket.onclose = () => {
@@ -135,15 +152,15 @@ export function RealtimeBridge() {
     poll();
     connect();
     pollTimer = window.setInterval(poll, 15_000);
-    window.addEventListener('online', onOnline);
+    window.addEventListener("online", onOnline);
     return () => {
       active = false;
-      window.removeEventListener('online', onOnline);
+      window.removeEventListener("online", onOnline);
       socket?.close();
       window.clearTimeout(retryTimer);
       window.clearInterval(pollTimer);
     };
-  }, [push, status, user?.id]);
+  }, [push, status, user?.id, t]);
 
   return null;
 }

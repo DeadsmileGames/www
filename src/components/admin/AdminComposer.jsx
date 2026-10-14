@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Modal } from '../ui/Modal';
-import { Button } from '../ui/Button';
-import { api } from '../../services/api';
-import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from "../../context/LanguageContext";
+import { SkeletonRows } from "../ui/Skeleton";
+import { useState } from "react";
+import { Modal } from "../ui/Modal";
+import { Button } from "../ui/Button";
+import { api, friendlyErrorMessage } from "../../services/api";
+import { useAuth } from "../../hooks/useAuth";
 import {
   X,
   Trash,
@@ -15,32 +16,35 @@ import {
   WarningCircle,
   Gear,
   PencilSimple,
-  RocketLaunch,
-} from '@phosphor-icons/react';
+} from "@phosphor-icons/react";
 
 const initial = {
-  title: '',
-  excerpt: '',
-  body: '',
-  image: '',
-  category: 'Devlog',
-  thumbnail: '',
-  videoUrl: '',
-  durationSeconds: '',
-  slug: '',
-  shortDescription: '',
-  description: '',
-  status: 'announced',
-  releaseDate: '',
-  heroImage: '',
-  coverImage: '',
-  trailerUrl: '',
+  title: "",
+  excerpt: "",
+  body: "",
+  image: "",
+  category: "Devlog",
+  thumbnail: "",
+  videoUrl: "",
+  durationSeconds: "",
+  slug: "",
+  shortDescription: "",
+  description: "",
+  status: "announced",
+  releaseDate: "",
+  heroImage: "",
+  coverImage: "",
+  trailerUrl: "",
   featured: false,
-  genres: '',
-  platforms: '',
-  purchaseUrl: '',
-  itchGameId: '',
-  downloadUrl: '',
+  genres: "",
+  platforms: "",
+  accessType: "free",
+  itchUrl: "",
+  microsoftStoreBadge: "",
+  gameId: "",
+  purchaseUrl: "",
+  itchGameId: "",
+  downloadUrl: "",
 };
 
 function normalizeList(response) {
@@ -55,13 +59,14 @@ function normalizeList(response) {
 }
 
 export function AdminComposer() {
+  const { t } = useLanguage();
   const { user, refresh } = useAuth();
   const [editing, setEditing] = useState(null);
   const [openingEdit, setOpeningEdit] = useState(null);
   const [type, setType] = useState(null);
   const [form, setForm] = useState({ ...initial });
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
   const [manage, setManage] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -73,29 +78,40 @@ export function AdminComposer() {
   const [loadingItems, setLoadingItems] = useState(false);
   const [deleting, setDeleting] = useState(null);
 
-  if (user?.role !== 'admin') return null;
+  if (user?.role !== "admin") return null;
 
   const set = (key) => (event) => {
-    const value = event.target.type === 'checkbox'
-      ? event.target.checked
-      : event.target.value;
+    const value =
+      event.target.type === "checkbox" ? event.target.checked : event.target.value;
     setForm((current) => ({ ...current, [key]: value }));
   };
+
+  async function loadGameOptions() {
+    const games = [];
+    for (let page = 1; page <= 1000; page++) {
+      const data = await api.get("/games", { page, limit: 48 });
+      games.push(...normalizeList(data));
+      if (page >= data.pagination.totalPages) break;
+    }
+    setItems((current) => ({ ...current, games }));
+  }
 
   function open(typeName) {
     setType(typeName);
     setEditing(null);
     setMenuOpen(false);
     setForm({ ...initial });
-    setError('');
+    setError("");
     setSaved(false);
+    if (typeName === "newsletter")
+      loadGameOptions().catch((error) => setError(friendlyErrorMessage(error)));
   }
 
   function closeComposer() {
     if (saving) return;
     setType(null);
     setEditing(null);
-    setError('');
+    setError("");
     setSaved(false);
   }
 
@@ -103,7 +119,7 @@ export function AdminComposer() {
     try {
       return await fn();
     } catch (err) {
-      if (err?.status === 401 || err?.code === 'UNAUTHENTICATED') {
+      if (err?.status === 401 || err?.code === "UNAUTHENTICATED") {
         await refresh();
         return fn();
       }
@@ -118,106 +134,107 @@ export function AdminComposer() {
     setError("");
 
     try {
-        let detail;
-        let nextType;
-        let nextForm = { ...initial };
+      let detail;
+      let nextType;
+      let nextForm = { ...initial };
 
-        if (kind === "news") {
-            detail = await authedRequest(() =>
-                api.get(`/news/${encodeURIComponent(item.slug)}`)
-            );
-
-            nextType = "newsletter";
-
-            nextForm = {
-                ...nextForm,
-                title: detail.title || "",
-                excerpt: detail.excerpt || "",
-                body: detail.body || "",
-                image: detail.image || "",
-            };
-        } else if (kind === "videos") {
-            detail = await authedRequest(() =>
-                api.get(`/videos/${encodeURIComponent(item.id)}`)
-            );
-
-            nextType = "video";
-
-            nextForm = {
-                ...nextForm,
-                title: detail.title || "",
-                category: detail.category || "",
-                thumbnail: detail.thumbnail || "",
-                videoUrl: detail.video_url || "",
-                durationSeconds: detail.duration_seconds ?? "",
-            };
-        } else if (kind === "games") {
-            detail = await authedRequest(() =>
-                api.get(`/games/${encodeURIComponent(item.slug)}`)
-            );
-
-            nextType = "game";
-
-            nextForm = {
-                ...nextForm,
-                title: detail.title || "",
-                slug: detail.slug || "",
-                shortDescription: detail.shortDescription || "",
-                description: detail.description || "",
-                status: detail.status || "announced",
-                releaseDate: detail.releaseDate
-                    ? String(detail.releaseDate).slice(0, 10)
-                    : "",
-                heroImage: detail.heroImage || "",
-                coverImage: detail.coverImage || "",
-                trailerUrl: detail.trailerUrl || "",
-                featured: Boolean(detail.featured),
-                genres: (detail.genres || []).join(", "),
-                platforms: (detail.platforms || []).join(", "),
-                purchaseUrl: detail.purchaseUrl || "",
-                itchGameId: detail.itchGameId ?? "",
-                downloadUrl: detail.downloadUrl || "",
-            };
-        } else {
-            return;
-        }
-
-        setForm(nextForm);
-        setEditing({ kind, id: item.id });
-        setSaved(false);
-        setManage(false);
-        setType(nextType);
-    } catch (err) {
-        setError(
-            err?.message ||
-            "Unable to load this item for editing."
+      if (kind === "news") {
+        await loadGameOptions();
+        detail = await authedRequest(() =>
+          api.get(`/newswire/${encodeURIComponent(item.slug)}`),
         );
+
+        nextType = "newsletter";
+
+        nextForm = {
+          ...nextForm,
+          title: detail.title || "",
+          excerpt: detail.excerpt || "",
+          body: detail.body || "",
+          image: detail.image || "",
+          gameId: detail.game_id || "",
+        };
+      } else if (kind === "videos") {
+        detail = await authedRequest(() =>
+          api.get(`/videos/${encodeURIComponent(item.id)}`),
+        );
+
+        nextType = "video";
+
+        nextForm = {
+          ...nextForm,
+          title: detail.title || "",
+          category: detail.category || "",
+          thumbnail: detail.thumbnail || "",
+          videoUrl: detail.video_url || "",
+          durationSeconds: detail.duration_seconds ?? "",
+        };
+      } else if (kind === "games") {
+        detail = await authedRequest(() =>
+          api.get(`/admin/game/${encodeURIComponent(item.id)}`),
+        );
+
+        nextType = "game";
+
+        nextForm = {
+          ...nextForm,
+          title: detail.title || "",
+          slug: detail.slug || "",
+          shortDescription: detail.shortDescription || "",
+          description: detail.description || "",
+          status: detail.status || "announced",
+          releaseDate: detail.releaseDate ? String(detail.releaseDate).slice(0, 10) : "",
+          heroImage: detail.heroImage || "",
+          coverImage: detail.coverImage || "",
+          trailerUrl: detail.trailerUrl || "",
+          featured: Boolean(detail.featured),
+          genres: (detail.genres || []).join(", "),
+          platforms: (detail.platforms || []).join(", "),
+          accessType: detail.accessType || "free",
+          itchUrl: detail.itchUrl || "",
+          microsoftStoreBadge: detail.microsoftStoreBadgeHtml || "",
+          purchaseUrl: detail.purchaseUrl || "",
+          itchGameId: detail.itchGameId ?? "",
+          downloadUrl: detail.downloadUrl || "",
+        };
+      } else {
+        return;
+      }
+
+      setForm(nextForm);
+      setEditing({ kind, id: item.id });
+      setSaved(false);
+      setManage(false);
+      setType(nextType);
+    } catch (err) {
+      setError(friendlyErrorMessage(err));
     } finally {
-        setOpeningEdit(null);
+      setOpeningEdit(null);
     }
-}
+  }
 
   async function submit(event) {
     event.preventDefault();
     setSaving(true);
-    setError('');
+    setError("");
     setSaved(false);
 
     try {
       let path, payload;
 
-      if (type === 'newsletter') {
-        path = '/admin/newsletter';
+      if (type === "newsletter") {
+        path = "/admin/newsletter";
         payload = {
           title: form.title,
           excerpt: form.excerpt,
           body: form.body,
           image: form.image,
+          gameId: form.gameId || null,
         };
       }
 
-      if (type === 'video') {
-        path = '/admin/video';
+      if (type === "video") {
+        path = "/admin/video";
         payload = {
           title: form.title,
           category: form.category,
@@ -227,8 +244,8 @@ export function AdminComposer() {
         };
       }
 
-      if (type === 'game') {
-        path = '/admin/game';
+      if (type === "game") {
+        path = "/admin/game";
         payload = {
           title: form.title,
           slug: form.slug,
@@ -240,29 +257,40 @@ export function AdminComposer() {
           coverImage: form.coverImage,
           trailerUrl: form.trailerUrl || null,
           featured: form.featured,
+          accessType: form.accessType,
+          itchUrl: form.itchUrl || null,
+          microsoftStoreBadge: form.microsoftStoreBadge || null,
           purchaseUrl: form.purchaseUrl || null,
           itchGameId: form.itchGameId ? Number(form.itchGameId) : null,
           downloadUrl: form.downloadUrl || null,
-          genres: form.genres.split(',').map((v) => v.trim()).filter(Boolean),
-          platforms: form.platforms.split(',').map((v) => v.trim()).filter(Boolean),
+          genres: form.genres
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean),
+          platforms: form.platforms
+            .split(",")
+            .map((v) => v.trim())
+            .filter(Boolean),
         };
       }
 
       await authedRequest(() =>
-          editing
-              ? api.put(
-                    `${path}/${encodeURIComponent(editing.id)}`,
-                    payload
-                )
-              : api.post(path, payload)
+        editing
+          ? api.put(`${path}/${encodeURIComponent(editing.id)}`, payload)
+          : api.post(path, payload),
       );
       setSaved(true);
+      if (manage) await openManage();
       window.setTimeout(() => {
         setType(null);
         setEditing(null);
       }, 500);
     } catch (err) {
-      setError(err?.message || 'Unable to publish.');
+      setError(
+        err.fields?.length
+          ? err.fields.map((item) => item.message).join("\n")
+          : friendlyErrorMessage(err),
+      );
     } finally {
       setSaving(false);
     }
@@ -272,13 +300,13 @@ export function AdminComposer() {
     setManage(true);
     setMenuOpen(false);
     setLoadingItems(true);
-    setError('');
+    setError("");
 
     try {
       const [newsResponse, videosResponse, gamesResponse] = await Promise.all([
-        api.get('/news', { limit: 48 }),
-        api.get('/videos', { limit: 48 }),
-        api.get('/games', { page: 1, limit: 48 }),
+        api.get("/newswire", { limit: 48 }),
+        api.get("/videos", { limit: 48 }),
+        api.get("/games", { page: 1, limit: 48 }),
       ]);
 
       setItems({
@@ -287,69 +315,79 @@ export function AdminComposer() {
         games: normalizeList(gamesResponse),
       });
     } catch (err) {
-      setError(err?.message || 'Unable to load content.');
+      setError(
+        err.fields?.length
+          ? err.fields.map((item) => item.message).join("\n")
+          : friendlyErrorMessage(err),
+      );
       setItems({ news: [], videos: [], games: [] });
     } finally {
       setLoadingItems(false);
     }
   }
   const deleteEndpointMap = {
-    news: 'newsletter',
-    videos: 'video',
-    games: 'game',
+    news: "newsletter",
+    videos: "video",
+    games: "game",
   };
 
   async function remove(kind, id) {
     const confirmed = window.confirm(
-      'Delete this item permanently? This action cannot be undone.'
+      t("Delete this item permanently? This action cannot be undone."),
     );
     if (!confirmed) return;
 
     const deleteKey = `${kind}:${id}`;
     setDeleting(deleteKey);
-    setError('');
+    setError("");
 
     try {
       const endpoint = deleteEndpointMap[kind];
       if (!endpoint) {
-        throw new Error('This content type could not be handled.');
+        throw new Error("This content type could not be handled.");
       }
-      await authedRequest(() => api.delete(`/admin/${endpoint}/${encodeURIComponent(id)}`));
+      await authedRequest(() =>
+        api.delete(`/admin/${endpoint}/${encodeURIComponent(id)}`),
+      );
 
       setItems((current) => ({
         ...current,
         [kind]: current[kind].filter((item) => item.id !== id),
       }));
     } catch (err) {
-      setError(err?.message || 'Unable to delete item.');
+      setError(
+        err.fields?.length
+          ? err.fields.map((item) => item.message).join("\n")
+          : friendlyErrorMessage(err),
+      );
     } finally {
       setDeleting(null);
     }
   }
 
   const sections = [
-    { key: 'news', label: 'Newswire' },
-    { key: 'videos', label: 'Videos' },
-    { key: 'games', label: 'Games' },
+    { key: "news", label: t("Newswire") },
+    { key: "videos", label: t("Videos") },
+    { key: "games", label: t("Games") },
   ];
 
   return (
     <>
-      <div className={`admin-composer ${menuOpen ? 'is-open' : ''}`}>
+      <div className="admin-composer">
         {menuOpen && (
           <div className="admin-composer__menu" role="menu">
-            <div className="admin-composer__label">Manage content</div>
-            <button type="button" role="menuitem" onClick={() => open('newsletter')}>
+            <div className="admin-composer__label">{t("Manage content")}</div>
+            <button type="button" role="menuitem" onClick={() => open("newsletter")}>
               <Newspaper weight="bold" />
-              <span>Newsletter</span>
+              <span>{t("Newsletter")}</span>
             </button>
-            <button type="button" role="menuitem" onClick={() => open('video')}>
+            <button type="button" role="menuitem" onClick={() => open("video")}>
               <FilmStrip weight="bold" />
-              <span>Video</span>
+              <span>{t("Video")}</span>
             </button>
-            <button type="button" role="menuitem" onClick={() => open('game')}>
+            <button type="button" role="menuitem" onClick={() => open("game")}>
               <GameController weight="bold" />
-              <span>Game</span>
+              <span>{t("Game")}</span>
             </button>
             <button
               type="button"
@@ -358,7 +396,7 @@ export function AdminComposer() {
               onClick={openManage}
             >
               <List weight="bold" />
-              <span>Manage</span>
+              <span>{t("Manage")}</span>
             </button>
           </div>
         )}
@@ -367,7 +405,7 @@ export function AdminComposer() {
           type="button"
           className="admin-composer__toggle"
           onClick={() => setMenuOpen((open) => !open)}
-          aria-label={menuOpen ? 'Close admin menu' : 'Open admin menu'}
+          aria-label={menuOpen ? t("Close admin menu") : t("Open admin menu")}
           aria-expanded={menuOpen}
         >
           {menuOpen ? <X weight="bold" /> : <Gear weight="bold" size={24} />}
@@ -379,7 +417,7 @@ export function AdminComposer() {
           <header>
             <div>
               <h2 id="admin-composer-title">
-                  {editing ? "Edit" : "Publish"} {type}
+                {editing ? t("Edit") : t("Publish")} {type}
               </h2>
             </div>
             <button
@@ -387,70 +425,231 @@ export function AdminComposer() {
               className="admin-modal__close"
               onClick={closeComposer}
               disabled={saving}
-              aria-label="Close"
+              aria-label={t("Close")}
             >
               <X weight="bold" />
             </button>
           </header>
 
           <form onSubmit={submit}>
-            {type === 'newsletter' && (
+            {type === "newsletter" && (
               <>
-                <Field label="Title" value={form.title} onChange={set('title')} required minLength={2} maxLength={180} />
-                <Field label="Excerpt" value={form.excerpt} onChange={set('excerpt')} maxLength={500} />
-                <Text label="Body" value={form.body} onChange={set('body')} required maxLength={30000} />
-                <Field label="Image URL" value={form.image} onChange={set('image')} maxLength={2000} placeholder="https://… or /assets/…" />
+                <Field
+                  label={t("Title")}
+                  value={form.title}
+                  onChange={set("title")}
+                  required
+                  minLength={2}
+                  maxLength={180}
+                />
+                <Field
+                  label={t("Excerpt")}
+                  value={form.excerpt}
+                  onChange={set("excerpt")}
+                  maxLength={500}
+                />
+                <label className="admin-field">
+                  <span>{t("Related game")}</span>
+                  <select value={form.gameId} onChange={set("gameId")}>
+                    <option value="">{t("None")}</option>
+                    {items.games.map((game) => (
+                      <option key={game.id} value={game.id}>
+                        {game.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <Text
+                  label={t("Body")}
+                  value={form.body}
+                  onChange={set("body")}
+                  required
+                  maxLength={30000}
+                />
+                <Field
+                  label={t("Image URL")}
+                  value={form.image}
+                  onChange={set("image")}
+                  maxLength={2000}
+                  placeholder="https://… /assets/…"
+                />
               </>
             )}
 
-            {type === 'video' && (
+            {type === "video" && (
               <>
-                <Field label="Title" value={form.title} onChange={set('title')} required minLength={2} maxLength={180} />
-                <Field label="Category" value={form.category} onChange={set('category')} required maxLength={80} />
-                <Field label="Video URL" type="url" maxLength={2000} value={form.videoUrl} onChange={set('videoUrl')} />
-                <Field label="Thumbnail URL" maxLength={2000} value={form.thumbnail} onChange={set('thumbnail')} />
                 <Field
-                  label="Duration (seconds)"
+                  label={t("Title")}
+                  value={form.title}
+                  onChange={set("title")}
+                  required
+                  minLength={2}
+                  maxLength={180}
+                />
+                <Field
+                  label={t("Category")}
+                  value={form.category}
+                  onChange={set("category")}
+                  required
+                  maxLength={80}
+                />
+                <Field
+                  label={t("Video URL")}
+                  type="url"
+                  maxLength={2000}
+                  value={form.videoUrl}
+                  onChange={set("videoUrl")}
+                />
+                <Field
+                  label={t("Thumbnail URL")}
+                  maxLength={2000}
+                  value={form.thumbnail}
+                  onChange={set("thumbnail")}
+                />
+                <Field
+                  label={t("Duration (seconds)")}
                   type="number"
                   min="0"
                   max="86400"
                   step="1"
                   value={form.durationSeconds}
-                  onChange={set('durationSeconds')}
+                  onChange={set("durationSeconds")}
                 />
               </>
             )}
 
-            {type === 'game' && (
+            {type === "game" && (
               <>
-                <Field label="Title" value={form.title} onChange={set('title')} required minLength={2} maxLength={180} />
-                <Field label="Slug" value={form.slug} onChange={set('slug')} required minLength={2} maxLength={120} pattern="[a-z0-9-]+" />
-                <Text label="Short description" value={form.shortDescription} onChange={set('shortDescription')} required maxLength={500} />
-                <Text label="Description" value={form.description} onChange={set('description')} maxLength={30000} />
+                <Field
+                  label={t("Title")}
+                  value={form.title}
+                  onChange={set("title")}
+                  required
+                  minLength={2}
+                  maxLength={180}
+                />
+                <Field
+                  label={t("Slug")}
+                  value={form.slug}
+                  onChange={set("slug")}
+                  required
+                  minLength={2}
+                  maxLength={120}
+                  pattern="[a-z0-9-]+"
+                />
+                <Text
+                  label={t("Short description")}
+                  value={form.shortDescription}
+                  onChange={set("shortDescription")}
+                  required
+                  maxLength={500}
+                />
+                <Text
+                  label={t("Description")}
+                  value={form.description}
+                  onChange={set("description")}
+                  maxLength={30000}
+                />
 
                 <div className="admin-modal__row">
                   <Field
-                    label="Status"
+                    label={t("Status")}
                     as="select"
                     value={form.status}
-                    onChange={set('status')}
-                    options={['announced', 'in_development', 'released']}
+                    onChange={set("status")}
+                    options={["announced", "in_development", "released"]}
                   />
-                  <Field label="Release date" type="date" value={form.releaseDate} onChange={set('releaseDate')} />
+
+                  <Field
+                    label={t("Release date")}
+                    type="date"
+                    value={form.releaseDate}
+                    onChange={set("releaseDate")}
+                  />
                 </div>
 
-                <Field label="Hero image URL" maxLength={2000} value={form.heroImage} onChange={set('heroImage')} />
-                <Field label="Cover image URL" maxLength={2000} value={form.coverImage} onChange={set('coverImage')} />
-                <Field label="Trailer URL" type="url" maxLength={2000} value={form.trailerUrl} onChange={set('trailerUrl')} />
-                <Field label="Purchase URL" type="url" maxLength={2000} value={form.purchaseUrl} onChange={set('purchaseUrl')} placeholder="https://deadsml.itch.io/game/purchase" />
-                <Field label="itch.io game ID" type="number" min="1" value={form.itchGameId} onChange={set('itchGameId')} />
-                <Field label="Download URL" type="url" maxLength={2000} value={form.downloadUrl} onChange={set('downloadUrl')} placeholder="https://..." />
-                <Field label="Genres (comma separated)" maxLength={509} value={form.genres} onChange={set('genres')} />
-                <Field label="Platforms (comma separated)" maxLength={509} value={form.platforms} onChange={set('platforms')} />
+                <Field
+                  label={t("Hero image URL")}
+                  maxLength={2000}
+                  value={form.heroImage}
+                  onChange={set("heroImage")}
+                />
+                <Field
+                  label={t("Cover image URL")}
+                  maxLength={2000}
+                  value={form.coverImage}
+                  onChange={set("coverImage")}
+                />
+                <Field
+                  label={t("Trailer URL")}
+                  type="url"
+                  maxLength={2000}
+                  value={form.trailerUrl}
+                  onChange={set("trailerUrl")}
+                />
+                <label className="admin-field">
+                  <span>{t("Access")}</span>
+                  <select value={form.accessType} onChange={set("accessType")}>
+                    <option value="free">{t("Free")}</option>
+                    <option value="paid">{t("Paid")}</option>
+                  </select>
+                </label>
+                <Field
+                  label={t("itch.io game page (optional)")}
+                  type="url"
+                  value={form.itchUrl}
+                  onChange={set("itchUrl")}
+                  maxLength={2000}
+                />
+                <Text
+                  label={t("Microsoft Store badge HTML (optional)")}
+                  value={form.microsoftStoreBadge}
+                  onChange={set("microsoftStoreBadge")}
+                  maxLength={4000}
+                />
+                <Field
+                  label={t("Purchase URL")}
+                  type="url"
+                  maxLength={2000}
+                  value={form.purchaseUrl}
+                  onChange={set("purchaseUrl")}
+                  placeholder="https://deadsml.itch.io/game/purchase"
+                />
+                <Field
+                  label={t("itch.io game ID")}
+                  type="number"
+                  min="1"
+                  value={form.itchGameId}
+                  onChange={set("itchGameId")}
+                />
+                <Field
+                  label={t("Download URL")}
+                  type="url"
+                  maxLength={2000}
+                  value={form.downloadUrl}
+                  onChange={set("downloadUrl")}
+                  placeholder="https://..."
+                />
+                <Field
+                  label={t("Genres (comma separated)")}
+                  maxLength={509}
+                  value={form.genres}
+                  onChange={set("genres")}
+                />
+                <Field
+                  label={t("Platforms (comma separated)")}
+                  maxLength={509}
+                  value={form.platforms}
+                  onChange={set("platforms")}
+                />
 
                 <label className="admin-check">
-                  <input type="checkbox" checked={form.featured} onChange={set('featured')} />
-                  <span>Feature on homepage</span>
+                  <input
+                    type="checkbox"
+                    checked={form.featured}
+                    onChange={set("featured")}
+                  />
+                  <span>{t("Feature on homepage")}</span>
                 </label>
               </>
             )}
@@ -458,7 +657,7 @@ export function AdminComposer() {
             {error && (
               <p className="admin-modal__error">
                 <WarningCircle weight="bold" />
-                <span>{error}</span>
+                <span>{t(error)}</span>
               </p>
             )}
 
@@ -466,29 +665,38 @@ export function AdminComposer() {
               <p className="admin-modal__saved">
                 <CheckCircle weight="bold" />
                 <span>
-                    {editing ? "Changes saved." : "Published successfully."}
+                  {editing ? t("Changes saved.") : t("Published successfully.")}
                 </span>
               </p>
             )}
 
             <Button type="submit" disabled={saving}>
               {saving
-                ? "Saving…"
+                ? t("Saving\u2026")
                 : editing
-                  ? "Save changes"
-                  : "Save & publish"}
+                  ? t("Save changes")
+                  : t("Save & publish")}
             </Button>
           </form>
         </div>
       </Modal>
 
-      <Modal open={manage} onClose={() => setManage(false)} labelledBy="admin-manage-title">
+      <Modal
+        open={manage}
+        onClose={() => setManage(false)}
+        labelledBy="admin-manage-title"
+      >
         <div className="admin-manage">
           <header>
             <div>
-              <h2 id="admin-manage-title">Content</h2>
+              <h2 id="admin-manage-title">{t("Content")}</h2>
             </div>
-            <button type="button" className="admin-modal__close" onClick={() => setManage(false)} aria-label="Close">
+            <button
+              type="button"
+              className="admin-modal__close"
+              onClick={() => setManage(false)}
+              aria-label={t("Close")}
+            >
               <X weight="bold" />
             </button>
           </header>
@@ -496,25 +704,23 @@ export function AdminComposer() {
           {error && (
             <p className="admin-modal__error">
               <WarningCircle weight="bold" />
-              <span>{error}</span>
+              <span>{t(error)}</span>
             </p>
           )}
 
           {loadingItems ? (
-            <p className="admin-manage__loading">Loading content…</p>
+            <SkeletonRows />
           ) : (
             sections.map(({ key, label, icon: Icon }) => {
               const list = items[key] || [];
               return (
                 <section key={key} className="admin-manage__section">
                   <div className="admin-manage__section-head">
-                    <h3>
-                      {label}
-                    </h3>
+                    <h3>{label}</h3>
                   </div>
 
                   {list.length === 0 ? (
-                    <p className="admin-manage__empty">No items published.</p>
+                    <p className="admin-manage__empty">{t("No items published.")}</p>
                   ) : (
                     list.map((item) => {
                       const deleteKey = `${key}:${item.id}`;
@@ -527,27 +733,30 @@ export function AdminComposer() {
                             <button
                               type="button"
                               onClick={() => edit(key, item)}
-                              disabled={
-                                  Boolean(openingEdit) ||
-                                  deleting === deleteKey
-                              }
-                              className="btn btn--primary"
-                              aria-label={`Edit ${item.title}`}
-                          >
+                              disabled={Boolean(openingEdit) || deleting === deleteKey}
+                              className="btn btn--secondary"
+                              aria-busy={openingEdit === deleteKey}
+                              aria-label={t("Edit {0}", { 0: item.title })}
+                            >
                               {openingEdit === deleteKey ? (
-                                  <span>…</span>
+                                <span>…</span>
                               ) : (
-                                  <PencilSimple weight="bold" />
+                                <PencilSimple weight="bold" />
                               )}
-                          </button>
+                            </button>
                             <button
                               type="button"
                               onClick={() => remove(key, item.id)}
                               disabled={deleting === deleteKey}
-                              className='btn btn--primary'
-                              aria-label={`Delete ${item.title}`}
+                              aria-busy={deleting === deleteKey}
+                              className="btn btn--danger"
+                              aria-label={t("Delete {0}", { 0: item.title })}
                             >
-                              {deleting === deleteKey ? <span>…</span> : <Trash weight="bold" />}
+                              {deleting === deleteKey ? (
+                                <span>…</span>
+                              ) : (
+                                <Trash weight="bold" />
+                              )}
                             </button>
                           </div>
                         </div>
@@ -564,15 +773,16 @@ export function AdminComposer() {
   );
 }
 
-function Field({ label, as = 'input', options = [], ...props }) {
+function Field({ label, as = "input", options = [], ...props }) {
+  const { t } = useLanguage();
   return (
     <label className="admin-field">
       <span>{label}</span>
-      {as === 'select' ? (
+      {as === "select" ? (
         <select {...props}>
           {options.map((opt) => (
             <option key={opt} value={opt}>
-              {opt}
+              {t(opt)}
             </option>
           ))}
         </select>

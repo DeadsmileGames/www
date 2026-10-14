@@ -1,11 +1,11 @@
+node_modules/
+dist/
+release/
+release-store/
 .env
 .env.*
 !.env.example
-node_modules
-dist
-coverage
+.env.example
 *.log
+coverage/
 .DS_Store
-
-.vercel
-.env*

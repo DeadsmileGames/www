@@ -2,10 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://deadsmilegames.vercel.app/</loc></url>
   <url><loc>https://deadsmilegames.vercel.app/games</loc></url>
-  <url><loc>https://deadsmilegames.vercel.app/news</loc></url>
+  <url><loc>https://deadsmilegames.vercel.app/newswire</loc></url>
   <url><loc>https://deadsmilegames.vercel.app/support</loc></url>
   <url><loc>https://deadsmilegames.vercel.app/about</loc></url>
   <url><loc>https://deadsmilegames.vercel.app/presskit</loc></url>
   <url><loc>https://deadsmilegames.vercel.app/privacy</loc></url>
   <url><loc>https://deadsmilegames.vercel.app/terms</loc></url>
+  <url><loc>https://deadsmilegames.vercel.app/launcher</loc></url>
 </urlset>

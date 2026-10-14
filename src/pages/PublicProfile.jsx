@@ -1,259 +1,401 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
-    ArrowLeft,
-    ArrowUpRight,
-    Clock,
-    GameController,
-    Images,
-    ShoppingCart,
-    Trophy,
-    X,
+  ArrowLeft,
+  ArrowUpRight,
+  Clock,
+  Images,
+  ShoppingCart,
+  Trophy,
+  X,
 } from "@phosphor-icons/react";
-import { api } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
+import { api, friendlyErrorMessage } from "../services/api";
+import { SkeletonProfile } from "../components/ui/Skeleton";
+import { ErrorState } from "../components/ui/ErrorState";
 import { Modal } from "../components/ui/Modal";
 import { Lightbox } from "../components/ui/Lightbox";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl } from "../utils/urls";
 
-const duration = (ms) => {
-    const hours = Math.floor(Number(ms || 0) / 3_600_000);
-    const minutes = Math.floor((Number(ms || 0) % 3_600_000) / 60_000);
-    return hours ? `${hours}h ${minutes}m` : `${minutes}m`;
-};
+const PLACEHOLDER = "/assets/placeholders/game-cover.svg";
+
+function duration(value) {
+  const milliseconds = Math.max(0, Number(value) || 0);
+  const hours = Math.floor(milliseconds / 3_600_000);
+  const minutes = Math.floor((milliseconds % 3_600_000) / 60_000);
+
+  return hours ? `${hours}h ${minutes}m` : `${minutes}m`;
+}
 
 export function PublicProfile() {
-    const { username } = useParams();
-    const [profile, setProfile] = useState(null);
-    const [error, setError] = useState(false);
-    const [gallery, setGallery] = useState(null);
-    const [selected, setSelected] = useState(null);
-    useEffect(() => {
-        let active = true;
-        setProfile(null);
-        setError(false);
-        setGallery(null);
-        setSelected(null);
-        api.get(`/account/profile/${encodeURIComponent(username.trim().toLowerCase())}`)
-            .then((data) => {
-                if (!active) return;
-                if (!data || typeof data.username !== "string") setError(true);
-                else setProfile(data);
-            })
-            .catch(() => {
-                if (active) setError(true);
-            });
-        return () => {
-            active = false;
-        };
-    }, [username]);
-    if (error)
-        return (
-            <div className="profile-page container">
-                <Link to="/" className="back-link">
-                    <ArrowLeft weight="bold" />
-                    Back
-                </Link>
-                <h1>Profile not found.</h1>
-            </div>
-        );
-    if (!profile)
-        return (
-            <div className="profile-page container">
-                <p>Loading profile…</p>
-            </div>
-        );
-    const games = profile.recentGames || [];
-    const achievements = profile.achievements || [];
-    const images = (gallery?.screenshots || [])
-        .map(safeImageUrl)
-        .filter(Boolean);
-    const websiteUrl = safeHttpsUrl(profile.websiteUrl);
-    return (
-        <div className="profile-page container">
-            <Link to="/" className="back-link">
-                <ArrowLeft weight="bold" />
-                <span>Back</span>
-            </Link>
-            <header className="profile-page__hero">
-                <div className="profile-page__avatar">
-                    {safeImageUrl(profile.avatarUrl) ? (
-                        <img src={safeImageUrl(profile.avatarUrl)} alt="" />
-                    ) : (
-                        profile.username.slice(0, 1).toUpperCase()
-                    )}
-                </div>
-                <div>
-                    <h1>@{profile.username}</h1>
-                    <p>{profile.bio || "No bio yet."}</p>
-                    <div className="profile-page__facts">
-                        <span>
-                            Member since{" "}
-                            {new Date(profile.createdAt).toLocaleDateString()}
-                        </span>
-                        {profile.location && <span>{profile.location}</span>}
-                        {websiteUrl && (
-                            <a
-                                href={websiteUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                Website <ArrowUpRight size={14} weight="bold" />
-                            </a>
-                        )}
-                    </div>
-                </div>
-            </header>
-            <section className="profile-section">
-                <div className="profile-section__head">
-                    <div>
-                        <GameController size={23} weight="bold" />
-                        <h2>Recently played</h2>
-                    </div>
-                    <span>{games.length} games</span>
-                </div>
-                {games.length ? (
-                    <div className="profile-games">
-                        {games.map((game) => (
-                            <article key={game.id}>
-                                <img
-                                    src={
-                                        safeImageUrl(game.coverImage) ||
-                                        safeImageUrl(game.heroImage) ||
-                                        "/assets/placeholders/game-cover.svg"
-                                    }
-                                    alt=""
-                                    loading="lazy"
-                                />
-                                <div>
-                                    <h3>{game.title}</h3>
-                                    {game.totalMs != null &&
-                                        game.sessions != null && (
-                                            <p>
-                                                <Clock size={14} weight="bold" />
+  const { t, language } = useLanguage();
+  const { username } = useParams();
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState("");
+  const [revision, setRevision] = useState(0);
+  const [avatarFailed, setAvatarFailed] = useState(false);
+  const [gallery, setGallery] = useState(null);
+  const [selected, setSelected] = useState(null);
 
-                                                {duration(game.totalMs)} ·{" "}
-                                                {game.sessions} sessions
-                                            </p>
-                                        )}
-                                    <div className="profile-game-actions">
-                                        <Link to={`/games/${game.slug}`} className="btn btn--primary">
-                                            View game
-                                        </Link>
-                                        {safeItchUrl(game.purchaseUrl) && (
-                                            <a
-                                                href={safeItchUrl(
-                                                    game.purchaseUrl,
-                                                )}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="btn btn--primary"
-                                            >
-                                                <ShoppingCart
-                                                    size={14}
-                                                    weight="bold"
-                                                />
-                                                Buy
-                                            </a>
-                                        )}
-                                        {game.screenshots?.length > 0 && (
-                                            <button
-                                                type="button"
-                                                onClick={() => setGallery(game)}
-                                            >
-                                                <Images
-                                                    size={14}
-                                                    weight="bold"
-                                                />
-                                                Screenshots
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="profile-empty">
-                        No public play activity yet.
-                    </div>
-                )}
-            </section>
-            <section className="profile-section">
-                <div className="profile-section__head">
-                    <div>
-                        <Trophy size={23} weight="bold" />
-                        <h2>Achievements</h2>
-                    </div>
-                    <span>{achievements.length} unlocked</span>
-                </div>
-                {achievements.length ? (
-                    <div className="profile-achievements">
-                        {achievements.map((item) => (
-                            <article key={`${item.gameSlug}-${item.key}`}>
-                                <Trophy size={22} weight="bold" />
-                                <div>
-                                    <strong>{item.title}</strong>
-                                    <span>
-                                        {item.gameTitle} · {item.points} points
-                                    </span>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="profile-empty">
-                        No achievements unlocked yet.
-                    </div>
-                )}
-            </section>
-            <Modal
-                open={Boolean(gallery)}
-                onClose={() => {
-                    setSelected(null);
-                    setGallery(null);
-                }}
-                labelledBy="profile-gallery-title"
-            >
-                <div className="profile-gallery">
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setSelected(null);
-                            setGallery(null);
-                        }}
-                        aria-label="Close"
-                    >
-                        <X size={19} weight="bold" />
-                    </button>
-                    <h2 id="profile-gallery-title">
-                        {gallery?.title} screenshots
-                    </h2>
-                    <div>
-                        {images.map((src, index) => (
-                            <button
-                                type="button"
-                                key={src}
-                                onClick={() => setSelected(index)}
-                            >
-                                <img
-                                    src={src}
-                                    alt={`Screenshot ${index + 1}`}
-                                    loading="lazy"
-                                />
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </Modal>
-            <Lightbox
-                images={images}
-                selectedIndex={selected}
-                onClose={() => setSelected(null)}
-                onPrev={() =>
-                    setSelected((selected - 1 + images.length) % images.length)
-                }
-                onNext={() => setSelected((selected + 1) % images.length)}
-            />
-        </div>
+  useEffect(() => {
+    let active = true;
+
+    setProfile(null);
+    setError("");
+    setAvatarFailed(false);
+    setGallery(null);
+    setSelected(null);
+
+    const name = String(username || "")
+      .trim()
+      .toLowerCase();
+
+    api
+      .get(`/account/profile/${encodeURIComponent(name)}`)
+      .then((data) => {
+        if (!active) return;
+
+        if (!data || typeof data.username !== "string") {
+          setError(friendlyErrorMessage({ code: "INVALID_RESPONSE" }));
+          return;
+        }
+
+        setProfile(data);
+      })
+      .catch((failure) => {
+        if (active) setError(friendlyErrorMessage(failure));
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [username, language, revision]);
+
+  const closeGallery = () => {
+    setSelected(null);
+    setGallery(null);
+  };
+
+  if (error) {
+    return (
+      <div className="profile-page container">
+        <ErrorState message={error} onRetry={() => setRevision((value) => value + 1)} />
+
+        <Link to="/" className="back-link" style={{ marginTop: 32 }}>
+          <ArrowLeft weight="bold" />
+          <span>{t("Back")}</span>
+        </Link>
+      </div>
     );
+  }
+
+  if (!profile) {
+    return (
+      <div
+        className="profile-page container"
+        role="status"
+        aria-label={t("Loading profile")}
+      >
+        <SkeletonProfile />
+      </div>
+    );
+  }
+
+  const games = Array.isArray(profile.recentGames) ? profile.recentGames : [];
+
+  const achievements = Array.isArray(profile.achievements) ? profile.achievements : [];
+
+  const images = (Array.isArray(gallery?.screenshots) ? gallery.screenshots : [])
+    .map(safeImageUrl)
+    .filter(Boolean);
+
+  const avatar = safeImageUrl(profile.avatarUrl);
+  const website = safeHttpsUrl(profile.websiteUrl);
+  const createdAt = profile.createdAt ? new Date(profile.createdAt) : null;
+
+  return (
+    <div className="profile-page container">
+      <Link to="/" className="back-link">
+        <ArrowLeft weight="bold" />
+        <span>{t("Back")}</span>
+      </Link>
+      <header className="profile-page__hero">
+        <div className="profile-page__avatar">
+          {avatar && !avatarFailed ? (
+            <img src={avatar} alt="" onError={() => setAvatarFailed(true)} />
+          ) : (
+            profile.username.slice(0, 1).toUpperCase()
+          )}
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1
+            style={{
+              fontSize: 36,
+              lineHeight: "36px",
+              margin: "0 0 20px",
+              overflowWrap: "anywhere",
+            }}
+          >
+            @{profile.username}
+          </h1>
+
+          <p
+            style={{
+              fontSize: 16,
+              lineHeight: "20px",
+              margin: "0 0 12px",
+              whiteSpace: "pre-line",
+              overflowWrap: "anywhere",
+            }}
+          >
+            {profile.bio || t("No bio yet.")}
+          </p>
+
+          <div className="profile-page__facts">
+            {createdAt && !Number.isNaN(createdAt.getTime()) && (
+              <span>
+                {t("Member since")} {createdAt.toLocaleDateString(language)}
+              </span>
+            )}
+
+            {profile.location && <span>{profile.location}</span>}
+
+            {website && (
+              <a
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                {t("Website ")}
+                <ArrowUpRight size={14} weight="bold" />
+              </a>
+            )}
+          </div>
+        </div>
+      </header>
+
+      <section aria-label={t("Recently played")}>
+        {games.length ? (
+          <div className="game-grid">
+            {games.map((game) => {
+              const purchase = safeItchUrl(game.purchaseUrl);
+              const screenshots = (
+                Array.isArray(game.screenshots) ? game.screenshots : []
+              )
+                .map(safeImageUrl)
+                .filter(Boolean);
+
+              const gamePath = `/games/${encodeURIComponent(game.slug)}`;
+
+              return (
+                <article className="game-card" key={game.id}>
+                  <Link
+                    to={gamePath}
+                    className="game-card__image-wrap"
+                    style={{ display: "block" }}
+                    aria-label={`${t("View game")}: ${game.title}`}
+                  >
+                    <img
+                      className="game-card__image"
+                      src={
+                        safeImageUrl(game.coverImage) ||
+                        safeImageUrl(game.heroImage) ||
+                        PLACEHOLDER
+                      }
+                      alt=""
+                      loading="lazy"
+                      style={{ display: "block" }}
+                    />
+                  </Link>
+
+                  <h3
+                    className="game-card__title"
+                    style={{
+                      fontSize: 28,
+                      lineHeight: "28px",
+                      margin: "0 0 12px",
+                      overflowWrap: "anywhere",
+                    }}
+                  >
+                    <Link to={gamePath}>{game.title}</Link>
+                  </h3>
+
+                  {game.totalMs != null && game.sessions != null && (
+                    <p
+                      className="game-card__meta"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexWrap: "wrap",
+                        gap: 6,
+                        margin: 0,
+                        fontSize: 16,
+                        lineHeight: "16px",
+                      }}
+                    >
+                      <Clock size={14} weight="bold" />
+                      <span>
+                        {duration(game.totalMs)} · {game.sessions}
+                        {t(" sessions")}
+                      </span>
+                    </p>
+                  )}
+
+                  {(purchase || screenshots.length > 0) && (
+                    <div className="profile-game-actions" style={{ marginTop: 20 }}>
+                      {purchase && (
+                        <a
+                          href={purchase}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn--secondary"
+                        >
+                          <ShoppingCart size={16} weight="bold" />
+                          {t("Buy")}
+                        </a>
+                      )}
+
+                      {screenshots.length > 0 && (
+                        <button
+                          type="button"
+                          className="btn btn--secondary"
+                          onClick={() => {
+                            setGallery({
+                              title: game.title,
+                              screenshots,
+                            });
+                            setSelected(null);
+                          }}
+                        >
+                          <Images size={16} weight="bold" />
+                          {t("Screenshots")}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="profile-empty">{t("No public play activity yet.")}</div>
+        )}
+      </section>
+
+      <section className="profile-section">
+        <div className="profile-section__head">
+          <div>
+            <Trophy size={23} weight="bold" />
+            <h2>{t("Achievements")}</h2>
+          </div>
+          <span>
+            {achievements.length}
+            {t(" unlocked")}
+          </span>
+        </div>
+
+        {achievements.length ? (
+          <div className="profile-achievements">
+            {achievements.map((item) => (
+              <article key={`${item.gameSlug}-${item.key}`}>
+                <Trophy size={22} weight="bold" style={{ flexShrink: 0 }} />
+                <div
+                  style={{
+                    minWidth: 0,
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  <strong>{item.title}</strong>
+                  <span>
+                    {item.gameTitle} · {item.points}
+                    {t(" points")}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="profile-empty">{t("No achievements unlocked yet.")}</div>
+        )}
+      </section>
+
+      <Modal
+        open={Boolean(gallery) && selected === null}
+        onClose={closeGallery}
+        labelledBy="profile-gallery-title"
+      >
+        <div className="profile-gallery">
+          <div className="profile-section__head" style={{ display: "flex" }}>
+            <h2 id="profile-gallery-title">
+              {gallery?.title}
+              {t(" screenshots")}
+            </h2>
+
+            <button
+              type="button"
+              className="btn btn--secondary"
+              style={{ padding: 12, flexShrink: 0 }}
+              onClick={closeGallery}
+              aria-label={t("Close")}
+            >
+              <X size={20} weight="bold" />
+            </button>
+          </div>
+
+          <div>
+            {images.map((src, index) => (
+              <button
+                type="button"
+                className="game-details__screenshot-item"
+                key={`${src}-${index}`}
+                onClick={() => setSelected(index)}
+                aria-label={t("Open screenshot {0}", {
+                  0: index + 1,
+                })}
+              >
+                <img
+                  src={src}
+                  alt={t("Screenshot {0}", {
+                    0: index + 1,
+                  })}
+                  loading="lazy"
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    aspectRatio: "16/9",
+                    objectFit: "cover",
+                    borderRadius: 10,
+                  }}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      </Modal>
+
+      <Lightbox
+        images={images}
+        selectedIndex={selected}
+        onClose={() => setSelected(null)}
+        onPrev={() =>
+          setSelected((index) =>
+            index === null || !images.length
+              ? null
+              : (index - 1 + images.length) % images.length,
+          )
+        }
+        onNext={() =>
+          setSelected((index) =>
+            index === null || !images.length ? null : (index + 1) % images.length,
+          )
+        }
+      />
+    </div>
+  );
 }

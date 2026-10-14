@@ -1,12 +1,14 @@
-import { Link } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
+import { Link } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
 export function NotFound() {
   const { t } = useLanguage();
   return (
     <div className="not-found">
-      <h1>PAGE NOT FOUND</h1>
-      <Link to="/" className="btn btn--primary">{t('nav.home')}</Link>
+      <h1>{t("PAGE NOT FOUND")}</h1>
+      <Link to="/" className="btn btn--primary">
+        {t("nav.home")}
+      </Link>
     </div>
   );
 }

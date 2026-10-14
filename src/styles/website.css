@@ -247,7 +247,9 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle at center, #000000a9 20%, #000 100%), url('/assets/games/screenshots/abbys-restless-heart/2.png');
+  background-image:
+    radial-gradient(circle at center, #000000a9 20%, #000 100%),
+    url("/assets/games/screenshots/abbys-restless-heart/2.png");
   background-size: auto;
   background-repeat: repeat;
 }
@@ -381,7 +383,6 @@ a {
   flex-direction: column;
 }
 
-
 .div-block-3 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -414,11 +415,7 @@ a {
   -ms-flex-direction: column;
   flex-direction: column;
   background-color: #3f5473;
-  background-image: radial-gradient(
-    circle farthest-corner at 50% 50%,
-    #1d252e,
-    #1d252e
-  );
+  background-image: radial-gradient(circle farthest-corner at 50% 50%, #1d252e, #1d252e);
   background-position: 0px 0px;
   background-size: auto;
   font-family: "Berlin sans fb demi", sans-serif;
@@ -602,7 +599,6 @@ a {
 }
 
 .social-link.instagram {
-  background-image: url("../images/Img_Icon_Instagram_Grey_1Img_Icon_Instagram_Grey.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -613,28 +609,24 @@ a {
 }
 
 .social-link.facebook {
-  background-image: url("../images/Img_Icon_Facebook_Grey_1Img_Icon_Facebook_Grey.png");
   background-position: 0px 0px;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .social-link.youtube {
-  background-image: url("../images/Img_Icon_Youtube_Grey_1Img_Icon_Youtube_Grey.png");
   background-position: 0px 0px;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .social-link.steam {
-  background-image: url("../images/Img_Icon_Steam_Grey_1Img_Icon_Steam_Grey.png");
   background-position: 0px 0px;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
 .social-link.tiktok {
-  background-image: url("../images/Img_Icon_Tiktok_grey_1Img_Icon_Tiktok_grey.png");
   background-position: 0px 0px;
   background-size: contain;
   background-repeat: no-repeat;
@@ -739,7 +731,6 @@ a {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  background-image: url("../images/IMG_HeaderLine.png");
   background-position: 50% 50%;
   background-size: contain;
   background-repeat: repeat-x;
@@ -815,7 +806,6 @@ a {
 .full-page-about {
   height: 100vh;
   background-color: #0f0f0f;
-  background-image: url("../images/Img_Icon_BackgroundTiny.png");
   background-position: 0% 90%;
   background-size: auto 80%;
   background-repeat: no-repeat;

@@ -1,125 +1,106 @@
+import { useLanguage } from "../context/LanguageContext";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { api } from "../services/api";
+import { api, friendlyErrorMessage } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 
 export function VerifyEmail() {
-    const location = useLocation();
-    const { refresh } = useAuth();
+  const { t } = useLanguage();
+  const location = useLocation();
+  const { refresh } = useAuth();
 
-    const [token] = useState(() => {
-        const params = new URLSearchParams(
-            window.location.search
-        );
+  const [token] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
 
-        return params.get("token");
-    });
+    return params.get("token");
+  });
 
-    const [status, setStatus] = useState(
-        token ? "loading" : "ready"
-    );
+  const [status, setStatus] = useState(token ? "loading" : "ready");
 
-    const [message, setMessage] = useState(
-        token
-            ? "Confirming your email..."
-            : "Check your inbox for a confirmation link."
-    );
+  const [message, setMessage] = useState(
+    token
+      ? t("Confirming your email...")
+      : t("Check your inbox for a confirmation link."),
+  );
 
-    const attempted = useRef(false);
+  const attempted = useRef(false);
 
-    useEffect(() => {
-        // Remove o token da barra de enderecos.
-        if (window.location.search) {
-            window.history.replaceState(
-                window.history.state,
-                "",
-                window.location.pathname
-            );
+  useEffect(() => {
+    if (window.location.search) {
+      window.history.replaceState(window.history.state, "", window.location.pathname);
+    }
+
+    if (!token || attempted.current) {
+      return;
+    }
+
+    attempted.current = true;
+
+    async function confirm() {
+      try {
+        const result = await api.post("/auth/confirm-email", { token });
+
+        setStatus("success");
+
+        if (result?.emailChanged) {
+          setMessage(
+            t("Your email has been changed successfully. ") +
+              t("Please sign in again using your new email address."),
+          );
+          await refresh();
+        } else {
+          setMessage(
+            t("Your email has been confirmed! ") +
+              t("You can now sign in to your account."),
+          );
         }
+      } catch (error) {
+        setStatus("error");
 
-        if (!token || attempted.current) {
-            return;
-        }
+        setMessage(friendlyErrorMessage(error));
+      }
+    }
 
-        attempted.current = true;
+    confirm();
+  }, [token, refresh]);
 
-        async function confirm() {
-            try {
-                const result = await api.post(
-                    "/auth/confirm-email",
-                    { token }
-                );
+  return (
+    <section className="newsletter-action page-section">
+      <div className="newsletter-action__card" aria-busy={status === "loading"}>
+        <h1>{t("Email verification")}</h1>
 
-                setStatus("success");
+        {status === "loading" && (
+          <div className="save-progress" aria-hidden="true">
+            <div className="save-progress__bar" />
+          </div>
+        )}
+        <p role="status">{t(message)}</p>
 
-                if (result?.emailChanged) {
-                    setMessage(
-                        "Your email has been changed successfully. " +
-                        "Please sign in again using your new email address."
-                    );
+        {location.state?.registered && (
+          <p>
+            {t(
+              "Your account has been created. Confirm your email address before signing in.",
+            )}
+          </p>
+        )}
 
-                    // A troca de e-mail invalida as sessoes antigas.
-                    await refresh();
-                } else {
-                    setMessage(
-                        "Your email has been confirmed! " +
-                        "You can now sign in to your account."
-                    );
-                }
-            } catch (error) {
-                setStatus("error");
+        {status === "loading" && <p>{t("Verifying your confirmation link...")}</p>}
 
-                setMessage(
-                    error?.message ||
-                    "This confirmation link is invalid or has expired."
-                );
-            }
-        }
+        {status === "error" && (
+          <p>
+            {t(
+              "If your link has expired, return to the login page and request another one.",
+            )}
+          </p>
+        )}
 
-        confirm();
-    }, [token, refresh]);
-
-    return (
-        <section className="newsletter-action page-section">
-            <div className="newsletter-action__card">
-
-                <h1>Email verification</h1>
-
-                <p role="status">
-                    {message}
-                </p>
-
-                {location.state?.registered && (
-                    <p>
-                        Your account has been created.
-                        Confirm your email address before signing in.
-                    </p>
-                )}
-
-                {status === "loading" && (
-                    <p>
-                        Verifying your confirmation link...
-                    </p>
-                )}
-
-                {status === "error" && (
-                    <p>
-                        If your link has expired, return to
-                        the login page and request another one.
-                    </p>
-                )}
-
-                {status !== "loading" && (
-                    <Link
-                        className="btn btn--primary"
-                        to="/login"
-                    >
-                        Go to login
-                    </Link>
-                )}
-
-            </div>
-        </section>
-    );
+        {status !== "loading" && (
+          <Link className="btn btn--primary" to="/login">
+            {t("Go to login")}
+          </Link>
+        )}
+      </div>
+    </section>
+  );
 }

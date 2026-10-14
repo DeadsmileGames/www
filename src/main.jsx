@@ -1,16 +1,15 @@
-import './styles/global.css';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
-import { AuthProvider } from './context/AuthContext';
-import { LanguageProvider } from './context/LanguageContext';
-import { ToastProvider } from './components/ui/Toast';
-import { IconContext } from '@phosphor-icons/react';
-import { RealtimeBridge } from './services/RealtimeBridge';
-import 'font-awesome/css/font-awesome.min.css';
+import "./styles/global.css";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
+import { AuthProvider } from "./context/AuthContext";
+import { LanguageProvider } from "./context/LanguageContext";
+import { ToastProvider } from "./components/ui/Toast";
+import { IconContext } from "@phosphor-icons/react";
+import { RealtimeBridge } from "./services/RealtimeBridge";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter
       future={{
@@ -19,8 +18,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       }}
     >
       <LanguageProvider>
-        <IconContext.Provider value={{ weight: 'bold', size: 20 }}><AuthProvider><ToastProvider><RealtimeBridge /><App /></ToastProvider></AuthProvider></IconContext.Provider>
+        <IconContext.Provider value={{ weight: "bold", size: 20 }}>
+          <AuthProvider>
+            <ToastProvider>
+              <RealtimeBridge />
+              <App />
+            </ToastProvider>
+          </AuthProvider>
+        </IconContext.Provider>
       </LanguageProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
