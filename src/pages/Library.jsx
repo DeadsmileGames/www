@@ -98,7 +98,7 @@ export function Library() {
             </Link>
           }
         />
-      ) : !error ? (
+      ) : games.length > 0 ? (
         <div className="library-page__grid">
           {games.map((game) => {
             const cover = safeImageUrl(game.coverImage);
