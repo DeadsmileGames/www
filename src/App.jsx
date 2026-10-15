@@ -18,6 +18,7 @@ const Privacy = page(() => import("./pages/Privacy"), "Privacy");
 const Terms = page(() => import("./pages/Terms"), "Terms");
 const About = page(() => import("./pages/About"), "About");
 const News = page(() => import("./pages/News"), "News");
+const Videos = page(() => import("./pages/Videos"), "Videos");
 const Wishlist = page(() => import("./pages/Wishlist"), "Wishlist");
 const Support = page(() => import("./pages/Support"), "Support");
 const PressKit = page(() => import("./pages/PressKit"), "PressKit");
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="/presskit" element={<PressKit />} />
         <Route path="/games" element={<Games />} />
         <Route path="/launcher" element={<Launcher />} />
+        <Route path="/videos" element={<Videos />} />
         <Route path="/games/:slug" element={<GameDetails />} />
         <Route
           path="/wishlist"
