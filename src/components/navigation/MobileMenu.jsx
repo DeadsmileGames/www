@@ -21,6 +21,7 @@ export function MobileMenu({ open, onClose }) {
     ["/about", "nav.about"],
     ["/games", "nav.games"],
     ["/videos", "nav.videos"],
+    ["/soundtracks", "nav.soundtracks"],
     ["/launcher", "nav.launcher"],
     ["/newswire", "nav.news"],
     ["/support", "nav.support"],
