@@ -597,7 +597,18 @@
     "No soundtracks found": "Nenhuma trilha sonora encontrada",
     "There are no matching YouTube soundtracks for the games in our catalog right now.": "Não há trilhas sonoras correspondentes aos jogos do nosso catálogo no YouTube neste momento.",
     "Try another game or soundtrack title.": "Tente outro jogo ou título de trilha sonora.",
-    "{0} soundtracks found": "{0} trilhas sonoras encontradas"
+    "{0} soundtracks found": "{0} trilhas sonoras encontradas",
+    "DEADSMILE GAMES / SYSTEM NOTICE": "DEADSMILE GAMES / AVISO DO SISTEMA",
+    "We're performing maintenance.": "Estamos em manutenção.",
+    "We're updating our systems to bring everything back in a moment.": "Estamos atualizando nossos sistemas para que tudo volte a funcionar em breve.",
+    "Please wait a little and come back later. We'll keep you updated on X.": "Espere um pouco e volte mais tarde. Vamos atualizar você pelo X.",
+    "on X": "no X",
+    "The site will reconnect automatically when service is restored.": "O site se reconectará automaticamente quando o serviço voltar.",
+    "The music behind the games.": "A música por trás dos jogos.",
+    "Browse soundtracks from Deadsmile Games, organized by game.": "Explore as trilhas sonoras da Deadsmile Games, organizadas por jogo.",
+    "Play soundtrack": "Reproduzir trilha sonora",
+    "Open on YouTube": "Abrir no YouTube",
+    "More from this game": "Mais deste jogo"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1197,7 +1208,18 @@
     "No soundtracks found": "No se encontraron bandas sonoras",
     "There are no matching YouTube soundtracks for the games in our catalog right now.": "No hay bandas sonoras de YouTube que coincidan con los juegos de nuestro catálogo en este momento.",
     "Try another game or soundtrack title.": "Prueba con otro juego o título de banda sonora.",
-    "{0} soundtracks found": "Se encontraron {0} bandas sonoras"
+    "{0} soundtracks found": "Se encontraron {0} bandas sonoras",
+    "DEADSMILE GAMES / SYSTEM NOTICE": "DEADSMILE GAMES / AVISO DEL SISTEMA",
+    "We're performing maintenance.": "Estamos en mantenimiento.",
+    "We're updating our systems to bring everything back in a moment.": "Estamos actualizando nuestros sistemas para volver pronto.",
+    "Please wait a little and come back later. We'll keep you updated on X.": "Espera un poco y vuelve más tarde. Te mantendremos al tanto en X.",
+    "on X": "en X",
+    "The site will reconnect automatically when service is restored.": "El sitio se reconectará automáticamente cuando se restablezca el servicio.",
+    "The music behind the games.": "La música detrás de los juegos.",
+    "Browse soundtracks from Deadsmile Games, organized by game.": "Explora las bandas sonoras de Deadsmile Games, organizadas por juego.",
+    "Play soundtrack": "Reproducir banda sonora",
+    "Open on YouTube": "Abrir en YouTube",
+    "More from this game": "Más de este juego"
   },
   "en": {
     "Retomar": "Resume",
@@ -1208,4 +1230,4 @@
     "in_development": "In development",
     "released": "Released"
   }
-}
+}\n
