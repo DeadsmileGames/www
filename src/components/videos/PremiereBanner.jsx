@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
 import { safeImageUrl } from "../../utils/urls";
@@ -21,6 +21,7 @@ export function PremiereBanner() {
   const videos = useContent("/videos/premiere");
   const [now, setNow] = useState(Date.now());
   const [activeVideo, setActiveVideo] = useState(null);
+  const bannerRef = useRef(null);
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
@@ -33,6 +34,31 @@ export function PremiereBanner() {
   }, [videos.retry]);
 
   const premiere = videos.data?.premiere || null;
+  const hasPremiere = Boolean(premiere);
+
+  useEffect(() => {
+    const node = bannerRef.current;
+    const root = document.documentElement;
+    if (!hasPremiere || !node) {
+      document.body.classList.remove("has-video-premiere");
+      root.style.removeProperty("--video-premiere-height");
+      return undefined;
+    }
+
+    const updateHeight = () => {
+      root.style.setProperty("--video-premiere-height", `${node.getBoundingClientRect().height}px`);
+    };
+    document.body.classList.add("has-video-premiere");
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      document.body.classList.remove("has-video-premiere");
+      root.style.removeProperty("--video-premiere-height");
+    };
+  }, [hasPremiere]);
+
   if (!premiere) return null;
 
   const title = premiere.title;
@@ -48,6 +74,7 @@ export function PremiereBanner() {
     <>
       <button
         type="button"
+        ref={bannerRef}
         className="rs-hero video-premiere"
         onClick={() => setActiveVideo(premiere)}
         aria-label={live ? t("{0} is now playing", { 0: title }) : t("{0} will be available in", { 0: title })}
