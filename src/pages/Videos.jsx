@@ -2,7 +2,8 @@ import { useSearchParams } from "react-router-dom";
 import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
-import { safeImageUrl } from "../utils/urls";
+import { safeImageUrl, safeYoutubeEmbedUrl } from "../utils/urls";
+import { useOptionalContent, setOptionalContent } from "../utils/consent";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonVideos } from "../components/ui/Skeleton";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
@@ -11,6 +12,7 @@ const fallbackImage = "/assets/games/screenshots/light/1.png";
 
 export function Videos() {
   const { t, language } = useLanguage();
+  const optionalAllowed = useOptionalContent();
   const videos = useContent("/videos", { limit: 50 });
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("video");
@@ -41,6 +43,7 @@ export function Videos() {
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
   const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.youtube_thumbnail || latest?.thumbnail) || fallbackImage;
+  const embed = safeYoutubeEmbedUrl(latest?.video_url);
   const gameScreenshot =
     safeImageUrl(latest?.game_screenshot) ||
     (/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(latest?.game_slug || "")
@@ -87,21 +90,37 @@ export function Videos() {
                 {publishedDate && <time className="news-page__date" dateTime={publishedAt}>{publishedDate}</time>}
                 <p>{latestDescription}</p>
                 <div className="rs-hero__actions">
-                  <button type="button" className="btn btn--primary" onClick={() => openVideo(latest)}>
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    onClick={() => (embed && !optionalAllowed ? setOptionalContent(true) : openVideo(latest))}
+                  >
                     <Play weight="fill" />
-                    {t("Watch video")}
+                    {embed && !optionalAllowed ? t("Allow YouTube") : t("Watch video")}
                   </button>
                 </div>
               </div>
-              <button
-                type="button"
-                className="video-visual video-visual--featured"
-                onClick={() => openVideo(latest)}
-                aria-label={t("Watch video")}
-              >
-                <img src={thumbnail} alt="" />
-                <span className="play-button"><Play size={26} weight="fill" /></span>
-              </button>
+              {embed && optionalAllowed ? (
+                <div className="video-visual video-visual--featured">
+                  <iframe
+                    src={`${embed}?autoplay=1&mute=1&playsinline=1&rel=0`}
+                    title={latestTitle}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="video-visual video-visual--featured"
+                  onClick={() => (embed ? setOptionalContent(true) : openVideo(latest))}
+                  aria-label={embed ? t("Allow YouTube") : t("Watch video")}
+                >
+                  <img src={thumbnail} alt="" />
+                  <span className="play-button"><Play size={26} weight="fill" /></span>
+                </button>
+              )}
             </div>
           </div>
         </section>
