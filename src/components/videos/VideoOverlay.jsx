@@ -110,7 +110,6 @@ export function VideoOverlay({ video, onClose }) {
           )}
         </div>
         <div className="video-overlay__meta">
-          <span className="eyebrow">{video.category || t("Videos")}</span>
           <h2 id="video-overlay-title">{title}</h2>
           {publishedDate && <time dateTime={publishedAt}>{publishedDate}</time>}
           {description && <p>{description}</p>}
