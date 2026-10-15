@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { X } from "@phosphor-icons/react";
+import { Play, X, YoutubeLogo } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
 import { setOptionalContent, useOptionalContent } from "../../utils/consent";
@@ -10,7 +11,7 @@ import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/url
 
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
-function Panel({ videoId, background, onClose }) {
+function Panel({ videoId, background, onClose, onSelect }) {
   const { t, language } = useLanguage();
   const allowed = useOptionalContent();
   const reducedMotion = useReducedMotion();
@@ -18,7 +19,20 @@ function Panel({ videoId, background, onClose }) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
   const resource = useContent(`/videos/${encodeURIComponent(videoId)}`);
+  const relatedResource = useContent("/videos", { limit: 48 });
   const video = resource.status === "success" ? resource.data : null;
+  const relatedVideos =
+    relatedResource.status === "success" && Array.isArray(relatedResource.data)
+      ? relatedResource.data
+          .filter((item) => String(item.id) !== String(videoId))
+          .sort((a, b) => {
+            const gameId = video?.game_id == null ? null : String(video.game_id);
+            const aMatches = gameId && String(a.game_id) === gameId ? 1 : 0;
+            const bMatches = gameId && String(b.game_id) === gameId ? 1 : 0;
+            return bMatches - aMatches;
+          })
+          .slice(0, 4)
+      : [];
   const embed = safeYoutubeEmbedUrl(video?.video_url);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
@@ -107,20 +121,70 @@ function Panel({ videoId, background, onClose }) {
               )}
             </div>
             <div className="video-overlay__details">
-              <div>
-                <h2 id="video-overlay-title">{video.youtube?.title || video.title}</h2>
-                {released && Number.isFinite(Date.parse(released)) && (
-                  <small>
-                    {new Date(released).toLocaleDateString(language, { dateStyle: "long", timeZone: "UTC" })}
-                  </small>
-                )}
+              <div className="video-overlay__heading">
+                <div className="video-overlay__heading-copy">
+                  <h2 id="video-overlay-title">{video.youtube?.title || video.title}</h2>
+                  {released && Number.isFinite(Date.parse(released)) && (
+                    <small>
+                      {new Date(released).toLocaleDateString(language, { dateStyle: "long", timeZone: "UTC" })}
+                    </small>
+                  )}
+                </div>
+                <a
+                  className="btn btn--secondary video-overlay__subscribe"
+                  href="https://www.youtube.com/@DeadsmileGames?sub_confirmation=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <YoutubeLogo size={20} weight="fill" aria-hidden="true" />
+                  {t("Subscribe to the channel")}
+                </a>
               </div>
-              {(video.youtube?.description || video.description) && (
+            </div>
+            {(video.youtube?.description || video.description) && (
+              <section className="video-overlay__description-panel support-card" aria-labelledby="video-overlay-description-title">
+                <h3 id="video-overlay-description-title">{t("Description")}</h3>
                 <p className="video-overlay__description">
                   {video.youtube?.description || video.description}
                 </p>
-              )}
-            </div>
+              </section>
+            )}
+            <section className="video-overlay__related" aria-labelledby="video-overlay-related-title">
+              <h3 id="video-overlay-related-title">{t("Related videos")}</h3>
+              {relatedVideos.length > 0 ? (
+                <div className="video-overlay__related-grid">
+                  {relatedVideos.map((related) => {
+                    const thumbnail = safeImageUrl(related.youtube?.thumbnail || related.thumbnail);
+                    return (
+                      <button
+                        key={related.id}
+                        type="button"
+                        className="video-overlay__related-tile"
+                        onClick={() => onSelect(related.id)}
+                      >
+                        <span className="video-overlay__related-visual">
+                          {thumbnail ? (
+                            <img src={thumbnail} alt="" loading="lazy" />
+                          ) : (
+                            <span className="videos-page__preview-placeholder">
+                              {t("Watch now")}
+                            </span>
+                          )}
+                          <span className="video-overlay__related-play" aria-hidden="true">
+                            <Play size={22} weight="fill" />
+                          </span>
+                        </span>
+                        <span className="video-overlay__related-title">
+                          {related.youtube?.title || related.title}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : relatedResource.status === "success" ? (
+                <p className="video-overlay__related-empty">{t("No related videos are available yet.")}</p>
+              ) : null}
+            </section>
           </>
         )}
       </div>
@@ -128,11 +192,27 @@ function Panel({ videoId, background, onClose }) {
   );
 }
 
-export function VideoOverlay({ videoId, background, onClose }) {
+export function VideoOverlay({ videoId, background, onClose, onSelect }) {
+  const navigate = useNavigate();
+  const selectVideo = (nextVideoId) => {
+    if (onSelect) {
+      onSelect(nextVideoId);
+      return;
+    }
+    onClose?.();
+    navigate(`/videos?video=${encodeURIComponent(nextVideoId)}`);
+  };
+
   return createPortal(
     <AnimatePresence>
       {videoId && (
-        <Panel key={videoId} videoId={videoId} background={background} onClose={onClose} />
+        <Panel
+          key={videoId}
+          videoId={videoId}
+          background={background}
+          onClose={onClose}
+          onSelect={selectVideo}
+        />
       )}
     </AnimatePresence>,
     document.body,
