@@ -19,7 +19,7 @@ function countdown(milliseconds) {
 
 export function PremiereBanner() {
   const { t } = useLanguage();
-  const videos = useContent("/videos", { limit: 50 });
+  const videos = useContent("/videos/premiere");
   const [now, setNow] = useState(Date.now());
   const [activeVideo, setActiveVideo] = useState(null);
 
@@ -28,30 +28,20 @@ export function PremiereBanner() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const premiere = (Array.isArray(videos.data) ? videos.data : []).find((video) => {
-    if (!video.is_premiere || !video.premiere_at) return false;
-    const scheduled = Date.parse(video.premiere_at);
-    if (!Number.isFinite(scheduled)) return false;
-    const delta = scheduled - now;
-    const startedAt = Date.parse(video.actual_start_time || "");
-    const recentlyStarted =
-      video.broadcast_status === "live" ||
-      (Number.isFinite(startedAt) && now >= startedAt && now - startedAt < DAY);
-    return (delta > 0 && delta <= DAY) || (delta <= 0 && delta > -DAY && recentlyStarted);
-  });
+  useEffect(() => {
+    const timer = window.setInterval(() => videos.retry(), 5 * 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, [videos.retry]);
+
+  const premiere = videos.data?.premiere || null;
 
   if (!premiere) return null;
 
-  const title = premiere.youtube_title || premiere.title;
-  const scheduled = Date.parse(premiere.premiere_at);
-  const live = scheduled <= now;
-  const slug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(premiere.game_slug || "")
-    ? premiere.game_slug
-    : null;
-  const screenshot = slug
-    ? `/assets/games/screenshots/${slug}/1.png`
-    : fallbackImage;
-  const thumbnail = safeImageUrl(premiere.youtube_thumbnail || premiere.thumbnail);
+  const title = premiere.title;
+  const scheduled = Date.parse(premiere.starts_at);
+  const live = premiere.state === "live" || scheduled <= now;
+  const screenshot = safeImageUrl(premiere.screenshots?.[0]) || safeImageUrl(premiere.thumbnail) || fallbackImage;
+  const thumbnail = safeImageUrl(premiere.thumbnail);
 
   return (
     <>
