@@ -569,7 +569,15 @@
     "Back to games": "Voltar aos jogos",
     "Read update": "Ler atualização",
     "Watch now": "Assistir agora",
-    "Latest updates for {0}": "Últimas atualizações de {0}"
+    "Latest updates for {0}": "Últimas atualizações de {0}",
+    "Your library": "Sua biblioteca",
+    "Your games, all in one place.": "Seus jogos, todos em um só lugar.",
+    "You have {0} games in your library.": "Você tem {0} jogos na sua biblioteca.",
+    "No games in your library yet.": "Sua biblioteca ainda está vazia.",
+    "Add games to your library to keep them handy.": "Adicione jogos à sua biblioteca para encontrá-los facilmente.",
+    "Remove from library": "Remover da biblioteca",
+    "Remove {0} from your library?": "Remover {0} da sua biblioteca?",
+    "Removing…": "Removendo…"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1141,7 +1149,15 @@
     "Back to games": "Volver a los juegos",
     "Read update": "Leer actualización",
     "Watch now": "Ver ahora",
-    "Latest updates for {0}": "Últimas actualizaciones de {0}"
+    "Latest updates for {0}": "Últimas actualizaciones de {0}",
+    "Your library": "Tu biblioteca",
+    "Your games, all in one place.": "Tus juegos, todo en un solo lugar.",
+    "You have {0} games in your library.": "Tienes {0} juegos en tu biblioteca.",
+    "No games in your library yet.": "Tu biblioteca aún está vacía.",
+    "Add games to your library to keep them handy.": "Añade juegos a tu biblioteca para tenerlos a mano.",
+    "Remove from library": "Quitar de la biblioteca",
+    "Remove {0} from your library?": "¿Quitar {0} de tu biblioteca?",
+    "Removing…": "Quitando…"
   },
   "en": {
     "Retomar": "Resume",
