@@ -22,14 +22,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <LanguageProvider>
         <IconContext.Provider value={{ weight: "bold", size: 20 }}>
           <MotionConfig reducedMotion="user">
-            <ApiAvailabilityGate>
-              <AuthProvider>
-                <ToastProvider>
-                  <RealtimeBridge />
-                  <App />
-                </ToastProvider>
-              </AuthProvider>
-            </ApiAvailabilityGate>
+            <LazyMotion features={domAnimation}>
+              <ApiAvailabilityGate>
+                <AuthProvider>
+                  <ToastProvider>
+                    <RealtimeBridge />
+                    <App />
+                  </ToastProvider>
+                </AuthProvider>
+              </ApiAvailabilityGate>
+            </LazyMotion>
           </MotionConfig>
         </IconContext.Provider>
       </LanguageProvider>
