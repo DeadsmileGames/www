@@ -4,10 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 import {
-  ArrowLeft,
   ArrowUpRight,
-  Disc,
-  MagnifyingGlass,
   MusicNotes,
   Play,
   X,
@@ -41,7 +38,10 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
   const [playing, setPlaying] = useState(false);
   closeRef.current = onClose;
 
-  useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
+  useEffect(() => {
+    if (!track) return undefined;
+    return trapFocus(panelRef.current, () => closeRef.current());
+  }, [track?.id]);
 
   const embed = safeYoutubeEmbedUrl(track?.watchUrl);
   const external = safeHttpsUrl(track?.watchUrl);
@@ -247,7 +247,22 @@ export function Soundtracks() {
       gameCover: group.coverImage,
     })),
   ), [groups]);
-  const selectedTrack = tracks.find((track) => track.id === trackId) || null;
+  const featuredTrack = useMemo(() => {
+    if (!tracks.length) return null;
+    return [...tracks].sort((a, b) =>
+      (Date.parse(b.publishedAt || "") || 0) - (Date.parse(a.publishedAt || "") || 0),
+    )[0];
+  }, [tracks]);
+  const featuredGroup = featuredTrack
+    ? groups.find((group) => String(group.gameId) === String(featuredTrack.gameId)) || null
+    : null;
+  const featuredThumbnail = safeImageUrl(featuredTrack?.thumbnail);
+  const featuredBackground =
+    safeImageUrl(featuredGroup?.coverImage) ||
+    featuredThumbnail ||
+    "/assets/games/screenshots/light/1.png";
+  const featuredPublished = publishedLabel(featuredTrack?.publishedAt, language);
+  const selectedTrack = tracks.find((track) => String(track.id) === String(trackId)) || null;
   const selectedGroup = selectedTrack
     ? groups.find((group) => String(group.gameId) === String(selectedTrack.gameId)) || null
     : null;
@@ -287,129 +302,160 @@ export function Soundtracks() {
   const isLoading = resource.status === "idle" || resource.status === "loading";
 
   return (
-    <>
-      <div className="soundtracks-page container">
-        <Link to="/" className="back-link">
-          <ArrowLeft weight="bold" />
-          <span>{t("Back")}</span>
-        </Link>
+    <div className="videos-page">
+      {featuredTrack && (
+        <header className="rs-hero videos-page__hero">
+          <img
+            className="game-hero__background"
+            src={featuredBackground}
+            alt=""
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = "/assets/games/screenshots/light/1.png";
+            }}
+          />
+          <div className="rs-hero__overlay" />
+          <div className="rs-hero__content container">
+            <div className="videos-page__hero-grid">
+              <div className="videos-page__hero-copy">
+                <p className="eyebrow">
+                  {[t("Soundtracks"), featuredGroup?.title].filter(Boolean).join(" · ")}
+                </p>
+                <h1 className="rs-hero__title">{featuredTrack.title}</h1>
+                {featuredPublished && (
+                  <time className="news-page__date" dateTime={featuredTrack.publishedAt}>
+                    {featuredPublished}
+                  </time>
+                )}
+                <p className="videos-page__hero-description">
+                  {t("Browse soundtracks from Deadsmile Games, organized by game.")}
+                </p>
+                <div className="rs-hero__actions videos-page__hero-actions">
+                  <button type="button" className="btn btn--primary" onClick={() => openTrack(featuredTrack.id)}>
+                    <Play size={20} weight="fill" />
+                    {t("Play soundtrack")}
+                  </button>
+                  {featuredGroup?.slug && (
+                    <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(featuredGroup.slug)}>
+                      {t("View game")}
+                      <ArrowUpRight size={16} />
+                    </Link>
+                  )}
+                </div>
+              </div>
+              <button
+                type="button"
+                className="videos-page__hero-preview"
+                onClick={() => openTrack(featuredTrack.id)}
+                aria-label={t("Play soundtrack") + ": " + featuredTrack.title}
+              >
+                {featuredThumbnail ? (
+                  <img src={featuredThumbnail} alt="" />
+                ) : (
+                  <span className="videos-page__preview-placeholder">{t("Play soundtrack")}</span>
+                )}
+                <span className="videos-page__preview-play" aria-hidden="true">
+                  <Play size={28} weight="fill" />
+                </span>
+              </button>
+            </div>
+          </div>
+        </header>
+      )}
 
-        <m.header
-          className="soundtracks-page__header"
-          initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reducedMotion ? 0.01 : 0.34, ease: "easeOut" }}
-        >
-          <div className="soundtracks-page__heading-copy">
-            <p className="soundtracks-page__eyebrow"><Disc size={16} weight="fill" /> {t("Soundtracks")}</p>
-            <h1>{t("The music behind the games.")}</h1>
+      <section className="studio-section studio-videos">
+        <div className="container">
+          <header className="section-heading">
+            <h2>{t("From the games")}</h2>
             <p>{t("Browse soundtracks from Deadsmile Games, organized by game.")}</p>
-          </div>
-          <div className="soundtracks-page__toolbar">
-            <span className="soundtracks-page__count">
-              <MusicNotes size={17} />
-              {t("{0} soundtracks", { 0: total })}
-            </span>
-            <label className="soundtracks-search">
-              <MagnifyingGlass size={19} />
-              <span className="sr-only">{t("Search soundtracks or games")}</span>
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder={t("Search soundtracks or games")}
-              />
-            </label>
-          </div>
-        </m.header>
+          </header>
 
-        {isLoading && <div className="soundtracks-page__loading" role="status" aria-label={t("Loading")}><SkeletonVideos /></div>}
-        {resource.status === "error" && <ErrorState message={resource.error} onRetry={resource.retry} />}
-        {resource.status === "success" && groups.length === 0 && (
-          <EmptyState
-            title={t("No soundtracks found")}
-            message={t("There are no matching YouTube soundtracks for the games in our catalog right now.")}
-          />
-        )}
-        {resource.status === "success" && groups.length > 0 && filteredGroups.length === 0 && (
-          <EmptyState
-            title={t("No soundtracks found")}
-            message={t("Try another game or soundtrack title.")}
-          />
-        )}
+          <label className="search-page__input-wrapper">
+            <span className="sr-only">{t("Search soundtracks or games")}</span>
+            <input
+              className="search-page__input"
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={t("Search soundtracks or games")}
+            />
+          </label>
+          {search.trim() && resource.status === "success" && (
+            <p className="search-page__hint">
+              {t("{0} soundtracks found", { 0: filteredCount })}
+            </p>
+          )}
 
-        {resource.status === "success" && filteredGroups.length > 0 && (
-          <div className="soundtracks-page__groups">
-            {search.trim() && (
-              <p className="soundtracks-page__results">{t("{0} soundtracks found", { 0: filteredCount })}</p>
-            )}
-            {filteredGroups.map((group, groupIndex) => {
-              const cover = safeImageUrl(group.coverImage);
-              return (
-                <m.section
-                  className="soundtracks-game"
-                  key={group.gameId}
-                  initial={{ opacity: 0, y: reducedMotion ? 0 : 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reducedMotion ? 0.01 : 0.32, delay: Math.min(groupIndex * 0.045, 0.27), ease: "easeOut" }}
-                >
-                  <header className="soundtracks-game__header">
-                    <div className="soundtracks-game__identity">
-                      <span className="soundtracks-game__cover">
-                        {cover ? <img src={cover} alt="" loading="lazy" /> : <MusicNotes size={24} />}
+          {isLoading && (
+            <div role="status" aria-label={t("Loading")} className="content-state">
+              <SkeletonVideos />
+            </div>
+          )}
+          {resource.status === "error" && (
+            <div className="content-state" role="alert">
+              <ErrorState message={resource.error} onRetry={resource.retry} />
+            </div>
+          )}
+          {resource.status === "success" && groups.length === 0 && (
+            <EmptyState
+              title={t("No soundtracks found")}
+              message={t("There are no matching YouTube soundtracks for the games in our catalog right now.")}
+            />
+          )}
+          {resource.status === "success" && groups.length > 0 && filteredGroups.length === 0 && (
+            <EmptyState
+              title={t("No soundtracks found")}
+              message={t("Try another game or soundtrack title.")}
+            />
+          )}
+        </div>
+      </section>
+
+      {resource.status === "success" && filteredGroups.map((group) => (
+        <section className="studio-section studio-videos" key={group.gameId}>
+          <div className="container">
+            <header className="section-heading">
+              <h2>{group.title}</h2>
+              <p>{t("{0} soundtracks", { 0: group.videos.length })}</p>
+              {group.slug && (
+                <Link className="text-link" to={"/games/" + encodeURIComponent(group.slug)}>
+                  {t("View game")}
+                </Link>
+              )}
+            </header>
+            <div className="video-grid">
+              {group.videos.map((track) => {
+                const image = safeImageUrl(track.thumbnail);
+                const published = publishedLabel(track.publishedAt, language);
+                const selected = String(selectedTrack?.id) === String(track.id);
+                return (
+                  <button
+                    type="button"
+                    className="video-tile"
+                    key={track.id}
+                    onClick={() => openTrack(track.id)}
+                    aria-label={t("Play soundtrack") + ": " + track.title}
+                    aria-pressed={selected}
+                  >
+                    <span className="video-visual">
+                      {image ? (
+                        <img src={image} alt="" loading="lazy" />
+                      ) : (
+                        <span className="videos-page__preview-placeholder">{t("Play soundtrack")}</span>
+                      )}
+                      <span className="play-button" aria-hidden="true">
+                        <Play size={26} weight="fill" />
                       </span>
-                      <div>
-                        <h2>{group.title}</h2>
-                        <p>{t("{0} soundtracks", { 0: group.videos.length })}</p>
-                      </div>
-                    </div>
-                    {group.slug && (
-                      <Link className="soundtracks-game__link" to={`/games/${encodeURIComponent(group.slug)}`}>
-                        {t("View game")} <ArrowUpRight size={16} />
-                      </Link>
-                    )}
-                  </header>
-                  <div className="soundtracks-track-grid">
-                    {group.videos.map((track, index) => {
-                      const image = safeImageUrl(track.thumbnail);
-                      const published = publishedLabel(track.publishedAt, language);
-                      const selected = selectedTrack?.id === track.id;
-                      return (
-                        <m.button
-                          type="button"
-                          className={`soundtrack-card ${selected ? "is-selected" : ""}`}
-                          key={track.id}
-                          onClick={() => openTrack(track.id)}
-                          aria-label={t("Play soundtrack") + ": " + track.title}
-                          aria-pressed={selected}
-                          whileHover={reducedMotion ? undefined : { y: -4 }}
-                          whileTap={reducedMotion ? undefined : { scale: 0.985 }}
-                          initial={{ opacity: 0, y: reducedMotion ? 0 : 7 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: reducedMotion ? 0.01 : 0.22, delay: Math.min(index * 0.025, 0.18) }}
-                        >
-                          <span className="soundtrack-card__art">
-                            {image ? <img src={image} alt="" loading="lazy" /> : <span className="soundtrack-card__art-fallback"><MusicNotes size={29} /></span>}
-                            <span className="soundtrack-card__play" aria-hidden="true"><Play size={19} weight="fill" /></span>
-                          </span>
-                          <span className="soundtrack-card__body">
-                            <strong className="soundtrack-card__title">{track.title}</strong>
-                            <span className="soundtrack-card__channel">{track.channelTitle || t("Deadsmile Games")}</span>
-                            <span className="soundtrack-card__footer">
-                              <span>{published || t("From YouTube")}</span>
-                              <span className="soundtrack-card__open">{t("Play")} <ArrowUpRight size={15} /></span>
-                            </span>
-                          </span>
-                        </m.button>
-                      );
-                    })}
-                  </div>
-                </m.section>
-              );
-            })}
+                    </span>
+                    <h3>{track.title}</h3>
+                    <small>{published || track.channelTitle || t("From YouTube")}</small>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        )}
-      </div>
+        </section>
+      ))}
 
       <SoundtrackPlayerPanel
         track={selectedTrack}
@@ -417,6 +463,6 @@ export function Soundtracks() {
         onClose={closeTrack}
         onSelect={openTrack}
       />
-    </>
+    </div>
   );
 }
