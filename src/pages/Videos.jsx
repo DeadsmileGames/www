@@ -2,8 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
-import { useOptionalContent, setOptionalContent } from "../utils/consent";
-import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../utils/urls";
+import { safeImageUrl } from "../utils/urls";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonVideos } from "../components/ui/Skeleton";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
@@ -12,7 +11,6 @@ const fallbackImage = "/assets/games/screenshots/light/1.png";
 
 export function Videos() {
   const { t, language } = useLanguage();
-  const optionalAllowed = useOptionalContent();
   const videos = useContent("/videos", { limit: 50 });
   const [params, setParams] = useSearchParams();
   const selectedId = params.get("video");
@@ -43,8 +41,6 @@ export function Videos() {
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
   const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.youtube_thumbnail || latest?.thumbnail) || fallbackImage;
-  const embed = latest ? safeYoutubeEmbedUrl(latest.video_url) : null;
-  const external = latest ? safeHttpsUrl(latest.video_url) : null;
   const publishedAt = latest?.youtube?.publishedAt || latest?.youtube_published_at || latest?.published_at;
   const publishedDate =
     publishedAt && Number.isFinite(Date.parse(publishedAt))
@@ -67,43 +63,21 @@ export function Videos() {
                 {publishedDate && <time className="news-page__date" dateTime={publishedAt}>{publishedDate}</time>}
                 <p>{latestDescription}</p>
                 <div className="rs-hero__actions">
-                  {embed && !optionalAllowed ? (
-                    <button type="button" className="btn btn--primary" onClick={() => setOptionalContent(true)}>
-                      <Play weight="fill" />
-                      {t("Allow YouTube")}
-                    </button>
-                  ) : external ? (
-                    <a className="btn btn--primary" href={external} target="_blank" rel="noopener noreferrer">
-                      <Play weight="fill" />
-                      {t("Watch video")}
-                    </a>
-                  ) : (
-                    <button type="button" className="btn btn--primary" onClick={() => openVideo(latest)}>
-                      <Play weight="fill" />
-                      {t("Watch video")}
-                    </button>
-                  )}
-                  <button type="button" className="btn btn--secondary" onClick={() => openVideo(latest)}>
-                    {t("More details")}
+                  <button type="button" className="btn btn--primary" onClick={() => openVideo(latest)}>
+                    <Play weight="fill" />
+                    {t("Watch video")}
                   </button>
                 </div>
               </div>
-              <div className="video-visual">
-                {embed && optionalAllowed ? (
-                  <iframe
-                    src={`${embed}?autoplay=1&mute=1&playsinline=1&rel=0`}
-                    title={latestTitle}
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
-                ) : (
-                  <>
-                    <img src={thumbnail} alt="" />
-                    <span className="play-button"><Play size={26} weight="fill" /></span>
-                  </>
-                )}
-              </div>
+              <button
+                type="button"
+                className="video-visual video-visual--featured"
+                onClick={() => openVideo(latest)}
+                aria-label={t("Watch video")}
+              >
+                <img src={thumbnail} alt="" />
+                <span className="play-button"><Play size={26} weight="fill" /></span>
+              </button>
             </div>
           </div>
         </section>
