@@ -284,12 +284,8 @@ export function Soundtracks() {
       <section className="studio-section studio-videos">
         <div className="container">
           <header className="section-heading">
-            <h2>{t("From the games")}</h2>
-            <p>
-              {t("{0} soundtracks", { 0: total })}
-              {" · "}
-              {t("Browse soundtracks from Deadsmile Games, organized by game.")}
-            </p>
+            <h1>{t("Soundtracks")}</h1>
+            <p>{t("Discover game soundtracks collected from YouTube and organized by title.")}</p>
           </header>
 
           <label className="search-page__input-wrapper">
@@ -333,7 +329,7 @@ export function Soundtracks() {
 
           {resource.status === "success" && filteredGroups.map((group, groupIndex) => (
             <section
-              className={groupIndex === 0 ? "studio-videos" : "studio-section studio-videos"}
+              className="studio-videos"
               key={group.gameId}
             >
               <header className="section-heading">
