@@ -3209,13 +3209,13 @@ input[type="file"]::file-selector-button {
   overflow-wrap: anywhere;
 }
 
-.cookie-consent__message h3 {
+.cookie-consent h3 {
   margin: 0 0 10px;
   color: #fff;
   font-size: 18px;
   line-height: 1.25;
 }
-.cookie-consent__message p {
+.cookie-consent p {
   margin: 8px 0;
   line-height: 1.55;
 }
@@ -3223,12 +3223,6 @@ input[type="file"]::file-selector-button {
   min-height: 42px;
   border-radius: 5px;
   font-weight: 600;
-}
-.cookie-consent__link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 42px;
-  padding: 0 8px;
 }
 .videos-page .rs-hero {
   min-height: min(82vh, 820px);
