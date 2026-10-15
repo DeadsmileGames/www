@@ -3416,3 +3416,126 @@ body.has-video-premiere .site-header__inner {
     animation: none;
   }
 }
+
+.modal-overlay.video-overlay {
+  z-index: 2400;
+  overflow: hidden;
+  padding: clamp(14px, 3vw, 42px);
+  background: #050505cc;
+  animation: video-overlay-drop 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+.video-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.video-overlay__backdrop img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  filter: saturate(0.72);
+}
+.video-overlay__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.86)), linear-gradient(90deg, rgba(0, 0, 0, 0.4), transparent 55%, rgba(0, 0, 0, 0.45));
+}
+.modal-panel.video-overlay__panel {
+  z-index: 1;
+  width: min(1400px, 100%);
+  max-height: calc(100dvh - 48px);
+  overflow: auto;
+  padding: clamp(18px, 3vw, 42px);
+  border: 1px solid #ffffff38;
+  border-radius: 12px;
+  background: rgba(8, 8, 8, 0.84);
+  box-shadow: 0 24px 90px #0009;
+  backdrop-filter: blur(12px);
+}
+.video-overlay__panel .video-dialog h2 {
+  margin: 0 48px 12px 0;
+  font-size: clamp(24px, 3vw, 42px);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+.video-overlay__panel .video-dialog__description {
+  max-width: 100ch;
+  max-height: 12rem;
+  margin: 14px 0 22px;
+  overflow: auto;
+  color: #dedede;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.video-overlay__panel .video-dialog iframe {
+  width: 100%;
+  max-height: 72vh;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+}
+.video-overlay__close {
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #050505b8;
+  color: #fff;
+}
+@keyframes video-overlay-drop {
+  from {
+    transform: translateY(-100%);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.videos-page .video-visual--featured {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  color: inherit;
+  cursor: pointer;
+  appearance: none;
+}
+.videos-page .video-visual--featured iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 10px;
+  background: #000;
+}
+.videos-page .video-visual--featured:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+@media (max-width: 760px) {
+  .modal-overlay.video-overlay {
+    padding: 12px;
+  }
+  .modal-panel.video-overlay__panel {
+    max-height: calc(100dvh - 24px);
+    padding: 18px;
+  }
+  .video-overlay__panel .video-dialog iframe {
+    max-height: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay.video-overlay {
+    animation: none;
+  }
+}
