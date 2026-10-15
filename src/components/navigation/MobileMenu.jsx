@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useLanguage } from "../../context/LanguageContext";
-import { ArrowUpRight, X, Heart } from "@phosphor-icons/react";
+import { ArrowUpRight, X, Heart, GameController } from "@phosphor-icons/react";
 import { trapFocus } from "../../utils/dom";
 import { safeImageUrl } from "../../utils/urls";
 export function MobileMenu({ open, onClose }) {
@@ -68,17 +68,30 @@ export function MobileMenu({ open, onClose }) {
           ))}
 
           {status === "authenticated" && (
-            <Link
-              to="/wishlist"
-              onClick={onClose}
-              className="mobile-menu__link"
-              style={{
-                "--menu-delay": "290ms",
-              }}
-            >
-              <span>{t("Wishlist")}</span>
-              <Heart weight="bold" className="mobile-menu__arrow" />
-            </Link>
+            <>
+              <Link
+                to="/library"
+                onClick={onClose}
+                className="mobile-menu__link"
+                style={{
+                  "--menu-delay": "290ms",
+                }}
+              >
+                <span>{t("Your library")}</span>
+                <GameController weight="bold" className="mobile-menu__arrow" />
+              </Link>
+              <Link
+                to="/wishlist"
+                onClick={onClose}
+                className="mobile-menu__link"
+                style={{
+                  "--menu-delay": "335ms",
+                }}
+              >
+                <span>{t("Wishlist")}</span>
+                <Heart weight="bold" className="mobile-menu__arrow" />
+              </Link>
+            </>
           )}
         </nav>
       </div>
