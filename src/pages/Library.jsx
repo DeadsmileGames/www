@@ -9,6 +9,45 @@ import { EmptyState } from "../components/ui/EmptyState";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
 import { safeImageUrl } from "../utils/urls";
 
+function storePosterFromDetails(details) {
+  const images = Array.isArray(details?.microsoftStore?.images)
+    ? details.microsoftStore.images
+    : [];
+  const candidates = images
+    .filter((image) =>
+      typeof image?.url === "string" &&
+      /poster|boxart|cover/i.test(image?.purpose || ""),
+    )
+    .sort((a, b) => {
+      const aPortrait = Number(a.height || 0) > Number(a.width || 0) ? 1 : 0;
+      const bPortrait = Number(b.height || 0) > Number(b.width || 0) ? 1 : 0;
+      return bPortrait - aPortrait || Number(b.height || 0) - Number(a.height || 0);
+    });
+  return candidates.map((image) => safeImageUrl(image.url)).find(Boolean) || null;
+}
+
+// Match the Launcher: fetch Store artwork only for products carrying its Store badge.
+async function loadStorePosters(games) {
+  const candidates = games.filter((game) => game.microsoftStoreBadge && game.slug);
+  const posters = new Map();
+  let next = 0;
+  const workers = Array.from({ length: Math.min(4, candidates.length) }, async () => {
+    while (next < candidates.length) {
+      const game = candidates[next++];
+      try {
+        const details = await api.get(`/games/${encodeURIComponent(game.slug)}`);
+        if (String(details?.id || "") !== String(game.id)) continue;
+        const poster = storePosterFromDetails(details);
+        if (poster) posters.set(String(game.id), poster);
+      } catch {
+        // Store artwork is optional. The database cover remains the fallback.
+      }
+    }
+  });
+  await Promise.all(workers);
+  return posters;
+}
+
 export function Library() {
   const { t, language } = useLanguage();
   const { user } = useAuth();
@@ -30,10 +69,22 @@ export function Library() {
       const items = Array.isArray(data?.items)
         ? data.items.filter((game) => game.inLibrary === true)
         : [];
-      setGames(items.map((game) => ({
+      const normalizedItems = items.map((game) => ({
         ...game,
         coverImage: game.coverImage || game.cover_image || game.heroImage || game.hero_image,
-      })));
+      }));
+      setGames(normalizedItems);
+
+      // Show database covers immediately, then replace them with Store posters when available.
+      void loadStorePosters(normalizedItems).then((posters) => {
+        if (id !== requestId.current || posters.size === 0) return;
+        setGames((current) =>
+          current.map((game) => {
+            const poster = posters.get(String(game.id));
+            return poster ? { ...game, storePoster: poster } : game;
+          }),
+        );
+      });
     } catch (err) {
       if (id === requestId.current) setError(friendlyErrorMessage(err));
     } finally {
@@ -104,7 +155,8 @@ export function Library() {
       ) : games.length > 0 ? (
         <div className="library-page__grid">
           {games.map((game) => {
-            const cover = safeImageUrl(game.coverImage);
+            const databaseCover = safeImageUrl(game.coverImage);
+            const cover = safeImageUrl(game.storePoster) || databaseCover;
             const busy = removingId === game.id;
             return (
               <article className="library-card" key={game.id}>
@@ -118,6 +170,13 @@ export function Library() {
                     src={cover || "/assets/placeholders/game-cover.svg"}
                     alt=""
                     loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.onerror = null;
+                      event.currentTarget.src =
+                        databaseCover && cover !== databaseCover
+                          ? databaseCover
+                          : "/assets/placeholders/game-cover.svg";
+                    }}
                   />
                 </Link>
                 <div className="library-card__body">
