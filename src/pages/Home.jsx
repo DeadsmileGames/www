@@ -102,7 +102,6 @@ export function Home() {
                         <Play size={26} weight="fill" />
                       </span>
                     </span>
-                    <span className="eyebrow">{video.category || t("Video")}</span>
                     <h3>{video.title}</h3>
                   </button>
                 ))}
