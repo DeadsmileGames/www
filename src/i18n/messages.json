@@ -610,7 +610,9 @@
     "Open on YouTube": "Abrir no YouTube",
     "More from this game": "Mais deste jogo",
     "Live now": "Ao vivo",
-    "Premiere": "Estreia"
+    "Premiere": "Estreia",
+    "Live chat": "Chat ao vivo",
+    "Open chat on YouTube": "Abrir chat no YouTube"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1223,7 +1225,9 @@
     "Open on YouTube": "Abrir en YouTube",
     "More from this game": "Más de este juego",
     "Live now": "En vivo",
-    "Premiere": "Estreno"
+    "Premiere": "Estreno",
+    "Live chat": "Chat en vivo",
+    "Open chat on YouTube": "Abrir chat en YouTube"
   },
   "en": {
     "Retomar": "Resume",
@@ -1234,6 +1238,8 @@
     "in_development": "In development",
     "released": "Released",
     "Live now": "LIVE",
-    "Premiere": "Premiere"
+    "Premiere": "Premiere",
+    "Live chat": "Live chat",
+    "Open chat on YouTube": "Open chat on YouTube"
   }
 }
