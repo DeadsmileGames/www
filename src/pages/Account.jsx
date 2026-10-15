@@ -1082,7 +1082,7 @@ export function Account() {
                     </div>
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="danger"
                       onClick={signOut}
                       disabled={saving || deleting}
                     >
