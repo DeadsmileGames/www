@@ -64,7 +64,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
   return createPortal(
     <AnimatePresence>
       {track && (
-        <motion.div
+        <m.div
           key={track.id}
           className="video-overlay soundtrack-overlay"
           role="dialog"
@@ -198,7 +198,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                   {related.map((item, index) => {
                     const image = safeImageUrl(item.thumbnail);
                     return (
-                      <motion.button
+                      <m.button
                         key={item.id}
                         type="button"
                         className="video-overlay__related-tile"
@@ -296,7 +296,7 @@ export function Soundtracks() {
           <span>{t("Back")}</span>
         </Link>
 
-        <motion.header
+        <m.header
           className="soundtracks-page__header"
           initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -348,7 +348,7 @@ export function Soundtracks() {
             {filteredGroups.map((group, groupIndex) => {
               const cover = safeImageUrl(group.coverImage);
               return (
-                <motion.section
+                <m.section
                   className="soundtracks-game"
                   key={group.gameId}
                   initial={{ opacity: 0, y: reducedMotion ? 0 : 15 }}
@@ -377,7 +377,7 @@ export function Soundtracks() {
                       const published = publishedLabel(track.publishedAt, language);
                       const selected = selectedTrack?.id === track.id;
                       return (
-                        <motion.button
+                        <m.button
                           type="button"
                           className={`soundtrack-card ${selected ? "is-selected" : ""}`}
                           key={track.id}
