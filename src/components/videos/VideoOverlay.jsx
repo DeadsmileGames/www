@@ -20,6 +20,17 @@ function Panel({ videoId, background, onClose }) {
   const resource = useContent(`/videos/${encodeURIComponent(videoId)}`);
   const video = resource.status === "success" ? resource.data : null;
   const embed = safeYoutubeEmbedUrl(video?.video_url);
+  const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
+  const embedSrc = (() => {
+    if (!embed) return null;
+    const url = new URL(embed);
+    url.searchParams.set("autoplay", "1");
+    url.searchParams.set("rel", "0");
+    // YouTube uses this locale for player UI and language preference hints.
+    // Audio-track availability/selection itself is controlled by YouTube.
+    url.searchParams.set("hl", playerLanguage);
+    return url.toString();
+  })();
   const external = safeHttpsUrl(video?.video_url);
   const gameSlug =
     /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(video?.game_slug || "") ? video.game_slug : null;
@@ -81,7 +92,7 @@ function Panel({ videoId, background, onClose }) {
                 </div>
               ) : embed ? (
                 <iframe
-                  src={`${embed}?autoplay=1&rel=0`}
+                  src={embedSrc}
                   title={video.title}
                   allow="autoplay; encrypted-media; picture-in-picture"
                   referrerPolicy="strict-origin-when-cross-origin"
