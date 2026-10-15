@@ -3294,67 +3294,44 @@ input[type="file"]::file-selector-button {
   outline: 2px solid #fff;
   outline-offset: -4px;
 }
-.videos-page__hero {
-  position: relative;
-  display: flex;
+
+.videos-page .rs-hero {
   min-height: min(82vh, 820px);
   overflow: hidden;
-  align-items: stretch;
   background: #101010;
   color: #fff;
 }
-.videos-page__hero-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  opacity: 0.48;
-  filter: saturate(0.72);
-}
-.videos-page__hero-shade {
-  position: absolute;
-  inset: 0;
+.videos-page .rs-hero__overlay {
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.48) 62%, rgba(0, 0, 0, 0.3)), linear-gradient(0deg, #111, transparent 45%);
 }
-.videos-page__hero-content {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  align-content: center;
-  align-items: center;
-  gap: 12px clamp(24px, 4vw, 64px);
+.videos-page .rs-hero__content {
+  width: 100%;
   padding-top: clamp(54px, 7vw, 100px);
   padding-bottom: clamp(54px, 7vw, 100px);
 }
-.videos-page__hero-content > .eyebrow {
-  grid-column: 1;
-  align-self: end;
-  color: #d8d8d8;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+.videos-page .rs-hero__identity {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
 }
-.videos-page__hero-content h1 {
-  grid-column: 1;
-  max-width: 700px;
+.videos-page .rs-hero__text-col {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+.videos-page .rs-hero__title {
+  width: 100%;
+  max-width: 20ch;
+  min-height: 0;
   margin: 0;
   font-size: clamp(32px, 4.6vw, 64px);
   line-height: 1.05;
-  text-wrap: balance;
   overflow-wrap: anywhere;
 }
-.videos-page__hero-content time {
-  grid-column: 1;
-  color: #c2c2c2;
-  font-size: 13px;
-}
-.videos-page__hero-content > p {
-  grid-column: 1;
-  max-width: 640px;
-  margin: 2px 0 12px;
+.videos-page .rs-hero__text-col > p {
+  max-width: 62ch;
+  margin: 0 0 8px;
   color: #dedede;
   line-height: 1.65;
   display: -webkit-box;
@@ -3362,45 +3339,46 @@ input[type="file"]::file-selector-button {
   -webkit-line-clamp: 5;
   overflow: hidden;
 }
-.videos-page__hero-actions {
-  grid-column: 2;
-  grid-row: 1 / span 5;
-  display: grid;
-  align-content: center;
-  justify-items: start;
-  gap: 14px;
-  min-width: 0;
+.videos-page .rs-hero__text-col > .eyebrow {
+  color: #d8d8d8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
-.videos-page__hero-player {
-  width: 100%;
+.videos-page .rs-hero__text-col time {
+  color: #c2c2c2;
+  font-size: 13px;
+}
+.videos-page .rs-hero__actions {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.videos-page .video-visual {
+  min-width: 0;
+  margin: 0;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
-  border-radius: 10px;
-  background: #000;
   box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
 }
-.videos-page__hero-player iframe {
+.videos-page .video-visual iframe {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
+  border-radius: 10px;
   background: #000;
 }
-.videos-page__hero-actions > .btn {
-  justify-self: start;
+.videos-page .video-visual .play-button {
+  pointer-events: none;
 }
-.videos-page__library {
+.videos-page .studio-news {
   background: #131313;
 }
-.videos-page__empty {
-  padding-top: 72px;
-  padding-bottom: 72px;
-}
-.video-tile time {
+.videos-page .video-tile .news-page__date {
   display: block;
-  margin-top: 10px;
-  color: #aaa;
-  font-size: 13px;
+  margin: 10px 0 0;
 }
 .video-overlay {
   position: fixed;
@@ -3521,27 +3499,21 @@ input[type="file"]::file-selector-button {
   .video-premiere-banner__content {
     gap: 6px 12px;
   }
-  .videos-page__hero {
+  .videos-page .rs-hero {
     min-height: auto;
   }
-  .videos-page__hero-content {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
+  .videos-page .rs-hero__content {
     padding-top: 50px;
     padding-bottom: 48px;
   }
-  .videos-page__hero-content > .eyebrow,
-  .videos-page__hero-content h1,
-  .videos-page__hero-content time,
-  .videos-page__hero-content > p,
-  .videos-page__hero-actions {
-    grid-column: 1;
-    grid-row: auto;
+  .videos-page .rs-hero__identity {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
   }
-  .videos-page__hero-content h1 {
+  .videos-page .rs-hero__title {
     font-size: clamp(32px, 9vw, 48px);
   }
-  .videos-page__hero-actions {
+  .videos-page .rs-hero__actions {
     gap: 12px;
   }
   .video-overlay {
