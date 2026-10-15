@@ -7,6 +7,7 @@ import { SkeletonDetail } from "../components/ui/Skeleton";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Lightbox } from "../components/ui/Lightbox";
 import { safeImageUrl } from "../utils/urls";
+import { GithubLogo, ArrowUpRight } from "@phosphor-icons/react";
 
 const STORE_URL = "https://apps.microsoft.com/detail/9p6p8284v337?hl=pt-BR&gl=BR";
 const ABBY_SCREENSHOTS = [1, 2, 3, 4, 5, 6].map(
@@ -84,6 +85,20 @@ export function Launcher() {
           </div>
           <aside className="game-details__aside">
             <StoreRatings store={store} />
+          <section className="game-meta">
+            <h3>{t("Also available on")}</h3>
+            <p>{t("Take your games on the go with the Deadsmile companion app for Android.")}</p>
+            <a
+              className="btn btn--secondary"
+              href="https://github.com/DeadsmileGames/mobile-app/releases/latest"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GithubLogo weight="fill" />
+              {t("Get it on GitHub")}
+              <ArrowUpRight weight="bold" />
+            </a>
+          </section>
           </aside>
         </div>
       )}
