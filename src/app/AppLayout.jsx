@@ -2,7 +2,8 @@ import { useLanguage } from "../context/LanguageContext";
 import { SkeletonPage } from "../components/ui/Skeleton";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useOutlet } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
@@ -83,7 +84,7 @@ export function AppLayout() {
       <main id="main-content">
         <Suspense fallback={<SkeletonPage path={location.pathname} />}>
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+            <m.div
               className="page-transition"
               key={location.pathname}
               initial={{ opacity: 0 }}
