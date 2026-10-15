@@ -20,6 +20,7 @@ const Terms = page(() => import("./pages/Terms"), "Terms");
 const About = page(() => import("./pages/About"), "About");
 const News = page(() => import("./pages/News"), "News");
 const Videos = page(() => import("./pages/Videos"), "Videos");
+const Soundtracks = page(() => import("./pages/Soundtracks"), "Soundtracks");
 const Wishlist = page(() => import("./pages/Wishlist"), "Wishlist");
 const Library = page(() => import("./pages/Library"), "Library");
 const Support = page(() => import("./pages/Support"), "Support");
@@ -51,6 +52,7 @@ export default function App() {
         <Route path="/games/:slug/latest" element={<GameLatest />} />
         <Route path="/launcher" element={<Launcher />} />
         <Route path="/videos" element={<Videos />} />
+        <Route path="/soundtracks" element={<Soundtracks />} />
         <Route path="/games/:slug" element={<GameDetails />} />
         <Route
           path="/wishlist"
