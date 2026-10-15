@@ -3461,6 +3461,17 @@ input[type="file"]::file-selector-button {
 
 
 
+/* Keep video and soundtrack listings in normal document flow so the full page can scroll. */
+.videos-page {
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+.videos-page > .studio-section {
+  height: auto;
+  overflow: visible;
+}
+
 /* Videos featured hero: original two-column layout, with a soft screenshot blur. */
 .videos-page__hero {
   min-height: min(82vh, 820px);
