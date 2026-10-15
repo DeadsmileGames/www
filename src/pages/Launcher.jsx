@@ -85,20 +85,22 @@ export function Launcher() {
           </div>
           <aside className="game-details__aside">
             <StoreRatings store={store} />
-          <section className="game-meta">
-            <h3>{t("Also available on")}</h3>
-            <p>{t("Take your games on the go with the Deadsmile companion app for Android.")}</p>
-            <a
-              className="btn btn--secondary"
-              href="https://github.com/DeadsmileGames/mobile-app/releases/latest"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GithubLogo weight="fill" />
-              {t("Get it on GitHub")}
-              <ArrowUpRight weight="bold" />
-            </a>
-          </section>
+            <section className="game-meta">
+              <h3>{t("Also available on")}</h3>
+              <p>
+                {t("Take your games on the go with the Deadsmile companion app for Android.")}
+              </p>
+              <a
+                className="btn btn--secondary"
+                href="https://github.com/DeadsmileGames/mobile-app/releases/latest"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <GithubLogo weight="fill" />
+                {t("Get it on GitHub")}
+                <ArrowUpRight weight="bold" />
+              </a>
+            </section>
           </aside>
         </div>
       )}
