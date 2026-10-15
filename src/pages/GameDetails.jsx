@@ -660,6 +660,46 @@ export function GameDetails() {
         </aside>
       </div>
 
+      <section className="container game-details__related game-details__latest">
+        <div className="game-details__latest-heading">
+          <div>
+            <h2>{t("Latest updates")}</h2>
+            <p>{t("News and updates about this game.")}</p>
+          </div>
+          <Link
+            className="btn btn--secondary"
+            to={`/games/${encodeURIComponent(slug)}/latest`}
+          >
+            {t("View all updates")}
+          </Link>
+        </div>
+        {game.news?.length > 0 ? (
+          <div className="game-details__latest-grid">
+            {game.news.slice(0, 3).map((item) => (
+              <article className="game-details__latest-card" key={item.id}>
+                <Link
+                  to={`/newswire/${encodeURIComponent(item.slug)}`}
+                  className="game-details__latest-image"
+                  aria-label={item.title}
+                >
+                  {safeImageUrl(item.image) && (
+                    <img src={safeImageUrl(item.image)} alt="" loading="lazy" />
+                  )}
+                </Link>
+                <h3>
+                  <Link to={`/newswire/${encodeURIComponent(item.slug)}`}>
+                    {item.title}
+                  </Link>
+                </h3>
+                {item.excerpt && <p>{item.excerpt}</p>}
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="content-state">{t("No recent updates for this game.")}</p>
+        )}
+      </section>
+
       {game.relatedGames?.length > 0 && (
         <section className="container game-details__related">
           <h2>{t("games.related")}</h2>
