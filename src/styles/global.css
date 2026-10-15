@@ -3590,9 +3590,15 @@ input[type="file"]::file-selector-button {
     transform: scale(1.04);
     filter: blur(2px) saturate(0.88);
   }
+  /* Match the top spacing used by other pages below the mobile header. */
   .videos-page__hero .rs-hero__content {
-    padding-top: 50px;
+    padding-top: 105px;
     padding-bottom: 48px;
+  }
+
+  /* The videos list is first during loading or when there is no featured video. */
+  .videos-page > .studio-section:first-child {
+    padding-top: 105px;
   }
   .videos-page__hero-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -3605,6 +3611,17 @@ input[type="file"]::file-selector-button {
     -webkit-line-clamp: 6;
   }
 }
+/* Avoid sticky hover movement on touch-first devices. */
+@media (hover: none) {
+  .videos-page__hero-preview:hover {
+    transform: none;
+    border-color: #ffffff30;
+  }
+  .videos-page__hero-preview:hover > img {
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .videos-page__hero-preview,
   .videos-page__hero-preview > img {
