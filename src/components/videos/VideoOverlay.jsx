@@ -36,17 +36,19 @@ export function VideoOverlay({ video, onClose }) {
 
   if (!video) return null;
 
-  const title = video.youtube_title || video.title || t("Videos");
-  const thumbnail = safeImageUrl(video.youtube_thumbnail || video.thumbnail);
+  const title = video.youtube?.title || video.youtube_title || video.title || t("Videos");
+  const description = video.youtube?.description || video.youtube_description || video.description || video.excerpt;
+  const thumbnail = safeImageUrl(video.youtube?.thumbnail || video.youtube_thumbnail || video.thumbnail);
+  const databaseScreenshot = safeImageUrl(video.screenshots?.[0]);
   const slug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(video.game_slug || "")
     ? video.game_slug
     : null;
-  const background = slug
+  const background = databaseScreenshot || (slug
     ? `/assets/games/screenshots/${slug}/1.png`
-    : thumbnail || fallbackImage;
+    : thumbnail || fallbackImage);
   const embed = safeYoutubeEmbedUrl(video.video_url);
   const external = safeHttpsUrl(video.video_url);
-  const publishedAt = video.youtube_published_at || video.published_at;
+  const publishedAt = video.youtube?.publishedAt || video.youtube_published_at || video.published_at;
   const publishedDate =
     publishedAt && Number.isFinite(Date.parse(publishedAt))
       ? new Date(publishedAt).toLocaleDateString(language, {
@@ -111,9 +113,7 @@ export function VideoOverlay({ video, onClose }) {
           <span className="eyebrow">{video.category || t("Videos")}</span>
           <h2 id="video-overlay-title">{title}</h2>
           {publishedDate && <time dateTime={publishedAt}>{publishedDate}</time>}
-          {(video.youtube_description || video.description || video.excerpt) && (
-            <p>{video.youtube_description || video.description || video.excerpt}</p>
-          )}
+          {description && <p>{description}</p>}
         </div>
       </div>
     </div>,
