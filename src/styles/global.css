@@ -3460,21 +3460,6 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Keep the premiere strip and site navigation moving as one header stack. */
-.premiere-shell--with-banner {
-  padding-top: var(--premiere-banner-height, 52px);
-}
-.premiere-shell--with-banner .premiere-banner {
-  position: fixed;
-  inset: 0 0 auto;
-  z-index: 1000;
-}
-.premiere-shell--with-banner .site-header {
-  top: var(--premiere-banner-height, 52px);
-}
-.premiere-shell--with-banner .site-header__inner {
-  top: var(--premiere-banner-height, 52px);
-}
 
 /* Keep the premiere banner and navigation aligned. */
 .premiere-shell--with-banner {
