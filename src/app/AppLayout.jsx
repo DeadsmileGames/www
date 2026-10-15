@@ -73,7 +73,7 @@ export function AppLayout() {
         {t("Skip to content")}
       </a>
 
-      <div className="premiere-shell">
+      <div className={`premiere-shell ${premiere && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
         {premiere && !isAuthPage && (
           <PremiereBanner premiere={premiere} onOpen={() => setPremiereOpen(true)} />
         )}
