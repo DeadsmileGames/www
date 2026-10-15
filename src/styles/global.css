@@ -3474,46 +3474,49 @@ input[type="file"]::file-selector-button {
 
 /* Videos featured hero: original two-column layout, with a soft screenshot blur. */
 .videos-page__hero {
-  min-height: min(82vh, 820px);
+  min-height: min(68vh, 680px);
   overflow: hidden;
+  isolation: isolate;
   background: #101010;
   color: #fff;
 }
 .videos-page__hero .game-hero__background {
   z-index: 0;
-  transform: scale(1.025);
-  filter: blur(2px) saturate(0.9);
+  transform: scale(1.02);
+  filter: blur(1px) saturate(0.82);
 }
 .videos-page__hero .rs-hero__overlay {
   z-index: 1;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.52) 64%, rgba(0, 0, 0, 0.34)),
-    linear-gradient(0deg, #111, transparent 48%);
+    linear-gradient(90deg, rgba(8, 8, 8, 0.94) 0%, rgba(8, 8, 8, 0.78) 42%, rgba(8, 8, 8, 0.32) 100%),
+    linear-gradient(0deg, #0f0f0f 0%, transparent 45%);
 }
 .videos-page__hero .rs-hero__content {
   z-index: 2;
-  padding-top: clamp(54px, 7vw, 100px);
-  padding-bottom: clamp(54px, 7vw, 100px);
+  width: min(1120px, calc(100% - 48px));
+  padding-top: clamp(72px, 8vw, 110px);
+  padding-bottom: clamp(42px, 5vw, 64px);
 }
 .videos-page__hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 4.5vw, 68px);
   align-items: center;
 }
 .videos-page__hero-copy {
   display: grid;
   min-width: 0;
   justify-items: start;
-  gap: 16px;
+  align-content: center;
+  gap: 12px;
 }
 .videos-page__hero-copy .rs-hero__title {
   width: 100%;
-  max-width: 20ch;
+  max-width: 16ch;
   min-height: 0;
   margin: 0;
-  font-size: clamp(32px, 4.6vw, 64px);
-  line-height: 1.05;
+  font-size: clamp(34px, 4.15vw, 58px);
+  line-height: 1.06;
   overflow-wrap: anywhere;
 }
 .videos-page__hero-copy .news-page__date {
@@ -3521,14 +3524,14 @@ input[type="file"]::file-selector-button {
 }
 .videos-page__hero-description {
   display: -webkit-box;
-  max-width: 62ch;
-  margin: 0 0 8px;
+  max-width: 54ch;
+  margin: 4px 0 6px;
   overflow: hidden;
   color: #dedede;
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.7;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
 }
 .videos-page__hero-actions {
   flex-wrap: wrap;
@@ -3543,12 +3546,12 @@ input[type="file"]::file-selector-button {
   aspect-ratio: 16 / 9;
   padding: 0;
   overflow: hidden;
-  border: 1px solid #ffffff30;
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 12px;
   background: #080808;
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.4);
   transition: transform 180ms ease, border-color 180ms ease;
 }
 .videos-page__hero-preview:hover {
@@ -3603,8 +3606,9 @@ input[type="file"]::file-selector-button {
   }
   /* Match the top spacing used by other pages below the mobile header. */
   .videos-page__hero .rs-hero__content {
-    padding-top: 105px;
-    padding-bottom: 48px;
+    width: calc(100% - 40px);
+    padding-top: 112px;
+    padding-bottom: 38px;
   }
 
   /* The videos list is first during loading or when there is no featured video. */
@@ -3613,7 +3617,15 @@ input[type="file"]::file-selector-button {
   }
   .videos-page__hero-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 26px;
+    gap: 22px;
+  }
+  .videos-page__hero .game-hero__background {
+    transform: scale(1.03);
+    filter: blur(1px) saturate(0.8);
+  }
+  .videos-page__hero .rs-hero__overlay {
+    background: linear-gradient(90deg, rgba(8, 8, 8, 0.9), rgba(8, 8, 8, 0.58)),
+      linear-gradient(0deg, #0f0f0f 0%, transparent 65%);
   }
   .videos-page__hero-copy .rs-hero__title {
     font-size: clamp(32px, 9vw, 48px);
