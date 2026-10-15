@@ -214,14 +214,14 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                           </span>
                         </span>
                         <span className="video-overlay__related-title">{item.title}</span>
-                      </motion.button>
+                      </m.button>
                     );
                   })}
                 </div>
               </section>
             )}
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>,
     document.body,
@@ -321,7 +321,7 @@ export function Soundtracks() {
               />
             </label>
           </div>
-        </motion.header>
+        </m.header>
 
         {isLoading && <div className="soundtracks-page__loading" role="status" aria-label={t("Loading")}><SkeletonVideos /></div>}
         {resource.status === "error" && <ErrorState message={resource.error} onRetry={resource.retry} />}
@@ -400,11 +400,11 @@ export function Soundtracks() {
                               <span className="soundtrack-card__open">{t("Play")} <ArrowUpRight size={15} /></span>
                             </span>
                           </span>
-                        </motion.button>
+                        </m.button>
                       );
                     })}
                   </div>
-                </motion.section>
+                </m.section>
               );
             })}
           </div>
