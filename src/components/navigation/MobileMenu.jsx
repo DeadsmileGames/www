@@ -3,15 +3,18 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { ArrowUpRight, X } from "@phosphor-icons/react";
 import { trapFocus } from "../../utils/dom";
+
 export function MobileMenu({ open, onClose }) {
   const { t } = useLanguage();
   const panelRef = useRef(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
+
   useEffect(() => {
     if (!open) return undefined;
     return trapFocus(panelRef.current, () => closeRef.current());
   }, [open]);
+
   const links = [
     ["/", "nav.home"],
     ["/about", "nav.about"],
@@ -22,6 +25,7 @@ export function MobileMenu({ open, onClose }) {
     ["/newswire", "nav.news"],
     ["/support", "nav.support"],
   ];
+
   return (
     <div
       className={`mobile-menu ${open ? "mobile-menu--open" : ""}`}
@@ -55,16 +59,12 @@ export function MobileMenu({ open, onClose }) {
               to={to}
               onClick={onClose}
               className="mobile-menu__link"
-              style={{
-                "--menu-delay": `${i * 45}ms`,
-              }}
+              style={{ "--menu-delay": `${i * 45}ms` }}
             >
               <span>{t(key)}</span>
               <ArrowUpRight weight="bold" className="mobile-menu__arrow" />
             </Link>
           ))}
-
-}
         </nav>
       </div>
     </div>
