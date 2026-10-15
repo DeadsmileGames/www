@@ -4,7 +4,6 @@ import { useContent } from "../../hooks/useContent";
 import { safeImageUrl } from "../../utils/urls";
 import { VideoOverlay } from "./VideoOverlay";
 
-const DAY = 24 * 60 * 60 * 1000;
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
 function countdown(milliseconds) {
