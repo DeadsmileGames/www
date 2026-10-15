@@ -556,7 +556,15 @@
     "Now playing": "No ar agora",
     "{0} will be available in": "{0} estará disponível em",
     "{0} is now playing": "{0} está no ar agora",
-    "More details": "Mais detalhes"
+    "More details": "Mais detalhes",
+    "Latest updates": "Últimas atualizações",
+    "View all updates": "Ver todas as atualizações",
+    "News and updates about this game.": "Notícias e atualizações deste jogo.",
+    "No recent updates for this game.": "Ainda não há novidades para este jogo.",
+    "Back to game": "Voltar ao jogo",
+    "Back to games": "Voltar aos jogos",
+    "Read update": "Ler atualização",
+    "Watch now": "Assistir agora"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1115,7 +1123,15 @@
     "Now playing": "Reproduciendo ahora",
     "{0} will be available in": "{0} estará disponible en",
     "{0} is now playing": "{0} se está reproduciendo ahora",
-    "More details": "Más detalles"
+    "More details": "Más detalles",
+    "Latest updates": "Últimas actualizaciones",
+    "View all updates": "Ver todas las actualizaciones",
+    "News and updates about this game.": "Noticias y actualizaciones de este juego.",
+    "No recent updates for this game.": "Todavía no hay novedades para este juego.",
+    "Back to game": "Volver al juego",
+    "Back to games": "Volver a los juegos",
+    "Read update": "Leer actualización",
+    "Watch now": "Ver ahora"
   },
   "en": {
     "Retomar": "Resume",
