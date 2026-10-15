@@ -577,7 +577,9 @@
     "Add games to your library to keep them handy.": "Adicione jogos à sua biblioteca para encontrá-los facilmente.",
     "Remove from library": "Remover da biblioteca",
     "Remove {0} from your library?": "Remover {0} da sua biblioteca?",
-    "Removing…": "Removendo…"
+    "Removing…": "Removendo…",
+    "Add to library": "Adicionar à biblioteca",
+    "Adding…": "Adicionando…"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1157,7 +1159,9 @@
     "Add games to your library to keep them handy.": "Añade juegos a tu biblioteca para tenerlos a mano.",
     "Remove from library": "Quitar de la biblioteca",
     "Remove {0} from your library?": "¿Quitar {0} de tu biblioteca?",
-    "Removing…": "Quitando…"
+    "Removing…": "Quitando…",
+    "Add to library": "Añadir a la biblioteca",
+    "Adding…": "Añadiendo…"
   },
   "en": {
     "Retomar": "Resume",
