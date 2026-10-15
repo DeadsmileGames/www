@@ -15,6 +15,7 @@ import { useContent } from "../hooks/useContent";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonVideos } from "../components/ui/Skeleton";
+import { YouTubeBroadcastBadge } from "../components/videos/YouTubeBroadcastBadge";
 import { setOptionalContent, useOptionalContent } from "../utils/consent";
 import { trapFocus } from "../utils/dom";
 import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../utils/urls";
@@ -231,6 +232,11 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
 export function Soundtracks() {
   const { t, language } = useLanguage();
   const resource = useContent("/soundtracks", {});
+
+  useEffect(() => {
+    const timer = window.setInterval(() => void resource.refresh(), 60_000);
+    return () => window.clearInterval(timer);
+  }, [resource.refresh]);
   const [search, setSearch] = useState("");
   const [params, setParams] = useSearchParams();
 
@@ -285,7 +291,7 @@ export function Soundtracks() {
         <div className="container">
           <header className="section-heading">
             <h1>{t("Soundtracks")}</h1>
-            <p>{t("Discover game soundtracks collected from YouTube and organized by title.")}</p>
+            <p>{t("Discover game soundtracks collected from YouTube and organized by title")}{" · "}{t("{0} soundtracks", { 0: total })}</p>
           </header>
 
           <label className="search-page__input-wrapper">
@@ -327,7 +333,7 @@ export function Soundtracks() {
             />
           )}
 
-          {resource.status === "success" && filteredGroups.map((group, groupIndex) => (
+          {resource.status === "success" && filteredGroups.map((group) => (
             <section
               className="studio-videos"
               key={group.gameId}
@@ -364,6 +370,7 @@ export function Soundtracks() {
                         <span className="play-button" aria-hidden="true">
                           <Play size={26} weight="fill" />
                         </span>
+                        <YouTubeBroadcastBadge video={track} />
                       </span>
                       <h3>{track.title}</h3>
                       <small>{published || track.channelTitle || t("From YouTube")}</small>
