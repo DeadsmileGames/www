@@ -2,17 +2,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { trapFocus } from "../../utils/dom";
 
-export function Modal({
-  open,
-  onClose,
-  children,
-  labelledBy,
-  overlayClassName = "",
-  panelClassName = "",
-  overlayStyle,
-  panelStyle,
-  backdrop,
-}) {
+export function Modal({ open, onClose, children, labelledBy }) {
   const panelRef = useRef(null);
   const onCloseRef = useRef(onClose);
 
@@ -29,16 +19,13 @@ export function Modal({
 
   return createPortal(
     <div
-      className={["modal-overlay", overlayClassName].filter(Boolean).join(" ")}
-      style={overlayStyle}
+      className="modal-overlay"
       onMouseDown={(event) => {
-        if (!panelRef.current?.contains(event.target)) onClose();
+        if (event.target === event.currentTarget) onClose();
       }}
     >
-      {backdrop}
       <div
-        className={["modal-panel", panelClassName].filter(Boolean).join(" ")}
-        style={panelStyle}
+        className="modal-panel"
         role="dialog"
         aria-modal="true"
         aria-labelledby={labelledBy}
