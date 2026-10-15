@@ -65,7 +65,6 @@ export function Videos() {
           <div className="rs-hero__content container">
             <div className="rs-hero__identity">
               <div className="rs-hero__text-col">
-                <span className="eyebrow">{t("Latest video")}</span>
                 <h1 className="rs-hero__title">{latestTitle}</h1>
                 {publishedDate && <time className="news-page__date" dateTime={publishedAt}>{publishedDate}</time>}
                 <p>{latestDescription}</p>
@@ -143,7 +142,6 @@ export function Videos() {
                       {image && <img src={image} alt="" loading="lazy" />}
                       <span className="play-button"><Play size={26} weight="fill" /></span>
                     </span>
-                    <span className="eyebrow">{video.category || t("Videos")}</span>
                     <h3>{videoTitle}</h3>
                     {date && Number.isFinite(Date.parse(date)) && (
                       <time className="news-page__date" dateTime={date}>
