@@ -4,7 +4,7 @@ import { Skeleton, SkeletonVideos, SkeletonNews } from "../components/ui/Skeleto
 import { Link, useNavigate } from "react-router-dom";
 import { useGames } from "../hooks/useGames";
 import { useContent } from "../hooks/useContent";
-import { safeImageUrl, safeHttpsUrl } from "../utils/urls";
+import { safeImageUrl, safeHttpsUrl, safeYoutubeEmbedUrl } from "../utils/urls";
 import { Play } from "@phosphor-icons/react";
 
 function ContentState({ resource, empty, children, skeleton }) {
@@ -47,9 +47,11 @@ export function Home() {
     const trailerUrl =
       safeHttpsUrl(game.trailerUrl) ||
       (isAbby(game) ? `https://youtu.be/${ABBY_VIDEO_ID}` : null);
+    const trailerEmbed = safeYoutubeEmbedUrl(trailerUrl);
     const matchingVideo =
       videos.data?.find(
-        (video) => trailerUrl && safeHttpsUrl(video.video_url) === trailerUrl,
+        (video) =>
+          trailerEmbed && safeYoutubeEmbedUrl(video.video_url) === trailerEmbed,
       ) ||
       videos.data?.find(
         (video) =>
