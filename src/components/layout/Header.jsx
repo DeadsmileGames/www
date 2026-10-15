@@ -15,6 +15,7 @@ import {
   MagnifyingGlass,
   List,
   Heart,
+  GameController,
   File,
   LockKey,
   Globe,
@@ -158,6 +159,10 @@ export function Header({ onOpenSearch }) {
                     >
                       <UserCircle weight="bold" />
                       {t("My profile")}
+                    </Link>
+                    <Link to="/library" onClick={() => setAccountOpen(false)}>
+                      <GameController weight="bold" />
+                      {t("Your library")}
                     </Link>
                     <Link to="/wishlist" onClick={() => setAccountOpen(false)}>
                       <Heart weight="bold" />
