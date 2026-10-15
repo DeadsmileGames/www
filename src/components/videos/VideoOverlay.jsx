@@ -43,6 +43,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
     // YouTube uses this locale for player UI and language preference hints.
     // Audio-track availability/selection itself is controlled by YouTube.
     url.searchParams.set("hl", playerLanguage);
+    url.searchParams.set("cc_lang_pref", playerLanguage === "pt-BR" ? "pt" : playerLanguage);
     return url.toString();
   })();
   const external = safeHttpsUrl(video?.video_url);
