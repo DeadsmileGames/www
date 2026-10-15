@@ -69,7 +69,7 @@ export function Header({ onOpenSearch }) {
     ["/games", t("nav.games")],
     ["/launcher", t("nav.launcher")],
     ["/newswire", t("nav.news")],
-    ["/#videos", t("nav.videos")],
+    ["/videos", t("nav.videos")],
     ["/support", t("nav.support")],
   ];
 
