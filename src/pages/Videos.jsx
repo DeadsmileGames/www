@@ -146,6 +146,7 @@ export function Videos() {
                       <span className="play-button">
                         <Play size={26} weight="fill" />
                       </span>
+                      <YouTubeBroadcastBadge video={video} />
                     </span>
                     <h3>{video.youtube?.title || video.title}</h3>
                   </button>
