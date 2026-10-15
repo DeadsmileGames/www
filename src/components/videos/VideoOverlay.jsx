@@ -1,7 +1,7 @@
 import { X } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useOptionalContent, setOptionalContent } from "../../utils/consent";
-import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/urls";
+import { safeHttpsUrl, safeYoutubeEmbedUrl } from "../../utils/urls";
 import { Modal } from "../ui/Modal";
 
 export function VideoOverlay({ video, onClose }) {
@@ -15,7 +15,6 @@ export function VideoOverlay({ video, onClose }) {
     video.youtube_description ||
     video.description ||
     video.excerpt;
-  const thumbnail = safeImageUrl(video.youtube?.thumbnail || video.youtube_thumbnail || video.thumbnail);
   const embed = safeYoutubeEmbedUrl(video.video_url);
   const external = safeHttpsUrl(video.video_url);
   const publishedAt = video.youtube?.publishedAt || video.youtube_published_at || video.published_at;
@@ -51,7 +50,6 @@ export function VideoOverlay({ video, onClose }) {
           />
         ) : embed ? (
           <div className="support-card">
-            {thumbnail && <img src={thumbnail} alt="" loading="lazy" />}
             <p>{t("Allow YouTube content to play this video.")}</p>
             <button
               type="button"
