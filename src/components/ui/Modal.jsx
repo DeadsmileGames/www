@@ -11,6 +11,7 @@ export function Modal({
   panelClassName = "",
   overlayStyle,
   panelStyle,
+  backdrop,
 }) {
   const panelRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -34,6 +35,7 @@ export function Modal({
         if (event.target === event.currentTarget) onClose();
       }}
     >
+      {backdrop}
       <div
         className={["modal-panel", panelClassName].filter(Boolean).join(" ")}
         style={panelStyle}
