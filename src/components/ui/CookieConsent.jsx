@@ -13,8 +13,8 @@ export function CookieConsent() {
   };
   return (
     <div className="cookie-consent" role="region" aria-label={t("Privacy choices")}>
-      <div>
-        <div>
+      <div className="cookie-consent__inner">
+        <div className="cookie-consent__message">
           <h3>{t("Privacy choices")}</h3>
           <p>{t("Essential session and security cookies stay active so the site can work safely.")}</p>
           <p>{t("Optional YouTube embeds remain blocked unless you allow them. Security verification asks separately before loading.")}</p>
@@ -22,7 +22,7 @@ export function CookieConsent() {
         <div className="cookie-consent__actions">
           <button
             type="button"
-            className="cookie-consent__btn"
+            className="cookie-consent__btn cookie-consent__btn--accept"
             onClick={() => choose(true)}
           >
             {t("Accept optional content")}
@@ -34,7 +34,7 @@ export function CookieConsent() {
           >
             {t("Reject optional content")}
           </button>
-          <Link to="/privacy" className="btn btn--secondary">
+          <Link to="/privacy" className="cookie-consent__link">
             {t("Manage preferences")}
           </Link>
         </div>
