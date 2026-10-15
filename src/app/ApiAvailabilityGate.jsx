@@ -144,6 +144,18 @@ export function ApiAvailabilityGate({ children }) {
     };
   }, [retryNonce]);
 
+  useEffect(() => {
+    if (available) return undefined;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+    };
+  }, [available]);
+
   return (
     <AnimatePresence mode="sync" initial={false}>
       {available ? (
