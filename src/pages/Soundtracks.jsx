@@ -291,7 +291,7 @@ export function Soundtracks() {
         <div className="container">
           <header className="section-heading">
             <h1>{t("Soundtracks")}</h1>
-            <p>{t("Discover game soundtracks collected from YouTube and organized by title")}{" · "}{t("{0} soundtracks", { 0: total })}</p>
+            <p>{t("Discover game soundtracks collected from YouTube and organized by title.")}{" · "}{t("{0} soundtracks", { 0: total })}</p>
           </header>
 
           <label className="search-page__input-wrapper">
