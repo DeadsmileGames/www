@@ -564,7 +564,8 @@
     "Back to game": "Voltar ao jogo",
     "Back to games": "Voltar aos jogos",
     "Read update": "Ler atualização",
-    "Watch now": "Assistir agora"
+    "Watch now": "Assistir agora",
+    "Latest updates for {0}": "Últimas atualizações de {0}"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1131,7 +1132,8 @@
     "Back to game": "Volver al juego",
     "Back to games": "Volver a los juegos",
     "Read update": "Leer actualización",
-    "Watch now": "Ver ahora"
+    "Watch now": "Ver ahora",
+    "Latest updates for {0}": "Últimas actualizaciones de {0}"
   },
   "en": {
     "Retomar": "Resume",
