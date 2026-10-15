@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
@@ -6,6 +7,7 @@ import { safeImageUrl } from "../../utils/urls";
 export function PremiereBanner({ premiere, onOpen }) {
   const { t } = useLanguage();
   const reducedMotion = useReducedMotion();
+  const bannerRef = useRef(null);
   const seconds = useCountdown(Date.parse(premiere.starts_at));
   const images = (premiere.screenshots?.length ? premiere.screenshots : [premiere.thumbnail])
     .map(safeImageUrl)
@@ -13,9 +15,29 @@ export function PremiereBanner({ premiere, onOpen }) {
     .slice(0, 3);
   const waiting = premiere.state === "upcoming" && seconds > 0;
 
+  useLayoutEffect(() => {
+    const banner = bannerRef.current;
+    if (!banner) return undefined;
+    const root = document.documentElement;
+    const updateHeight = () => {
+      root.style.setProperty(
+        "--premiere-banner-height",
+        `${Math.ceil(banner.getBoundingClientRect().height)}px`,
+      );
+    };
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--premiere-banner-height");
+    };
+  }, []);
+
   return (
     <motion.button
       type="button"
+      ref={bannerRef}
       className="premiere-banner"
       onClick={onOpen}
       initial={{ y: "-100%" }}
