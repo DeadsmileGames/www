@@ -19,10 +19,10 @@ function MaintenanceScreen({ checking, onRetry }) {
       className="maintenance-screen"
       role="status"
       aria-live="polite"
-      initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.99 }}
-      transition={{ duration: reducedMotion ? 0.01 : 0.35, ease: "easeOut" }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reducedMotion ? 0.01 : 0.22, ease: "easeOut" }}
     >
       <div className="maintenance-screen__ambient" aria-hidden="true">
         <span className="maintenance-screen__orb maintenance-screen__orb--one" />
@@ -30,7 +30,12 @@ function MaintenanceScreen({ checking, onRetry }) {
         <span className="maintenance-screen__grid" />
       </div>
 
-      <div className="maintenance-screen__content">
+      <m.div
+        className="maintenance-screen__content"
+        initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reducedMotion ? 0.01 : 0.32, ease: "easeOut" }}
+      >
         <img
           className="maintenance-screen__brand"
           src="/assets/branding/deadsmile-mark-mask.svg"
