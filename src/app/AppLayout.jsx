@@ -8,6 +8,7 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { SearchOverlay } from "../components/search/SearchOverlay";
 import { CookieConsent } from "../components/ui/CookieConsent";
+import { PremiereBanner } from "../components/videos/PremiereBanner";
 import { useAuth } from "../hooks/useAuth";
 
 const AdminComposer = lazy(() =>
@@ -67,7 +68,9 @@ export function AppLayout() {
         {t("Skip to content")}
       </a>
 
-      {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
+      <PremiereBanner />
+
+      {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />
 
       <main id="main-content">
         <Suspense fallback={<SkeletonPage path={location.pathname} />}>
