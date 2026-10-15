@@ -9,6 +9,7 @@ const Home = page(() => import("./pages/Home"), "Home");
 const Launcher = page(() => import("./pages/Launcher"), "Launcher");
 const Games = page(() => import("./pages/Games"), "Games");
 const GameDetails = page(() => import("./pages/GameDetails"), "GameDetails");
+const GameLatest = page(() => import("./pages/GameLatest"), "GameLatest");
 const Search = page(() => import("./pages/Search"), "Search");
 const Login = page(() => import("./pages/Login"), "Login");
 const Register = page(() => import("./pages/Register"), "Register");
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/presskit" element={<PressKit />} />
         <Route path="/games" element={<Games />} />
+        <Route path="/games/:slug/latest" element={<GameLatest />} />
         <Route path="/launcher" element={<Launcher />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/games/:slug" element={<GameDetails />} />
