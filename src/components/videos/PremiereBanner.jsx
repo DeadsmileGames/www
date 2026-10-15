@@ -63,7 +63,7 @@ export function PremiereBanner() {
 
   const title = premiere.title;
   const scheduled = Date.parse(premiere.starts_at);
-  const live = premiere.state === "live";
+  const live = premiere.state === "live" || (premiere.state === "upcoming" && Number.isFinite(scheduled) && scheduled <= now);
   const screenshot =
     safeImageUrl(premiere.screenshots?.[0]) ||
     safeImageUrl(premiere.thumbnail) ||
