@@ -21,6 +21,7 @@ const About = page(() => import("./pages/About"), "About");
 const News = page(() => import("./pages/News"), "News");
 const Videos = page(() => import("./pages/Videos"), "Videos");
 const Wishlist = page(() => import("./pages/Wishlist"), "Wishlist");
+const Library = page(() => import("./pages/Library"), "Library");
 const Support = page(() => import("./pages/Support"), "Support");
 const PressKit = page(() => import("./pages/PressKit"), "PressKit");
 const NotFound = page(() => import("./pages/NotFound"), "NotFound");
@@ -56,6 +57,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Wishlist />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            <ProtectedRoute>
+              <Library />
             </ProtectedRoute>
           }
         />
