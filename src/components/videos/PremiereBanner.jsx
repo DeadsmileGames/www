@@ -37,7 +37,7 @@ export function PremiereBanner() {
 
   const title = premiere.title;
   const scheduled = Date.parse(premiere.starts_at);
-  const live = premiere.state === "live" || scheduled <= now;
+  const live = premiere.state === "live";
   const screenshot = safeImageUrl(premiere.screenshots?.[0]) || safeImageUrl(premiere.thumbnail) || fallbackImage;
   const thumbnail = safeImageUrl(premiere.thumbnail);
 
@@ -102,12 +102,6 @@ export function PremiereBanner() {
             padding: 0,
           }}
         >
-          <span
-            className="eyebrow"
-            style={{ color: "#e2e2e2", fontSize: 11, fontWeight: 700, letterSpacing: ".14em", textTransform: "uppercase" }}
-          >
-            {live ? t("Now playing") : t("Upcoming premiere")}
-          </span>
           <strong style={{ fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 600 }}>
             {live
               ? t("{0} is now playing", { 0: title })
