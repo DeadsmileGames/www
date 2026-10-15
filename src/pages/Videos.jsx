@@ -9,7 +9,7 @@ import { VideoOverlay } from "../components/videos/VideoOverlay";
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
 export function Videos() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [params, setParams] = useSearchParams();
   const videos = useContent("/videos", { limit: 48 });
   const latest = videos.status === "success" ? videos.data[0] : null;
@@ -33,17 +33,6 @@ export function Videos() {
     (gameSlug ? safeImageUrl(`/assets/games/screenshots/${gameSlug}/1.png`) : null) ||
     fallbackImage;
   const latestTitle = latest?.youtube?.title || latest?.title || t("Latest videos");
-  const latestDescription =
-    latest?.youtube?.description || latest?.description || latest?.excerpt || t("Video highlights from Deadsmile Games.");
-  const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.thumbnail);
-  const publishedAt = latest?.youtube?.publishedAt || latest?.published_at;
-  const publishedDate =
-    publishedAt && Number.isFinite(Date.parse(publishedAt))
-      ? new Date(publishedAt).toLocaleDateString(language, {
-          dateStyle: "long",
-          timeZone: "UTC",
-        })
-      : null;
 
   return (
     <div className="videos-page">
@@ -60,36 +49,11 @@ export function Videos() {
           />
           <div className="rs-hero__overlay" />
           <div className="rs-hero__content container">
-            <div className="videos-page__hero-grid">
-              <div className="videos-page__hero-copy">
-                <h1 className="rs-hero__title">{latestTitle}</h1>
-                {publishedDate && (
-                  <time className="news-page__date" dateTime={publishedAt}>
-                    {publishedDate}
-                  </time>
-                )}
-                {latestDescription && <p className="videos-page__hero-description">{latestDescription}</p>}
-                <div className="rs-hero__actions videos-page__hero-actions">
-                  <button type="button" className="btn btn--primary" onClick={() => open(latest.id)}>
-                    <Play size={20} weight="fill" />
-                    {t("Watch now")}
-                  </button>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="videos-page__hero-preview"
-                onClick={() => open(latest.id)}
-                aria-label={t("Watch now")}
-              >
-                {thumbnail ? (
-                  <img src={thumbnail} alt="" />
-                ) : (
-                  <span className="videos-page__preview-placeholder">{t("Watch now")}</span>
-                )}
-                <span className="videos-page__preview-play" aria-hidden="true">
-                  <Play size={28} weight="fill" />
-                </span>
+            <h1 className="rs-hero__title">{latestTitle}</h1>
+            <div className="rs-hero__actions">
+              <button type="button" className="btn btn--primary" onClick={() => open(latest.id)}>
+                <Play size={20} weight="fill" />
+                {t("Watch now")}
               </button>
             </div>
           </div>
