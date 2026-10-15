@@ -3370,6 +3370,140 @@ input[type="file"]::file-selector-button {
   border-bottom-color: #641f1f;
 }
 
+
+.game-details__latest-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+.game-details__latest-heading h2,
+.game-details__latest-heading p {
+  margin: 0;
+}
+.game-details__latest-heading p {
+  margin-top: 8px;
+  color: #bbb;
+}
+.game-details__latest-grid,
+.game-latest-page__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.game-details__latest-card,
+.game-latest-page__card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #ffffff1c;
+  border-radius: 10px;
+  background: #171717;
+}
+.game-details__latest-image,
+.game-latest-page__image {
+  display: block;
+  overflow: hidden;
+  background: #222;
+  aspect-ratio: 16 / 9;
+}
+.game-details__latest-image img,
+.game-latest-page__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 180ms ease;
+}
+.game-details__latest-image:hover img,
+.game-latest-page__image:hover img {
+  transform: scale(1.03);
+}
+.game-details__latest-card h3 {
+  padding: 18px 18px 0;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+}
+.game-details__latest-card h3 a,
+.game-latest-page__card h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.game-details__latest-card h3 a:hover,
+.game-latest-page__card h2 a:hover {
+  text-decoration: underline;
+}
+.game-details__latest-card p {
+  padding: 0 18px 18px;
+  margin: 12px 0 0;
+  color: #ccc;
+  line-height: 1.6;
+}
+.game-latest-page {
+  padding-top: 130px;
+  padding-bottom: 90px;
+}
+.game-latest-page__header {
+  margin-bottom: 36px;
+}
+.game-latest-page__header h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 56px);
+}
+.game-latest-page__header p {
+  margin: 12px 0 0;
+  color: #c8c8c8;
+}
+.game-latest-page__card time {
+  display: block;
+  margin-bottom: 10px;
+  color: #aaa;
+  font-size: 13px;
+}
+.game-latest-page__copy {
+  padding: 20px;
+}
+.game-latest-page__copy h2 {
+  margin: 0;
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.35;
+}
+.game-latest-page__copy p {
+  color: #ccc;
+  line-height: 1.6;
+}
+.game-latest-page__read-more {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  font-weight: 600;
+}
+@media (max-width: 760px) {
+  .game-details__latest-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+  .game-details__latest-grid,
+  .game-latest-page__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .game-latest-page {
+    padding-top: 100px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-details__latest-image img,
+  .game-latest-page__image img {
+    transition: none;
+  }
+  .game-details__latest-image:hover img,
+  .game-latest-page__image:hover img {
+    transform: none;
+  }
+}
+
 .premiere-shell {
   position: relative;
 }
