@@ -56,9 +56,7 @@ export function Videos() {
 
   return (
     <div className="videos-page">
-      {videos.status === "loading" && !latest ? (
-        <div className="container"><SkeletonVideos /></div>
-      ) : latest ? (
+      {videos.status === "loading" && !latest ? null : latest ? (
         <section className="rs-hero">
           <img className="game-hero__background" src={thumbnail} alt="" />
           <div className="rs-hero__overlay" />
