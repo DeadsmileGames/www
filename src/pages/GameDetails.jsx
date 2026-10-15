@@ -56,8 +56,21 @@ export function GameDetails() {
   });
   const [launcherMissing, setLauncherMissing] = useState(false);
   const [download, setDownload] = useState({ busy: false, error: "" });
+  const [releaseNow, setReleaseNow] = useState(Date.now());
 
   const game = state.game;
+  const releaseTimestamp = Date.parse(game?.releaseDate || "");
+  useEffect(() => {
+    if (
+      game?.status !== "in_development" ||
+      !Number.isFinite(releaseTimestamp) ||
+      releaseTimestamp <= Date.now()
+    ) {
+      return undefined;
+    }
+    const timer = window.setInterval(() => setReleaseNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [game?.status, game?.releaseDate, releaseTimestamp]);
   const gameId = game?.id || null;
   const isValidGameId = typeof gameId === "string" && gameId.length > 0;
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
@@ -455,6 +468,28 @@ export function GameDetails() {
             )}
           </button>
         )}
+
+        {game.status === "in_development" &&
+          Number.isFinite(releaseTimestamp) &&
+          releaseTimestamp > releaseNow && (
+            <button
+              type="button"
+              className="btn btn--secondary game-details__btn"
+              disabled
+              aria-label={t("Countdown to launch")}
+            >
+              {t("Release in")}{" "}
+              {(() => {
+                const seconds = Math.max(0, Math.floor((releaseTimestamp - releaseNow) / 1000));
+                const days = Math.floor(seconds / 86400);
+                const hours = Math.floor((seconds % 86400) / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remaining = seconds % 60;
+                const clock = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remaining).padStart(2, "0")}`;
+                return days > 0 ? `${days}d ${clock}` : clock;
+              })()}
+            </button>
+          )}
       </ProductHero>
 
       <div className="container game-details__body">
