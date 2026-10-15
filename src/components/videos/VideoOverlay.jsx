@@ -22,7 +22,28 @@ export function VideoOverlay({ video, onClose }) {
     const previousFocus = document.activeElement;
     const previousOverflow = document.body.style.overflow;
     const closeOnEscape = (event) => {
-      if (event.key === "Escape") closeRef.current?.();
+      if (event.key === "Escape") {
+        closeRef.current?.();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = panelRef.current?.querySelectorAll(
+        'button:not([disabled]), a[href], iframe, [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) {
+        event.preventDefault();
+        panelRef.current?.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === panelRef.current)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", closeOnEscape);
