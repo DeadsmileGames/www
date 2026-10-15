@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { Play, X, YoutubeLogo } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
@@ -60,7 +61,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
   useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
 
   return (
-    <motion.div
+    <m.div
       className="video-overlay"
       role="dialog"
       aria-modal="true"
