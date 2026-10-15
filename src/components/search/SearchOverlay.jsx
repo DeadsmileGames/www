@@ -9,7 +9,7 @@ import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { trapFocus } from "../../utils/dom";
 import { safeImageUrl } from "../../utils/urls";
 
-export function SearchOverlay({ open, onClose }) {
+export function SearchOverlay({ open, onClose, hasPremiere = false }) {
   const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
@@ -45,7 +45,7 @@ export function SearchOverlay({ open, onClose }) {
 
   return (
     <div
-      className="search-overlay"
+      className={`search-overlay${hasPremiere ? " search-overlay--with-banner" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label={t("Site search")}
