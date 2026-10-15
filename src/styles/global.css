@@ -3382,21 +3382,6 @@ input[type="file"]::file-selector-button {
   }
 }
 
-.videos-page .video-visual--featured {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: 10px;
-  color: inherit;
-  cursor: pointer;
-  appearance: none;
-}
-.videos-page .video-visual--featured:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 4px;
-}
-
 body.has-video-premiere .site-header {
   top: var(--video-premiere-height, 76px);
 }
