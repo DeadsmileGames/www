@@ -100,7 +100,7 @@ export function AppLayout() {
               }}
             >
               {outlet}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </Suspense>
       </main>
