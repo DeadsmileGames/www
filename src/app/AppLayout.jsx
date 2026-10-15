@@ -9,7 +9,10 @@ import { Footer } from "../components/layout/Footer";
 import { SearchOverlay } from "../components/search/SearchOverlay";
 import { CookieConsent } from "../components/ui/CookieConsent";
 import { PremiereBanner } from "../components/videos/PremiereBanner";
+import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { useAuth } from "../hooks/useAuth";
+import { usePremiere } from "../hooks/usePremiere";
+import { safeImageUrl } from "../utils/urls";
 
 const AdminComposer = lazy(() =>
   import("../components/admin/AdminComposer").then((module) => ({
@@ -21,6 +24,8 @@ export function AppLayout() {
   const { t } = useLanguage();
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [premiereOpen, setPremiereOpen] = useState(false);
+  const premiere = usePremiere();
 
   const location = useLocation();
   const outlet = useOutlet();
@@ -68,9 +73,12 @@ export function AppLayout() {
         {t("Skip to content")}
       </a>
 
-      <PremiereBanner />
-
-      {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
+      <div className="premiere-shell">
+        {premiere && !isAuthPage && (
+          <PremiereBanner premiere={premiere} onOpen={() => setPremiereOpen(true)} />
+        )}
+        {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
+      </div>
 
       <main id="main-content">
         <Suspense fallback={<SkeletonPage path={location.pathname} />}>
@@ -99,6 +107,12 @@ export function AppLayout() {
       {!isAuthPage && <Footer />}
 
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+
+      <VideoOverlay
+        videoId={premiereOpen && premiere ? premiere.id : null}
+        background={safeImageUrl(premiere?.screenshots?.[0])}
+        onClose={() => setPremiereOpen(false)}
+      />
 
       {!isAuthPage && user?.role === "admin" && (
         <Suspense fallback={null}>
