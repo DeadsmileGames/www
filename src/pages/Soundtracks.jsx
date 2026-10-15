@@ -127,17 +127,18 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                   allowFullScreen
                 />
               ) : external ? (
-                <button
-                  type="button"
+                <a
                   className="soundtrack-overlay__poster"
-                  onClick={() => setPlaying(true)}
-                  aria-label={t("Play soundtrack")}
+                  href={external}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t("Open on YouTube")}
                 >
                   {thumbnail && <img src={thumbnail} alt="" />}
                   <span className="soundtrack-overlay__poster-play">
                     <Play size={29} weight="fill" />
                   </span>
-                </button>
+                </a>
               ) : (
                 <p className="content-state">{t("No video source available.")}</p>
               )}
