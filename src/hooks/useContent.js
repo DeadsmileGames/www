@@ -12,14 +12,14 @@ export function useContent(path, params = {}) {
     error: "",
   });
 
-  const load = useCallback(async () => {
+  const load = useCallback(async ({ silent = false } = {}) => {
     if (!path) {
       requestId.current += 1;
       setState({ status: "idle", data: null, error: "" });
       return null;
     }
     const id = ++requestId.current;
-    setState((current) => ({ ...current, status: "loading", error: "" }));
+    if (!silent) setState((current) => ({ ...current, status: "loading", error: "" }));
     try {
       const data = await api.get(path, JSON.parse(paramsKey));
       if (id === requestId.current)
@@ -27,7 +27,11 @@ export function useContent(path, params = {}) {
       return data;
     } catch (error) {
       if (id === requestId.current) {
-        setState({ status: "error", data: [], error: friendlyErrorMessage(error) });
+        setState((current) => {
+          const message = friendlyErrorMessage(error);
+          if (silent && current.status === "success") return { ...current, error: message };
+          return { status: "error", data: [], error: message };
+        });
       }
       return null;
     }
@@ -54,5 +58,7 @@ export function useContent(path, params = {}) {
     return () => window.removeEventListener("deadsmile:live", onLive);
   }, [path, load]);
 
-  return { ...state, retry: load };
+  const refresh = useCallback(() => load({ silent: true }), [load]);
+
+  return { ...state, retry: load, refresh };
 }
