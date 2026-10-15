@@ -147,7 +147,7 @@ export function Videos() {
           )}
         </div>
       </section>
-      <VideoOverlay videoId={selectedId} onClose={close} />
+      <VideoOverlay videoId={selectedId} onClose={close} onSelect={open} />
     </div>
   );
 }
