@@ -55,7 +55,7 @@ export function ToastProvider({ children }) {
                   >
                     <X size={16} weight="bold" />
                   </button>
-                </motion.div>
+                </m.div>
               );
             })}
           </AnimatePresence>
