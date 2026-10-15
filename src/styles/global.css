@@ -3234,7 +3234,6 @@ input[type="file"]::file-selector-button {
   background: linear-gradient(90deg, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.48) 62%, rgba(0, 0, 0, 0.3)), linear-gradient(0deg, #111, transparent 45%);
 }
 .videos-page .rs-hero__content {
-  width: 100%;
   padding-top: clamp(54px, 7vw, 100px);
   padding-bottom: clamp(54px, 7vw, 100px);
 }
@@ -3321,8 +3320,12 @@ input[type="file"]::file-selector-button {
 }
 
 .video-premiere.rs-hero {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   width: 100%;
   min-height: 76px;
+  animation: video-premiere-drop 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
   padding: 12px 24px;
   align-items: center;
   justify-content: center;
@@ -3392,4 +3395,24 @@ input[type="file"]::file-selector-button {
 .videos-page .video-visual--featured:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 4px;
+}
+
+body.has-video-premiere .site-header {
+  top: var(--video-premiere-height, 76px);
+}
+body.has-video-premiere .site-header__inner {
+  top: var(--video-premiere-height, 76px);
+}
+@keyframes video-premiere-drop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .video-premiere.rs-hero {
+    animation: none;
+  }
 }
