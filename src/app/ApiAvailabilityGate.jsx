@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { ArrowClockwise, Broadcast, Wrench } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { API_BASE_URL } from "../services/api";
@@ -14,7 +15,7 @@ function MaintenanceScreen({ checking, onRetry }) {
   const reducedMotion = useReducedMotion();
 
   return (
-    <motion.main
+    <m.main
       className="maintenance-screen"
       role="status"
       aria-live="polite"
@@ -159,7 +160,7 @@ export function ApiAvailabilityGate({ children }) {
   return (
     <AnimatePresence mode="sync" initial={false}>
       {available ? (
-        <motion.div
+        <m.div
           key="site-ready"
           className="api-availability-site"
           initial={{ opacity: 0 }}
