@@ -60,7 +60,7 @@ export function GameDetails() {
 
   const game = state.game;
   const releaseDateValue = game?.releaseDate || "";
-  const releaseTimestamp = /^\\d{4}-\\d{2}-\\d{2}$/.test(releaseDateValue)
+  const releaseTimestamp = /^\d{4}-\d{2}-\d{2}$/.test(releaseDateValue)
     ? new Date(`${releaseDateValue}T00:00:00`).getTime()
     : Date.parse(releaseDateValue);
   useEffect(() => {
