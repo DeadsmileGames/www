@@ -128,8 +128,11 @@ function browserLanguage() {
         ? navigator.languages
         : [navigator.language];
   const languages = candidates.map((value) => String(value || "").toLowerCase());
-  if (languages.some((value) => value === "pt" || value.startsWith("pt-"))) return "pt-BR";
-  if (languages.some((value) => value === "es" || value.startsWith("es-"))) return "es";
+  for (const value of languages) {
+    if (value === "pt" || value.startsWith("pt-")) return "pt-BR";
+    if (value === "es" || value.startsWith("es-")) return "es";
+    if (value === "en" || value.startsWith("en-")) return "en";
+  }
   return "en";
 }
 export function LanguageProvider({ children }) {
