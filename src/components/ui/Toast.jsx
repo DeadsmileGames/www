@@ -1,7 +1,8 @@
 import { useLanguage } from "../../context/LanguageContext";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { CheckCircle, Info, WarningCircle, X } from "@phosphor-icons/react";
 
 const ToastContext = createContext(null);
@@ -37,14 +38,13 @@ export function ToastProvider({ children }) {
                     ? WarningCircle
                     : Info;
               return (
-                <motion.div
+                <m.div
                   className={`toast toast--${item.tone}`}
                   key={item.id}
                   initial={{ opacity: 0, y: reducedMotion ? 0 : 14, scale: reducedMotion ? 1 : 0.97 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, x: reducedMotion ? 0 : 20, scale: reducedMotion ? 1 : 0.98 }}
                   transition={{ duration: reducedMotion ? 0.01 : 0.22, ease: "easeOut" }}
-                  layout
                 >
                   <Icon size={21} weight="bold" />
                   <span>{t(item.message)}</span>
