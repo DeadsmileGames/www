@@ -106,7 +106,11 @@ export function AppLayout() {
 
       {!isAuthPage && <Footer />}
 
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        hasPremiere={Boolean(premiere && !isAuthPage)}
+      />
 
       <VideoOverlay
         videoId={premiereOpen && premiere ? premiere.id : null}
