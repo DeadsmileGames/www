@@ -218,7 +218,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
 }
 
 export function Soundtracks() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const resource = useContent("/soundtracks", {});
   const [search, setSearch] = useState("");
   const [params, setParams] = useSearchParams();
@@ -361,7 +361,7 @@ export function Soundtracks() {
                   <div className="soundtracks-track-grid">
                     {group.videos.map((track, index) => {
                       const image = safeImageUrl(track.thumbnail);
-                      const published = publishedLabel(track.publishedAt, "en");
+                      const published = publishedLabel(track.publishedAt, language);
                       const selected = selectedTrack?.id === track.id;
                       return (
                         <motion.button
