@@ -24,9 +24,12 @@ export function Library() {
     setError("");
 
     try {
-      const data = await api.get("/library");
+      const data = await api.get("/library/catalog");
       if (id !== requestId.current) return;
-      const items = Array.isArray(data?.items) ? data.items : [];
+      // This existing catalog endpoint reports library membership from user entitlements.
+      const items = Array.isArray(data?.items)
+        ? data.items.filter((game) => game.inLibrary === true)
+        : [];
       setGames(items.map((game) => ({
         ...game,
         coverImage: game.coverImage || game.cover_image || game.heroImage || game.hero_image,
