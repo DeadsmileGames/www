@@ -41,6 +41,12 @@ export function Videos() {
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
   const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.youtube_thumbnail || latest?.thumbnail) || fallbackImage;
+  const gameScreenshot =
+    safeImageUrl(latest?.game_screenshot) ||
+    (/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(latest?.game_slug || "")
+      ? safeImageUrl(`/assets/games/screenshots/${latest.game_slug}/1.png`)
+      : null) ||
+    fallbackImage;
   const publishedAt = latest?.youtube?.publishedAt || latest?.youtube_published_at || latest?.published_at;
   const publishedDate =
     publishedAt && Number.isFinite(Date.parse(publishedAt))
@@ -54,7 +60,25 @@ export function Videos() {
     <div className="videos-page">
       {videos.status === "loading" && !latest ? null : latest ? (
         <section className="rs-hero">
-          <img className="game-hero__background" src={thumbnail} alt="" />
+          <img
+            className="game-hero__background"
+            src={gameScreenshot}
+            alt=""
+            onError={(event) => {
+              const image = event.currentTarget;
+              if (image.dataset.fallback === "default") {
+                image.onerror = null;
+                return;
+              }
+              if (image.dataset.fallback === "thumbnail" || !thumbnail) {
+                image.dataset.fallback = "default";
+                image.src = fallbackImage;
+              } else {
+                image.dataset.fallback = "thumbnail";
+                image.src = thumbnail;
+              }
+            }}
+          />
           <div className="rs-hero__overlay" />
           <div className="rs-hero__content container">
             <div className="rs-hero__identity">
