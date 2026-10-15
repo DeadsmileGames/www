@@ -9,7 +9,7 @@ import { ToastProvider } from "./components/ui/Toast";
 import { IconContext } from "@phosphor-icons/react";
 import { RealtimeBridge } from "./services/RealtimeBridge";
 import { ApiAvailabilityGate } from "./app/ApiAvailabilityGate";
-import { MotionConfig } from "motion/react";
+import { domAnimation, LazyMotion, MotionConfig } from "motion/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
