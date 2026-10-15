@@ -3564,3 +3564,11 @@ input[type="file"]::file-selector-button {
     height: 42px;
   }
 }
+
+.site-header__dropdown button.btn--danger:hover {
+  background: #c04646;
+  color: #fff;
+}
+.site-header__dropdown button.btn--danger {
+  border-bottom-color: #641f1f;
+}
