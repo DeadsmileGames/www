@@ -240,21 +240,6 @@ export function Soundtracks() {
   const tracks = useMemo(() => groups.flatMap((group) =>
     (group.videos || []).map((track) => ({ ...track, gameId: group.gameId })),
   ), [groups]);
-  const featuredTrack = useMemo(() => {
-    if (!tracks.length) return null;
-    return [...tracks].sort((a, b) =>
-      (Date.parse(b.publishedAt || "") || 0) - (Date.parse(a.publishedAt || "") || 0),
-    )[0];
-  }, [tracks]);
-  const featuredGroup = featuredTrack
-    ? groups.find((group) => String(group.gameId) === String(featuredTrack.gameId)) || null
-    : null;
-  const featuredThumbnail = safeImageUrl(featuredTrack?.thumbnail);
-  const featuredBackground =
-    safeImageUrl(featuredGroup?.coverImage) ||
-    featuredThumbnail ||
-    "/assets/games/screenshots/light/1.png";
-  const featuredPublished = publishedLabel(featuredTrack?.publishedAt, language);
   const selectedTrack = tracks.find((track) => String(track.id) === String(trackId)) || null;
   const selectedGroup = selectedTrack
     ? groups.find((group) => String(group.gameId) === String(selectedTrack.gameId)) || null
@@ -296,66 +281,6 @@ export function Soundtracks() {
 
   return (
     <div className="videos-page">
-      {featuredTrack && (
-        <header className="rs-hero videos-page__hero">
-          <img
-            className="game-hero__background"
-            src={featuredBackground}
-            alt=""
-            onError={(event) => {
-              event.currentTarget.onerror = null;
-              event.currentTarget.src = "/assets/games/screenshots/light/1.png";
-            }}
-          />
-          <div className="rs-hero__overlay" />
-          <div className="rs-hero__content container">
-            <div className="videos-page__hero-grid">
-              <div className="videos-page__hero-copy">
-                <p className="eyebrow">
-                  {[t("Soundtracks"), featuredGroup?.title].filter(Boolean).join(" · ")}
-                </p>
-                <h1 className="rs-hero__title">{featuredTrack.title}</h1>
-                {featuredPublished && (
-                  <time className="news-page__date" dateTime={featuredTrack.publishedAt}>
-                    {featuredPublished}
-                  </time>
-                )}
-                <p className="videos-page__hero-description">
-                  {t("Browse soundtracks from Deadsmile Games, organized by game.")}
-                </p>
-                <div className="rs-hero__actions videos-page__hero-actions">
-                  <button type="button" className="btn btn--primary" onClick={() => openTrack(featuredTrack.id)}>
-                    <Play size={20} weight="fill" />
-                    {t("Play soundtrack")}
-                  </button>
-                  {featuredGroup?.slug && (
-                    <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(featuredGroup.slug)}>
-                      {t("View game")}
-                      <ArrowUpRight size={16} />
-                    </Link>
-                  )}
-                </div>
-              </div>
-              <button
-                type="button"
-                className="videos-page__hero-preview"
-                onClick={() => openTrack(featuredTrack.id)}
-                aria-label={t("Play soundtrack") + ": " + featuredTrack.title}
-              >
-                {featuredThumbnail ? (
-                  <img src={featuredThumbnail} alt="" />
-                ) : (
-                  <span className="videos-page__preview-placeholder">{t("Play soundtrack")}</span>
-                )}
-                <span className="videos-page__preview-play" aria-hidden="true">
-                  <Play size={28} weight="fill" />
-                </span>
-              </button>
-            </div>
-          </div>
-        </header>
-      )}
-
       <section className="studio-section studio-videos">
         <div className="container">
           <header className="section-heading">
