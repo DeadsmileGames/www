@@ -104,7 +104,7 @@ export function Home() {
                         <Play size={26} weight="fill" />
                       </span>
                     </span>
-                    <h3>{video.title}</h3>
+                    <h3>{video.youtube?.title || video.title}</h3>
                   </button>
                 ))}
               </div>
