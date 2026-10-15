@@ -3268,13 +3268,6 @@ input[type="file"]::file-selector-button {
   -webkit-line-clamp: 5;
   overflow: hidden;
 }
-.videos-page .rs-hero__text-col > .eyebrow {
-  color: #d8d8d8;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
 .videos-page .rs-hero__text-col time {
   color: #c2c2c2;
   font-size: 13px;
