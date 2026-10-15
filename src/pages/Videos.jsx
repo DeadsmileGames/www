@@ -58,17 +58,40 @@ export function Videos() {
       {videos.status === "loading" && !latest ? (
         <div className="container"><SkeletonVideos /></div>
       ) : latest ? (
-        <section className="videos-page__hero">
-          <img className="videos-page__hero-image" src={thumbnail} alt="" />
-          <div className="videos-page__hero-shade" />
-          <div className="videos-page__hero-content container">
-            <span className="eyebrow">{t("Latest video")}</span>
-            <h1>{latestTitle}</h1>
-            {publishedDate && <time dateTime={publishedAt}>{publishedDate}</time>}
-            <p>{latestDescription}</p>
-            <div className="videos-page__hero-actions">
-              {embed && optionalAllowed ? (
-                <div className="videos-page__hero-player">
+        <section className="rs-hero">
+          <img className="game-hero__background" src={thumbnail} alt="" />
+          <div className="rs-hero__overlay" />
+          <div className="rs-hero__content container">
+            <div className="rs-hero__identity">
+              <div className="rs-hero__text-col">
+                <span className="eyebrow">{t("Latest video")}</span>
+                <h1 className="rs-hero__title">{latestTitle}</h1>
+                {publishedDate && <time className="news-page__date" dateTime={publishedAt}>{publishedDate}</time>}
+                <p>{latestDescription}</p>
+                <div className="rs-hero__actions">
+                  {embed && !optionalAllowed ? (
+                    <button type="button" className="btn btn--primary" onClick={() => setOptionalContent(true)}>
+                      <Play weight="fill" />
+                      {t("Allow YouTube")}
+                    </button>
+                  ) : external ? (
+                    <a className="btn btn--primary" href={external} target="_blank" rel="noopener noreferrer">
+                      <Play weight="fill" />
+                      {t("Watch video")}
+                    </a>
+                  ) : (
+                    <button type="button" className="btn btn--primary" onClick={() => openVideo(latest)}>
+                      <Play weight="fill" />
+                      {t("Watch video")}
+                    </button>
+                  )}
+                  <button type="button" className="btn btn--secondary" onClick={() => openVideo(latest)}>
+                    {t("More details")}
+                  </button>
+                </div>
+              </div>
+              <div className="video-visual">
+                {embed && optionalAllowed ? (
                   <iframe
                     src={`${embed}?autoplay=1&mute=1&playsinline=1&rel=0`}
                     title={latestTitle}
@@ -76,43 +99,35 @@ export function Videos() {
                     referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                   />
-                </div>
-              ) : embed ? (
-                <button type="button" className="btn btn--primary" onClick={() => setOptionalContent(true)}>
-                  <Play weight="fill" />
-                  {t("Allow YouTube")}
-                </button>
-              ) : external ? (
-                <a className="btn btn--primary" href={external} target="_blank" rel="noopener noreferrer">
-                  <Play weight="fill" />
-                  {t("Watch video")}
-                </a>
-              ) : (
-                <p>{t("Video unavailable.")}</p>
-              )}
-              <button type="button" className="btn btn--secondary" onClick={() => openVideo(latest)}>
-                <Play weight="bold" />
-                {t("Watch video")}
-              </button>
+                ) : (
+                  <>
+                    <img src={thumbnail} alt="" />
+                    <span className="play-button"><Play size={26} weight="fill" /></span>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </section>
       ) : (
-        <header className="container videos-page__empty">
-          <span className="eyebrow">{t("Deadsmile Games")}</span>
-          <h1>{t("Videos")}</h1>
-          <p>{videos.status === "error" ? videos.error : t("New videos are coming soon.")}</p>
-          {videos.status === "error" && <ErrorState message={videos.error} onRetry={videos.retry} />}
-        </header>
+        <section className="studio-section">
+          <div className="container">
+            <header className="section-heading">
+              <h1>{t("Videos")}</h1>
+              <p>{t("New videos are coming soon.")}</p>
+            </header>
+            {videos.status === "error" && <ErrorState message={videos.error} onRetry={videos.retry} />}
+          </div>
+        </section>
       )}
 
-      <section className="studio-section studio-videos videos-page__library">
+      <section className="studio-section studio-videos studio-news">
         <div className="container">
           <header className="section-heading">
             <h2>{t("All videos")}</h2>
             <p>{t("Trailers, gameplay and a look behind the scenes.")}</p>
           </header>
-          {videos.status === "error" && <ErrorState message={videos.error} onRetry={videos.retry} />}
+          {videos.status === "error" && items.length > 0 && <ErrorState message={videos.error} onRetry={videos.retry} />}
           {videos.status === "loading" && <SkeletonVideos />}
           {videos.status === "success" && items.length === 0 && <p className="content-state">{t("New videos are coming soon.")}</p>}
           {items.length > 0 && (
@@ -130,7 +145,7 @@ export function Videos() {
                     <span className="eyebrow">{video.category || t("Videos")}</span>
                     <h3>{videoTitle}</h3>
                     {date && Number.isFinite(Date.parse(date)) && (
-                      <time dateTime={date}>
+                      <time className="news-page__date" dateTime={date}>
                         {new Date(date).toLocaleDateString(language, {
                           day: "2-digit",
                           month: "short",
