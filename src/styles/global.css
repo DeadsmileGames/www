@@ -3677,3 +3677,26 @@ input[type="file"]::file-selector-button {
     top: calc(var(--premiere-banner-height, 56px) - 1px);
   }
 }
+
+
+/* Treat the premiere strip as the top row of the header stack. */
+.premiere-shell:not(.premiere-shell--with-banner) .site-header,
+.premiere-shell:not(.premiere-shell--with-banner) .site-header__inner {
+  top: 0;
+}
+
+/* Search opens immediately beneath the same header stack, with or without a premiere. */
+.search-overlay--with-banner {
+  top: calc(var(--premiere-banner-height, 52px) + 80px);
+  max-height: calc(100vh - var(--premiere-banner-height, 52px) - 80px);
+  max-height: calc(100dvh - var(--premiere-banner-height, 52px) - 80px);
+}
+
+@media (max-width: 760px) {
+  .search-overlay--with-banner {
+    /* The mobile header is intentionally raised 1px over the premiere strip. */
+    top: calc(var(--premiere-banner-height, 56px) + 79px);
+    max-height: calc(100vh - var(--premiere-banner-height, 56px) - 79px);
+    max-height: calc(100dvh - var(--premiere-banner-height, 56px) - 79px);
+  }
+}
