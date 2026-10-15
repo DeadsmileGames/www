@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 import {
+  ArrowLeft,
   ArrowUpRight,
   Disc,
   MagnifyingGlass,
@@ -289,7 +290,7 @@ export function Soundtracks() {
     <>
       <div className="soundtracks-page container">
         <Link to="/" className="back-link">
-          <span aria-hidden="true">←</span>
+          <ArrowLeft weight="bold" />
           <span>{t("Back")}</span>
         </Link>
 
