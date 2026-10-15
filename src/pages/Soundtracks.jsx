@@ -233,19 +233,12 @@ export function Soundtracks() {
   const resource = useContent("/soundtracks", {});
   const [search, setSearch] = useState("");
   const [params, setParams] = useSearchParams();
-  const reducedMotion = useReducedMotion();
 
   const groups = Array.isArray(resource.data?.groups) ? resource.data.groups : [];
   const total = Number.isFinite(resource.data?.total) ? resource.data.total : 0;
   const trackId = params.get("track");
   const tracks = useMemo(() => groups.flatMap((group) =>
-    (group.videos || []).map((track) => ({
-      ...track,
-      gameId: group.gameId,
-      gameTitle: group.title,
-      gameSlug: group.slug,
-      gameCover: group.coverImage,
-    })),
+    (group.videos || []).map((track) => ({ ...track, gameId: group.gameId })),
   ), [groups]);
   const featuredTrack = useMemo(() => {
     if (!tracks.length) return null;
@@ -367,7 +360,11 @@ export function Soundtracks() {
         <div className="container">
           <header className="section-heading">
             <h2>{t("From the games")}</h2>
-            <p>{t("Browse soundtracks from Deadsmile Games, organized by game.")}</p>
+            <p>
+              {t("{0} soundtracks", { 0: total })}
+              {" · "}
+              {t("Browse soundtracks from Deadsmile Games, organized by game.")}
+            </p>
           </header>
 
           <label className="search-page__input-wrapper">
@@ -380,7 +377,7 @@ export function Soundtracks() {
               placeholder={t("Search soundtracks or games")}
             />
           </label>
-          {search.trim() && resource.status === "success" && (
+          {resource.status === "success" && (
             <p className="search-page__hint">
               {t("{0} soundtracks found", { 0: filteredCount })}
             </p>
@@ -408,54 +405,55 @@ export function Soundtracks() {
               message={t("Try another game or soundtrack title.")}
             />
           )}
+
+          {resource.status === "success" && filteredGroups.map((group, groupIndex) => (
+            <section
+              className={groupIndex === 0 ? "studio-videos" : "studio-section studio-videos"}
+              key={group.gameId}
+            >
+              <header className="section-heading">
+                <h2>{group.title}</h2>
+                <p>{t("{0} soundtracks", { 0: group.videos.length })}</p>
+                {group.slug && (
+                  <Link className="text-link" to={"/games/" + encodeURIComponent(group.slug)}>
+                    {t("View game")}
+                  </Link>
+                )}
+              </header>
+              <div className="video-grid">
+                {group.videos.map((track) => {
+                  const image = safeImageUrl(track.thumbnail);
+                  const published = publishedLabel(track.publishedAt, language);
+                  const selected = String(selectedTrack?.id) === String(track.id);
+                  return (
+                    <button
+                      type="button"
+                      className="video-tile"
+                      key={track.id}
+                      onClick={() => openTrack(track.id)}
+                      aria-label={t("Play soundtrack") + ": " + track.title}
+                      aria-pressed={selected}
+                    >
+                      <span className="video-visual">
+                        {image ? (
+                          <img src={image} alt="" loading="lazy" />
+                        ) : (
+                          <span className="videos-page__preview-placeholder">{t("Play soundtrack")}</span>
+                        )}
+                        <span className="play-button" aria-hidden="true">
+                          <Play size={26} weight="fill" />
+                        </span>
+                      </span>
+                      <h3>{track.title}</h3>
+                      <small>{published || track.channelTitle || t("From YouTube")}</small>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
         </div>
       </section>
-
-      {resource.status === "success" && filteredGroups.map((group) => (
-        <section className="studio-section studio-videos" key={group.gameId}>
-          <div className="container">
-            <header className="section-heading">
-              <h2>{group.title}</h2>
-              <p>{t("{0} soundtracks", { 0: group.videos.length })}</p>
-              {group.slug && (
-                <Link className="text-link" to={"/games/" + encodeURIComponent(group.slug)}>
-                  {t("View game")}
-                </Link>
-              )}
-            </header>
-            <div className="video-grid">
-              {group.videos.map((track) => {
-                const image = safeImageUrl(track.thumbnail);
-                const published = publishedLabel(track.publishedAt, language);
-                const selected = String(selectedTrack?.id) === String(track.id);
-                return (
-                  <button
-                    type="button"
-                    className="video-tile"
-                    key={track.id}
-                    onClick={() => openTrack(track.id)}
-                    aria-label={t("Play soundtrack") + ": " + track.title}
-                    aria-pressed={selected}
-                  >
-                    <span className="video-visual">
-                      {image ? (
-                        <img src={image} alt="" loading="lazy" />
-                      ) : (
-                        <span className="videos-page__preview-placeholder">{t("Play soundtrack")}</span>
-                      )}
-                      <span className="play-button" aria-hidden="true">
-                        <Play size={26} weight="fill" />
-                      </span>
-                    </span>
-                    <h3>{track.title}</h3>
-                    <small>{published || track.channelTitle || t("From YouTube")}</small>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      ))}
 
       <SoundtrackPlayerPanel
         track={selectedTrack}
