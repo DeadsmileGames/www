@@ -70,7 +70,7 @@ export function AppLayout() {
 
       <PremiereBanner />
 
-      {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />
+      {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
 
       <main id="main-content">
         <Suspense fallback={<SkeletonPage path={location.pathname} />}>
