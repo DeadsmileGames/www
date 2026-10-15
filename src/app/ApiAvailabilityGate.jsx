@@ -83,7 +83,7 @@ function MaintenanceScreen({ checking, onRetry }) {
           {t("The site will reconnect automatically when service is restored.")}
         </p>
       </div>
-    </motion.main>
+    </m.main>
   );
 }
 
@@ -174,7 +174,7 @@ export function ApiAvailabilityGate({ children }) {
           transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: "easeOut" }}
         >
           {children}
-        </motion.div>
+        </m.div>
       ) : (
         <MaintenanceScreen
           key="site-maintenance"
