@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
@@ -5,6 +6,7 @@ import { useContent } from "../hooks/useContent";
 import { safeImageUrl } from "../utils/urls";
 import { SkeletonVideos } from "../components/ui/Skeleton";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
+import { YouTubeBroadcastBadge } from "../components/videos/YouTubeBroadcastBadge";
 
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
@@ -12,6 +14,11 @@ export function Videos() {
   const { t, language } = useLanguage();
   const [params, setParams] = useSearchParams();
   const videos = useContent("/videos", { limit: 48 });
+
+  useEffect(() => {
+    const timer = window.setInterval(() => void videos.refresh(), 60_000);
+    return () => window.clearInterval(timer);
+  }, [videos.refresh]);
   const latest = videos.status === "success" ? videos.data[0] : null;
   const selectedId = params.get("video");
   const open = (id) => {
@@ -95,6 +102,7 @@ export function Videos() {
                 <span className="videos-page__preview-play" aria-hidden="true">
                   <Play size={28} weight="fill" />
                 </span>
+                <YouTubeBroadcastBadge video={latest} />
               </button>
             </div>
           </div>
@@ -103,7 +111,7 @@ export function Videos() {
       <section className="studio-section studio-videos">
         <div className="container">
           <header className="section-heading">
-            <h2>{t("From the games")}</h2>
+            <h2>{t("Videos")}</h2>
             <p>{t("Trailers, gameplay and a look behind the scenes.")}</p>
           </header>
           {videos.status === "loading" && (
