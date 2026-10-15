@@ -1,0 +1,161 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, GameController, Trash } from "@phosphor-icons/react";
+import { useAuth } from "../hooks/useAuth";
+import { useLanguage } from "../context/LanguageContext";
+import { api, friendlyErrorMessage } from "../services/api";
+import { ErrorState } from "../components/ui/ErrorState";
+import { EmptyState } from "../components/ui/EmptyState";
+import { SkeletonGameGrid } from "../components/ui/Skeleton";
+import { safeImageUrl } from "../utils/urls";
+
+export function Library() {
+  const { t, language } = useLanguage();
+  const { user } = useAuth();
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [removingId, setRemovingId] = useState(null);
+  const requestId = useRef(0);
+
+  const load = useCallback(async () => {
+    const id = ++requestId.current;
+    setLoading(true);
+    setError("");
+
+    try {
+      const data = await api.get("/library");
+      if (id !== requestId.current) return;
+      const items = Array.isArray(data?.items) ? data.items : [];
+      setGames(items.map((game) => ({
+        ...game,
+        coverImage: game.coverImage || game.cover_image || game.heroImage || game.hero_image,
+      })));
+    } catch (err) {
+      if (id === requestId.current) setError(friendlyErrorMessage(err));
+    } finally {
+      if (id === requestId.current) setLoading(false);
+    }
+  }, [language, user?.id]);
+
+  useEffect(() => {
+    void load();
+    return () => {
+      requestId.current += 1;
+    };
+  }, [load]);
+
+  async function removeGame(game) {
+    if (removingId) return;
+    if (!window.confirm(t("Remove {0} from your library?", { 0: game.title }))) return;
+
+    setRemovingId(game.id);
+    setError("");
+    try {
+      await api.delete(`/library/${encodeURIComponent(game.id)}`);
+      setGames((current) => current.filter((item) => item.id !== game.id));
+    } catch (err) {
+      setError(friendlyErrorMessage(err));
+    } finally {
+      setRemovingId(null);
+    }
+  }
+
+  return (
+    <div className="library-page container">
+      <Link to="/" className="back-link">
+        <ArrowLeft weight="bold" />
+        <span>{t("Back")}</span>
+      </Link>
+
+      <header className="library-page__header">
+        <div>
+          <h1>{t("Your library")}</h1>
+          <p>{t("Your games, all in one place.")}</p>
+        </div>
+        {!loading && !error && games.length > 0 && (
+          <p className="library-page__count">
+            {t("You have {0} games in your library.", { 0: games.length })}
+          </p>
+        )}
+      </header>
+
+      {error && (
+        <div className="library-page__error" role="alert">
+          <ErrorState message={error} onRetry={load} />
+        </div>
+      )}
+
+      {loading ? (
+        <SkeletonGameGrid count={6} />
+      ) : !error && games.length === 0 ? (
+        <EmptyState
+          title={t("No games in your library yet.")}
+          message={t("Add games to your library to keep them handy.")}
+          action={
+            <Link to="/games" className="btn btn--primary">
+              {t("Browse games")}
+            </Link>
+          }
+        />
+      ) : !error ? (
+        <div className="library-page__grid">
+          {games.map((game) => {
+            const cover = safeImageUrl(game.coverImage);
+            const busy = removingId === game.id;
+            return (
+              <article className="library-card" key={game.id}>
+                <Link
+                  to={`/games/${encodeURIComponent(game.slug)}`}
+                  className="library-card__image-link"
+                  aria-label={t("View game") + ": " + game.title}
+                >
+                  <img
+                    className="library-card__image"
+                    src={cover || "/assets/placeholders/game-cover.svg"}
+                    alt=""
+                    loading="lazy"
+                  />
+                </Link>
+                <div className="library-card__body">
+                  <div className="library-card__copy">
+                    <h2 className="library-card__title">
+                      <Link to={`/games/${encodeURIComponent(game.slug)}`}>
+                        {game.title}
+                      </Link>
+                    </h2>
+                    {game.shortDescription && (
+                      <p className="library-card__description">{game.shortDescription}</p>
+                    )}
+                    {Array.isArray(game.genres) && game.genres.length > 0 && (
+                      <p className="library-card__meta">{game.genres.join(" · ")}</p>
+                    )}
+                  </div>
+                  <div className="library-card__actions">
+                    <Link
+                      className="btn btn--primary"
+                      to={`/games/${encodeURIComponent(game.slug)}`}
+                    >
+                      <GameController weight="bold" />
+                      {t("View game")}
+                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn--secondary library-card__remove"
+                      onClick={() => removeGame(game)}
+                      disabled={Boolean(removingId)}
+                      aria-busy={busy}
+                    >
+                      <Trash weight="bold" />
+                      {t(busy ? "Removing…" : "Remove from library")}
+                    </button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
+  );
+}
