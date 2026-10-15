@@ -126,6 +126,18 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                   referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                 />
+              ) : embed && allowed ? (
+                <button
+                  type="button"
+                  className="soundtrack-overlay__poster"
+                  onClick={() => setPlaying(true)}
+                  aria-label={t("Play soundtrack")}
+                >
+                  {thumbnail && <img src={thumbnail} alt="" />}
+                  <span className="soundtrack-overlay__poster-play">
+                    <Play size={29} weight="fill" />
+                  </span>
+                </button>
               ) : external ? (
                 <a
                   className="soundtrack-overlay__poster"
