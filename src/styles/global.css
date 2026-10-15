@@ -3700,3 +3700,173 @@ input[type="file"]::file-selector-button {
     max-height: calc(100dvh - var(--premiere-banner-height, 56px) - 79px);
   }
 }
+
+
+/* Video overlay: keep metadata compact and give the description its own news-style section. */
+.video-overlay__details {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 30px;
+}
+.video-overlay__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.video-overlay__heading-copy {
+  min-width: 0;
+  flex: 1 1 360px;
+}
+.video-overlay__heading-copy h2 {
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+.video-overlay__heading-copy small {
+  color: #bdbdbd;
+}
+.video-overlay__subscribe {
+  flex: 0 0 auto;
+  margin-top: 4px;
+  gap: 9px;
+  text-decoration: none;
+}
+.video-overlay__description-panel {
+  margin-top: 26px;
+  padding: clamp(20px, 3vw, 36px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  background: rgba(24, 24, 24, 0.72);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.video-overlay__description-panel h3 {
+  margin: 0 0 14px;
+  font-size: clamp(21px, 2.3vw, 28px);
+}
+.video-overlay__description {
+  margin: 0;
+  color: #dedede;
+  font-size: 16px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.video-overlay__related {
+  margin-top: 38px;
+}
+.video-overlay__related > h3 {
+  margin: 0 0 20px;
+  font-size: clamp(24px, 3vw, 34px);
+}
+.video-overlay__related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.video-overlay__related-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(24, 24, 24, 0.74);
+  color: #f0f0f0;
+  text-align: left;
+  transition: border-color 180ms ease, background 180ms ease;
+}
+.video-overlay__related-tile:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(36, 36, 36, 0.9);
+}
+.video-overlay__related-visual {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #222;
+}
+.video-overlay__related-visual > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+.video-overlay__related-tile:hover .video-overlay__related-visual > img {
+  transform: scale(1.035);
+}
+.video-overlay__related-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.34), transparent 60%);
+}
+.video-overlay__related-title {
+  display: block;
+  padding: 13px 14px 15px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.video-overlay__related-empty {
+  margin: 0;
+  color: #bdbdbd;
+}
+@media (max-width: 760px) {
+  .video-overlay__content {
+    width: calc(100% - 32px);
+    padding-top: 64px;
+    padding-bottom: 38px;
+  }
+  .video-overlay__heading {
+    gap: 15px;
+  }
+  .video-overlay__subscribe {
+    width: 100%;
+    margin-top: 0;
+  }
+  .video-overlay__description-panel {
+    margin-top: 22px;
+    padding: 22px 18px;
+    border-radius: 12px;
+  }
+  .video-overlay__related {
+    margin-top: 30px;
+  }
+  .video-overlay__related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .video-overlay__related-title {
+    padding: 11px;
+    font-size: 14px;
+  }
+}
+@media (max-width: 420px) {
+  .video-overlay__related-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (hover: none) {
+  .video-overlay__related-tile:hover .video-overlay__related-visual > img {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .video-overlay__related-tile,
+  .video-overlay__related-visual > img {
+    transition: none;
+  }
+}
