@@ -35,16 +35,17 @@ export function Videos() {
     setParams(next, { preventScrollReset: true });
   }
 
-  const latestTitle = latest?.youtube_title || latest?.title || t("Latest videos");
+  const latestTitle = latest?.youtube?.title || latest?.youtube_title || latest?.title || t("Latest videos");
   const latestDescription =
+    latest?.youtube?.description ||
     latest?.youtube_description ||
     latest?.description ||
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
-  const thumbnail = safeImageUrl(latest?.youtube_thumbnail || latest?.thumbnail) || fallbackImage;
+  const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.youtube_thumbnail || latest?.thumbnail) || fallbackImage;
   const embed = latest ? safeYoutubeEmbedUrl(latest.video_url) : null;
   const external = latest ? safeHttpsUrl(latest.video_url) : null;
-  const publishedAt = latest?.youtube_published_at || latest?.published_at;
+  const publishedAt = latest?.youtube?.publishedAt || latest?.youtube_published_at || latest?.published_at;
   const publishedDate =
     publishedAt && Number.isFinite(Date.parse(publishedAt))
       ? new Date(publishedAt).toLocaleDateString(language, {
@@ -133,9 +134,9 @@ export function Videos() {
           {items.length > 0 && (
             <div className="video-grid">
               {items.map((video) => {
-                const videoTitle = video.youtube_title || video.title;
-                const image = safeImageUrl(video.youtube_thumbnail || video.thumbnail);
-                const date = video.youtube_published_at || video.published_at;
+                const videoTitle = video.youtube?.title || video.youtube_title || video.title;
+                const image = safeImageUrl(video.youtube?.thumbnail || video.youtube_thumbnail || video.thumbnail);
+                const date = video.youtube?.publishedAt || video.youtube_published_at || video.published_at;
                 return (
                   <button type="button" className="video-tile" key={video.id} onClick={() => openVideo(video)}>
                     <span className="video-visual">
