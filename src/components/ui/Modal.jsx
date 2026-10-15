@@ -32,7 +32,7 @@ export function Modal({
       className={["modal-overlay", overlayClassName].filter(Boolean).join(" ")}
       style={overlayStyle}
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (!panelRef.current?.contains(event.target)) onClose();
       }}
     >
       {backdrop}
