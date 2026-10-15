@@ -20,7 +20,7 @@ export function MobileMenu({ open, onClose }) {
     ["/", "nav.home"],
     ["/about", "nav.about"],
     ["/games", "nav.games"],
-    ["/#videos", "nav.videos"],
+    ["/videos", "nav.videos"],
     ["/launcher", "nav.launcher"],
     ["/newswire", "nav.news"],
     ["/support", "nav.support"],
