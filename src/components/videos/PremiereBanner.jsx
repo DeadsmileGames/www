@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
 import { safeImageUrl } from "../../utils/urls";
@@ -36,7 +36,7 @@ export function PremiereBanner() {
   const premiere = videos.data?.premiere || null;
   const hasPremiere = Boolean(premiere);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const node = bannerRef.current;
     const root = document.documentElement;
     if (!hasPremiere || !node) {
