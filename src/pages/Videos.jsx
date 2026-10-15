@@ -72,6 +72,7 @@ export function Videos() {
           <div className="rs-hero__content container">
             <div className="videos-page__hero-grid">
               <div className="videos-page__hero-copy">
+                <p className="eyebrow">{t("Videos")}</p>
                 <h1 className="rs-hero__title">{latestTitle}</h1>
                 {publishedDate && (
                   <time className="news-page__date" dateTime={publishedAt}>
@@ -111,7 +112,7 @@ export function Videos() {
       <section className="studio-section studio-videos">
         <div className="container">
           <header className="section-heading">
-            <h2>{t("Videos")}</h2>
+            <h2>{t("All videos")}</h2>
             <p>{t("Trailers, gameplay and a look behind the scenes.")}</p>
           </header>
           {videos.status === "loading" && (
