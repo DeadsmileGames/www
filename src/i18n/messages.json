@@ -608,7 +608,9 @@
     "Browse soundtracks from Deadsmile Games, organized by game.": "Explore as trilhas sonoras da Deadsmile Games, organizadas por jogo.",
     "Play soundtrack": "Reproduzir trilha sonora",
     "Open on YouTube": "Abrir no YouTube",
-    "More from this game": "Mais deste jogo"
+    "More from this game": "Mais deste jogo",
+    "Live now": "Ao vivo",
+    "Premiere": "Estreia"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1219,7 +1221,9 @@
     "Browse soundtracks from Deadsmile Games, organized by game.": "Explora las bandas sonoras de Deadsmile Games, organizadas por juego.",
     "Play soundtrack": "Reproducir banda sonora",
     "Open on YouTube": "Abrir en YouTube",
-    "More from this game": "Más de este juego"
+    "More from this game": "Más de este juego",
+    "Live now": "En vivo",
+    "Premiere": "Estreno"
   },
   "en": {
     "Retomar": "Resume",
@@ -1228,6 +1232,8 @@
     "Próximo": "Next",
     "announced": "Announced",
     "in_development": "In development",
-    "released": "Released"
+    "released": "Released",
+    "Live now": "LIVE",
+    "Premiere": "Premiere"
   }
 }
