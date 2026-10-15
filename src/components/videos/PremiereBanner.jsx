@@ -38,35 +38,22 @@ export function PremiereBanner() {
   const title = premiere.title;
   const scheduled = Date.parse(premiere.starts_at);
   const live = premiere.state === "live";
-  const screenshot = safeImageUrl(premiere.screenshots?.[0]) || safeImageUrl(premiere.thumbnail) || fallbackImage;
+  const screenshot =
+    safeImageUrl(premiere.screenshots?.[0]) ||
+    safeImageUrl(premiere.thumbnail) ||
+    fallbackImage;
   const thumbnail = safeImageUrl(premiere.thumbnail);
 
   return (
     <>
       <button
         type="button"
-        className="rs-hero"
-        style={{
-          width: "100%",
-          minHeight: 76,
-          padding: "12px 24px",
-          alignItems: "center",
-          justifyContent: "center",
-          border: 0,
-          borderRadius: 0,
-          color: "#fff",
-          font: "inherit",
-          textAlign: "center",
-          cursor: "pointer",
-          appearance: "none",
-          backgroundColor: "#101010",
-        }}
+        className="rs-hero video-premiere"
         onClick={() => setActiveVideo(premiere)}
         aria-label={live ? t("{0} is now playing", { 0: title }) : t("{0} will be available in", { 0: title })}
       >
         <img
-          className="game-hero__background"
-          style={{ zIndex: 0, opacity: 0.35, filter: "saturate(.7)" }}
+          className="game-hero__background video-premiere__image"
           src={screenshot}
           alt=""
           onError={(event) => {
@@ -82,37 +69,15 @@ export function PremiereBanner() {
             }
           }}
         />
-        <span
-          className="rs-hero__overlay"
-          style={{
-            zIndex: 1,
-            background: "linear-gradient(90deg, rgba(0,0,0,.88), rgba(0,0,0,.56), rgba(0,0,0,.88))",
-          }}
-        />
-        <span
-          className="rs-hero__actions"
-          style={{
-            position: "relative",
-            zIndex: 2,
-            alignItems: "center",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: "8px 18px",
-            maxWidth: 1200,
-            padding: 0,
-          }}
-        >
-          <strong style={{ fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 600 }}>
+        <span className="rs-hero__overlay video-premiere__overlay" />
+        <span className="rs-hero__actions video-premiere__content">
+          <strong>
             {live
               ? t("{0} is now playing", { 0: title })
               : t("{0} will be available in", { 0: title })}
           </strong>
           {!live && (
-            <span
-              className="news-page__date"
-              aria-live="off"
-              style={{ color: "#fff", fontVariantNumeric: "tabular-nums", fontSize: 15, fontWeight: 700, letterSpacing: ".08em" }}
-            >
+            <span className="video-premiere__countdown" aria-live="off">
               {countdown(scheduled - now)}
             </span>
           )}
