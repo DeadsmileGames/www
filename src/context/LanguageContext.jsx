@@ -8,6 +8,7 @@ const strings = {
     about: "About",
     news: "Newswire",
     videos: "Videos",
+    soundtracks: "Soundtracks",
     downloads: "Downloads",
     support: "Support",
     search: "Search",
