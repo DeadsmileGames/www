@@ -46,9 +46,11 @@ export function GameDetails() {
     userId: null,
     status: "idle",
     inLibrary: false,
+    owned: false,
     error: "",
   });
   const [libraryRevision, setLibraryRevision] = useState(0);
+  const [libraryActionBusy, setLibraryActionBusy] = useState(false);
   const [purchase, setPurchase] = useState({
     open: false,
     status: "idle",
@@ -79,7 +81,7 @@ export function GameDetails() {
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
   const libraryReady =
     authStatus === "authenticated" && libraryMatches && library.status === "success";
-  const owned = libraryReady && library.inLibrary;
+  const owned = libraryReady && library.owned;
   const showWishlist = libraryReady && isValidGameId && !library.inLibrary;
 
   const {
@@ -131,6 +133,7 @@ export function GameDetails() {
         userId: null,
         status: "idle",
         inLibrary: false,
+        owned: false,
         error: "",
       });
       return undefined;
@@ -144,22 +147,25 @@ export function GameDetails() {
       userId,
       status: "loading",
       inLibrary: false,
+      owned: false,
       error: "",
     });
 
     api
-      .get("/library")
+      .get("/library/catalog")
       .then((data) => {
         if (!Array.isArray(data?.items)) {
           throw { code: "INVALID_RESPONSE" };
         }
 
         if (active && request === libraryRequest.current) {
+          const libraryGame = data.items.find((item) => item.id === gameId);
           setLibrary({
             gameId,
             userId,
             status: "success",
-            inLibrary: data.items.some((item) => item.id === gameId),
+            inLibrary: Boolean(libraryGame?.inLibrary),
+            owned: Boolean(libraryGame?.owned),
             error: "",
           });
         }
@@ -171,6 +177,7 @@ export function GameDetails() {
             userId,
             status: "error",
             inLibrary: false,
+            owned: false,
             error: friendlyErrorMessage(error),
           });
         }
@@ -228,13 +235,15 @@ export function GameDetails() {
 
       if (result.owned) {
         libraryRequest.current++;
-        setLibrary({
+        setLibrary((current) => ({
+          ...current,
           gameId,
           userId: user.id,
           status: "success",
-          inLibrary: true,
+          inLibrary: current.inLibrary || !current.owned,
+          owned: true,
           error: "",
-        });
+        }));
         setPurchase({ open: !launch, status: "owned", message: "" });
 
         if (launch) openInLauncher();
@@ -273,6 +282,7 @@ export function GameDetails() {
           userId: user.id,
           status: "success",
           inLibrary: true,
+          owned: true,
           error: "",
         });
       }
@@ -281,6 +291,32 @@ export function GameDetails() {
       setDownload({ busy: false, error: "" });
     } catch (error) {
       setDownload({ busy: false, error: friendlyErrorMessage(error) });
+    }
+  }
+
+  async function restoreGameToLibrary() {
+    if (libraryActionBusy || !gameId || authStatus !== "authenticated") return;
+    setLibraryActionBusy(true);
+    try {
+      await api.post(`/library/${encodeURIComponent(gameId)}`);
+      libraryRequest.current++;
+      setLibrary((current) => ({
+        ...current,
+        gameId,
+        userId: user.id,
+        status: "success",
+        owned: true,
+        inLibrary: true,
+        error: "",
+      }));
+    } catch (error) {
+      setLibrary((current) => ({
+        ...current,
+        status: "error",
+        error: friendlyErrorMessage(error),
+      }));
+    } finally {
+      setLibraryActionBusy(false);
     }
   }
 
@@ -447,6 +483,19 @@ export function GameDetails() {
           >
             <GameController weight="bold" />
             {t("Play in Launcher")}
+          </button>
+        )}
+
+        {libraryReady && library.owned && !library.inLibrary && (
+          <button
+            type="button"
+            className="btn btn--secondary game-details__btn"
+            disabled={libraryActionBusy}
+            aria-busy={libraryActionBusy}
+            onClick={restoreGameToLibrary}
+          >
+            <GameController weight="bold" />
+            {t(libraryActionBusy ? "Adding…" : "Add to library")}
           </button>
         )}
 
