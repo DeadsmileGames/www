@@ -531,7 +531,7 @@ export function GameDetails() {
               <div>
                 {gameVideos.map((video) => (
                   <Link
-                    to={`/?video=${encodeURIComponent(video.id)}#videos`}
+                    to={`/videos?video=${encodeURIComponent(video.id)}`}
                     key={video.id}
                     className="game-video-card"
                   >
@@ -596,7 +596,7 @@ export function GameDetails() {
           <div className="game-details__trailer-list">
             {trailerVideos.map((video, index) => (
               <Link
-                to={`/?video=${encodeURIComponent(video.id)}#videos`}
+                to={`/videos?video=${encodeURIComponent(video.id)}`}
                 className="btn btn--secondary game-details__trailer"
                 key={video.id}
               >
