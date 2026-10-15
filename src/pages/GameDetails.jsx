@@ -59,7 +59,10 @@ export function GameDetails() {
   const [releaseNow, setReleaseNow] = useState(Date.now());
 
   const game = state.game;
-  const releaseTimestamp = Date.parse(game?.releaseDate || "");
+  const releaseDateValue = game?.releaseDate || "";
+  const releaseTimestamp = /^\\d{4}-\\d{2}-\\d{2}$/.test(releaseDateValue)
+    ? new Date(`${releaseDateValue}T00:00:00`).getTime()
+    : Date.parse(releaseDateValue);
   useEffect(() => {
     if (
       game?.status !== "in_development" ||
