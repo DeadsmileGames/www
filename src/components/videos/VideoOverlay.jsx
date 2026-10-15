@@ -190,7 +190,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
           </>
         )}
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
