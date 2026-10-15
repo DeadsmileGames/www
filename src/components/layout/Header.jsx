@@ -71,6 +71,7 @@ export function Header({ onOpenSearch }) {
     ["/launcher", t("nav.launcher")],
     ["/newswire", t("nav.news")],
     ["/videos", t("nav.videos")],
+    ["/soundtracks", t("nav.soundtracks")],
     ["/support", t("nav.support")],
   ];
 
