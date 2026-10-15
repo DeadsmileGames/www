@@ -65,17 +65,20 @@ export function Soundtracks() {
     const term = search.trim().toLocaleLowerCase();
     if (!term) return groups;
     return groups
-      .map((group) => ({
-        ...group,
-        videos: (group.videos || []).filter((track) =>
-          [group.title, track.title, track.description, track.channelTitle]
-            .filter(Boolean)
-            .some((value) => value.toLocaleLowerCase().includes(term)),
-        ),
-      }))
-      .filter((group) =>
-        group.title.toLocaleLowerCase().includes(term) || group.videos.length > 0,
-      );
+      .map((group) => {
+        const gameMatches = group.title.toLocaleLowerCase().includes(term);
+        return {
+          ...group,
+          videos: gameMatches
+            ? group.videos
+            : (group.videos || []).filter((track) =>
+                [track.title, track.description, track.channelTitle]
+                  .filter(Boolean)
+                  .some((value) => value.toLocaleLowerCase().includes(term)),
+              ),
+        };
+      })
+      .filter((group) => group.videos.length > 0);
   }, [groups, search]);
 
   const filteredCount = filteredGroups.reduce((count, group) => count + group.videos.length, 0);
