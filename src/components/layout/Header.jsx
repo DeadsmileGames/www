@@ -189,6 +189,12 @@ export function Header({ onOpenSearch, searchOpen = false }) {
                       <Gear weight="bold" />
                       {t("Settings")}
                     </Link>
+                    {user?.role === "admin" && (
+                      <Link to="/admin" onClick={() => setAccountOpen(false)}>
+                        <List weight="bold" />
+                        {t("Admin panel")}
+                      </Link>
+                    )}
                     <Link
                       to={`/profile/${encodeURIComponent(user.username)}`}
                       onClick={() => setAccountOpen(false)}
