@@ -8,6 +8,7 @@ import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
 import { safeImageUrl } from "../../utils/urls";
 import { formatReleaseDate, getReleaseTimestamp } from "../../utils/releaseDate";
 import { trapFocus } from "../../utils/dom";
+import { AutoLinkText } from "../ui/AutoLinkText";
 
 export function PremiereBanner({ premiere, onOpen }) {
   const { t, language } = useLanguage();
@@ -128,7 +129,7 @@ export function PremiereBanner({ premiere, onOpen }) {
                   <time dateTime={premiere.starts_at}>{releaseDate}</time>
                 </p>
               )}
-              {description && <p className="premiere-banner__description">{description}</p>}
+              {description && <p className="premiere-banner__description"><AutoLinkText>{description}</AutoLinkText></p>}
               {premiere.slug && (
                 <div className="premiere-banner__actions">
                   <Link
