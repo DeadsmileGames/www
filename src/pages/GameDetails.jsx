@@ -22,6 +22,7 @@ import { useWishlist } from "../hooks/useWishlist";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
+import { getVideoThumbnail } from "../utils/videoThumbnail";
 
 const LAUNCHER_DOWNLOAD_URL = "/launcher";
 
@@ -623,8 +624,8 @@ export function GameDetails() {
                     className="game-video-card"
                   >
                     <span className="game-video-card__visual">
-                      {safeImageUrl(video.thumbnail) && (
-                        <img src={safeImageUrl(video.thumbnail)} alt="" loading="lazy" />
+                      {getVideoThumbnail(video, language) && (
+                        <img src={getVideoThumbnail(video, language)} alt="" loading="lazy" />
                       )}
                       <i>
                         <Play size={20} weight="bold" />
