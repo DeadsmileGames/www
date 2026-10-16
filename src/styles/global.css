@@ -2292,7 +2292,7 @@ fieldset {
     display: grid;
   }
   .search-overlay {
-    inset: 80px 0 auto;
+    inset: 78px 0 auto;
     padding: 18px 20px 24px;
   }
   .search-overlay__inner {
@@ -4031,9 +4031,9 @@ input[type="file"]::file-selector-button {
 
 @media (max-width: 760px) {
   .search-overlay--with-banner {
-    top: calc(var(--premiere-banner-height, 56px) + 80px);
-    max-height: calc(100vh - var(--premiere-banner-height, 56px) - 80px);
-    max-height: calc(100dvh - var(--premiere-banner-height, 56px) - 80px);
+    top: calc(var(--premiere-banner-height, 56px) + 78px);
+    max-height: calc(100vh - var(--premiere-banner-height, 56px) - 78px);
+    max-height: calc(100dvh - var(--premiere-banner-height, 56px) - 78px);
   }
 }
 
