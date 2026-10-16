@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SecurityCaptcha as ReCAPTCHA } from "../components/ui/SecurityCaptcha";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/Button";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { useLanguage } from "../context/LanguageContext";
 import { ArrowLeft } from "@phosphor-icons/react";
 
@@ -129,7 +130,7 @@ export function Register() {
           </p>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} aria-busy={submitting}>
           <div className="auth-page__field">
             <label htmlFor="username">{t("auth.username")}</label>
 
@@ -142,6 +143,7 @@ export function Register() {
               value={form.username}
               onChange={update("username")}
               autoComplete="username"
+              disabled={submitting}
             />
           </div>
 
@@ -156,6 +158,7 @@ export function Register() {
               value={form.email}
               onChange={update("email")}
               autoComplete="email"
+              disabled={submitting}
             />
           </div>
 
@@ -171,6 +174,7 @@ export function Register() {
               value={form.password}
               onChange={update("password")}
               autoComplete="new-password"
+              disabled={submitting}
             />
           </div>
 
@@ -186,6 +190,7 @@ export function Register() {
               value={form.confirmPassword}
               onChange={update("confirmPassword")}
               autoComplete="new-password"
+              disabled={submitting}
             />
           </div>
 
@@ -211,7 +216,7 @@ export function Register() {
             className="auth-page__submit"
             disabled={submitting || !recaptchaToken}
           >
-            {submitting ? t("auth.creating") : t("auth.create")}
+            {submitting ? <><LoadingSpinner />{t("auth.creating")}</> : t("auth.create")}
           </Button>
         </form>
 
