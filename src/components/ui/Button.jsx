@@ -14,12 +14,18 @@ export function Button({
     `btn--${variant}`,
     ...String(className).split(/\s+/).filter(Boolean),
   ]);
+  const busy = Boolean(loading || props["aria-busy"]);
+  const isUnavailable = Boolean(disabled || loading);
+  const elementProps =
+    As === "button"
+      ? { disabled: isUnavailable }
+      : { "aria-disabled": isUnavailable || props["aria-disabled"] || undefined };
   return (
     <As
       className={[...classes].join(" ")}
       {...props}
-      disabled={disabled || loading}
-      aria-busy={loading || props["aria-busy"] || undefined}
+      {...elementProps}
+      aria-busy={busy || undefined}
     >
       {loading && <LoadingSpinner />}
       {children}
