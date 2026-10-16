@@ -1256,7 +1256,7 @@ fieldset {
   align-items: start;
   gap: 32px;
 }
-.account-page__layout > aside {
+.account-page__layout > nav {
   display: flex;
   min-width: 0;
   flex-direction: column;
@@ -2436,7 +2436,7 @@ fieldset {
   .press-kit__game-grid {
     grid-template-columns: 1fr;
   }
-  .account-page__layout > aside {
+  .account-page__layout > nav {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 5px;
@@ -3045,7 +3045,7 @@ input[type="file"]::file-selector-button {
   .account-page__layout {
     gap: 20px;
   }
-  .account-page__layout > aside {
+  .account-page__layout > nav {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
