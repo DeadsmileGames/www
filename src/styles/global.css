@@ -1537,9 +1537,9 @@ fieldset {
 }
 .search-overlay {
   position: fixed;
-  inset: 80px 0 auto;
+  inset: 84px 0 auto;
   z-index: 1100;
-  max-height: calc(100svh - 80px);
+  max-height: calc(100svh - 84px);
   overflow: auto;
   padding: 24px max(30px, 8vw) 32px;
   background: #151515;
@@ -1549,7 +1549,7 @@ fieldset {
 @keyframes searchOpen {
   from {
     opacity: 0;
-    transform: translateY(-14px);
+    transform: translateY(-4px);
   }
 
   to {
@@ -3974,17 +3974,17 @@ input[type="file"]::file-selector-button {
 
 
 .search-overlay--with-banner {
-  top: calc(var(--premiere-banner-height, 52px) + 80px);
-  max-height: calc(100vh - var(--premiere-banner-height, 52px) - 80px);
-  max-height: calc(100dvh - var(--premiere-banner-height, 52px) - 80px);
+  top: calc(var(--premiere-banner-height, 52px) + 84px);
+  max-height: calc(100vh - var(--premiere-banner-height, 52px) - 84px);
+  max-height: calc(100dvh - var(--premiere-banner-height, 52px) - 84px);
 }
 
 @media (max-width: 760px) {
   .search-overlay--with-banner {
     
-    top: calc(var(--premiere-banner-height, 56px) + 79px);
-    max-height: calc(100vh - var(--premiere-banner-height, 56px) - 79px);
-    max-height: calc(100dvh - var(--premiere-banner-height, 56px) - 79px);
+    top: calc(var(--premiere-banner-height, 56px) + 84px);
+    max-height: calc(100vh - var(--premiere-banner-height, 56px) - 84px);
+    max-height: calc(100dvh - var(--premiere-banner-height, 56px) - 84px);
   }
 }
 
