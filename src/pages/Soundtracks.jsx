@@ -47,7 +47,6 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
   const embed = safeYoutubeEmbedUrl(track?.watchUrl);
   const external = safeHttpsUrl(track?.watchUrl);
   const thumbnail = safeImageUrl(track?.thumbnail) || safeImageUrl(game?.coverImage);
-  const published = publishedLabel(track?.publishedAt, language);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed || !playing || !allowed) return null;
@@ -159,11 +158,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
               <div className="video-overlay__heading">
                 <div className="video-overlay__heading-copy">
                   <h1 id="soundtrack-overlay-title">{track.title}</h1>
-                  <div className="soundtrack-overlay__metadata">
-                    {game?.title && <span>{game.title}</span>}
-                    {track.channelTitle && <span>{track.channelTitle}</span>}
-                    {published && <time dateTime={track.publishedAt}>{published}</time>}
-                  </div>
+
                 </div>
                 {external && (
                   <a
