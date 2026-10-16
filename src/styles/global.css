@@ -5300,3 +5300,19 @@ html[dir="rtl"] .site-header__actions {
   }
 }
 
+/* The navigation hides while scrolling down, but the premiere banner stays fixed. */
+.site-header__inner {
+  transform: translateY(0);
+  transition: transform 240ms ease;
+  will-change: transform;
+}
+.site-header__inner--hidden {
+  transform: translateY(calc(-100% - 2px));
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header__inner {
+    transition: none;
+  }
+}
+
