@@ -124,12 +124,6 @@ export function Videos() {
 
   return (
     <div className="videos-page videos-page--rockstar-hero">
-      <div className="videos-rockstar-ribbon">
-        <span className="videos-rockstar-ribbon__mark" aria-hidden="true">DS</span>
-        <span>{t("Featured video")}</span>
-        <span className="videos-rockstar-ribbon__divider" aria-hidden="true">•</span>
-        <strong>{latestTitle}</strong>
-      </div>
       {latest && (
         <section className="videos-rockstar-hero" aria-label={t("Featured video")}>
           <div className="videos-rockstar-hero__layout">
@@ -183,7 +177,7 @@ export function Videos() {
                 )}
                 <button
                   type="button"
-                  className="videos-rockstar-hero__action"
+                  className="btn btn--primary videos-rockstar-hero__action"
                   onClick={() => open(latest.id)}
                 >
                   <Play size={16} weight="fill" />
