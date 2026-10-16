@@ -186,7 +186,7 @@ export function AppLayout() {
             }}
           />
         )}
-        {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
+        {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} searchOpen={searchOpen} />}
       </div>
 
       <main id="main-content">
