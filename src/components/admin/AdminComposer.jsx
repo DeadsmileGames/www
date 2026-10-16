@@ -143,6 +143,7 @@ export function AdminComposer() {
   const [form, setForm] = useState({ ...initial });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [saved, setSaved] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(null);
   const [items, setItems] = useState({
@@ -154,10 +155,21 @@ export function AdminComposer() {
   const [itemsLoaded, setItemsLoaded] = useState(false);
   const [deleting, setDeleting] = useState(null);
 
+  const updateField = (key, value) => {
+    setForm((current) => ({ ...current, [key]: value }));
+    setFieldErrors((current) => {
+      if (!current[key]) return current;
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    setError("");
+  };
+
   const set = (key) => (event) => {
     const value =
       event.target.type === "checkbox" ? event.target.checked : event.target.value;
-    setForm((current) => ({ ...current, [key]: value }));
+    updateField(key, value);
   };
 
   async function loadGameOptions() {
@@ -174,6 +186,7 @@ export function AdminComposer() {
     setEditing(null);
     setForm({ ...initial });
     setError("");
+    setFieldErrors({});
     setSaved(false);
     setConfirmingDelete(null);
     if (typeName === "newsletter")
@@ -185,6 +198,7 @@ export function AdminComposer() {
     setType(null);
     setEditing(null);
     setError("");
+    setFieldErrors({});
     setSaved(false);
   }
 
@@ -205,6 +219,7 @@ export function AdminComposer() {
 
     setOpeningEdit(`${kind}:${item.id}`);
     setError("");
+    setFieldErrors({});
 
     try {
       let detail;
@@ -296,11 +311,13 @@ export function AdminComposer() {
       type === "newsletter" &&
       !String(form.body || "").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim()
     ) {
-      setError(t("Body is required."));
+      setFieldErrors({ body: t("Body is required.") });
+      setError("");
       return;
     }
     setSaving(true);
     setError("");
+    setFieldErrors({});
     setSaved(false);
 
     try {
@@ -370,11 +387,16 @@ export function AdminComposer() {
       await openManage();
       if (!editing) setForm({ ...initial });
     } catch (err) {
-      setError(
-        err.fields?.length
-          ? err.fields.map((item) => item.message).join("\n")
-          : friendlyErrorMessage(err),
-      );
+      const fields = Array.isArray(err.fields) ? err.fields : [];
+      if (fields.length) {
+        setFieldErrors(
+          Object.fromEntries(fields.filter((item) => item.field).map((item) => [item.field, item.message])),
+        );
+        setError("");
+      } else {
+        setFieldErrors({});
+        setError(friendlyErrorMessage(err));
+      }
     } finally {
       setSaving(false);
     }
@@ -476,6 +498,7 @@ export function AdminComposer() {
     setEditing(null);
     setForm({ ...initial });
     setError("");
+    setFieldErrors({});
     setSaved(false);
     setConfirmingDelete(null);
   }
@@ -489,7 +512,7 @@ export function AdminComposer() {
   return (
     <div className="account-page container">
       <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 32 }}>
-        <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>
+        <div className="account-block__head" style={{ flex: "1 1 460px", minWidth: 0 }}>
           <p className="news-detail__eyebrow">{t("Studio workspace")}</p>
           <h1 style={{ fontSize: "clamp(34px, 4.3vw, 52px)", marginBottom: 10 }}>
             {t("Admin panel")}
@@ -595,6 +618,8 @@ export function AdminComposer() {
                           label={t("Title")}
                           value={form.title}
                           onChange={set("title")}
+                          name="title"
+                          error={fieldErrors.title}
                           required
                           minLength={2}
                           maxLength={180}
@@ -603,13 +628,21 @@ export function AdminComposer() {
                           label={t("Excerpt")}
                           value={form.excerpt}
                           onChange={set("excerpt")}
+                          name="excerpt"
+                          error={fieldErrors.excerpt}
                           maxLength={500}
                         />
                       </div>
                       <div className="admin-modal__row">
                         <label className="admin-field">
                           <span>{t("Related game")}</span>
-                          <select value={form.gameId} onChange={set("gameId")}>
+                          <select
+                            name="gameId"
+                            value={form.gameId}
+                            onChange={set("gameId")}
+                            aria-invalid={fieldErrors.gameId ? "true" : undefined}
+                            aria-describedby={fieldErrors.gameId ? "gameId-error" : undefined}
+                          >
                             <option value="">{t("None")}</option>
                             {items.games.map((game) => (
                               <option key={game.id} value={game.id}>
@@ -617,11 +650,18 @@ export function AdminComposer() {
                               </option>
                             ))}
                           </select>
+                          {fieldErrors.gameId && (
+                            <small id="gameId-error" className="admin-modal__error" role="alert">
+                              {fieldErrors.gameId}
+                            </small>
+                          )}
                         </label>
                         <Field
                           label={t("Image URL")}
                           value={form.image}
                           onChange={set("image")}
+                          name="image"
+                          error={fieldErrors.image}
                           maxLength={2000}
                           placeholder="https://… /assets/…"
                         />
@@ -635,7 +675,8 @@ export function AdminComposer() {
                       <NewswireBodyEditor
                         label={t("Body")}
                         value={form.body}
-                        onChange={(value) => setForm((current) => ({ ...current, body: value }))}
+                        onChange={(value) => updateField("body", value)}
+                        error={fieldErrors.body}
                         maxLength={30000}
                       />
                     </section>
@@ -654,6 +695,8 @@ export function AdminComposer() {
                           label={t("Title")}
                           value={form.title}
                           onChange={set("title")}
+                          name="title"
+                          error={fieldErrors.title}
                           required
                           minLength={2}
                           maxLength={180}
@@ -662,6 +705,8 @@ export function AdminComposer() {
                           label={t("Category")}
                           value={form.category}
                           onChange={set("category")}
+                          name="category"
+                          error={fieldErrors.category}
                           required
                           maxLength={80}
                         />
@@ -673,6 +718,8 @@ export function AdminComposer() {
                           maxLength={2000}
                           value={form.videoUrl}
                           onChange={set("videoUrl")}
+                          name="videoUrl"
+                          error={fieldErrors.videoUrl}
                         />
                         <Field
                           label={t("Duration (seconds)")}
@@ -682,6 +729,8 @@ export function AdminComposer() {
                           step="1"
                           value={form.durationSeconds}
                           onChange={set("durationSeconds")}
+                          name="durationSeconds"
+                          error={fieldErrors.durationSeconds}
                         />
                       </div>
                     </section>
@@ -695,6 +744,8 @@ export function AdminComposer() {
                         maxLength={2000}
                         value={form.thumbnail}
                         onChange={set("thumbnail")}
+                          name="thumbnail"
+                          error={fieldErrors.thumbnail}
                       />
                       <div className="admin-modal__row">
                         <Field
@@ -702,6 +753,8 @@ export function AdminComposer() {
                           maxLength={2000}
                           value={form.thumbnailEn}
                           onChange={set("thumbnailEn")}
+                          name="thumbnailEn"
+                          error={fieldErrors.thumbnailEn}
                           placeholder="https://…"
                         />
                         <Field
@@ -709,6 +762,8 @@ export function AdminComposer() {
                           maxLength={2000}
                           value={form.thumbnailPtBr}
                           onChange={set("thumbnailPtBr")}
+                          name="thumbnailPtBr"
+                          error={fieldErrors.thumbnailPtBr}
                           placeholder="https://…"
                         />
                       </div>
@@ -717,6 +772,8 @@ export function AdminComposer() {
                         maxLength={2000}
                         value={form.thumbnailEs}
                         onChange={set("thumbnailEs")}
+                          name="thumbnailEs"
+                          error={fieldErrors.thumbnailEs}
                         placeholder="https://…"
                       />
                     </section>
@@ -735,6 +792,8 @@ export function AdminComposer() {
                           label={t("Title")}
                           value={form.title}
                           onChange={set("title")}
+                          name="title"
+                          error={fieldErrors.title}
                           required
                           minLength={2}
                           maxLength={180}
@@ -743,6 +802,8 @@ export function AdminComposer() {
                           label={t("Slug")}
                           value={form.slug}
                           onChange={set("slug")}
+                          name="slug"
+                          error={fieldErrors.slug}
                           required
                           minLength={2}
                           maxLength={120}
@@ -755,6 +816,8 @@ export function AdminComposer() {
                           as="select"
                           value={form.status}
                           onChange={set("status")}
+                          name="status"
+                          error={fieldErrors.status}
                           options={["announced", "in_development", "released"]}
                         />
                         <Field
@@ -762,12 +825,16 @@ export function AdminComposer() {
                           type="date"
                           value={form.releaseDate}
                           onChange={set("releaseDate")}
+                          name="releaseDate"
+                          error={fieldErrors.releaseDate}
                         />
                       </div>
                       <Text
                         label={t("Short description")}
                         value={form.shortDescription}
                         onChange={set("shortDescription")}
+                          name="shortDescription"
+                          error={fieldErrors.shortDescription}
                         required
                         maxLength={500}
                       />
@@ -775,6 +842,8 @@ export function AdminComposer() {
                         label={t("Description")}
                         value={form.description}
                         onChange={set("description")}
+                          name="description"
+                          error={fieldErrors.description}
                         maxLength={30000}
                       />
                     </section>
@@ -790,12 +859,16 @@ export function AdminComposer() {
                           maxLength={2000}
                           value={form.heroImage}
                           onChange={set("heroImage")}
+                          name="heroImage"
+                          error={fieldErrors.heroImage}
                         />
                         <Field
                           label={t("Cover image URL")}
                           maxLength={2000}
                           value={form.coverImage}
                           onChange={set("coverImage")}
+                          name="coverImage"
+                          error={fieldErrors.coverImage}
                         />
                       </div>
                       <Field
@@ -804,6 +877,8 @@ export function AdminComposer() {
                         maxLength={2000}
                         value={form.trailerUrl}
                         onChange={set("trailerUrl")}
+                          name="trailerUrl"
+                          error={fieldErrors.trailerUrl}
                       />
                     </section>
 
@@ -825,6 +900,8 @@ export function AdminComposer() {
                           type="url"
                           value={form.itchUrl}
                           onChange={set("itchUrl")}
+                          name="itchUrl"
+                          error={fieldErrors.itchUrl}
                           maxLength={2000}
                         />
                       </div>
@@ -832,6 +909,8 @@ export function AdminComposer() {
                         label={t("Microsoft Store badge HTML (optional)")}
                         value={form.microsoftStoreBadge}
                         onChange={set("microsoftStoreBadge")}
+                          name="microsoftStoreBadge"
+                          error={fieldErrors.microsoftStoreBadge}
                         maxLength={4000}
                       />
                       <div className="admin-modal__row">
@@ -841,6 +920,8 @@ export function AdminComposer() {
                           maxLength={2000}
                           value={form.purchaseUrl}
                           onChange={set("purchaseUrl")}
+                          name="purchaseUrl"
+                          error={fieldErrors.purchaseUrl}
                           placeholder="https://deadsml.itch.io/game/purchase"
                         />
                         <Field
@@ -849,6 +930,8 @@ export function AdminComposer() {
                           min="1"
                           value={form.itchGameId}
                           onChange={set("itchGameId")}
+                          name="itchGameId"
+                          error={fieldErrors.itchGameId}
                         />
                       </div>
                       <Field
@@ -857,6 +940,8 @@ export function AdminComposer() {
                         maxLength={2000}
                         value={form.downloadUrl}
                         onChange={set("downloadUrl")}
+                          name="downloadUrl"
+                          error={fieldErrors.downloadUrl}
                         placeholder="https://..."
                       />
                     </section>
@@ -872,12 +957,16 @@ export function AdminComposer() {
                           maxLength={509}
                           value={form.genres}
                           onChange={set("genres")}
+                          name="genres"
+                          error={fieldErrors.genres}
                         />
                         <Field
                           label={t("Platforms (comma separated)")}
                           maxLength={509}
                           value={form.platforms}
                           onChange={set("platforms")}
+                          name="platforms"
+                          error={fieldErrors.platforms}
                         />
                       </div>
                       <label className="admin-check">
@@ -1077,6 +1166,7 @@ export function AdminComposer() {
                                 aria-label={t("Edit {0}", { 0: item.title })}
                               >
                                 {openingEdit === deleteKey ? <LoadingSpinner /> : <PencilSimple weight="bold" />}
+                                {t("Edit")}
                               </button>
                               <button
                                 type="button"
@@ -1087,6 +1177,7 @@ export function AdminComposer() {
                                 aria-label={t("Delete {0}", { 0: item.title })}
                               >
                                 <Trash weight="bold" />
+                                {t("Delete")}
                               </button>
                             </div>
                           )}
@@ -1104,13 +1195,18 @@ export function AdminComposer() {
   );
 }
 
-function Field({ label, as = "input", options = [], ...props }) {
+function Field({ label, as = "input", options = [], name, error, ...props }) {
   const { t } = useLanguage();
+  const accessibilityProps = {
+    name,
+    "aria-invalid": error ? "true" : undefined,
+    "aria-describedby": error ? `${name}-error` : undefined,
+  };
   return (
     <label className="admin-field">
       <span>{label}</span>
       {as === "select" ? (
-        <select {...props}>
+        <select {...accessibilityProps} {...props}>
           {options.map((opt) => (
             <option key={opt} value={opt}>
               {t(opt)}
@@ -1118,22 +1214,38 @@ function Field({ label, as = "input", options = [], ...props }) {
           ))}
         </select>
       ) : (
-        <input {...props} />
+        <input {...accessibilityProps} {...props} />
+      )}
+      {error && (
+        <small id={`${name}-error`} className="admin-modal__error" role="alert">
+          {error}
+        </small>
       )}
     </label>
   );
 }
 
-function Text({ label, ...props }) {
+function Text({ label, name, error, ...props }) {
   return (
     <label className="admin-field">
       <span>{label}</span>
-      <textarea rows="6" {...props} />
+      <textarea
+        rows="6"
+        name={name}
+        aria-invalid={error ? "true" : undefined}
+        aria-describedby={error ? `${name}-error` : undefined}
+        {...props}
+      />
+      {error && (
+        <small id={`${name}-error`} className="admin-modal__error" role="alert">
+          {error}
+        </small>
+      )}
     </label>
   );
 }
 
-function NewswireBodyEditor({ label, value, onChange, maxLength }) {
+function NewswireBodyEditor({ label, value, onChange, error, maxLength }) {
   const { t } = useLanguage();
   const editorRef = useRef(null);
   const savedRangeRef = useRef(null);
@@ -1236,6 +1348,8 @@ function NewswireBodyEditor({ label, value, onChange, maxLength }) {
         aria-label={label}
         aria-multiline="true"
         aria-required="true"
+        aria-invalid={error ? "true" : undefined}
+        aria-describedby={error ? "body-error" : undefined}
         onPaste={(event) => {
           event.preventDefault();
           const editor = editorRef.current;
@@ -1315,6 +1429,11 @@ function NewswireBodyEditor({ label, value, onChange, maxLength }) {
         onKeyUp={rememberSelection}
         onMouseUp={rememberSelection}
       />
+      {error && (
+        <small id="body-error" className="admin-modal__error" role="alert">
+          {error}
+        </small>
+      )}
       <div className="admin-rich-editor__toolbar">
         <button
           type="button"
