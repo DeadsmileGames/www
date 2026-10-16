@@ -14,9 +14,9 @@ import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/url
 import { getVideoThumbnail } from "../../utils/videoThumbnail";
 import { AutoLinkText } from "../ui/AutoLinkText";
 
-const fallbackImage = "/assets/games/screenshots/light/1.png";
+const fallbackImage = "/assets/placeholders/game-cover.svg";
 
-function Panel({ videoId, background, onClose, onSelect }) {
+function Panel({ videoId, onClose, onSelect }) {
   const { t, language } = useLanguage();
   const allowed = useOptionalContent();
   const reducedMotion = useReducedMotion();
@@ -96,13 +96,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const external = safeHttpsUrl(video?.video_url);
   const gameSlug =
     /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(video?.game_slug || "") ? video.game_slug : null;
-  const image =
-    safeImageUrl(background) ||
-    safeImageUrl(video?.game_screenshot) ||
-    safeImageUrl(video?.screenshots?.[0]) ||
-    (gameSlug ? safeImageUrl(`/assets/games/screenshots/${gameSlug}/1.png`) : null) ||
-    getVideoThumbnail(video, language) ||
-    fallbackImage;
+  const image = safeImageUrl(video?.game_cover_image) || fallbackImage;
   const released = video?.youtube?.actualStartedAt || video?.youtube?.startsAt || null;
   useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
 
@@ -279,7 +273,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
   );
 }
 
-export function VideoOverlay({ videoId, background, onClose, onSelect }) {
+export function VideoOverlay({ videoId, onClose, onSelect }) {
   const navigate = useNavigate();
   const selectVideo = (nextVideoId) => {
     if (onSelect) {
@@ -296,7 +290,6 @@ export function VideoOverlay({ videoId, background, onClose, onSelect }) {
         <Panel
           key={videoId}
           videoId={videoId}
-          background={background}
           onClose={onClose}
           onSelect={selectVideo}
         />
