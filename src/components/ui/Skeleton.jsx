@@ -207,11 +207,11 @@ export function SkeletonRows({ count = 3 }) {
   );
 }
 
-export function SkeletonProfile() {
+export function SkeletonProfile({ account = false }) {
   return (
     <>
       <header className="profile-page__hero">
-        <Skeleton style={{ width: 110, height: 110, borderRadius: "50%" }} />
+        <Skeleton style={{ width: account ? 95 : 110, height: account ? 95 : 110, borderRadius: "50%" }} />
         <div style={{ flex: 1 }}>
           <Skeleton style={{ height: 36, width: "50%", marginBottom: 20 }} />
           <SkeletonLines count={2} />
@@ -293,9 +293,9 @@ export function SkeletonPage({ path }) {
     className = "account-page container";
     content = (
       <>
-        <SkeletonProfile />
+        <SkeletonProfile account />
         <div className="account-page__layout">
-          <aside aria-hidden="true">
+          <nav aria-hidden="true">
             {[0, 1, 2, 3, 4].map((index) => (
               <div className="account-nav-item" key={index}>
                 <Skeleton style={{ width: 18, height: 18, flexShrink: 0 }} />
@@ -309,7 +309,7 @@ export function SkeletonPage({ path }) {
               <Skeleton style={{ width: 18, height: 18, flexShrink: 0 }} />
               <Skeleton style={{ width: "48%", height: 14 }} />
             </div>
-          </aside>
+          </nav>
           <div className="account-page__content">
             <div className="support-faq-panel support-card">
               <section className="account-block">
