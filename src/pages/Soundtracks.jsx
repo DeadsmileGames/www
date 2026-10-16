@@ -223,7 +223,6 @@ export function Soundtracks() {
   const [params, setParams] = useSearchParams();
 
   const groups = Array.isArray(resource.data?.groups) ? resource.data.groups : [];
-  const total = Number.isFinite(resource.data?.total) ? resource.data.total : 0;
   const trackId = params.get("track");
   const tracks = useMemo(() => groups.flatMap((group) =>
     (group.videos || []).map((track) => ({ ...track, gameId: group.gameId })),
@@ -273,7 +272,7 @@ export function Soundtracks() {
         <div className="container">
           <header className="section-heading">
             <h1>{t("Soundtracks")}</h1>
-            <p>{t("Discover game soundtracks collected from YouTube and organized by title.")}{" · "}{t("{0} soundtracks", { 0: total })}</p>
+            <p>{t("Discover game soundtracks from our games")}</p>
           </header>
 
           <label className="search-page__input-wrapper">
