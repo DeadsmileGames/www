@@ -1,7 +1,6 @@
 import { useLanguage } from "../../context/LanguageContext";
 import { SkeletonRows } from "../ui/Skeleton";
-import { useEffect, useRef, useState } from "react";
-import { Modal } from "../ui/Modal";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "../ui/Button";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
 import { api, friendlyErrorMessage } from "../../services/api";
@@ -12,10 +11,8 @@ import {
   Newspaper,
   FilmStrip,
   GameController,
-  List,
   CheckCircle,
   WarningCircle,
-  Gear,
   PencilSimple,
 } from "@phosphor-icons/react";
 
@@ -72,8 +69,7 @@ export function AdminComposer() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
-  const [manage, setManage] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(null);
   const [items, setItems] = useState({
     news: [],
     videos: [],
@@ -81,8 +77,6 @@ export function AdminComposer() {
   });
   const [loadingItems, setLoadingItems] = useState(false);
   const [deleting, setDeleting] = useState(null);
-
-  if (user?.role !== "admin") return null;
 
   const set = (key) => (event) => {
     const value =
@@ -103,7 +97,6 @@ export function AdminComposer() {
   function open(typeName) {
     setType(typeName);
     setEditing(null);
-    setMenuOpen(false);
     setForm({ ...initial });
     setError("");
     setSaved(false);
@@ -211,7 +204,6 @@ export function AdminComposer() {
       setForm(nextForm);
       setEditing({ kind, id: item.id });
       setSaved(false);
-      setManage(false);
       setType(nextType);
     } catch (err) {
       setError(friendlyErrorMessage(err));
@@ -297,7 +289,7 @@ export function AdminComposer() {
           : api.post(path, payload),
       );
       setSaved(true);
-      if (manage) await openManage();
+      await openManage();
       window.setTimeout(() => {
         setType(null);
         setEditing(null);
@@ -313,9 +305,7 @@ export function AdminComposer() {
     }
   }
 
-  async function openManage() {
-    setManage(true);
-    setMenuOpen(false);
+  const loadManageItems = useCallback(async () => {
     setLoadingItems(true);
     setError("");
 
@@ -341,7 +331,16 @@ export function AdminComposer() {
     } finally {
       setLoadingItems(false);
     }
+  }, [t]);
+
+  useEffect(() => {
+    void loadManageItems();
+  }, [loadManageItems]);
+
+  async function openManage() {
+    await loadManageItems();
   }
+
   const deleteEndpointMap = {
     news: "newsletter",
     videos: "video",
@@ -349,11 +348,6 @@ export function AdminComposer() {
   };
 
   async function remove(kind, id) {
-    const confirmed = window.confirm(
-      t("Delete this item permanently? This action cannot be undone."),
-    );
-    if (!confirmed) return;
-
     const deleteKey = `${kind}:${id}`;
     setDeleting(deleteKey);
     setError("");
@@ -371,6 +365,7 @@ export function AdminComposer() {
         ...current,
         [kind]: current[kind].filter((item) => item.id !== id),
       }));
+      setConfirmingDelete(null);
     } catch (err) {
       setError(
         err.fields?.length
@@ -388,58 +383,45 @@ export function AdminComposer() {
     { key: "games", label: t("Games") },
   ];
 
-  return (
-    <>
-      <div className="admin-composer">
-        {menuOpen && (
-          <div className="admin-composer__menu" role="menu">
-            <div className="admin-composer__label">{t("Manage content")}</div>
-            <button type="button" role="menuitem" onClick={() => open("newsletter")}>
-              <Newspaper weight="bold" />
-              <span>{t("Newsletter")}</span>
-            </button>
-            <button type="button" role="menuitem" onClick={() => open("video")}>
-              <FilmStrip weight="bold" />
-              <span>{t("Video")}</span>
-            </button>
-            <button type="button" role="menuitem" onClick={() => open("game")}>
-              <GameController weight="bold" />
-              <span>{t("Game")}</span>
-            </button>
-            <button
-              type="button"
-              role="menuitem"
-              className="admin-composer__manage"
-              onClick={openManage}
-            >
-              <List weight="bold" />
-              <span>{t("Manage")}</span>
-            </button>
-          </div>
-        )}
+  if (user?.role !== "admin") return null;
 
-        <button
-          type="button"
-          className="admin-composer__toggle"
-          onClick={() => setMenuOpen((open) => !open)}
-          aria-label={menuOpen ? t("Close admin menu") : t("Open admin menu")}
-          aria-expanded={menuOpen}
-        >
-          {menuOpen ? <X weight="bold" /> : <Gear weight="bold" size={24} />}
-        </button>
+  return (
+    <div className="account-page container">
+      <div className="account-block__head">
+        <h1>{t("Admin panel")}</h1>
+        <p>{t("Manage and publish games, videos, and news in one place.")}</p>
       </div>
 
-      <Modal open={!!type} onClose={closeComposer} labelledBy="admin-composer-title">
+      <div className="studio-actions" style={{ marginTop: 0, marginBottom: 32 }}>
+        <Button type="button" variant="primary" onClick={() => open("newsletter")} disabled={saving}>
+          <Newspaper weight="bold" />
+          {t("Publish news")}
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => open("video")} disabled={saving}>
+          <FilmStrip weight="bold" />
+          {t("Add video")}
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => open("game")} disabled={saving}>
+          <GameController weight="bold" />
+          {t("Add game")}
+        </Button>
+        <Button type="button" variant="secondary" onClick={openManage} loading={loadingItems} disabled={loadingItems}>
+          {t("Refresh content")}
+        </Button>
+      </div>
+
+      {type && (
+        <section className="support-card support-contact-panel">
         <div className="admin-modal">
           <header>
             <div>
               <h2 id="admin-composer-title">
-                {editing ? t("Edit") : t("Publish")} {type}
+                {editing ? t("Edit") : t("Publish")} {type === "newsletter" ? t("Newswire") : type === "video" ? t("Video") : t("Game")}
               </h2>
             </div>
             <button
               type="button"
-              className="admin-modal__close"
+              className="btn btn--secondary"
               onClick={closeComposer}
               disabled={saving}
               aria-label={t("Close")}
@@ -718,29 +700,18 @@ export function AdminComposer() {
             </Button>
           </form>
         </div>
-      </Modal>
+              </section>
+      )}
 
-      <Modal
-        open={manage}
-        onClose={() => setManage(false)}
-        labelledBy="admin-manage-title"
-      >
+      <section className="support-card support-faq-panel">
         <div className="admin-manage">
           <header>
             <div>
-              <h2 id="admin-manage-title">{t("Content")}</h2>
+              <h2 id="admin-manage-title">{t("Published content")}</h2>
             </div>
-            <button
-              type="button"
-              className="admin-modal__close"
-              onClick={() => setManage(false)}
-              aria-label={t("Close")}
-            >
-              <X weight="bold" />
-            </button>
           </header>
 
-          {error && (
+          {error && !type && (
             <p className="admin-modal__error">
               <WarningCircle weight="bold" />
               <span>{t(error)}</span>
@@ -768,36 +739,55 @@ export function AdminComposer() {
                           <div>
                             <strong>{item.title}</strong>
                           </div>
-                          <div className="admin-manage__item-actions">
-                            <button
-                              type="button"
-                              onClick={() => edit(key, item)}
-                              disabled={Boolean(openingEdit) || deleting === deleteKey}
-                              className="btn btn--secondary"
-                              aria-busy={openingEdit === deleteKey}
-                              aria-label={t("Edit {0}", { 0: item.title })}
-                            >
-                              {openingEdit === deleteKey ? (
-                                <span>…</span>
-                              ) : (
-                                <PencilSimple weight="bold" />
-                              )}
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => remove(key, item.id)}
-                              disabled={deleting === deleteKey}
-                              aria-busy={deleting === deleteKey}
-                              className="btn btn--danger"
-                              aria-label={t("Delete {0}", { 0: item.title })}
-                            >
-                              {deleting === deleteKey ? (
-                                <span>…</span>
-                              ) : (
+                          {confirmingDelete === deleteKey ? (
+                            <div className="studio-actions" style={{ marginTop: 0 }}>
+                              <span>{t("Delete this item permanently? This action cannot be undone.")}</span>
+                              <Button
+                                type="button"
+                                variant="danger"
+                                onClick={() => remove(key, item.id)}
+                                disabled={deleting === deleteKey}
+                                loading={deleting === deleteKey}
+                              >
+                                {t("Delete")}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => setConfirmingDelete(null)}
+                                disabled={deleting === deleteKey}
+                              >
+                                {t("Cancel")}
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="admin-manage__item-actions">
+                              <button
+                                type="button"
+                                onClick={() => edit(key, item)}
+                                disabled={Boolean(openingEdit) || deleting === deleteKey}
+                                className="btn btn--secondary"
+                                aria-busy={openingEdit === deleteKey}
+                                aria-label={t("Edit {0}", { 0: item.title })}
+                              >
+                                {openingEdit === deleteKey ? (
+                                  <span>…</span>
+                                ) : (
+                                  <PencilSimple weight="bold" />
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setConfirmingDelete(deleteKey)}
+                                disabled={deleting === deleteKey}
+                                aria-busy={deleting === deleteKey}
+                                className="btn btn--danger"
+                                aria-label={t("Delete {0}", { 0: item.title })}
+                              >
                                 <Trash weight="bold" />
-                              )}
-                            </button>
-                          </div>
+                              </button>
+                            </div>
+                          )}
                         </div>
                       );
                     })
@@ -807,8 +797,8 @@ export function AdminComposer() {
             })
           )}
         </div>
-      </Modal>
-    </>
+            </section>
+    </div>
   );
 }
 
