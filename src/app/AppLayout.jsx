@@ -31,7 +31,15 @@ export function AppLayout() {
   const { games: gamesNearRelease = [] } = useGames({ limit: 48, status: "in_development" });
   const now = Date.now();
   const monthFromNow = new Date(now);
+  const currentDay = monthFromNow.getDate();
+  monthFromNow.setDate(1);
   monthFromNow.setMonth(monthFromNow.getMonth() + 1);
+  const lastDayOfNextMonth = new Date(
+    monthFromNow.getFullYear(),
+    monthFromNow.getMonth() + 1,
+    0,
+  ).getDate();
+  monthFromNow.setDate(Math.min(currentDay, lastDayOfNextMonth));
   const nextRelease = gamesNearRelease
     .map((game) => {
       const value = game.releaseDate || game.release_date;
