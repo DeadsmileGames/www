@@ -2,7 +2,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useGames } from "../hooks/useGames";
 import { SkeletonPage } from "../components/ui/Skeleton";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { useLocation, useNavigate, useOutlet } from "react-router-dom";
+import { useLocation, useOutlet } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 
@@ -108,7 +108,6 @@ export function AppLayout() {
       : premiere;
 
   const location = useLocation();
-  const navigate = useNavigate();
   const outlet = useOutlet();
   const reducedMotion = useReducedMotion();
 
