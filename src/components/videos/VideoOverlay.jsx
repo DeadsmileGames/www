@@ -51,7 +51,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
     !chatEnded && (youtubeState === "live" || youtubeState === "upcoming");
 
   useEffect(() => {
-    // Don't treat the temporary empty state during a language refresh as the end of a broadcast.
+    
     if (resource.status !== "success" || !video?.id || !video?.youtube?.state) return;
     if (youtubeState === "live") broadcastWasLive.current = true;
     const broadcastHasEnded =
@@ -68,8 +68,8 @@ function Panel({ videoId, background, onClose, onSelect }) {
     const url = new URL(embed);
     url.searchParams.set("autoplay", "1");
     url.searchParams.set("rel", "0");
-    // YouTube uses this locale for player UI and language preference hints.
-    // Audio-track availability/selection itself is controlled by YouTube.
+    
+    
     url.searchParams.set("hl", playerLanguage);
     url.searchParams.set("cc_lang_pref", playerLanguage === "pt-BR" ? "pt" : playerLanguage);
     return url.toString();
