@@ -539,13 +539,61 @@ export function GameDetails() {
             >
               {t("Release in")}{" "}
               {(() => {
-                const seconds = Math.max(0, Math.floor((releaseTimestamp - releaseNow) / 1000));
-                const days = Math.floor(seconds / 86400);
-                const hours = Math.floor((seconds % 86400) / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                const remaining = seconds % 60;
-                const clock = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remaining).padStart(2, "0")}`;
-                return days > 0 ? `${days}d ${clock}` : clock;
+                const now = new Date(releaseNow);
+                const releaseDate = new Date(releaseTimestamp);
+                const releaseDayKey = Date.UTC(
+                  releaseDate.getFullYear(),
+                  releaseDate.getMonth(),
+                  releaseDate.getDate(),
+                );
+
+                let months =
+                  (releaseDate.getFullYear() - now.getFullYear()) * 12 +
+                  releaseDate.getMonth() -
+                  now.getMonth();
+
+                const getMonthAnchor = (count) => {
+                  const anchor = new Date(now.getFullYear(), now.getMonth() + count, 1);
+                  const lastDay = new Date(
+                    anchor.getFullYear(),
+                    anchor.getMonth() + 1,
+                    0,
+                  ).getDate();
+                  anchor.setDate(Math.min(now.getDate(), lastDay));
+                  return anchor;
+                };
+
+                const anchorForMonths = getMonthAnchor(months);
+                const anchorKey = Date.UTC(
+                  anchorForMonths.getFullYear(),
+                  anchorForMonths.getMonth(),
+                  anchorForMonths.getDate(),
+                );
+                if (months > 0 && anchorKey > releaseDayKey) months -= 1;
+
+                const monthAnchor = getMonthAnchor(months);
+                const monthAnchorKey = Date.UTC(
+                  monthAnchor.getFullYear(),
+                  monthAnchor.getMonth(),
+                  monthAnchor.getDate(),
+                );
+                const days = Math.max(
+                  0,
+                  Math.round((releaseDayKey - monthAnchorKey) / 86400000),
+                );
+
+                const parts = [];
+                if (months > 0) {
+                  parts.push(months + " " + t(months === 1 ? "month" : "months"));
+                }
+                if (days > 0) {
+                  parts.push(days + " " + t(days === 1 ? "day" : "days"));
+                }
+
+                if (!parts.length && releaseTimestamp > releaseNow) {
+                  return t("Less than a day");
+                }
+                return parts.join(", ");
               })()}
             </button>
           )}
