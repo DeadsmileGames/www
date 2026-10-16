@@ -1,4 +1,5 @@
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useState } from "react";
 import { ProductHero, productIcon } from "../components/games/ProductHero";
 import { useContent } from "../hooks/useContent";
@@ -79,7 +80,7 @@ export function Launcher() {
             )}
             <section className={screenshots.length ? "launcher-page__about" : undefined}>
               <h2 className="launcher-page__section-title">{t("games.about")}</h2>
-              <p className="game-details__description">{store.description}</p>
+              <p className="game-details__description"><AutoLinkText>{store.description}</AutoLinkText></p>
               <StoreInformation store={store} />
             </section>
           </div>
