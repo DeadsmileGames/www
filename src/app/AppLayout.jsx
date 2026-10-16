@@ -27,9 +27,16 @@ export function AppLayout() {
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
+  const [bannerClock, setBannerClock] = useState(() => Date.now());
   const premiere = usePremiere();
   const { games: gamesNearRelease = [] } = useGames({ limit: 48, status: "in_development" });
-  const now = Date.now();
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setBannerClock(Date.now()), 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const now = bannerClock;
   const monthFromNow = new Date(now);
   const currentDay = monthFromNow.getDate();
   monthFromNow.setDate(1);
@@ -76,11 +83,13 @@ export function AppLayout() {
       }
     : null;
   const premiereTimestamp = Date.parse(premiere?.starts_at || "");
+  const hasFuturePremiere =
+    premiere?.state === "upcoming" &&
+    Number.isFinite(premiereTimestamp) &&
+    premiereTimestamp > now;
   const bannerContent =
     upcomingGameBanner &&
-    (premiere?.state !== "upcoming" ||
-      !Number.isFinite(premiereTimestamp) ||
-      nextRelease.timestamp < premiereTimestamp)
+    (!hasFuturePremiere || nextRelease.timestamp < premiereTimestamp)
       ? upcomingGameBanner
       : premiere;
 
