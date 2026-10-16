@@ -9,6 +9,7 @@ import { safeImageUrl } from "../utils/urls";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ArrowLeft } from "@phosphor-icons/react";
+import { useMicrosoftStoreCovers } from "../hooks/useMicrosoftStoreCovers";
 
 export function Wishlist() {
   const { t, language } = useLanguage();
@@ -17,6 +18,7 @@ export function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const requestId = useRef(0);
+  const storeCovers = useMicrosoftStoreCovers(games);
 
   const load = useCallback(() => {
     const id = ++requestId.current;
@@ -122,7 +124,7 @@ export function Wishlist() {
             <GameCoverPanel
               key={game.id}
               game={game}
-              cover={safeImageUrl(game.coverImage || game.cover_image || game.heroImage)}
+              cover={storeCovers[String(game.id ?? game.slug)] || safeImageUrl(game.coverImage || game.cover_image || game.heroImage)}
             />
           ))}
         </div>
