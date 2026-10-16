@@ -88,12 +88,17 @@ export function PremiereBanner({ premiere, onOpen }) {
           1: formatCountdown(seconds),
         })
       : t("{0} is now playing", { 0: premiere.title });
+  // Normalize digits before measuring so the countdown does not resize the text every second.
+  const mobileBannerSizingLabel = bannerLabel.replace(/\d/g, "8");
   const mobileBannerFontSize = useMemo(
     () =>
       viewportWidth <= 760
-        ? fitMobileBannerText(bannerLabel, Math.max(0, viewportWidth - 48))
+        ? fitMobileBannerText(
+            mobileBannerSizingLabel,
+            Math.max(0, viewportWidth - 48),
+          )
         : null,
-    [bannerLabel, viewportWidth],
+    [mobileBannerSizingLabel, viewportWidth],
   );
 
   useEffect(() => {
