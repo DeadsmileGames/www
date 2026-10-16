@@ -67,17 +67,8 @@ function contentKey(item) {
 }
 
 async function loadPaginatedContent(path) {
-  const limit = 48;
-  const firstPage = await api.get(path, { page: 1, limit });
-  const firstItems = normalizeList(firstPage);
-  const pagination = firstPage?.pagination ?? firstPage?.meta?.pagination;
-  const totalPagesValue =
-    pagination?.totalPages ??
-    pagination?.total_pages ??
-    pagination?.pages ??
-    firstPage?.totalPages;
-  const totalPages = Number(totalPagesValue);
-  const hasPageCount = Number.isFinite(totalPages) && totalPages > 0;
+  const isGames = path === "/games";
+  const limit = isGames ? 48 : 50;
   const collected = [];
   const seen = new Set();
 
@@ -89,6 +80,32 @@ async function loadPaginatedContent(path) {
       collected.push(item);
     });
   };
+
+  if (!isGames) {
+    // Newswire and videos use offset pagination; their query schema rejects "page".
+    for (let offset = 0; offset <= 10_000; offset += limit) {
+      const response = await api.get(path, { offset, limit });
+      const pageItems = normalizeList(response);
+      if (!pageItems.length) break;
+
+      const previousCount = collected.length;
+      appendUnique(pageItems);
+      if (pageItems.length < limit || collected.length === previousCount) break;
+    }
+
+    return collected;
+  }
+
+  const firstPage = await api.get(path, { page: 1, limit });
+  const firstItems = normalizeList(firstPage);
+  const pagination = firstPage?.pagination ?? firstPage?.meta?.pagination;
+  const totalPagesValue =
+    pagination?.totalPages ??
+    pagination?.total_pages ??
+    pagination?.pages ??
+    firstPage?.totalPages;
+  const totalPages = Number(totalPagesValue);
+  const hasPageCount = Number.isFinite(totalPages) && totalPages > 0;
 
   appendUnique(firstItems);
   if (hasPageCount && totalPages <= 1) return collected;
@@ -105,10 +122,11 @@ async function loadPaginatedContent(path) {
     const signature = pageItems.map((item) => contentKey(item) ?? item?.title ?? "").join("|");
     if (!hasPageCount && signature && signature === previousSignature) break;
 
+    const previousCount = collected.length;
     appendUnique(pageItems);
     previousSignature = signature;
 
-    if (!hasPageCount && pageItems.length < limit) break;
+    if (!hasPageCount && (pageItems.length < limit || collected.length === previousCount)) break;
   }
 
   return collected;
@@ -133,6 +151,7 @@ export function AdminComposer() {
     games: [],
   });
   const [loadingItems, setLoadingItems] = useState(false);
+  const [itemsLoaded, setItemsLoaded] = useState(false);
   const [deleting, setDeleting] = useState(null);
 
   const set = (key) => (event) => {
@@ -363,6 +382,7 @@ export function AdminComposer() {
 
   const loadManageItems = useCallback(async () => {
     setLoadingItems(true);
+    setItemsLoaded(false);
     setError("");
 
     try {
@@ -373,6 +393,7 @@ export function AdminComposer() {
       ]);
 
       setItems({ news, videos, games });
+      setItemsLoaded(true);
     } catch (err) {
       setError(
         err.fields?.length
@@ -380,6 +401,7 @@ export function AdminComposer() {
           : friendlyErrorMessage(err),
       );
       setItems({ news: [], videos: [], games: [] });
+      setItemsLoaded(false);
     } finally {
       setLoadingItems(false);
     }
@@ -895,8 +917,18 @@ export function AdminComposer() {
                   <h2>{t("Content overview")}</h2>
                   <p>{t("Choose a section to manage content.")}</p>
                 </div>
+                {error && (
+                  <p className="admin-modal__error" role="alert">
+                    <WarningCircle weight="bold" />
+                    <span>{t(error)}</span>
+                  </p>
+                )}
                 {loadingItems ? (
                   <SkeletonRows count={3} />
+                ) : !itemsLoaded ? (
+                  <p className="admin-manage__empty" role="status">
+                    {t("Published content could not be loaded. Refresh to try again.")}
+                  </p>
                 ) : (
                   <div className="studio-game-strip" style={{ margin: "0 0 28px", padding: 24, gap: 20 }}>
                     <div>
@@ -994,7 +1026,7 @@ export function AdminComposer() {
 
               {loadingItems ? (
                 <SkeletonRows count={4} />
-              ) : filteredItems.length === 0 ? (
+              ) : error && filteredItems.length === 0 ? null : filteredItems.length === 0 ? (
                 <p className="admin-manage__empty">
                   {normalizedQuery ? t("No items match your search.") : t("No items published.")}
                 </p>
