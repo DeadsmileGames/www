@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -10,12 +10,35 @@ import { formatReleaseDate, getReleaseTimestamp } from "../../utils/releaseDate"
 import { trapFocus } from "../../utils/dom";
 import { AutoLinkText } from "../ui/AutoLinkText";
 
+function fitMobileBannerText(text, availableWidth) {
+  const maxFontSize = 15;
+  const minFontSize = 6;
+  const canvas =
+    typeof document !== "undefined" ? document.createElement("canvas") : null;
+  const context = canvas?.getContext("2d");
+
+  if (!context) {
+    const estimatedWidthPerPixel = Math.max(1, String(text).length * 0.62);
+    return Math.max(minFontSize, Math.min(maxFontSize, Math.floor(availableWidth / estimatedWidthPerPixel)));
+  }
+
+  for (let fontSize = maxFontSize; fontSize >= minFontSize; fontSize -= 1) {
+    context.font = `700 ${fontSize}px Poppins, sans-serif`;
+    if (context.measureText(text).width <= availableWidth) return fontSize;
+  }
+
+  return minFontSize;
+}
+
 export function PremiereBanner({ premiere, onOpen }) {
   const { t, language } = useLanguage();
   const reducedMotion = useReducedMotion();
   const bannerRef = useRef(null);
   const previewRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(() =>
+    typeof window === "undefined" ? 1024 : window.innerWidth,
+  );
   const isGameRelease = premiere.kind === "game";
   const releaseTimestamp = isGameRelease
     ? getReleaseTimestamp(premiere.starts_at || "")
@@ -65,6 +88,19 @@ export function PremiereBanner({ premiere, onOpen }) {
           1: formatCountdown(seconds),
         })
       : t("{0} is now playing", { 0: premiere.title });
+  const mobileBannerFontSize = useMemo(
+    () =>
+      viewportWidth <= 760
+        ? fitMobileBannerText(bannerLabel, Math.max(0, viewportWidth - 48))
+        : null,
+    [bannerLabel, viewportWidth],
+  );
+
+  useEffect(() => {
+    const updateViewportWidth = () => setViewportWidth(window.innerWidth);
+    window.addEventListener("resize", updateViewportWidth, { passive: true });
+    return () => window.removeEventListener("resize", updateViewportWidth);
+  }, []);
 
   useEffect(() => {
     setExpanded(false);
@@ -183,7 +219,12 @@ export function PremiereBanner({ premiere, onOpen }) {
           onClick={isGameRelease ? expandPreview : onOpen}
           aria-expanded={isGameRelease ? expanded : undefined}
         >
-          <span className="premiere-banner__text">{bannerLabel}</span>
+          <span
+            className="premiere-banner__text"
+            style={mobileBannerFontSize ? { fontSize: `${mobileBannerFontSize}px` } : undefined}
+          >
+            {bannerLabel}
+          </span>
         </button>
       </motion.div>
       {expandedPreview}
