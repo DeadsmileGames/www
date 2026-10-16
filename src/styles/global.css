@@ -4581,3 +4581,56 @@ input[type="file"]::file-selector-button {
     transition: none;
   }
 }
+
+
+/* Rich-text Newswire body editor */
+.admin-rich-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.admin-rich-editor {
+  min-height: 190px;
+  max-height: 420px;
+  padding: 13px 14px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.22);
+  color: inherit;
+  font: inherit;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.admin-rich-editor:focus {
+  border-color: rgba(255, 255, 255, 0.62);
+  outline: 2px solid rgba(255, 255, 255, 0.16);
+  outline-offset: 1px;
+}
+.admin-rich-editor a {
+  color: #d5d5ff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.admin-rich-editor__toolbar,
+.admin-rich-editor__link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+.admin-rich-editor__link-form {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.admin-rich-editor__link-form .admin-field {
+  margin: 0;
+}
+.admin-rich-editor__link-form .account-page__error {
+  margin: 0;
+}
