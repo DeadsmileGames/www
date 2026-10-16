@@ -4419,3 +4419,38 @@ input[type="file"]::file-selector-button {
 @media (prefers-reduced-motion: reduce) {
   .loading-spinner { animation-duration: 1.6s; }
 }
+
+
+/* Sliding video hero transitions */
+.videos-page__hero-background-stage {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.videos-page__hero-background-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.videos-page__hero-background-slide .game-hero__background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.02);
+  filter: blur(1px) saturate(0.82);
+}
+.videos-page__hero-stage {
+  position: relative;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+}
+.videos-page__hero-slide {
+  grid-area: 1 / 1;
+  width: 100%;
+  min-width: 0;
+}
