@@ -646,10 +646,6 @@
     "Close preview": "Fechar prévia",
     "Upcoming game": "Próximo lançamento",
     "Featured video": "Vídeo em destaque",
-    "Videos from {0}": "Vídeos de {0}",
-    "By game": "Por jogo",
-    "Scroll videos left": "Rolar vídeos para a esquerda",
-    "Scroll videos right": "Rolar vídeos para a direita",
     "Show featured video {0}": "Mostrar vídeo em destaque {0}"
   },
   "es": {
@@ -1299,10 +1295,6 @@
     "Close preview": "Cerrar vista previa",
     "Upcoming game": "Próximo lanzamiento",
     "Featured video": "Vídeo destacado",
-    "Videos from {0}": "Vídeos de {0}",
-    "By game": "Por juego",
-    "Scroll videos left": "Desplazar los vídeos a la izquierda",
-    "Scroll videos right": "Desplazar los vídeos a la derecha",
     "Show featured video {0}": "Mostrar vídeo destacado {0}"
   },
   "en": {
