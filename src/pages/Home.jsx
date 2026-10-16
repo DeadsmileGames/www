@@ -31,11 +31,11 @@ function ContentState({ resource, empty, children, skeleton }) {
 
 export function Home() {
   const { t, language } = useLanguage();
-  const catalog = useGames({ limit: 8 });
+  const catalog = useGames({ limit: 48 });
   const news = useContent("/newswire", { limit: 3 });
   const videos = useContent("/videos", { limit: 48 });
   const navigate = useNavigate();
-  const games = catalog.games || [];
+  const games = (catalog.games || []).slice(0, 8);
   const heroGames = games.map((game) => ({
     ...game,
     trailerUrl:
