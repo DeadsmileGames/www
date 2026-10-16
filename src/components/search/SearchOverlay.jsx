@@ -101,26 +101,37 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
           <ul className="search-overlay__list">
             {results.map((game) => (
               <li key={game.id}>
-                <Link
-                  to={`/games/${game.slug}`}
-                  onClick={onClose}
-                  className="search-overlay__result"
-                >
-                  <img
-                    src={
-                      safeImageUrl(storeCovers[String(game.id ?? game.slug)]) ||
-                      safeImageUrl(game.coverImage) ||
-                      "/assets/placeholders/game-cover.svg"
-                    }
-                    alt=""
-                    className="search-overlay__thumb"
-                  />
+                <div className="search-overlay__result">
+                  <Link
+                    to={`/games/${game.slug}`}
+                    onClick={onClose}
+                    className="search-overlay__result-cover"
+                    aria-label={t("View game") + ": " + game.title}
+                  >
+                    <img
+                      src={
+                        safeImageUrl(storeCovers[String(game.id ?? game.slug)]) ||
+                        safeImageUrl(game.coverImage) ||
+                        "/assets/placeholders/game-cover.svg"
+                      }
+                      alt=""
+                      className="search-overlay__thumb"
+                    />
+                  </Link>
 
-                  <div>
-                    <p className="search-overlay__result-title">{game.title}</p>
-                    <p className="search-overlay__result-desc"><AutoLinkText>{game.shortDescription}</AutoLinkText></p>
+                  <div className="search-overlay__result-copy">
+                    <Link
+                      to={`/games/${game.slug}`}
+                      onClick={onClose}
+                      className="search-overlay__result-title-link"
+                    >
+                      <p className="search-overlay__result-title">{game.title}</p>
+                    </Link>
+                    <p className="search-overlay__result-desc">
+                      <AutoLinkText>{game.shortDescription}</AutoLinkText>
+                    </p>
                   </div>
-                </Link>
+                </div>
               </li>
             ))}
           </ul>
