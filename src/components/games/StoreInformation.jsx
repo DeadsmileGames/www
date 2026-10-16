@@ -3,7 +3,7 @@ import { safeHttpsUrl, safeImageUrl } from "../../utils/urls";
 
 export function StoreRatings({ store, fallback = true }) {
   const { language, t } = useLanguage();
-  const system = { "pt-BR": "DJCTQ", en: "ESRB", es: "PEGI" }[language];
+  const system = { "pt-BR": "DJCTQ", en: "ESRB", es: "PEGI", fr: "PEGI", de: "USK" }[language];
   const rating = [store?.primaryRating, ...(store?.ratings || [])].find(
     (item) => item && (item.system === system || item.id?.startsWith(`${system}:`)),
   );
@@ -61,7 +61,7 @@ export function StoreInformation({ store }) {
   ].filter(([, value]) => value);
   const publisher = store.publisher || store.developer;
   const publisherUrl = publisher
-    ? `https://apps.microsoft.com/search/publisher?${new URLSearchParams({ name: publisher, hl: store.locale || language, gl: store.market || { "pt-BR": "BR", en: "US", es: "ES" }[language] })}`
+    ? `https://apps.microsoft.com/search/publisher?${new URLSearchParams({ name: publisher, hl: store.locale || language, gl: store.market || { "pt-BR": "BR", en: "US", es: "ES", fr: "FR", de: "DE" }[language] })}`
     : null;
   return (
     <details className="game-meta">
