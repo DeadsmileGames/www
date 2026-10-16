@@ -1252,40 +1252,47 @@ fieldset {
 }
 .account-page__layout {
   display: grid;
-  grid-template-columns: 210px minmax(0, 1fr);
-  gap: 65px;
+  grid-template-columns: 205px minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
 }
 .account-page__layout > aside {
   display: flex;
+  min-width: 0;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 .account-nav-item {
   display: flex;
-  gap: 12px;
-  padding: 14px 20px;
-  text-align: left;
-  border: 0;
-  border-radius: 100px;
+  min-height: 46px;
   align-items: center;
-  background: none;
-  transition: background 0.2s ease;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: #c8c8c8;
+  text-align: left;
+  font-size: 14px;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .account-nav-item:hover {
+  border-color: #353535;
   background: #ffffff0a;
   color: #fff;
 }
 .account-nav-item.is-active,
 .account-nav-item--active {
-  background: #fff;
-  color: black;
+  border-color: #e7e7e7;
+  background: #e7e7e7;
+  color: #111;
 }
 .account-nav-title {
-  margin: 20px 14px 5px;
+  margin: 18px 10px 4px;
   color: #aaa;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1.3px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
 }
 .account-page__wishlist {
@@ -1300,6 +1307,37 @@ fieldset {
   align-items: center;
   gap: 25px;
   margin-bottom: 40px;
+}
+.account-page .profile-page__hero {
+  align-items: center;
+  gap: 24px;
+  margin: 0 0 30px;
+  padding: 24px 28px;
+  border: 1px solid #303030;
+  border-radius: 15px;
+  background: #181818;
+}
+.account-page .profile-page__hero h2 {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 2.5vw, 32px);
+  overflow-wrap: anywhere;
+}
+.account-page .profile-page__hero p {
+  max-width: 65ch;
+}
+.account-page__content {
+  min-width: 0;
+}
+.account-page .account-page__content > #account-tab-content {
+  padding: clamp(20px, 2.2vw, 32px);
+  border: 1px solid #303030;
+  border-radius: 15px;
+}
+.account-page .account-block:last-child {
+  margin-bottom: 0;
+}
+.account-page .account-block__foot {
+  margin-top: 22px;
 }
 .account-page__avatar {
   position: relative;
@@ -1341,10 +1379,10 @@ fieldset {
 }
 .cloud-saves,
 .account-block {
-  margin-bottom: 45px;
+  margin-bottom: 34px;
 }
 .account-block__head {
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 .account-block__head--danger h2 {
   color: #ffb1b1;
@@ -1353,7 +1391,8 @@ fieldset {
   color: #d7b4b4;
 }
 .account-block h2 {
-  font-size: 27px;
+  margin-bottom: 8px;
+  font-size: 24px;
 }
 .account-panel--danger {
   padding-top: 4px;
@@ -1372,7 +1411,7 @@ fieldset {
 .account-row {
   display: grid;
   gap: 10px;
-  padding: 20px 0;
+  padding: 18px 0;
   border-bottom: 1px solid #333;
 }
 .account-row--inline {
@@ -2977,7 +3016,8 @@ input[type="file"]::file-selector-button {
   .terms-page,
   .wishlist-page,
   .press-kit-page,
-  .profile-page {
+  .profile-page,
+  .account-page {
     padding-top: 110px;
     padding-bottom: 55px;
   }
@@ -2994,12 +3034,48 @@ input[type="file"]::file-selector-button {
   .studio-game-strip {
     padding: 24px;
   }
+  .account-page__layout {
+    gap: 20px;
+  }
   .account-page__layout > aside {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
   }
   .account-nav-item {
     min-width: 0;
+    min-height: 44px;
+    padding: 10px 11px;
+    gap: 8px;
+    border-radius: 10px;
+    font-size: 13px;
     overflow-wrap: anywhere;
+  }
+  .account-nav-title {
+    grid-column: 1 / -1;
+    margin: 8px 4px 0;
+  }
+  .account-page .profile-page__hero {
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 22px;
+    padding: 17px;
+  }
+  .account-page .account-page__content > #account-tab-content {
+    padding: 18px;
+  }
+  .account-page .account-block {
+    margin-bottom: 28px;
+  }
+  .account-page .account-block h2 {
+    font-size: 22px;
+  }
+  .account-page .account-row--inline {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .account-page .account-block__foot {
+    gap: 10px;
   }
   .crop-modal {
     padding: 12px;
