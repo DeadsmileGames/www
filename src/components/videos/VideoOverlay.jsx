@@ -50,12 +50,14 @@ function Panel({ videoId, background, onClose, onSelect }) {
     !chatEnded && (youtubeState === "live" || youtubeState === "upcoming");
 
   useEffect(() => {
+    // Don't treat the temporary empty state during a language refresh as the end of a broadcast.
+    if (resource.status !== "success" || !video?.id || !video?.youtube?.state) return;
     if (youtubeState === "live") broadcastWasLive.current = true;
     if (broadcastWasLive.current && !["live", "upcoming"].includes(youtubeState)) {
       setChatEnded(true);
       setPremiereEnded(true);
     }
-  }, [youtubeState]);
+  }, [resource.status, video?.id, video?.youtube?.state, youtubeState]);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
