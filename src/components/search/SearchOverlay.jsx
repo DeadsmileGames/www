@@ -1,4 +1,5 @@
 import { useLanguage } from "../../context/LanguageContext";
+import { AutoLinkText } from "../ui/AutoLinkText";
 import { SkeletonSearch } from "../ui/Skeleton";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -117,7 +118,7 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
 
                   <div>
                     <p className="search-overlay__result-title">{game.title}</p>
-                    <p className="search-overlay__result-desc">{game.shortDescription}</p>
+                    <p className="search-overlay__result-desc"><AutoLinkText>{game.shortDescription}</AutoLinkText></p>
                   </div>
                 </Link>
               </li>
