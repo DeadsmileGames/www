@@ -415,7 +415,12 @@ export function SkeletonPage({ path }) {
   return (
     <div className={className} role="status" aria-label={t("Loading")}>
       {className !== "newsletter-action page-section" && (
-        <Skeleton style={{ height: 42, width: "45%", marginBottom: 40 }} />
+        <>
+          {path === "/account" && (
+            <Skeleton style={{ width: 86, height: 18, marginBottom: 20 }} />
+          )}
+          <Skeleton style={{ height: 42, width: "45%", marginBottom: 40 }} />
+        </>
       )}
       {content}
     </div>
