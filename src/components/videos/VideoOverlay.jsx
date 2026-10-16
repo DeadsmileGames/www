@@ -160,14 +160,18 @@ function Panel({ videoId, background, onClose, onSelect }) {
               )}
             </div>
             {premiereEnded && (
-              <aside className="video-overlay__premiere-ended" role="status" aria-live="polite">
-                <CheckCircle size={24} weight="fill" aria-hidden="true" />
-                <p>
+              <section
+                className="video-overlay__description-panel support-card"
+                role="status"
+                aria-live="polite"
+              >
+                <p className="video-overlay__description">
+                  <CheckCircle size={20} weight="fill" aria-hidden="true" />{" "}
                   {t("Thank you for watching the premiere: {0}", {
                     0: video.youtube?.title || video.title,
                   })}
                 </p>
-              </aside>
+              </section>
             )}
             <div className="video-overlay__details">
               <div className="video-overlay__heading">
