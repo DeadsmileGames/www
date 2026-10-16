@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, X } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
@@ -87,8 +87,9 @@ export function PremiereBanner({ premiere, onOpen }) {
     return trapFocus(previewRef.current, collapsePreview);
   }, [expanded, isGameRelease]);
 
-  const expandedPreview = isGameRelease && expanded
-    ? createPortal(
+  const expandedPreview = createPortal(
+    <AnimatePresence>
+      {isGameRelease && expanded && (
         <motion.div
           layout
           ref={previewRef}
@@ -97,10 +98,10 @@ export function PremiereBanner({ premiere, onOpen }) {
           aria-modal="true"
           aria-labelledby="premiere-banner-preview-title"
           tabIndex={-1}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reducedMotion ? 0.01 : 0.22, ease: "easeOut" }}
+          initial={{ y: "-100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "-100%" }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
         >
           <span className="premiere-banner__background" aria-hidden="true">
             {images.map((url) => (
@@ -150,10 +151,11 @@ export function PremiereBanner({ premiere, onOpen }) {
               <X size={20} weight="bold" />
             </button>
           </div>
-        </motion.div>,
-        document.body,
-      )
-    : null;
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    document.body,
+  );
 
   return (
     <>
