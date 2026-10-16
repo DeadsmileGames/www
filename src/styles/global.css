@@ -2058,6 +2058,13 @@ fieldset {
   }
   .site-header__actions {
     margin-left: auto;
+    gap: 5px;
+  }
+  .site-header__search,
+  .site-header__account-pill,
+  .site-header__signin {
+    align-items: center;
+    justify-content: center;
   }
   .site-header__menu-toggle {
     display: flex !important;
