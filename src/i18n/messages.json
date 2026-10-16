@@ -644,7 +644,13 @@
     "Enter a valid URL.": "Insira uma URL válida.",
     "Body is required.": "O corpo da notícia é obrigatório.",
     "Close preview": "Fechar prévia",
-    "Upcoming game": "Próximo lançamento"
+    "Upcoming game": "Próximo lançamento",
+    "Featured video": "Vídeo em destaque",
+    "Videos from {0}": "Vídeos de {0}",
+    "By game": "Por jogo",
+    "Scroll videos left": "Rolar vídeos para a esquerda",
+    "Scroll videos right": "Rolar vídeos para a direita",
+    "Show featured video {0}": "Mostrar vídeo em destaque {0}"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1291,7 +1297,13 @@
     "Enter a valid URL.": "Introduce una URL válida.",
     "Body is required.": "El cuerpo de la noticia es obligatorio.",
     "Close preview": "Cerrar vista previa",
-    "Upcoming game": "Próximo lanzamiento"
+    "Upcoming game": "Próximo lanzamiento",
+    "Featured video": "Vídeo destacado",
+    "Videos from {0}": "Vídeos de {0}",
+    "By game": "Por juego",
+    "Scroll videos left": "Desplazar los vídeos a la izquierda",
+    "Scroll videos right": "Desplazar los vídeos a la derecha",
+    "Show featured video {0}": "Mostrar vídeo destacado {0}"
   },
   "en": {
     "Retomar": "Resume",
