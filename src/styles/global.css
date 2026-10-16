@@ -4560,9 +4560,12 @@ input[type="file"]::file-selector-button {
     gap: 16px 13px;
   }
   .game-cover-tile__panel {
-    left: calc(100% + 8px);
-    width: min(300px, calc(100vw - 62px));
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
     padding: 15px;
+    transform: translateY(8px);
   }
   .game-cover-tile__panel h2 {
     font-size: 21px;
