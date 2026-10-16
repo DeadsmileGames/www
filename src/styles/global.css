@@ -3537,10 +3537,13 @@ input[type="file"]::file-selector-button {
   opacity: 1;
 }
 
-/* Shift the top banner crop down on desktop without changing mobile or fullscreen. */
+/* Fine-tune the top banner image on desktop only; fullscreen and mobile stay unchanged. */
 @media (min-width: 761px) {
   .premiere-banner:not(.premiere-banner--fullscreen) .premiere-banner__background img {
-    object-position: 50% calc(50% - 100px);
+    flex: 0 0 90%;
+    width: 90%;
+    margin-inline: auto;
+    object-position: 50% calc(50% - 150px);
   }
 }
 .premiere-banner__trigger {
