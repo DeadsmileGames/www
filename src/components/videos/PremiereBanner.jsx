@@ -78,6 +78,7 @@ export function PremiereBanner({ premiere, onOpen }) {
 
   return (
     <motion.div
+      layout
       ref={bannerRef}
       className={`premiere-banner${isGameRelease && expanded ? " premiere-banner--expanded" : ""}`}
       initial={{ y: "-100%" }}
