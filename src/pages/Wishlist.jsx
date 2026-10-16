@@ -18,7 +18,7 @@ export function Wishlist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const requestId = useRef(0);
-  const storeCovers = useMicrosoftStoreCovers(games);
+  const storeCovers = useMicrosoftStoreCovers(games, { includeUnknown: true });
 
   const load = useCallback(() => {
     const id = ++requestId.current;
