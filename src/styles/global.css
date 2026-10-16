@@ -180,6 +180,22 @@ button[type="submit"]:hover {
   border: 1px solid #777;
   border-bottom-width: 4px;
 }
+.btn--player {
+  border: 0;
+  border-bottom: 0;
+  border-radius: 10px;
+  background: rgba(24, 24, 24, 0.72);
+  color: #fff;
+  box-shadow: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.btn--player:hover {
+  border: 0;
+  border-bottom: 0;
+  background: rgba(40, 40, 40, 0.92);
+  color: #fff;
+}
 .btn--danger {
   background: #a53636;
   color: #fff;
@@ -3385,16 +3401,19 @@ input[type="file"]::file-selector-button {
   display: block;
   width: 100%;
   min-height: 52px;
-  padding: 14px 20px;
+  padding: 0;
   border: 0;
   overflow: hidden;
   background: #0f0f0f;
+  color: #fff;
   text-align: center;
 }
 .premiere-banner__background {
   position: absolute;
+  z-index: 0;
   inset: 0;
   display: flex;
+  pointer-events: none;
 }
 .premiere-banner__background img {
   flex: 1;
@@ -3403,11 +3422,116 @@ input[type="file"]::file-selector-button {
   object-fit: cover;
   opacity: 0.4;
 }
+.premiere-banner__trigger {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: center;
+}
 .premiere-banner__text {
   position: relative;
+  display: block;
   font-family: var(--font-display);
   font-size: 18px;
   text-shadow: 0 1px 8px #000;
+}
+.premiere-banner--expanded {
+  min-height: 260px;
+  background: #101010;
+  text-align: left;
+}
+.premiere-banner--expanded::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 8, 8, 0.82), rgba(8, 8, 8, 0.52)),
+    linear-gradient(0deg, rgba(8, 8, 8, 0.45), transparent 85%);
+  content: "";
+  pointer-events: none;
+}
+.premiere-banner__expanded-content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(140px, 180px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 38px);
+  width: min(1120px, calc(100% - 72px));
+  margin: 0 auto;
+  padding: 22px 0 26px;
+}
+.premiere-banner__cover {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  aspect-ratio: 2 / 3;
+  border-radius: 8px;
+  background: #191919;
+  object-fit: cover;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.premiere-banner__details {
+  min-width: 0;
+  padding-right: 24px;
+}
+.premiere-banner__title {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(27px, 3vw, 42px);
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+.premiere-banner__date {
+  margin: 0 0 12px;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+.premiere-banner__date span {
+  color: #b8b8b8;
+}
+.premiere-banner__description {
+  display: -webkit-box;
+  max-width: 78ch;
+  margin: 0;
+  overflow: hidden;
+  color: #e2e2e2;
+  font-size: 14px;
+  line-height: 1.6;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.premiere-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.premiere-banner__collapse {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  right: 18px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(24, 24, 24, 0.82);
+  color: #fff;
+}
+.premiere-banner__collapse:hover {
+  background: rgba(45, 45, 45, 0.95);
 }
 .video-overlay {
   position: fixed;
@@ -3474,6 +3598,50 @@ input[type="file"]::file-selector-button {
   }
   .premiere-banner__text {
     font-size: 15px;
+  }
+  .premiere-banner--expanded {
+    min-height: 190px;
+  }
+  .premiere-banner__expanded-content {
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: start;
+    gap: 15px;
+    width: calc(100% - 28px);
+    padding: 16px 0 20px;
+  }
+  .premiere-banner__cover {
+    max-height: 138px;
+    border-radius: 6px;
+  }
+  .premiere-banner__details {
+    padding-right: 23px;
+  }
+  .premiere-banner__title {
+    margin-bottom: 7px;
+    font-size: clamp(20px, 5.2vw, 27px);
+  }
+  .premiere-banner__date {
+    margin-bottom: 7px;
+    font-size: 12px;
+  }
+  .premiere-banner__description {
+    font-size: 12px;
+    line-height: 1.45;
+    -webkit-line-clamp: 2;
+  }
+  .premiere-banner__actions {
+    margin-top: 10px;
+  }
+  .premiere-banner__actions .btn {
+    min-height: 40px;
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+  .premiere-banner__collapse {
+    top: 6px;
+    right: 6px;
+    width: 34px;
+    height: 34px;
   }
 }
 .video-overlay .dialog-close {
@@ -4674,121 +4842,6 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Compact game preview opened from the release banner */
-.game-release-overlay .dialog-close {
-  position: fixed;
-  z-index: 2;
-}
-.game-release-overlay {
-  position: fixed;
-  z-index: 1300;
-  inset: 0;
-  overflow-y: auto;
-  background: #0f0f0f;
-  color: #fff;
-}
-.game-release-overlay__background {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.28;
-  filter: blur(20px) saturate(0.8);
-  transform: scale(1.04);
-}
-.game-release-overlay__scrim {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(10, 10, 10, 0.94), rgba(10, 10, 10, 0.62)),
-    linear-gradient(0deg, #0f0f0f 0%, transparent 72%);
-}
-.game-release-overlay__content {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
-  align-items: center;
-  gap: clamp(26px, 5vw, 68px);
-  width: min(1050px, calc(100% - 48px));
-  min-height: 100%;
-  margin: 0 auto;
-  padding: 100px 0 72px;
-}
-.game-release-overlay__poster {
-  overflow: hidden;
-  border-radius: 10px;
-  background: #191919;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-}
-.game-release-overlay__poster img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-}
-.game-release-overlay__details {
-  min-width: 0;
-}
-.game-release-overlay__eyebrow {
-  margin: 0 0 12px;
-  color: #c6c6c6;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.game-release-overlay__details h1 {
-  max-width: 18ch;
-  margin: 0;
-  font-size: clamp(34px, 5.5vw, 64px);
-  line-height: 1.05;
-  overflow-wrap: anywhere;
-}
-.game-release-overlay__date {
-  margin: 18px 0 0;
-  color: #d3d3d3;
-  font-size: 14px;
-}
-.game-release-overlay__description {
-  display: -webkit-box;
-  max-width: 58ch;
-  margin: 18px 0 0;
-  overflow: hidden;
-  color: #e0e0e0;
-  font-size: 16px;
-  line-height: 1.75;
-  text-overflow: ellipsis;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-.game-release-overlay__action {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 27px;
-}
-@media (max-width: 680px) {
-  .game-release-overlay__content {
-    grid-template-columns: minmax(0, 1fr);
-    width: min(540px, calc(100% - 36px));
-    align-content: center;
-    gap: 23px;
-    padding: 76px 0 42px;
-  }
-  .game-release-overlay__poster {
-    width: min(180px, 48vw);
-  }
-  .game-release-overlay__details h1 {
-    font-size: clamp(30px, 9vw, 44px);
-  }
-  .game-release-overlay__description {
-    margin-top: 12px;
-    font-size: 14px;
-  }
-  .game-release-overlay__action {
-    margin-top: 20px;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .game-cover-tile__panel {
     transition: none;
