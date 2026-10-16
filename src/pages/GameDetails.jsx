@@ -24,6 +24,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
+import { getReleaseTimestamp } from "../utils/releaseDate";
 
 const LAUNCHER_DOWNLOAD_URL = "/launcher";
 const GAME_RELEASE_TIME_ZONE = "America/Sao_Paulo";
@@ -57,32 +58,6 @@ function getCalendarDateParts(timestamp) {
     month: Number(parts.month),
     day: Number(parts.day),
   };
-}
-
-function getReleaseTimestamp(value) {
-  if (!value) return Number.NaN;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return Date.parse(value);
-
-  const [year, month, day] = value.split("-").map(Number);
-  const targetAsUtc = Date.UTC(year, month - 1, day);
-  let timestamp = targetAsUtc;
-
-  for (let attempt = 0; attempt < 4; attempt += 1) {
-    const parts = getCalendarParts(timestamp, RELEASE_DATETIME_FORMATTER);
-    const representedAsUtc = Date.UTC(
-      Number(parts.year),
-      Number(parts.month) - 1,
-      Number(parts.day),
-      Number(parts.hour),
-      Number(parts.minute),
-      Number(parts.second),
-    );
-    const adjustment = targetAsUtc - representedAsUtc;
-    timestamp += adjustment;
-    if (adjustment === 0) break;
-  }
-
-  return timestamp;
 }
 
 export function GameDetails() {
