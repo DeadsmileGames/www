@@ -292,15 +292,38 @@ export function SkeletonPage({ path }) {
   } else if (path === "/account") {
     className = "account-page container";
     content = (
-      <div className="account-page__layout">
-        <nav>
-          <SkeletonLines count={6} />
-        </nav>
-        <div className="account-page__content">
-          <SkeletonProfile />
-          <SkeletonRows />
+      <>
+        <SkeletonProfile />
+        <div className="account-page__layout">
+          <aside aria-hidden="true">
+            {[0, 1, 2, 3, 4].map((index) => (
+              <div className="account-nav-item" key={index}>
+                <Skeleton style={{ width: 18, height: 18, flexShrink: 0 }} />
+                <Skeleton style={{ width: index === 4 ? "74%" : "58%", height: 14 }} />
+              </div>
+            ))}
+            <div className="account-nav-title">
+              <Skeleton style={{ width: 70, height: 11 }} />
+            </div>
+            <div className="account-nav-item account-page__wishlist">
+              <Skeleton style={{ width: 18, height: 18, flexShrink: 0 }} />
+              <Skeleton style={{ width: "48%", height: 14 }} />
+            </div>
+          </aside>
+          <div className="account-page__content">
+            <div className="support-faq-panel support-card">
+              <section className="account-block">
+                <Skeleton style={{ width: "46%", height: 30, marginBottom: 12 }} />
+                <Skeleton style={{ width: "72%", height: 17, marginBottom: 18 }} />
+                <SkeletonRows count={4} />
+                <div className="account-block__foot">
+                  <Skeleton style={{ width: 160, height: 46 }} />
+                </div>
+              </section>
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   } else if (path === "/presskit") {
     className = "press-kit-page container";
