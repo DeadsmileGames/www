@@ -4372,49 +4372,120 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Library artwork follows the Launcher layout: centered 2:3 poster at the left of each card. */
-.library-page__grid > .library-card {
+/* Library is a compact wall of portrait covers with title chips and a top-right remove control. */
+.library-page__grid {
   display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  align-items: stretch;
-  min-height: 168px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 176px));
+  align-items: start;
+  gap: 22px 18px;
 }
-.library-page__grid .library-card__image-link {
-  align-self: center;
-  width: 112px;
-  height: 168px;
+.library-cover {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-width: 0;
   aspect-ratio: 2 / 3;
-  flex: 0 0 112px;
-  margin: 0;
-  background: #111;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #191919;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
-.library-page__grid .library-card__image {
+.library-cover__link {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background: #242424;
+}
+.library-cover__image {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
+  transition: transform 220ms ease;
 }
-.library-page__grid .library-card__body {
-  min-width: 0;
-  padding: 16px;
-  gap: 14px;
+.library-cover__link:hover .library-cover__image {
+  transform: scale(1.035);
 }
-.library-page__grid .library-card__actions {
-  align-items: stretch;
+.library-cover__title {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  left: 9px;
+  display: -webkit-box;
+  padding: 8px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 6px;
+  background: rgba(8, 8, 8, 0.82);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.library-cover__remove {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(8, 8, 8, 0.82);
+  color: #fff;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+.library-cover__remove:hover:not(:disabled) {
+  transform: scale(1.04);
+  background: #e62117;
+}
+.library-cover__remove:disabled {
+  opacity: 0.55;
+  cursor: progress;
 }
 @media (max-width: 760px) {
-  .library-page__grid > .library-card {
-    grid-template-columns: 96px minmax(0, 1fr);
-    min-height: 144px;
+  .library-page__grid {
+    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+    gap: 16px 13px;
   }
-  .library-page__grid .library-card__image-link {
-    width: 96px;
-    height: 144px;
-    flex-basis: 96px;
+  .library-cover__title {
+    right: 7px;
+    bottom: 7px;
+    left: 7px;
+    padding: 7px 8px;
+    font-size: 12px;
   }
-  .library-page__grid .library-card__body {
-    padding: 12px;
-    gap: 12px;
+  .library-cover__remove {
+    top: 7px;
+    right: 7px;
+    width: 28px;
+    height: 28px;
+  }
+}
+@media (hover: none) {
+  .library-cover__link:hover .library-cover__image {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .library-cover__image,
+  .library-cover__remove {
+    transition: none;
+  }
+  .library-cover__link:hover .library-cover__image {
+    transform: none;
   }
 }
