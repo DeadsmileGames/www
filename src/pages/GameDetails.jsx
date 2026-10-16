@@ -486,7 +486,7 @@ export function GameDetails() {
           </button>
         )}
 
-        {libraryReady && library.owned && !library.inLibrary && (
+        {game.status === "released" && libraryReady && library.owned && !library.inLibrary && (
           <button
             type="button"
             className="btn btn--secondary game-details__btn"
