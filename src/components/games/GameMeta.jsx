@@ -1,18 +1,16 @@
 import { useLanguage } from "../../context/LanguageContext";
+import { formatReleaseDate } from "../../utils/releaseDate";
 export function GameMeta({ game }) {
   const { t, language } = useLanguage();
   const rows = [
     {
       label: t("Release date"),
       value:
-        game.releaseDate && Number.isFinite(Date.parse(game.releaseDate))
-          ? new Date(game.releaseDate).toLocaleDateString(language, {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              timeZone: "UTC",
-            })
-          : t("To be announced"),
+        formatReleaseDate(game.releaseDate, language, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }) || t("To be announced"),
     },
     { label: t("Platforms"), value: game.platforms?.join(", ") || "—" },
     {
