@@ -81,7 +81,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
       window.clearTimeout(hideTimer);
     };
   }, [video?.id, video?.youtube?.actualEndedAt]);
-  const playerLanguage = ["de", "en", "es", "fr", "pt-BR"].includes(language) ? language : "en";
+  const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
     const url = new URL(embed);
