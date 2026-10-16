@@ -646,7 +646,16 @@
     "Close preview": "Fechar prévia",
     "Upcoming game": "Próximo lançamento",
     "Featured video": "Vídeo em destaque",
-    "Show featured video {0}": "Mostrar vídeo em destaque {0}"
+    "Show featured video {0}": "Mostrar vídeo em destaque {0}",
+    "Admin panel": "Painel administrativo",
+    "Manage and publish games, videos, and news in one place.": "Gerencie e publique jogos, vídeos e notícias em um só lugar.",
+    "Publish news": "Publicar notícia",
+    "Add video": "Adicionar vídeo",
+    "Add game": "Adicionar jogo",
+    "Refresh content": "Atualizar conteúdo",
+    "Published content": "Conteúdo publicado",
+    "AI transparency": "Transparência no uso de IA",
+    "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.": "A Deadsmile Games utiliza ferramentas de IA como apoio em algumas etapas de criação e desenvolvimento. A IA auxilia a equipe, mas não substitui a direção criativa humana, a revisão ou as decisões finais."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1295,7 +1304,16 @@
     "Close preview": "Cerrar vista previa",
     "Upcoming game": "Próximo lanzamiento",
     "Featured video": "Vídeo destacado",
-    "Show featured video {0}": "Mostrar vídeo destacado {0}"
+    "Show featured video {0}": "Mostrar vídeo destacado {0}",
+    "Admin panel": "Panel de administración",
+    "Manage and publish games, videos, and news in one place.": "Gestiona y publica juegos, vídeos y noticias en un solo lugar.",
+    "Publish news": "Publicar noticia",
+    "Add video": "Añadir vídeo",
+    "Add game": "Añadir juego",
+    "Refresh content": "Actualizar contenido",
+    "Published content": "Contenido publicado",
+    "AI transparency": "Transparencia en el uso de IA",
+    "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.": "Deadsmile Games utiliza herramientas de IA como apoyo en algunas etapas de creación y desarrollo. La IA ayuda al equipo, pero no sustituye la dirección creativa humana, la revisión ni las decisiones finales."
   },
   "en": {
     "Retomar": "Resume",
@@ -1317,6 +1335,15 @@
     "Read-only chat from YouTube.": "Read-only chat from YouTube.",
     "No description available yet.": "No description available yet.",
     "Deleting…": "Deleting…",
-    "Thank you for watching the premiere: {0}": "Thank you for watching the premiere: {0}"
+    "Thank you for watching the premiere: {0}": "Thank you for watching the premiere: {0}",
+    "Admin panel": "Admin panel",
+    "Manage and publish games, videos, and news in one place.": "Manage and publish games, videos, and news in one place.",
+    "Publish news": "Publish news",
+    "Add video": "Add video",
+    "Add game": "Add game",
+    "Refresh content": "Refresh content",
+    "Published content": "Published content",
+    "AI transparency": "AI transparency",
+    "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.": "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions."
   }
 }
