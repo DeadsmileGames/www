@@ -217,7 +217,7 @@ export function AppLayout() {
       <SearchOverlay
         open={searchOpen}
         onClose={() => setSearchOpen(false)}
-        hasPremiere={Boolean(premiere && !isAuthPage)}
+        hasPremiere={Boolean(bannerContent && !isAuthPage)}
       />
 
       <VideoOverlay
