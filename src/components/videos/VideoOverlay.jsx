@@ -30,7 +30,6 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const broadcastWasLive = useRef(false);
   const handleBroadcastEnded = useCallback(() => {
     setChatEnded(true);
-    setPremiereEnded(true);
   }, []);
   const relatedVideos =
     relatedResource.status === "success" && Array.isArray(relatedResource.data)
@@ -51,17 +50,36 @@ function Panel({ videoId, background, onClose, onSelect }) {
     !chatEnded && (youtubeState === "live" || youtubeState === "upcoming");
 
   useEffect(() => {
-    
     if (resource.status !== "success" || !video?.id || !video?.youtube?.state) return;
     if (youtubeState === "live") broadcastWasLive.current = true;
     const broadcastHasEnded =
       !["live", "upcoming"].includes(youtubeState) &&
       (broadcastWasLive.current || Boolean(video.youtube.actualStartedAt));
-    if (broadcastHasEnded) {
-      setChatEnded(true);
-      setPremiereEnded(true);
-    }
+    if (broadcastHasEnded) setChatEnded(true);
   }, [resource.status, video?.id, video?.youtube?.state, video?.youtube?.actualStartedAt, youtubeState]);
+
+  useEffect(() => {
+    setPremiereEnded(false);
+    const endedAt = Date.parse(video?.youtube?.actualEndedAt || "");
+    if (!Number.isFinite(endedAt)) return undefined;
+
+    const expiresAt = endedAt + 10_000;
+    const now = Date.now();
+    if (expiresAt <= now) return undefined;
+
+    const showTimer = window.setTimeout(
+      () => setPremiereEnded(true),
+      Math.max(0, endedAt - now),
+    );
+    const hideTimer = window.setTimeout(
+      () => setPremiereEnded(false),
+      expiresAt - now,
+    );
+    return () => {
+      window.clearTimeout(showTimer);
+      window.clearTimeout(hideTimer);
+    };
+  }, [video?.id, video?.youtube?.actualEndedAt]);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
@@ -89,7 +107,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
 
   useEffect(() => {
     if (!video?.id || !["live", "upcoming"].includes(video?.youtube?.state)) return undefined;
-    const timer = window.setInterval(() => void resource.refresh(), 15_000);
+    const timer = window.setInterval(() => void resource.refresh(), 5_000);
     return () => window.clearInterval(timer);
   }, [video?.id, video?.youtube?.state, resource.refresh]);
 
