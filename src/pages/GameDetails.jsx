@@ -14,6 +14,7 @@ import { StoreOffers } from "../components/games/StoreOffers";
 import { StoreInformation, StoreRatings } from "../components/games/StoreInformation";
 import { GameMeta } from "../components/games/GameMeta";
 import { GameGrid } from "../components/games/GameGrid";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonDetail } from "../components/ui/Skeleton";
 import { Lightbox } from "../components/ui/Lightbox";
@@ -482,8 +483,8 @@ export function GameDetails() {
             disabled={purchase.status === "checking"}
             onClick={() => (game.isFree ? openInLauncher() : verifyPurchase(false, true))}
           >
-            <GameController weight="bold" />
-            {t("Play in Launcher")}
+            {purchase.status === "checking" ? <LoadingSpinner /> : <GameController weight="bold" />}
+            {purchase.status === "checking" ? t("Verifying…") : t("Play in Launcher")}
           </button>
         )}
 
@@ -495,7 +496,7 @@ export function GameDetails() {
             aria-busy={libraryActionBusy}
             onClick={restoreGameToLibrary}
           >
-            <GameController weight="bold" />
+            {libraryActionBusy ? <LoadingSpinner /> : <GameController weight="bold" />}
             {t(libraryActionBusy ? "Adding…" : "Add to library")}
           </button>
         )}
@@ -665,8 +666,8 @@ export function GameDetails() {
                     disabled={purchase.status === "checking"}
                     onClick={() => verifyPurchase(false)}
                   >
-                    <ShoppingCart weight="bold" />
-                    {t("Verify purchase")}
+                    {purchase.status === "checking" ? <LoadingSpinner /> : <ShoppingCart weight="bold" />}
+                    {purchase.status === "checking" ? t("Verifying…") : t("Verify purchase")}
                   </button>
                 </div>
               )}
@@ -776,8 +777,11 @@ export function GameDetails() {
                 type="button"
                 className="btn btn--primary"
                 onClick={() => verifyPurchase(false)}
+                disabled={purchase.status === "checking"}
+                aria-busy={purchase.status === "checking"}
               >
-                {t("Verify purchase")}
+                {purchase.status === "checking" ? <LoadingSpinner /> : null}
+                {purchase.status === "checking" ? t("Verifying…") : t("Verify purchase")}
               </button>
             )}
 
