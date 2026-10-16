@@ -168,37 +168,41 @@ export function Videos() {
                   <div className="videos-page__hero-grid">
                     <div className="videos-page__hero-copy">
                       <h1 className="rs-hero__title">{latestTitle}</h1>
-                {releaseDate && (
-                  <time className="news-page__date" dateTime={releaseAt}>
-                    {releaseDate}
-                  </time>
-                )}
-                {latestDescription && (
-                  <p className="videos-page__hero-description">{latestDescription}</p>
-                )}
-                <div className="rs-hero__actions videos-page__hero-actions">
-                  <button type="button" className="btn btn--primary" onClick={() => open(latest.id)}>
-                    <Play size={20} weight="fill" />
-                    {heroActionLabel}
-                  </button>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="videos-page__hero-preview"
-                onClick={() => open(latest.id)}
-                aria-label={heroActionLabel}
-              >
-                {thumbnail ? (
-                  <img src={thumbnail} alt="" />
-                ) : (
-                  <span className="videos-page__preview-placeholder">{heroActionLabel}</span>
-                )}
-                <span className="videos-page__preview-play" aria-hidden="true">
-                  <Play size={28} weight="fill" />
-                </span>
-                <YouTubeBroadcastBadge video={latest} />
-              </button>
+                      {releaseDate && (
+                        <time className="news-page__date" dateTime={releaseAt}>
+                          {releaseDate}
+                        </time>
+                      )}
+                      {latestDescription && (
+                        <p className="videos-page__hero-description">{latestDescription}</p>
+                      )}
+                      <div className="rs-hero__actions videos-page__hero-actions">
+                        <button
+                          type="button"
+                          className="btn btn--primary"
+                          onClick={() => open(latest.id)}
+                        >
+                          <Play size={20} weight="fill" />
+                          {heroActionLabel}
+                        </button>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      className="videos-page__hero-preview"
+                      onClick={() => open(latest.id)}
+                      aria-label={heroActionLabel}
+                    >
+                      {thumbnail ? (
+                        <img src={thumbnail} alt="" />
+                      ) : (
+                        <span className="videos-page__preview-placeholder">{heroActionLabel}</span>
+                      )}
+                      <span className="videos-page__preview-play" aria-hidden="true">
+                        <Play size={28} weight="fill" />
+                      </span>
+                      <YouTubeBroadcastBadge video={latest} />
+                    </button>
                   </div>
                 </m.div>
               </AnimatePresence>
