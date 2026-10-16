@@ -1132,8 +1132,9 @@ export function Account() {
                         type="submit"
                         variant="danger"
                         disabled={deleting || saving}
+                        loading={deleting}
                       >
-                        {t("Delete account")}
+                        {deleting ? t("Deleting…") : t("Delete account")}
                       </Button>
                     </div>
                   </form>
@@ -1556,6 +1557,7 @@ export function Account() {
                                 type="button"
                                 variant="danger"
                                 disabled={Boolean(revokingSessionId) || sessionsLoading}
+                                loading={revokingSessionId === session.id}
                                 onClick={() => revokeDeviceSession(session)}
                               >
                                 {revokingSessionId === session.id
