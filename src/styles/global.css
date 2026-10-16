@@ -3719,6 +3719,8 @@ input[type="file"]::file-selector-button {
     max-height: 360px;
   }
   .premiere-banner__text {
+    max-width: 100%;
+    white-space: nowrap;
     font-size: 15px;
   }
   .premiere-banner--expanded {
