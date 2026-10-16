@@ -86,19 +86,6 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
           </button>
 
           <div className="video-overlay__content soundtrack-overlay__content">
-            <div className="soundtrack-overlay__eyebrow">
-              <MusicNotes size={16} weight="fill" />
-              <span>{t("Soundtracks")}</span>
-              {game?.slug && (
-                <>
-                  <span aria-hidden="true">/</span>
-                  <Link to={`/games/${encodeURIComponent(game.slug)}`} onClick={onClose}>
-                    {game.title}
-                  </Link>
-                </>
-              )}
-            </div>
-
             <div className="video-dialog video-overlay__player soundtrack-overlay__player">
               {embed && !allowed ? (
                 <div className="soundtrack-overlay__consent">
