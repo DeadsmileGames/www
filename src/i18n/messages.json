@@ -697,7 +697,9 @@
     "Select this game for support": "Selecionar este jogo para suporte",
     "Search support": "Pesquisar suporte",
     "Clear search": "Limpar pesquisa",
-    "Please select a game before sending your request.": "Selecione um jogo antes de enviar sua solicitação."
+    "Please select a game before sending your request.": "Selecione um jogo antes de enviar sua solicitação.",
+    "Read article": "Ler artigo",
+    "Email address": "Endereço de e-mail"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1397,7 +1399,9 @@
     "Select this game for support": "Seleccionar este juego para recibir soporte",
     "Search support": "Buscar soporte",
     "Clear search": "Borrar búsqueda",
-    "Please select a game before sending your request.": "Selecciona un juego antes de enviar tu solicitud."
+    "Please select a game before sending your request.": "Selecciona un juego antes de enviar tu solicitud.",
+    "Read article": "Leer artículo",
+    "Email address": "Correo electrónico"
   },
   "en": {
     "Retomar": "Resume",
@@ -1470,6 +1474,8 @@
     "Select this game for support": "Select this game for support",
     "Search support": "Search support",
     "Clear search": "Clear search",
-    "Please select a game before sending your request.": "Please select a game before sending your request."
+    "Please select a game before sending your request.": "Please select a game before sending your request.",
+    "Read article": "Read article",
+    "Email address": "Email address"
   }
 }
