@@ -25,7 +25,7 @@ export function useGames({
     setState((s) => ({ ...s, status: "loading", error: null }));
 
     api
-      .get("/games", { page, limit, featured, genre, platform, status })
+      .get("/games", { page, limit, featured, genre, platform, status, language })
       .then((data) => {
         if (cancelled) return;
         setState({
