@@ -3,6 +3,7 @@ import { SkeletonSearch } from "../ui/Skeleton";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSearch } from "../../hooks/useSearch";
+import { useMicrosoftStoreCovers } from "../../hooks/useMicrosoftStoreCovers";
 import { EmptyState } from "../ui/EmptyState";
 import { ErrorState } from "../ui/ErrorState";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
@@ -17,6 +18,7 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
   const { status, results, retry, error } = useSearch(open ? query : "");
+  const storeCovers = useMicrosoftStoreCovers(results);
 
   useEffect(() => {
     if (!open) return;
@@ -105,6 +107,7 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
                 >
                   <img
                     src={
+                      safeImageUrl(storeCovers[String(game.id ?? game.slug)]) ||
                       safeImageUrl(game.coverImage) ||
                       "/assets/placeholders/game-cover.svg"
                     }
