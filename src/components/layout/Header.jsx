@@ -21,8 +21,9 @@ import {
   Globe,
 } from "@phosphor-icons/react";
 
-export function Header({ onOpenSearch }) {
+export function Header({ onOpenSearch, searchOpen = false }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const ref = useRef(null);
@@ -63,7 +64,41 @@ export function Header({ onOpenSearch }) {
     setMobileOpen(false);
     setAccountOpen(false);
     setLanguageOpen(false);
+    setHeaderHidden(false);
   }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (searchOpen || mobileOpen) {
+      setHeaderHidden(false);
+      return undefined;
+    }
+
+    let lastScrollY = window.scrollY;
+    let downDistance = 0;
+    const showAtTop = 100;
+    const hideAfterDownScroll = 36;
+
+    const handleScroll = () => {
+      const currentScrollY = Math.max(0, window.scrollY);
+      const delta = currentScrollY - lastScrollY;
+
+      if (currentScrollY <= showAtTop) {
+        downDistance = 0;
+        setHeaderHidden(false);
+      } else if (delta > 0) {
+        downDistance += delta;
+        if (downDistance >= hideAfterDownScroll) setHeaderHidden(true);
+      } else if (delta < 0) {
+        downDistance = 0;
+        setHeaderHidden(false);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [searchOpen, mobileOpen, location.pathname]);
 
   const links = [
     ["/about", t("nav.about")],
@@ -92,7 +127,7 @@ export function Header({ onOpenSearch }) {
   return (
     <>
       <header className="site-header">
-        <div className="site-header__inner">
+        <div className={`site-header__inner${headerHidden && !searchOpen && !mobileOpen ? " site-header__inner--hidden" : ""}`}>
           <Link to="/" className="site-header__brand" aria-label="Deadsmile Games">
             <img
               src="/assets/branding/deadsmile-mark-mask.svg"
