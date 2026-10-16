@@ -12,6 +12,7 @@ import { setOptionalContent, useOptionalContent } from "../../utils/consent";
 import { trapFocus } from "../../utils/dom";
 import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/urls";
 import { getVideoThumbnail } from "../../utils/videoThumbnail";
+import { AutoLinkText } from "../ui/AutoLinkText";
 
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
@@ -224,7 +225,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
               >
                 <h3 id="video-overlay-description-title">{t("Description")}</h3>
                 <p className="video-overlay__description">
-                  {description || t("No description available yet.")}
+                  <AutoLinkText>{description || t("No description available yet.")}</AutoLinkText>
                 </p>
               </section>
               {liveChatEnabled && (
