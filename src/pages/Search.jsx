@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
-import { SkeletonGameGrid } from "../components/ui/Skeleton";
-import { GameGrid } from "../components/games/GameGrid";
+import { SkeletonSearch } from "../components/ui/Skeleton";
+import { SearchResults } from "../components/search/SearchResults";
 import { ArrowLeft } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -12,8 +12,6 @@ export function Search() {
   const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const { status, results, retry, error } = useSearch(query);
-
-  const games = results.map((r) => ({ ...r, coverImage: r.coverImage }));
 
   return (
     <div className="search-page container">
@@ -26,13 +24,13 @@ export function Search() {
 
       <div className="search-page__input-wrapper">
         <label htmlFor="search-page-input" className="sr-only">
-          {t("Search games")}
+          {t("Site search")}
         </label>
         <input
           id="search-page-input"
           type="search"
           className="search-page__input"
-          placeholder={t("Search Deadsmile Games\u2026")}
+          placeholder={t("Search Deadsmile Games…")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           autoFocus
@@ -42,24 +40,23 @@ export function Search() {
 
       <div className="search-page__results">
         {status === "idle" && (
-          <p className="search-page__hint">{t("Start typing to find a game.")}</p>
+          <p className="search-page__hint">
+            {t("Start typing to search games, news, and videos.")}
+          </p>
         )}
-        {status === "loading" && <SkeletonGameGrid count={6} />}
+        {status === "loading" && <SkeletonSearch />}
         {status === "error" && (
           <ErrorState title={t("SEARCH FAILED")} message={t(error)} onRetry={retry} />
         )}
-        {status === "success" && games.length === 0 && (
+        {status === "success" && results.length === 0 && (
           <EmptyState
             title={t("NO RESULTS")}
             message={t('Nothing matched "{0}".', { 0: query })}
-            action={
-              <Link to="/games" className="btn btn--secondary">
-                {t("Browse all games")}
-              </Link>
-            }
           />
         )}
-        {status === "success" && games.length > 0 && <GameGrid games={games} />}
+        {status === "success" && results.length > 0 && (
+          <SearchResults results={results} variant="page" />
+        )}
       </div>
     </div>
   );
