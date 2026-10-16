@@ -171,9 +171,7 @@ export function PremiereBanner({ premiere, onOpen }) {
         transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
       >
         <span className="premiere-banner__background" aria-hidden="true">
-          {images.map((url) => (
-            <img key={url} src={url} alt="" />
-          ))}
+          {images[0] && <img src={images[0]} alt="" />}
         </span>
         <button
           type="button"
