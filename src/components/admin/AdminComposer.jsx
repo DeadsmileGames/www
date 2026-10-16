@@ -12,6 +12,7 @@ import {
   Newspaper,
   FilmStrip,
   GameController,
+  SquaresFour,
   CheckCircle,
   WarningCircle,
   PencilSimple,
