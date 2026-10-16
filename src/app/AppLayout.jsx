@@ -29,7 +29,7 @@ export function AppLayout() {
   const [premiereOpen, setPremiereOpen] = useState(false);
   const [bannerClock, setBannerClock] = useState(() => Date.now());
   const premiere = usePremiere();
-  const { games: gamesNearRelease = [] } = useGames({ limit: 48, status: "in_development" });
+  const { games: gamesNearRelease = [] } = useGames({ limit: 48 });
 
   useEffect(() => {
     const timer = window.setInterval(() => setBannerClock(Date.now()), 30_000);
@@ -58,6 +58,7 @@ export function AppLayout() {
     })
     .filter(
       (item) =>
+        item.game.status !== "released" &&
         Number.isFinite(item.timestamp) &&
         item.timestamp > now &&
         item.timestamp <= monthFromNow.getTime(),
