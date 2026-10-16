@@ -151,7 +151,7 @@ export function Videos() {
                 {thumbnail ? (
                   <img src={thumbnail} alt="" />
                 ) : (
-                  <span className="videos-page__preview-placeholder">{t("Watch now")}</span>
+                  <span className="videos-page__preview-placeholder">{heroActionLabel}</span>
                 )}
                 <span className="videos-page__preview-play" aria-hidden="true">
                   <Play size={28} weight="fill" />
