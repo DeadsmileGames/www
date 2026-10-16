@@ -4869,7 +4869,7 @@ input[type="file"]::file-selector-button {
   position: absolute;
   inset: 0;
 }
-.premiere-banner--fullscreen .premiere-banner--expanded::after {
+.premiere-banner--fullscreen.premiere-banner--expanded::after {
   position: absolute;
   inset: 0;
 }
