@@ -8,6 +8,8 @@ export function errorLocale() {
   } catch {}
   if (/^pt(?:-|$)/i.test(value)) return "pt-BR";
   if (/^es(?:-|$)/i.test(value)) return "es";
+  if (/^fr(?:-|$)/i.test(value)) return "fr";
+  if (/^de(?:-|$)/i.test(value)) return "de";
   return "en";
 }
 
