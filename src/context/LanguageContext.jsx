@@ -125,13 +125,13 @@ export function LanguageProvider({ children }) {
   const [language, updateLanguage] = useState(() => {
     try {
       const value = localStorage.getItem("deadsmile.language");
-      return ["de", "en", "es", "fr", "pt-BR"].includes(value) ? value : "en";
+      return ["en", "es", "pt-BR"].includes(value) ? value : "en";
     } catch {
       return "en";
     }
   });
   const setLanguage = (value) => {
-    if (!["de", "en", "es", "fr", "pt-BR"].includes(value)) return;
+    if (!["en", "es", "pt-BR"].includes(value)) return;
     try {
       localStorage.setItem("deadsmile.language", value);
     } catch {}
