@@ -139,7 +139,7 @@ export function LanguageProvider({ children }) {
   };
   useEffect(() => {
     document.documentElement.lang = language;
-    document.documentElement.dir = language === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = "ltr";
   }, [language]);
   const t = useCallback(
     (path, variables) =>
