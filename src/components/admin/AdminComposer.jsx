@@ -964,7 +964,7 @@ function NewswireBodyEditor({ label, value, onChange, maxLength }) {
 
           range.deleteContents();
           const fragment = document.createDocumentFragment();
-          const lines = pastedText.replace(/\\r\\n?/g, "\\n").split("\\n");
+          const lines = pastedText.replace(/\r\n?/g, "\n").split("\n");
           lines.forEach((line, index) => {
             if (index) fragment.append(document.createElement("br"));
             fragment.append(document.createTextNode(line));
