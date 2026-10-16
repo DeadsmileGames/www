@@ -27,6 +27,7 @@ export function AppLayout() {
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
+  const [gameBannerExpanded, setGameBannerExpanded] = useState(false);
   const [bannerClock, setBannerClock] = useState(() => Date.now());
   const premiere = usePremiere();
   const { games: gamesNearRelease = [] } = useGames({ limit: 48 });
@@ -151,10 +152,11 @@ export function AppLayout() {
         {t("Skip to content")}
       </a>
 
-      <div className={`premiere-shell ${bannerContent && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
+      <div className={`premiere-shell ${bannerContent && !isAuthPage ? "premiere-shell--with-banner" : ""}${gameBannerExpanded && bannerContent?.kind === "game" && !isAuthPage ? " premiere-shell--game-expanded" : ""}`}>
         {bannerContent && !isAuthPage && (
           <PremiereBanner
             premiere={bannerContent}
+            onExpandedChange={setGameBannerExpanded}
             onOpen={() => {
               if (bannerContent.kind !== "game") setPremiereOpen(true);
             }}
