@@ -770,7 +770,7 @@ export function Account() {
       </header>
 
       <div className="account-page__layout">
-        <aside aria-label={t("Account")}>
+        <nav aria-label={t("Account")}>
           {TABS.map((tab) => {
             const Icon = tab.icon;
 
@@ -795,7 +795,7 @@ export function Account() {
             <Heart weight="bold" />
             <span>{t("Wishlist")}</span>
           </Link>
-        </aside>
+        </nav>
 
         <div className="account-page__content">
           <div id="account-tab-content" className="support-faq-panel support-card">
