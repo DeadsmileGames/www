@@ -31,7 +31,7 @@ for (const catalog of Object.values(errors)) {
 export function translate(value, language = "en", variables = {}) {
   if (typeof value !== "string") return value;
   const key = value.trim();
-  const locale = ["de", "en", "es", "fr", "pt-BR"].includes(language) ? language : "en";
+  const locale = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const code = errorCodes.get(key);
   let source = Object.hasOwn(messages[locale] || {}, key) ? key : sources.get(key) || key;
   let values = variables;
