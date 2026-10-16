@@ -618,7 +618,8 @@
     "Chat will appear when the premiere starts.": "O chat aparecerá quando a estreia começar.",
     "Live chat is temporarily unavailable.": "O chat ao vivo está temporariamente indisponível.",
     "No messages yet.": "Ainda não há mensagens.",
-    "Read-only chat from YouTube.": "Chat do YouTube somente para leitura."
+    "Read-only chat from YouTube.": "Chat do YouTube somente para leitura.",
+    "No description available yet.": "Ainda não há descrição disponível."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1239,7 +1240,8 @@
     "Chat will appear when the premiere starts.": "El chat aparecerá cuando comience el estreno.",
     "Live chat is temporarily unavailable.": "El chat en vivo no está disponible temporalmente.",
     "No messages yet.": "Todavía no hay mensajes.",
-    "Read-only chat from YouTube.": "Chat de YouTube solo de lectura."
+    "Read-only chat from YouTube.": "Chat de YouTube solo de lectura.",
+    "No description available yet.": "Todavía no hay una descripción disponible."
   },
   "en": {
     "Retomar": "Resume",
@@ -1258,6 +1260,7 @@
     "Chat will appear when the premiere starts.": "Chat will appear when the premiere starts.",
     "Live chat is temporarily unavailable.": "Live chat is temporarily unavailable.",
     "No messages yet.": "No messages yet.",
-    "Read-only chat from YouTube.": "Read-only chat from YouTube."
+    "Read-only chat from YouTube.": "Read-only chat from YouTube.",
+    "No description available yet.": "No description available yet."
   }
 }
