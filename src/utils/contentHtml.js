@@ -38,7 +38,7 @@ purifier.addHook("afterSanitizeAttributes", (node) => {
     node.setAttribute("aria-label", "Get it from Microsoft Store");
   } else {
     const value = node.getAttribute("href") || "";
-    if (!/^(?:https:\/\/|mailto:)/i.test(value) || /[\u0000-\u0020\\]/.test(value))
+    if (!/^(?:https?:\/\/|mailto:)/i.test(value) || /[\u0000-\u0020\\]/.test(value))
       node.removeAttribute("href");
     node.setAttribute("target", "_blank");
     node.removeAttribute("aria-label");
