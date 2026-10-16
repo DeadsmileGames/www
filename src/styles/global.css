@@ -1915,8 +1915,14 @@ fieldset {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  body,
   .skeleton {
     animation: none;
+  }
+  .skeleton {
     background: #292929;
   }
 }
@@ -2820,7 +2826,15 @@ input[type="file"]::file-selector-button {
 }
 .admin-field {
   display: grid;
+  min-width: 0;
   gap: 8px;
+}
+.admin-field input:not([type="checkbox"]):not([type="range"]):not([type="file"]),
+.admin-field textarea,
+.admin-field select {
+  border: 0;
+  border-radius: 8px;
+  background: #171717;
 }
 .admin-manage__item > div:first-child {
   min-width: 0;
@@ -2997,6 +3011,13 @@ input[type="file"]::file-selector-button {
   }
   .account-page__layout {
     gap: 20px;
+  }
+  .account-page .studio-game-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-modal__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
   }
   .account-page__layout > nav {
     display: grid;
@@ -4960,9 +4981,9 @@ input[type="file"]::file-selector-button {
   max-height: 420px;
   padding: 13px 14px;
   overflow: auto;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 7px;
-  background: rgba(0, 0, 0, 0.22);
+  border: 0;
+  border-radius: 10px;
+  background: #171717;
   color: inherit;
   font: inherit;
   line-height: 1.65;
@@ -4970,9 +4991,8 @@ input[type="file"]::file-selector-button {
   overflow-wrap: anywhere;
 }
 .admin-rich-editor:focus {
-  border-color: rgba(255, 255, 255, 0.62);
-  outline: 2px solid rgba(255, 255, 255, 0.16);
-  outline-offset: 1px;
+  outline: 3px solid #a4caff;
+  outline-offset: 3px;
 }
 .admin-rich-editor a {
   color: #d5d5ff;
@@ -4990,9 +5010,9 @@ input[type="file"]::file-selector-button {
   display: grid;
   gap: 10px;
   padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.13);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.18);
+  border: 0;
+  border-radius: 10px;
+  background: #242424;
 }
 .admin-rich-editor__link-form .admin-field {
   margin: 0;

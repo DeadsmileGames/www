@@ -7,6 +7,7 @@ import { api, friendlyErrorMessage } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 import {
   X,
+  ArrowClockwise,
   Trash,
   Newspaper,
   FilmStrip,
@@ -59,12 +60,67 @@ function normalizeList(response) {
   return [];
 }
 
+function contentKey(item) {
+  const key = item?.id ?? item?.slug ?? item?.title;
+  return key == null ? null : String(key);
+}
+
+async function loadPaginatedContent(path) {
+  const limit = 48;
+  const firstPage = await api.get(path, { page: 1, limit });
+  const firstItems = normalizeList(firstPage);
+  const pagination = firstPage?.pagination ?? firstPage?.meta?.pagination;
+  const totalPagesValue =
+    pagination?.totalPages ??
+    pagination?.total_pages ??
+    pagination?.pages ??
+    firstPage?.totalPages;
+  const totalPages = Number(totalPagesValue);
+  const hasPageCount = Number.isFinite(totalPages) && totalPages > 0;
+  const collected = [];
+  const seen = new Set();
+
+  const appendUnique = (list) => {
+    list.forEach((item, index) => {
+      const key = contentKey(item) ?? "page-item-" + collected.length + "-" + index;
+      if (seen.has(key)) return;
+      seen.add(key);
+      collected.push(item);
+    });
+  };
+
+  appendUnique(firstItems);
+  if (hasPageCount && totalPages <= 1) return collected;
+  if (!hasPageCount && firstItems.length < limit) return collected;
+
+  let previousSignature = firstItems.map((item) => contentKey(item) ?? item?.title ?? "").join("|");
+  const lastPage = hasPageCount ? Math.min(totalPages, 100) : 100;
+
+  for (let page = 2; page <= lastPage; page += 1) {
+    const response = await api.get(path, { page, limit });
+    const pageItems = normalizeList(response);
+    if (!pageItems.length) break;
+
+    const signature = pageItems.map((item) => contentKey(item) ?? item?.title ?? "").join("|");
+    if (!hasPageCount && signature && signature === previousSignature) break;
+
+    appendUnique(pageItems);
+    previousSignature = signature;
+
+    if (!hasPageCount && pageItems.length < limit) break;
+  }
+
+  return collected;
+}
+
 export function AdminComposer() {
   const { t } = useLanguage();
   const { user, refresh } = useAuth();
   const [editing, setEditing] = useState(null);
   const [openingEdit, setOpeningEdit] = useState(null);
   const [type, setType] = useState(null);
+  const [activeSection, setActiveSection] = useState("overview");
+  const [contentQuery, setContentQuery] = useState("");
   const [form, setForm] = useState({ ...initial });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -85,21 +141,21 @@ export function AdminComposer() {
   };
 
   async function loadGameOptions() {
-    const games = [];
-    for (let page = 1; page <= 1000; page++) {
-      const data = await api.get("/games", { page, limit: 48 });
-      games.push(...normalizeList(data));
-      if (page >= data.pagination.totalPages) break;
-    }
+    const games = await loadPaginatedContent("/games");
     setItems((current) => ({ ...current, games }));
   }
 
   function open(typeName) {
+    setActiveSection(
+      typeName === "newsletter" ? "news" : typeName === "video" ? "videos" : "games",
+    );
+    setContentQuery("");
     setType(typeName);
     setEditing(null);
     setForm({ ...initial });
     setError("");
     setSaved(false);
+    setConfirmingDelete(null);
     if (typeName === "newsletter")
       loadGameOptions().catch((error) => setError(friendlyErrorMessage(error)));
   }
@@ -201,6 +257,8 @@ export function AdminComposer() {
         return;
       }
 
+      setActiveSection(kind);
+      setContentQuery("");
       setForm(nextForm);
       setEditing({ kind, id: item.id });
       setSaved(false);
@@ -290,10 +348,7 @@ export function AdminComposer() {
       );
       setSaved(true);
       await openManage();
-      window.setTimeout(() => {
-        setType(null);
-        setEditing(null);
-      }, 500);
+      if (!editing) setForm({ ...initial });
     } catch (err) {
       setError(
         err.fields?.length
@@ -310,17 +365,13 @@ export function AdminComposer() {
     setError("");
 
     try {
-      const [newsResponse, videosResponse, gamesResponse] = await Promise.all([
-        api.get("/newswire", { limit: 48 }),
-        api.get("/videos", { limit: 48 }),
-        api.get("/games", { page: 1, limit: 48 }),
+      const [news, videos, games] = await Promise.all([
+        loadPaginatedContent("/newswire"),
+        loadPaginatedContent("/videos"),
+        loadPaginatedContent("/games"),
       ]);
 
-      setItems({
-        news: normalizeList(newsResponse),
-        videos: normalizeList(videosResponse),
-        games: normalizeList(gamesResponse),
-      });
+      setItems({ news, videos, games });
     } catch (err) {
       setError(
         err.fields?.length
@@ -379,380 +430,595 @@ export function AdminComposer() {
   }
 
   const sections = [
-    { key: "news", label: t("Newswire") },
-    { key: "videos", label: t("Videos") },
-    { key: "games", label: t("Games") },
+    { key: "news", label: t("Newswire"), icon: Newspaper, createType: "newsletter" },
+    { key: "videos", label: t("Videos"), icon: FilmStrip, createType: "video" },
+    { key: "games", label: t("Games"), icon: GameController, createType: "game" },
   ];
+  const activeSectionData = sections.find((section) => section.key === activeSection);
+  const ActiveSectionIcon = activeSectionData?.icon;
+  const activeItems = items[activeSection] || [];
+  const normalizedQuery = contentQuery.trim().toLocaleLowerCase();
+  const filteredItems = activeItems.filter((item) =>
+    [item.title, item.slug, item.category, item.status]
+      .filter(Boolean)
+      .join(" ")
+      .toLocaleLowerCase()
+      .includes(normalizedQuery),
+  );
+
+  function selectSection(sectionKey) {
+    setActiveSection(sectionKey);
+    setContentQuery("");
+    setType(null);
+    setEditing(null);
+    setForm({ ...initial });
+    setError("");
+    setSaved(false);
+    setConfirmingDelete(null);
+  }
+
+  function createForSection() {
+    if (activeSectionData) open(activeSectionData.createType);
+  }
 
   if (user?.role !== "admin") return null;
 
   return (
     <div className="account-page container">
-      <div className="account-block__head">
-        <h1>{t("Admin panel")}</h1>
-        <p>{t("Manage and publish games, videos, and news in one place.")}</p>
-      </div>
-
-      <div className="studio-actions" style={{ marginTop: 0, marginBottom: 32 }}>
-        <Button type="button" variant="primary" onClick={() => open("newsletter")} disabled={saving}>
-          <Newspaper weight="bold" />
-          {t("Publish news")}
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => open("video")} disabled={saving}>
-          <FilmStrip weight="bold" />
-          {t("Add video")}
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => open("game")} disabled={saving}>
-          <GameController weight="bold" />
-          {t("Add game")}
-        </Button>
-        <Button type="button" variant="secondary" onClick={openManage} loading={loadingItems} disabled={loadingItems}>
+      <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 32 }}>
+        <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>
+          <p className="news-detail__eyebrow">{t("Studio workspace")}</p>
+          <h1 style={{ fontSize: "clamp(34px, 4.3vw, 52px)", marginBottom: 10 }}>
+            {t("Admin panel")}
+          </h1>
+          <p>{t("Manage and publish games, videos, and news in one place.")}</p>
+        </div>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={openManage}
+          loading={loadingItems}
+          disabled={loadingItems}
+        >
+          <ArrowClockwise weight="bold" />
           {t("Refresh content")}
         </Button>
-      </div>
+      </header>
 
-      {type && (
-        <section className="support-card support-contact-panel">
-        <div className="admin-modal">
-          <header>
-            <div>
-              <h2 id="admin-composer-title">
-                {editing
-                  ? `${t("Edit")} ${type === "newsletter" ? t("Newswire") : type === "video" ? t("Video") : t("Game")}`
-                  : type === "newsletter"
-                    ? t("Publish news")
-                    : type === "video"
-                      ? t("Add video")
-                      : t("Add game")}
-              </h2>
-            </div>
+      <div className="account-page__layout">
+        <nav aria-label={t("Admin navigation")}>
+          <div className="account-nav-title">{t("Workspace")}</div>
+          <button
+            type="button"
+            className={activeSection === "overview" ? "account-nav-item is-active" : "account-nav-item"}
+            onClick={() => selectSection("overview")}
+            aria-current={activeSection === "overview" ? "page" : undefined}
+          >
+            <SquaresFour weight="bold" />
+            {t("Overview")}
+          </button>
+          <div className="account-nav-title">{t("Published content")}</div>
+          {sections.map(({ key, label, icon: Icon }) => (
             <button
+              key={key}
               type="button"
-              className="btn btn--secondary"
-              onClick={closeComposer}
-              disabled={saving}
-              aria-label={t("Close")}
+              className={activeSection === key ? "account-nav-item is-active" : "account-nav-item"}
+              onClick={() => selectSection(key)}
+              aria-current={activeSection === key ? "page" : undefined}
             >
-              <X weight="bold" />
+              <Icon weight="bold" />
+              {label}
             </button>
-          </header>
+          ))}
+        </nav>
 
-          <form onSubmit={submit}>
-            {type === "newsletter" && (
-              <>
-                <Field
-                  label={t("Title")}
-                  value={form.title}
-                  onChange={set("title")}
-                  required
-                  minLength={2}
-                  maxLength={180}
-                />
-                <Field
-                  label={t("Excerpt")}
-                  value={form.excerpt}
-                  onChange={set("excerpt")}
-                  maxLength={500}
-                />
-                <label className="admin-field">
-                  <span>{t("Related game")}</span>
-                  <select value={form.gameId} onChange={set("gameId")}>
-                    <option value="">{t("None")}</option>
-                    {items.games.map((game) => (
-                      <option key={game.id} value={game.id}>
-                        {game.title}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <NewswireBodyEditor
-                  label={t("Body")}
-                  value={form.body}
-                  onChange={(value) => setForm((current) => ({ ...current, body: value }))}
-                  maxLength={30000}
-                />
-                <Field
-                  label={t("Image URL")}
-                  value={form.image}
-                  onChange={set("image")}
-                  maxLength={2000}
-                  placeholder="https://… /assets/…"
-                />
-              </>
-            )}
-
-            {type === "video" && (
-              <>
-                <Field
-                  label={t("Title")}
-                  value={form.title}
-                  onChange={set("title")}
-                  required
-                  minLength={2}
-                  maxLength={180}
-                />
-                <Field
-                  label={t("Category")}
-                  value={form.category}
-                  onChange={set("category")}
-                  required
-                  maxLength={80}
-                />
-                <Field
-                  label={t("Video URL")}
-                  type="url"
-                  maxLength={2000}
-                  value={form.videoUrl}
-                  onChange={set("videoUrl")}
-                />
-                <Field
-                  label={t("Thumbnail URL")}
-                  maxLength={2000}
-                  value={form.thumbnail}
-                  onChange={set("thumbnail")}
-                />
-                <Field
-                  label={t("Thumbnail URL (English)")}
-                  maxLength={2000}
-                  value={form.thumbnailEn}
-                  onChange={set("thumbnailEn")}
-                  placeholder="https://…"
-                />
-                <Field
-                  label={t("Thumbnail URL (Portuguese)")}
-                  maxLength={2000}
-                  value={form.thumbnailPtBr}
-                  onChange={set("thumbnailPtBr")}
-                  placeholder="https://…"
-                />
-                <Field
-                  label={t("Thumbnail URL (Spanish)")}
-                  maxLength={2000}
-                  value={form.thumbnailEs}
-                  onChange={set("thumbnailEs")}
-                  placeholder="https://…"
-                />
-                <Field
-                  label={t("Duration (seconds)")}
-                  type="number"
-                  min="0"
-                  max="86400"
-                  step="1"
-                  value={form.durationSeconds}
-                  onChange={set("durationSeconds")}
-                />
-              </>
-            )}
-
-            {type === "game" && (
-              <>
-                <Field
-                  label={t("Title")}
-                  value={form.title}
-                  onChange={set("title")}
-                  required
-                  minLength={2}
-                  maxLength={180}
-                />
-                <Field
-                  label={t("Slug")}
-                  value={form.slug}
-                  onChange={set("slug")}
-                  required
-                  minLength={2}
-                  maxLength={120}
-                  pattern="[a-z0-9-]+"
-                />
-                <Text
-                  label={t("Short description")}
-                  value={form.shortDescription}
-                  onChange={set("shortDescription")}
-                  required
-                  maxLength={500}
-                />
-                <Text
-                  label={t("Description")}
-                  value={form.description}
-                  onChange={set("description")}
-                  maxLength={30000}
-                />
-
-                <div className="admin-modal__row">
-                  <Field
-                    label={t("Status")}
-                    as="select"
-                    value={form.status}
-                    onChange={set("status")}
-                    options={["announced", "in_development", "released"]}
-                  />
-
-                  <Field
-                    label={t("Release date")}
-                    type="date"
-                    value={form.releaseDate}
-                    onChange={set("releaseDate")}
-                  />
+        <div className="account-page__content">
+          {type && (
+            <section
+              className="support-card support-contact-panel account-block"
+              aria-labelledby="admin-composer-title"
+            >
+              <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 24 }}>
+                <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>
+                  <p className="news-detail__eyebrow">
+                    {editing ? t("Editing published content") : t("New content")}
+                  </p>
+                  <h2 id="admin-composer-title" style={{ marginBottom: 8 }}>
+                    {editing
+                      ? t("Edit") + " " + (type === "newsletter" ? t("Newswire") : type === "video" ? t("Video") : t("Game"))
+                      : type === "newsletter"
+                        ? t("Publish news")
+                        : type === "video"
+                          ? t("Add video")
+                          : t("Add game")}
+                  </h2>
+                  <p>
+                    {type === "newsletter"
+                      ? t("Set a headline, summary, image and related game for this news post.")
+                      : type === "video"
+                        ? t("Enter the source URL and duration.")
+                        : t("Set the title, slug, release details and core description.")}
+                  </p>
                 </div>
+                <Button type="button" variant="secondary" onClick={closeComposer} disabled={saving}>
+                  <X weight="bold" />
+                  {t("Cancel")}
+                </Button>
+              </header>
 
-                <Field
-                  label={t("Hero image URL")}
-                  maxLength={2000}
-                  value={form.heroImage}
-                  onChange={set("heroImage")}
-                />
-                <Field
-                  label={t("Cover image URL")}
-                  maxLength={2000}
-                  value={form.coverImage}
-                  onChange={set("coverImage")}
-                />
-                <Field
-                  label={t("Trailer URL")}
-                  type="url"
-                  maxLength={2000}
-                  value={form.trailerUrl}
-                  onChange={set("trailerUrl")}
-                />
-                <label className="admin-field">
-                  <span>{t("Access")}</span>
-                  <select value={form.accessType} onChange={set("accessType")}>
-                    <option value="free">{t("Free")}</option>
-                    <option value="paid">{t("Paid")}</option>
-                  </select>
-                </label>
-                <Field
-                  label={t("itch.io game page (optional)")}
-                  type="url"
-                  value={form.itchUrl}
-                  onChange={set("itchUrl")}
-                  maxLength={2000}
-                />
-                <Text
-                  label={t("Microsoft Store badge HTML (optional)")}
-                  value={form.microsoftStoreBadge}
-                  onChange={set("microsoftStoreBadge")}
-                  maxLength={4000}
-                />
-                <Field
-                  label={t("Purchase URL")}
-                  type="url"
-                  maxLength={2000}
-                  value={form.purchaseUrl}
-                  onChange={set("purchaseUrl")}
-                  placeholder="https://deadsml.itch.io/game/purchase"
-                />
-                <Field
-                  label={t("itch.io game ID")}
-                  type="number"
-                  min="1"
-                  value={form.itchGameId}
-                  onChange={set("itchGameId")}
-                />
-                <Field
-                  label={t("Download URL")}
-                  type="url"
-                  maxLength={2000}
-                  value={form.downloadUrl}
-                  onChange={set("downloadUrl")}
-                  placeholder="https://..."
-                />
-                <Field
-                  label={t("Genres (comma separated)")}
-                  maxLength={509}
-                  value={form.genres}
-                  onChange={set("genres")}
-                />
-                <Field
-                  label={t("Platforms (comma separated)")}
-                  maxLength={509}
-                  value={form.platforms}
-                  onChange={set("platforms")}
-                />
-
-                <label className="admin-check">
-                  <input
-                    type="checkbox"
-                    checked={form.featured}
-                    onChange={set("featured")}
-                  />
-                  <span>{t("Feature on homepage")}</span>
-                </label>
-              </>
-            )}
-
-            {error && (
-              <p className="admin-modal__error">
-                <WarningCircle weight="bold" />
-                <span>{t(error)}</span>
-              </p>
-            )}
-
-            {saved && (
-              <p className="admin-modal__saved">
-                <CheckCircle weight="bold" />
-                <span>
-                  {editing ? t("Changes saved.") : t("Published successfully.")}
-                </span>
-              </p>
-            )}
-
-            <Button type="submit" disabled={saving}>
-              {saving ? (
-                <><LoadingSpinner />{t("Saving\u2026")}</>
-              ) : editing ? (
-                t("Save changes")
-              ) : (
-                t("Save & publish")
+              {error && (
+                <p className="admin-modal__error" role="alert">
+                  <WarningCircle weight="bold" />
+                  <span>{t(error)}</span>
+                </p>
               )}
-            </Button>
-          </form>
-        </div>
-              </section>
-      )}
+              {saved && (
+                <p className="admin-modal__saved" role="status" aria-live="polite">
+                  <CheckCircle weight="bold" />
+                  <span>{editing ? t("Changes saved.") : t("Published successfully.")}</span>
+                </p>
+              )}
 
-      <section className="support-card support-faq-panel">
-        <div className="admin-manage">
-          <header>
-            <div>
-              <h2 id="admin-manage-title">{t("Published content")}</h2>
-            </div>
-          </header>
+              <form onSubmit={submit}>
+                {type === "newsletter" && (
+                  <>
+                    <section className="account-block" role="group" aria-labelledby="admin-article-details">
+                      <div className="account-block__head">
+                        <h3 id="admin-article-details">{t("Article details")}</h3>
+                        <p>{t("Set a headline, summary, image and related game for this news post.")}</p>
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Title")}
+                          value={form.title}
+                          onChange={set("title")}
+                          required
+                          minLength={2}
+                          maxLength={180}
+                        />
+                        <Field
+                          label={t("Excerpt")}
+                          value={form.excerpt}
+                          onChange={set("excerpt")}
+                          maxLength={500}
+                        />
+                      </div>
+                      <div className="admin-modal__row">
+                        <label className="admin-field">
+                          <span>{t("Related game")}</span>
+                          <select value={form.gameId} onChange={set("gameId")}>
+                            <option value="">{t("None")}</option>
+                            {items.games.map((game) => (
+                              <option key={game.id} value={game.id}>
+                                {game.title}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                        <Field
+                          label={t("Image URL")}
+                          value={form.image}
+                          onChange={set("image")}
+                          maxLength={2000}
+                          placeholder="https://… /assets/…"
+                        />
+                      </div>
+                    </section>
+                    <section className="account-block" role="group" aria-labelledby="admin-article-body">
+                      <div className="account-block__head">
+                        <h3 id="admin-article-body">{t("Article body")}</h3>
+                        <p>{t("Write the full story for this news post.")}</p>
+                      </div>
+                      <NewswireBodyEditor
+                        label={t("Body")}
+                        value={form.body}
+                        onChange={(value) => setForm((current) => ({ ...current, body: value }))}
+                        maxLength={30000}
+                      />
+                    </section>
+                  </>
+                )}
 
-          {error && !type && (
-            <p className="admin-modal__error">
-              <WarningCircle weight="bold" />
-              <span>{t(error)}</span>
-            </p>
+                {type === "video" && (
+                  <>
+                    <section className="account-block" role="group" aria-labelledby="admin-video-details">
+                      <div className="account-block__head">
+                        <h3 id="admin-video-details">{t("Video details")}</h3>
+                        <p>{t("Enter the source URL and duration.")}</p>
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Title")}
+                          value={form.title}
+                          onChange={set("title")}
+                          required
+                          minLength={2}
+                          maxLength={180}
+                        />
+                        <Field
+                          label={t("Category")}
+                          value={form.category}
+                          onChange={set("category")}
+                          required
+                          maxLength={80}
+                        />
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Video URL")}
+                          type="url"
+                          maxLength={2000}
+                          value={form.videoUrl}
+                          onChange={set("videoUrl")}
+                        />
+                        <Field
+                          label={t("Duration (seconds)")}
+                          type="number"
+                          min="0"
+                          max="86400"
+                          step="1"
+                          value={form.durationSeconds}
+                          onChange={set("durationSeconds")}
+                        />
+                      </div>
+                    </section>
+                    <section className="account-block" role="group" aria-labelledby="admin-video-thumbnails">
+                      <div className="account-block__head">
+                        <h3 id="admin-video-thumbnails">{t("Thumbnails by language")}</h3>
+                        <p>{t("Add a default thumbnail and optional language-specific versions.")}</p>
+                      </div>
+                      <Field
+                        label={t("Thumbnail URL")}
+                        maxLength={2000}
+                        value={form.thumbnail}
+                        onChange={set("thumbnail")}
+                      />
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Thumbnail URL (English)")}
+                          maxLength={2000}
+                          value={form.thumbnailEn}
+                          onChange={set("thumbnailEn")}
+                          placeholder="https://…"
+                        />
+                        <Field
+                          label={t("Thumbnail URL (Portuguese)")}
+                          maxLength={2000}
+                          value={form.thumbnailPtBr}
+                          onChange={set("thumbnailPtBr")}
+                          placeholder="https://…"
+                        />
+                      </div>
+                      <Field
+                        label={t("Thumbnail URL (Spanish)")}
+                        maxLength={2000}
+                        value={form.thumbnailEs}
+                        onChange={set("thumbnailEs")}
+                        placeholder="https://…"
+                      />
+                    </section>
+                  </>
+                )}
+
+                {type === "game" && (
+                  <>
+                    <section className="account-block" role="group" aria-labelledby="admin-game-details">
+                      <div className="account-block__head">
+                        <h3 id="admin-game-details">{t("Game details")}</h3>
+                        <p>{t("Set the title, slug, release details and core description.")}</p>
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Title")}
+                          value={form.title}
+                          onChange={set("title")}
+                          required
+                          minLength={2}
+                          maxLength={180}
+                        />
+                        <Field
+                          label={t("Slug")}
+                          value={form.slug}
+                          onChange={set("slug")}
+                          required
+                          minLength={2}
+                          maxLength={120}
+                          pattern="[a-z0-9-]+"
+                        />
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Status")}
+                          as="select"
+                          value={form.status}
+                          onChange={set("status")}
+                          options={["announced", "in_development", "released"]}
+                        />
+                        <Field
+                          label={t("Release date")}
+                          type="date"
+                          value={form.releaseDate}
+                          onChange={set("releaseDate")}
+                        />
+                      </div>
+                      <Text
+                        label={t("Short description")}
+                        value={form.shortDescription}
+                        onChange={set("shortDescription")}
+                        required
+                        maxLength={500}
+                      />
+                      <Text
+                        label={t("Description")}
+                        value={form.description}
+                        onChange={set("description")}
+                        maxLength={30000}
+                      />
+                    </section>
+
+                    <section className="account-block" role="group" aria-labelledby="admin-game-artwork">
+                      <div className="account-block__head">
+                        <h3 id="admin-game-artwork">{t("Artwork and trailer")}</h3>
+                        <p>{t("Add the artwork and trailer used on the game page.")}</p>
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Hero image URL")}
+                          maxLength={2000}
+                          value={form.heroImage}
+                          onChange={set("heroImage")}
+                        />
+                        <Field
+                          label={t("Cover image URL")}
+                          maxLength={2000}
+                          value={form.coverImage}
+                          onChange={set("coverImage")}
+                        />
+                      </div>
+                      <Field
+                        label={t("Trailer URL")}
+                        type="url"
+                        maxLength={2000}
+                        value={form.trailerUrl}
+                        onChange={set("trailerUrl")}
+                      />
+                    </section>
+
+                    <section className="account-block" role="group" aria-labelledby="admin-game-store">
+                      <div className="account-block__head">
+                        <h3 id="admin-game-store">{t("Store and access")}</h3>
+                        <p>{t("Add purchase, download and store information when available.")}</p>
+                      </div>
+                      <div className="admin-modal__row">
+                        <label className="admin-field">
+                          <span>{t("Access")}</span>
+                          <select value={form.accessType} onChange={set("accessType")}>
+                            <option value="free">{t("Free")}</option>
+                            <option value="paid">{t("Paid")}</option>
+                          </select>
+                        </label>
+                        <Field
+                          label={t("itch.io game page (optional)")}
+                          type="url"
+                          value={form.itchUrl}
+                          onChange={set("itchUrl")}
+                          maxLength={2000}
+                        />
+                      </div>
+                      <Text
+                        label={t("Microsoft Store badge HTML (optional)")}
+                        value={form.microsoftStoreBadge}
+                        onChange={set("microsoftStoreBadge")}
+                        maxLength={4000}
+                      />
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Purchase URL")}
+                          type="url"
+                          maxLength={2000}
+                          value={form.purchaseUrl}
+                          onChange={set("purchaseUrl")}
+                          placeholder="https://deadsml.itch.io/game/purchase"
+                        />
+                        <Field
+                          label={t("itch.io game ID")}
+                          type="number"
+                          min="1"
+                          value={form.itchGameId}
+                          onChange={set("itchGameId")}
+                        />
+                      </div>
+                      <Field
+                        label={t("Download URL")}
+                        type="url"
+                        maxLength={2000}
+                        value={form.downloadUrl}
+                        onChange={set("downloadUrl")}
+                        placeholder="https://..."
+                      />
+                    </section>
+
+                    <section className="account-block" role="group" aria-labelledby="admin-game-discovery">
+                      <div className="account-block__head">
+                        <h3 id="admin-game-discovery">{t("Discoverability")}</h3>
+                        <p>{t("Choose genres and platforms so players can find your game.")}</p>
+                      </div>
+                      <div className="admin-modal__row">
+                        <Field
+                          label={t("Genres (comma separated)")}
+                          maxLength={509}
+                          value={form.genres}
+                          onChange={set("genres")}
+                        />
+                        <Field
+                          label={t("Platforms (comma separated)")}
+                          maxLength={509}
+                          value={form.platforms}
+                          onChange={set("platforms")}
+                        />
+                      </div>
+                      <label className="admin-check">
+                        <input
+                          type="checkbox"
+                          checked={form.featured}
+                          onChange={set("featured")}
+                        />
+                        <span>{t("Feature on homepage")}</span>
+                      </label>
+                    </section>
+                  </>
+                )}
+
+                <div className="account-block__foot">
+                  <Button type="submit" disabled={saving}>
+                    {saving ? (
+                      <><LoadingSpinner />{t("Saving…")}</>
+                    ) : editing ? (
+                      t("Save changes")
+                    ) : (
+                      t("Save & publish")
+                    )}
+                  </Button>
+                  <Button type="button" variant="secondary" onClick={closeComposer} disabled={saving}>
+                    {t("Cancel")}
+                  </Button>
+                </div>
+              </form>
+            </section>
           )}
 
-          {loadingItems ? (
-            <SkeletonRows />
-          ) : (
-            sections.map(({ key, label }) => {
-              const list = items[key] || [];
-              return (
-                <section key={key} className="admin-manage__section">
-                  <div className="admin-manage__section-head">
-                    <h3>{label}</h3>
+          {!type && activeSection === "overview" && (
+            <>
+              <section className="support-card support-faq-panel account-block">
+                <div className="account-block__head">
+                  <h2>{t("Content overview")}</h2>
+                  <p>{t("Choose a section to manage content.")}</p>
+                </div>
+                {loadingItems ? (
+                  <SkeletonRows count={3} />
+                ) : (
+                  <div className="studio-game-strip" style={{ margin: "0 0 28px", padding: 24, gap: 20 }}>
+                    <div>
+                      <p style={{ marginBottom: 6 }}>{t("Games")}</p>
+                      <h3 style={{ marginBottom: 0, fontSize: 32 }}>{items.games.length}</h3>
+                    </div>
+                    <div>
+                      <p style={{ marginBottom: 6 }}>{t("Videos")}</p>
+                      <h3 style={{ marginBottom: 0, fontSize: 32 }}>{items.videos.length}</h3>
+                    </div>
+                    <div>
+                      <p style={{ marginBottom: 6 }}>{t("Newswire")}</p>
+                      <h3 style={{ marginBottom: 0, fontSize: 32 }}>{items.news.length}</h3>
+                    </div>
                   </div>
+                )}
 
-                  {list.length === 0 ? (
-                    <p className="admin-manage__empty">{t("No items published.")}</p>
-                  ) : (
-                    list.map((item) => {
-                      const deleteKey = `${key}:${item.id}`;
+                <div className="account-block__head">
+                  <h3>{t("Create content")}</h3>
+                  <p>{t("Create or update studio content directly in this workspace.")}</p>
+                </div>
+                <div className="studio-actions" style={{ marginTop: 0 }}>
+                  <Button type="button" variant="primary" onClick={() => open("game")} disabled={saving}>
+                    <GameController weight="bold" />
+                    {t("Add game")}
+                  </Button>
+                  <Button type="button" variant="secondary" onClick={() => open("video")} disabled={saving}>
+                    <FilmStrip weight="bold" />
+                    {t("Add video")}
+                  </Button>
+                  <Button type="button" variant="secondary" onClick={() => open("newsletter")} disabled={saving}>
+                    <Newspaper weight="bold" />
+                    {t("Publish news")}
+                  </Button>
+                </div>
+              </section>
+
+              <section className="support-card support-contact-panel">
+                <div className="account-block__head">
+                  <h2>{t("Published content")}</h2>
+                  <p>{t("Choose a section to manage content.")}</p>
+                </div>
+                <div className="support-quick-grid">
+                  {sections.map(({ key, label, icon: Icon }) => (
+                    <button
+                      type="button"
+                      key={key}
+                      className="btn btn--secondary"
+                      onClick={() => selectSection(key)}
+                      style={{ justifyContent: "flex-start", textAlign: "left", whiteSpace: "normal", minHeight: 78, padding: 20, gap: 14 }}
+                    >
+                      <Icon weight="bold" />
+                      <div style={{ minWidth: 0 }}>
+                        <strong>{label}</strong>
+                        <span>{items[key].length} {t("Published content").toLocaleLowerCase()}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+
+          {activeSection !== "overview" && (
+            <section className="support-card support-faq-panel account-block" aria-labelledby="admin-manage-title">
+              <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 20 }}>
+                <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>
+                  <h2 id="admin-manage-title">{t("Published content")}</h2>
+                  <p>{activeSectionData?.label || t("Manage and publish games, videos, and news in one place.")}</p>
+                </div>
+                {!type && (
+                  <Button type="button" variant="primary" onClick={createForSection} disabled={saving}>
+                    {ActiveSectionIcon && <ActiveSectionIcon weight="bold" />}
+                    {activeSection === "news" ? t("Publish news") : activeSection === "videos" ? t("Add video") : t("Add game")}
+                  </Button>
+                )}
+              </header>
+
+              <label className="admin-field">
+                <span>{t("Search published content")}</span>
+                <input
+                  type="search"
+                  value={contentQuery}
+                  onChange={(event) => setContentQuery(event.target.value)}
+                  autoComplete="off"
+                />
+              </label>
+
+              {error && !type && (
+                <p className="admin-modal__error" role="alert">
+                  <WarningCircle weight="bold" />
+                  <span>{t(error)}</span>
+                </p>
+              )}
+
+              {loadingItems ? (
+                <SkeletonRows count={4} />
+              ) : filteredItems.length === 0 ? (
+                <p className="admin-manage__empty">
+                  {normalizedQuery ? t("No items match your search.") : t("No items published.")}
+                </p>
+              ) : (
+                <div className="admin-manage">
+                  <section className="admin-manage__section">
+                    {filteredItems.map((item) => {
+                      const deleteKey = activeSection + ":" + item.id;
                       return (
-                        <div className="admin-manage__item" key={item.id}>
-                          <div>
+                        <article className="admin-manage__item" key={deleteKey}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
                             <strong>{item.title}</strong>
+                            {(item.slug || item.category || item.status) && (
+                              <p style={{ margin: "4px 0 0", color: "var(--color-text-secondary)", fontSize: 13 }}>
+                                {item.slug || item.category || t(item.status)}
+                              </p>
+                            )}
                           </div>
                           {confirmingDelete === deleteKey ? (
-                            <div className="studio-actions" style={{ marginTop: 0 }}>
-                              <span>{t("Delete this item permanently? This action cannot be undone.")}</span>
+                            <div className="studio-actions" style={{ marginTop: 0, flex: "1 1 100%" }}>
+                              <span role="alert">{t("Delete this item permanently? This action cannot be undone.")}</span>
                               <Button
                                 type="button"
                                 variant="danger"
-                                onClick={() => remove(key, item.id)}
+                                onClick={() => remove(activeSection, item.id)}
                                 disabled={deleting === deleteKey}
                                 loading={deleting === deleteKey}
                               >
@@ -771,17 +1037,13 @@ export function AdminComposer() {
                             <div className="admin-manage__item-actions">
                               <button
                                 type="button"
-                                onClick={() => edit(key, item)}
+                                onClick={() => edit(activeSection, item)}
                                 disabled={Boolean(openingEdit) || deleting === deleteKey}
                                 className="btn btn--secondary"
                                 aria-busy={openingEdit === deleteKey}
                                 aria-label={t("Edit {0}", { 0: item.title })}
                               >
-                                {openingEdit === deleteKey ? (
-                                  <span>…</span>
-                                ) : (
-                                  <PencilSimple weight="bold" />
-                                )}
+                                {openingEdit === deleteKey ? <LoadingSpinner /> : <PencilSimple weight="bold" />}
                               </button>
                               <button
                                 type="button"
@@ -795,16 +1057,16 @@ export function AdminComposer() {
                               </button>
                             </div>
                           )}
-                        </div>
+                        </article>
                       );
-                    })
-                  )}
-                </section>
-              );
-            })
+                    })}
+                  </section>
+                </div>
+              )}
+            </section>
           )}
         </div>
-            </section>
+      </div>
     </div>
   );
 }

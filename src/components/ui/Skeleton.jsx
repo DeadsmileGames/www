@@ -293,17 +293,55 @@ export function SkeletonPage({ path }) {
     className = "account-page container";
     content = (
       <>
-        <div className="studio-actions" style={{ marginTop: 0, marginBottom: 32 }}>
-          <Skeleton style={{ width: 150, height: 46 }} />
-          <Skeleton style={{ width: 130, height: 46 }} />
-          <Skeleton style={{ width: 130, height: 46 }} />
+        <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 32 }}>
+          <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>
+            <Skeleton style={{ width: 132, height: 13, marginBottom: 14 }} />
+            <Skeleton style={{ width: "52%", height: 42, marginBottom: 12 }} />
+            <Skeleton style={{ width: "75%", height: 16 }} />
+          </div>
+          <Skeleton style={{ width: 148, height: 46 }} />
+        </header>
+        <div className="account-page__layout">
+          <nav aria-hidden="true">
+            <div className="account-nav-title"><Skeleton style={{ width: 80, height: 11 }} /></div>
+            {[0, 1, 2, 3].map((index) => (
+              <div className="account-nav-item" key={index}>
+                <Skeleton style={{ width: 18, height: 18, flexShrink: 0 }} />
+                <Skeleton style={{ width: index === 0 ? "45%" : "60%", height: 14 }} />
+              </div>
+            ))}
+          </nav>
+          <div className="account-page__content">
+            <section className="support-card support-faq-panel account-block">
+              <Skeleton style={{ width: "46%", height: 30, marginBottom: 14 }} />
+              <Skeleton style={{ width: "72%", height: 16, marginBottom: 26 }} />
+              <div className="studio-game-strip" style={{ margin: "0 0 28px", padding: 24, gap: 20 }}>
+                {[0, 1, 2].map((index) => (
+                  <div key={index}>
+                    <Skeleton style={{ width: "58%", height: 14, marginBottom: 12 }} />
+                    <Skeleton style={{ width: 70, height: 32 }} />
+                  </div>
+                ))}
+              </div>
+              <Skeleton style={{ width: "34%", height: 25, marginBottom: 12 }} />
+              <div className="studio-actions" style={{ marginTop: 0 }}>
+                {[0, 1, 2].map((index) => (
+                  <Skeleton key={index} style={{ width: 150, height: 46 }} />
+                ))}
+              </div>
+            </section>
+            <section className="support-card support-contact-panel">
+              <Skeleton style={{ width: "42%", height: 30, marginBottom: 20 }} />
+              {[0, 1, 2].map((index) => (
+                <div className="account-row" key={index}>
+                  <Skeleton style={{ width: "62%", height: 17 }} />
+                  <Skeleton style={{ width: 96, height: 40 }} />
+                </div>
+              ))}
+            </section>
+          </div>
         </div>
-        <section className="support-card support-faq-panel">
-          <Skeleton style={{ width: "42%", height: 30, marginBottom: 24 }} />
-          <SkeletonRows count={5} />
-        </section>
       </>
-    );
   } else if (path === "/account") {
     className = "account-page container";
     content = (
@@ -429,7 +467,7 @@ export function SkeletonPage({ path }) {
   }
   return (
     <div className={className} role="status" aria-label={t("Loading")}>
-      {className !== "newsletter-action page-section" && (
+      {className !== "newsletter-action page-section" && path !== "/admin" && (
         <>
           {path === "/account" && (
             <Skeleton style={{ width: 86, height: 18, marginBottom: 20 }} />
