@@ -3536,6 +3536,13 @@ input[type="file"]::file-selector-button {
   width: 100%;
   opacity: 1;
 }
+
+/* Shift the top banner crop down on desktop without changing mobile or fullscreen. */
+@media (min-width: 761px) {
+  .premiere-banner:not(.premiere-banner--fullscreen) .premiere-banner__background img {
+    object-position: 50% calc(50% - 100px);
+  }
+}
 .premiere-banner__trigger {
   position: relative;
   z-index: 1;
