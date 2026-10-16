@@ -65,25 +65,28 @@ export function AppLayout() {
     )
     .sort((a, b) => a.timestamp - b.timestamp)[0] || null;
 
+  const nextReleaseGame = nextRelease?.game || null;
+
   useEffect(() => {
     let cancelled = false;
-    const game = nextRelease?.game;
     setUpcomingStoreCover(null);
-    if (!game?.slug) {
+    if (!nextReleaseGame?.slug) {
       return () => {
         cancelled = true;
       };
     }
 
-    void loadMicrosoftStoreCovers([game], { includeUnknown: true }).then((covers) => {
+    void loadMicrosoftStoreCovers([nextReleaseGame], { includeUnknown: true }).then((covers) => {
       if (cancelled) return;
-      setUpcomingStoreCover(covers.get(String(game.id ?? game.slug)) || null);
+      setUpcomingStoreCover(
+        covers.get(String(nextReleaseGame.id ?? nextReleaseGame.slug)) || null,
+      );
     });
 
     return () => {
       cancelled = true;
     };
-  }, [nextRelease?.game?.id, nextRelease?.game?.slug]);
+  }, [nextReleaseGame]);
 
   const upcomingGameBanner = nextRelease
     ? {
