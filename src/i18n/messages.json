@@ -682,7 +682,8 @@
     "Choose genres and platforms so players can find your game.": "Escolha gêneros e plataformas para facilitar que encontrem seu jogo.",
     "Editing published content": "Editando conteúdo publicado",
     "Search published content": "Buscar conteúdo publicado",
-    "No items match your search.": "Nenhum item corresponde à busca."
+    "No items match your search.": "Nenhum item corresponde à busca.",
+    "Published content could not be loaded. Refresh to try again.": "Não foi possível carregar o conteúdo publicado. Atualize o painel para tentar novamente."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1367,7 +1368,8 @@
     "Choose genres and platforms so players can find your game.": "Elige géneros y plataformas para facilitar que encuentren tu juego.",
     "Editing published content": "Editando contenido publicado",
     "Search published content": "Buscar contenido publicado",
-    "No items match your search.": "Ningún elemento coincide con la búsqueda."
+    "No items match your search.": "Ningún elemento coincide con la búsqueda.",
+    "Published content could not be loaded. Refresh to try again.": "No se pudo cargar el contenido publicado. Actualiza el panel para intentarlo de nuevo."
   },
   "en": {
     "Retomar": "Resume",
@@ -1398,6 +1400,7 @@
     "Refresh content": "Refresh content",
     "Published content": "Published content",
     "AI transparency": "AI transparency",
-    "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.": "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions."
+    "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.": "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.",
+    "Published content could not be loaded. Refresh to try again.": "Published content could not be loaded. Refresh to try again."
   }
 }
