@@ -1560,7 +1560,7 @@ fieldset {
 
 .search-overlay__inner {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) auto 44px;
+  grid-template-columns: minmax(0, 1fr) 44px;
   align-items: center;
   gap: 22px;
 }
