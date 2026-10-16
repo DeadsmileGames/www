@@ -4183,6 +4183,25 @@ input[type="file"]::file-selector-button {
 }
 
 
+.api-availability-checking {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  place-items: center;
+  background: #0f0f0f;
+  color: #888;
+}
+.api-availability-checking__spinner {
+  width: 22px;
+  height: 22px;
+  flex-basis: 22px;
+  border-width: 2px;
+}
+
 .maintenance-screen {
   position: fixed;
   z-index: 10000;
