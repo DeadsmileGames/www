@@ -633,7 +633,16 @@
     "No messages yet.": "Ainda não há mensagens.",
     "Read-only chat from YouTube.": "Chat do YouTube somente para leitura.",
     "No description available yet.": "Ainda não há descrição disponível.",
-    "Thank you for watching the premiere: {0}": "Obrigado por assistir à estreia: {0}"
+    "Thank you for watching the premiere: {0}": "Obrigado por assistir à estreia: {0}",
+    "Latest news": "Últimas notícias",
+    "{0} launches in {1}": "{0} será lançado em {1}",
+    "{0} releases today": "Lançamento de {0} hoje",
+    "Create link": "Criar link",
+    "Link text": "Texto do link",
+    "Link URL": "URL do link",
+    "Insert link": "Inserir link",
+    "Enter a valid URL.": "Insira uma URL válida.",
+    "Body is required.": "O corpo da notícia é obrigatório."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1269,7 +1278,16 @@
     "No messages yet.": "Todavía no hay mensajes.",
     "Read-only chat from YouTube.": "Chat de YouTube solo de lectura.",
     "No description available yet.": "Todavía no hay una descripción disponible.",
-    "Thank you for watching the premiere: {0}": "Gracias por ver el estreno: {0}"
+    "Thank you for watching the premiere: {0}": "Gracias por ver el estreno: {0}",
+    "Latest news": "Últimas noticias",
+    "{0} launches in {1}": "{0} se lanza en {1}",
+    "{0} releases today": "Lanzamiento de {0} hoy",
+    "Create link": "Crear enlace",
+    "Link text": "Texto del enlace",
+    "Link URL": "URL del enlace",
+    "Insert link": "Insertar enlace",
+    "Enter a valid URL.": "Introduce una URL válida.",
+    "Body is required.": "El cuerpo de la noticia es obligatorio."
   },
   "en": {
     "Retomar": "Resume",
