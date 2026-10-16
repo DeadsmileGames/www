@@ -54,6 +54,16 @@ export function About() {
             </p>
           </article>
         </Reveal>
+        <Reveal>
+          <article>
+            <h2>{t("AI transparency")}</h2>
+            <p>
+              {t(
+                "Deadsmile Games uses AI tools to support some parts of creation and development. AI assists the team, but does not replace human creative direction, review, or final decisions.",
+              )}
+            </p>
+          </article>
+        </Reveal>
       </section>
       <section className="container studio-page__closing">
         <Reveal>
