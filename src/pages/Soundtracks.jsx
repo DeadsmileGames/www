@@ -48,7 +48,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
   const embed = safeYoutubeEmbedUrl(track?.watchUrl);
   const external = safeHttpsUrl(track?.watchUrl);
   const thumbnail = safeImageUrl(track?.thumbnail) || safeImageUrl(game?.coverImage);
-  const playerLanguage = ["de", "en", "es", "fr", "pt-BR"].includes(language) ? language : "en";
+  const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed || !playing || !allowed) return null;
     const url = new URL(embed);
