@@ -656,7 +656,7 @@ export function GameDetails() {
                 downloadBusy={download.busy}
               />
 
-              {game.commerceEnabled && game.purchaseUrl && game.itchGameId && !owned && (
+              {game.status === "released" && game.commerceEnabled && game.purchaseUrl && game.itchGameId && !owned && (
                 <div className="game-details__availability-actions">
                   <button
                     type="button"
