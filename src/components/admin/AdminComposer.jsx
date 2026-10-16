@@ -951,6 +951,32 @@ function NewswireBodyEditor({ label, value, onChange, maxLength }) {
           }
           onChange(event.currentTarget.innerHTML);
         }}
+        onKeyDown={(event) => {
+          if (event.key !== "Enter") return;
+          event.preventDefault();
+          const editor = editorRef.current;
+          if (!editor) return;
+          const selection = window.getSelection();
+          let range =
+            selection?.rangeCount &&
+            editor.contains(selection.getRangeAt(0).commonAncestorContainer)
+              ? selection.getRangeAt(0)
+              : null;
+          if (!range) {
+            range = document.createRange();
+            range.selectNodeContents(editor);
+            range.collapse(false);
+          }
+          range.deleteContents();
+          const lineBreak = document.createElement("br");
+          range.insertNode(lineBreak);
+          range.setStartAfter(lineBreak);
+          range.collapse(true);
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+          savedRangeRef.current = range.cloneRange();
+          onChange(editor.innerHTML);
+        }}
         onKeyUp={rememberSelection}
         onMouseUp={rememberSelection}
       />
