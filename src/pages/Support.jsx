@@ -202,7 +202,7 @@ export function Support() {
         </div>
       </header>
 
-      <main className="support-center__width">
+      <div className="support-center__width">
         <section className="support-center__section" aria-labelledby="support-solutions-title">
           <div className="support-center__section-head">
             <h2 id="support-solutions-title">{t("support.commonSolutions")}</h2>
@@ -434,7 +434,7 @@ export function Support() {
             ))}
           </div>
         </section>
-      </main>
+      </div>
     </div>
   );
 }
