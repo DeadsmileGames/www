@@ -3613,7 +3613,7 @@ input[type="file"]::file-selector-button {
   opacity: 1;
 }
 
-/* Shift the top banner image down on desktop only; keep its original full width. */
+
 @media (min-width: 761px) {
   .premiere-banner:not(.premiere-banner--fullscreen) .premiere-banner__background img {
     object-position: 50% calc(50% - 120px);
@@ -5320,7 +5320,7 @@ html[dir="rtl"] .site-header__actions {
   }
 }
 
-/* Compact the home featured-game card and ensure the muted hero video fills mobile screens. */
+
 .studio-landing.rs-hero {
   min-height: 100svh;
   padding: 130px 0 50px;
