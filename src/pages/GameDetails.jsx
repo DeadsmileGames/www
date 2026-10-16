@@ -34,16 +34,6 @@ const RELEASE_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
   month: "2-digit",
   day: "2-digit",
 });
-const RELEASE_DATETIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
-  timeZone: GAME_RELEASE_TIME_ZONE,
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hourCycle: "h23",
-});
 
 function getCalendarParts(timestamp, formatter) {
   return Object.fromEntries(
