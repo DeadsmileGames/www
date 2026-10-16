@@ -22,7 +22,7 @@ function isPortrait(image) {
 }
 
 export function microsoftStoreCoverFromDetails(details) {
-  const store = details?.microsoftStore;
+  const store = details?.microsoftStore || details?.microsoft_store;
   const directCover = [
     store?.coverImage,
     store?.cover_image,
@@ -46,7 +46,11 @@ export function microsoftStoreCoverFromDetails(details) {
     .filter((image) => image.safeUrl);
 
   const namedCovers = validImages
-    .filter((image) => /poster|box.?art|cover|pack.?art|product.?art/i.test(image.purpose || ""))
+    .filter((image) =>
+      /poster|box.?art|cover|pack.?art|product.?art/i.test(
+        String(image.purpose || image.imagePurpose || image.image_purpose || image.type || ""),
+      ),
+    )
     .sort((a, b) => {
       const portraitDifference = Number(isPortrait(b)) - Number(isPortrait(a));
       return portraitDifference || area(b) - area(a);
@@ -58,7 +62,7 @@ export function microsoftStoreCoverFromDetails(details) {
       (image) =>
         isPortrait(image) &&
         !/screenshot|screen.?shot|logo|icon|tile|hero|banner|background/i.test(
-          image.purpose || "",
+          image.purpose || image.imagePurpose || image.image_purpose || image.type || "",
         ),
     )
     .sort((a, b) => area(b) - area(a));
@@ -66,8 +70,8 @@ export function microsoftStoreCoverFromDetails(details) {
 }
 
 function hasMicrosoftStoreListing(game) {
-  if (game?.microsoftStore?.images?.length) return true;
-  if (game?.microsoftStoreBadge) return true;
+  if (game?.microsoftStore || game?.microsoft_store) return true;
+  if (game?.microsoftStoreBadge || game?.microsoft_store_badge) return true;
   return (Array.isArray(game?.offers) ? game.offers : []).some((offer) =>
     /microsoft|windows store|xbox store/i.test(
       `${offer?.provider || ""} ${offer?.name || ""}`,
