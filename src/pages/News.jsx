@@ -1,6 +1,6 @@
 import { sanitizeNewswire } from "../utils/contentHtml";
 import { SkeletonNews } from "../components/ui/Skeleton";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EmptyState } from "../components/ui/EmptyState";
 import { useState } from "react";
 import { ErrorState } from "../components/ui/ErrorState";
@@ -12,12 +12,36 @@ import { Reveal } from "../components/ui/Reveal";
 import { ArrowLeft, ArrowUpRight, Trash } from "@phosphor-icons/react";
 import { api, friendlyErrorMessage } from "../services/api";
 import { safeImageUrl } from "../utils/urls";
+import { getExternalPageTitle } from "../utils/linkTitles";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 
 function NewswireBody({ body }) {
   const { language } = useLanguage();
+  const bodyRef = useRef(null);
   const html = sanitizeNewswire(body, language);
+
+  useEffect(() => {
+    let active = true;
+    const links = bodyRef.current?.querySelectorAll('a[data-auto-title="true"]') || [];
+    for (const link of links) {
+      const currentText = link.textContent;
+      getExternalPageTitle(link.href).then((title) => {
+        if (active && title && link.isConnected && link.textContent === currentText) {
+          link.textContent = title;
+        }
+      });
+    }
+    return () => {
+      active = false;
+    };
+  }, [html]);
+
   return (
-    <div style={{ whiteSpace: "pre-line" }} dangerouslySetInnerHTML={{ __html: html }} />
+    <div
+      ref={bodyRef}
+      style={{ whiteSpace: "pre-line" }}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }
 
@@ -116,7 +140,7 @@ export function News() {
               </time>
             </div>
             <h1>{item.title}</h1>
-            {item.excerpt && <p className="news-detail__lead">{item.excerpt}</p>}
+            {item.excerpt && <p className="news-detail__lead"><AutoLinkText>{item.excerpt}</AutoLinkText></p>}
           </header>
           {item.image && (
             <figure className="news-detail__image">
@@ -262,7 +286,7 @@ export function News() {
                   </Link>
                 </h2>
 
-                {story.excerpt && <p>{story.excerpt}</p>}
+                {story.excerpt && <p><AutoLinkText>{story.excerpt}</AutoLinkText></p>}
 
                 <div className="news-card__actions">
                   <Link
