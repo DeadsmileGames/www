@@ -83,12 +83,12 @@ function cacheKey(game) {
   return String(game?.id ?? game?.slug ?? "");
 }
 
-async function fetchMicrosoftStoreCover(game) {
+async function fetchMicrosoftStoreCover(game, includeUnknown = false) {
   const direct = microsoftStoreCoverFromDetails(game);
   if (direct) return direct;
 
   const key = cacheKey(game);
-  if (!key || !game?.slug || !hasMicrosoftStoreListing(game)) return null;
+  if (!key || !game?.slug || (!includeUnknown && !hasMicrosoftStoreListing(game))) return null;
   if (coverCache.has(key)) return coverCache.get(key);
   if (coverRequests.has(key)) return coverRequests.get(key);
 
@@ -116,9 +116,9 @@ async function fetchMicrosoftStoreCover(game) {
   return request;
 }
 
-export async function loadMicrosoftStoreCovers(games) {
+export async function loadMicrosoftStoreCovers(games, { includeUnknown = false } = {}) {
   const candidates = (Array.isArray(games) ? games : []).filter(
-    (game) => game?.slug && hasMicrosoftStoreListing(game),
+    (game) => game?.slug && (includeUnknown || hasMicrosoftStoreListing(game)),
   );
   const covers = new Map();
   let next = 0;
@@ -127,7 +127,7 @@ export async function loadMicrosoftStoreCovers(games) {
     async () => {
       while (next < candidates.length) {
         const game = candidates[next++];
-        const cover = await fetchMicrosoftStoreCover(game);
+        const cover = await fetchMicrosoftStoreCover(game, includeUnknown);
         if (cover) covers.set(cacheKey(game), cover);
       }
     },
