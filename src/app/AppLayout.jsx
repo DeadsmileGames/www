@@ -107,7 +107,8 @@ export function AppLayout() {
           nextRelease.game.coverImage || nextRelease.game.cover_image,
         ].filter(Boolean),
         heroImage: nextRelease.game.heroImage || nextRelease.game.hero_image || null,
-        coverImage: nextRelease.game.coverImage || nextRelease.game.cover_image || null,
+        databaseCoverImage: nextRelease.game.coverImage || nextRelease.game.cover_image || null,
+        coverImage: upcomingStoreCover || nextRelease.game.coverImage || nextRelease.game.cover_image || null,
         shortDescription:
           nextRelease.game.shortDescription ||
           nextRelease.game.short_description ||
