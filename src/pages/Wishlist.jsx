@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { api, friendlyErrorMessage } from "../services/api";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
-import { GameCard } from "../components/games/GameCard";
+import { GameCoverPanel } from "../components/games/GameCoverPanel";
+import { safeImageUrl } from "../utils/urls";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ArrowLeft } from "@phosphor-icons/react";
@@ -116,9 +117,13 @@ export function Wishlist() {
           }
         />
       ) : (
-        <div className="game-grid">
+        <div className="library-page__grid game-cover-tile-grid">
           {games.map((game) => (
-            <GameCard key={game.id} game={game} />
+            <GameCoverPanel
+              key={game.id}
+              game={game}
+              cover={safeImageUrl(game.coverImage || game.cover_image || game.heroImage)}
+            />
           ))}
         </div>
       )}
