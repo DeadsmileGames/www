@@ -59,7 +59,7 @@ export function RealtimeBridge() {
     };
 
     const poll = async () => {
-      if (!active || !navigator.onLine || polling) return;
+      if (!active || document.hidden || !navigator.onLine || polling) return;
       polling = true;
       try {
         for (let batch = 0; batch < 5 && active; batch += 1) {
@@ -130,6 +130,7 @@ export function RealtimeBridge() {
       }
       socket.onopen = () => {
         retryAttempt = 0;
+        poll();
       };
       socket.onmessage = (message) => {
         try {
@@ -139,6 +140,7 @@ export function RealtimeBridge() {
       };
       socket.onclose = () => {
         socket = null;
+        poll();
         scheduleReconnect();
       };
       socket.onerror = () => socket?.close();
@@ -148,14 +150,23 @@ export function RealtimeBridge() {
       poll();
       connect();
     };
+    const onVisibilityChange = () => {
+      if (document.visibilityState !== "visible") return;
+      poll();
+      connect();
+    };
 
     poll();
     connect();
-    pollTimer = window.setInterval(poll, 15_000);
+    pollTimer = window.setInterval(() => {
+      if (socket?.readyState !== WebSocket.OPEN) poll();
+    }, 15_000);
     window.addEventListener("online", onOnline);
+    document.addEventListener("visibilitychange", onVisibilityChange);
     return () => {
       active = false;
       window.removeEventListener("online", onOnline);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       socket?.close();
       window.clearTimeout(retryTimer);
       window.clearInterval(pollTimer);
