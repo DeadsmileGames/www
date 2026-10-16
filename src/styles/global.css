@@ -1631,6 +1631,22 @@ fieldset {
 .search-overlay__result:hover {
   background: #222;
 }
+.search-overlay__result-cover {
+  flex: 0 0 100px;
+  line-height: 0;
+}
+.search-overlay__result-copy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.search-overlay__result-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+.search-overlay__result-title-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .search-overlay__thumb {
   width: 100px;
   height: 75px;
