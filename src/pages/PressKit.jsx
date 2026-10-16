@@ -8,6 +8,7 @@ import { useGames } from "../hooks/useGames";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Lightbox } from "../components/ui/Lightbox";
 import { formatReleaseDate } from "../utils/releaseDate";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 
 export function PressKit() {
   const { t, language } = useLanguage();
@@ -134,9 +135,11 @@ export function PressKit() {
                     </li>
                   </ul>
                   <p>
-                    {game.shortDescription ||
-                      game.description ||
-                      t("No description available.")}
+                    <AutoLinkText>
+                      {game.shortDescription ||
+                        game.description ||
+                        t("No description available.")}
+                    </AutoLinkText>
                   </p>
                 </article>
               </Reveal>
