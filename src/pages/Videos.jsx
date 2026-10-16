@@ -323,7 +323,7 @@ export function Videos() {
             </div>
           </div>
         </section>
-      ) : (
+      ) : videos.status === "loading" ? (
         <section className="videos-featured videos-featured--loading">
           <div className="videos-featured__layout">
             <div className="videos-featured__loading-media" role="status" aria-label={t("Loading")}>
@@ -336,7 +336,7 @@ export function Videos() {
             </div>
           </div>
         </section>
-      )}
+      ) : null}
 
       <main className="videos-showcase__content">
         {videos.status === "loading" && (
