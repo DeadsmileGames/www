@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, GameController, Trash } from "@phosphor-icons/react";
+import { ArrowLeft, X } from "@phosphor-icons/react";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
 import { api, friendlyErrorMessage } from "../services/api";
@@ -101,8 +101,6 @@ export function Library() {
 
   async function removeGame(game) {
     if (removingId) return;
-    if (!window.confirm(t("Remove {0} from your library?", { 0: game.title }))) return;
-
     setRemovingId(game.id);
     setError("");
     try {
@@ -159,14 +157,14 @@ export function Library() {
             const cover = safeImageUrl(game.storePoster) || databaseCover;
             const busy = removingId === game.id;
             return (
-              <article className="library-card" key={game.id}>
+              <article className="library-cover" key={game.id}>
                 <Link
                   to={`/games/${encodeURIComponent(game.slug)}`}
-                  className="library-card__image-link"
+                  className="library-cover__link"
                   aria-label={t("View game") + ": " + game.title}
                 >
                   <img
-                    className="library-card__image"
+                    className="library-cover__image"
                     src={cover || "/assets/placeholders/game-cover.svg"}
                     alt=""
                     loading="lazy"
@@ -178,41 +176,19 @@ export function Library() {
                           : "/assets/placeholders/game-cover.svg";
                     }}
                   />
+                  <span className="library-cover__title">{game.title}</span>
                 </Link>
-                <div className="library-card__body">
-                  <div className="library-card__copy">
-                    <h2 className="library-card__title">
-                      <Link to={`/games/${encodeURIComponent(game.slug)}`}>
-                        {game.title}
-                      </Link>
-                    </h2>
-                    {game.shortDescription && (
-                      <p className="library-card__description">{game.shortDescription}</p>
-                    )}
-                    {Array.isArray(game.genres) && game.genres.length > 0 && (
-                      <p className="library-card__meta">{game.genres.join(" · ")}</p>
-                    )}
-                  </div>
-                  <div className="library-card__actions">
-                    <Link
-                      className="btn btn--primary"
-                      to={`/games/${encodeURIComponent(game.slug)}`}
-                    >
-                      <GameController weight="bold" />
-                      {t("View game")}
-                    </Link>
-                    <button
-                      type="button"
-                      className="btn btn--secondary library-card__remove"
-                      onClick={() => removeGame(game)}
-                      disabled={Boolean(removingId)}
-                      aria-busy={busy}
-                    >
-                      <Trash weight="bold" />
-                      {t(busy ? "Removing…" : "Remove from library")}
-                    </button>
-                  </div>
-                </div>
+                <button
+                  type="button"
+                  className="library-cover__remove"
+                  onClick={() => removeGame(game)}
+                  disabled={Boolean(removingId)}
+                  aria-busy={busy}
+                  aria-label={t("Remove from library") + ": " + game.title}
+                  title={t("Remove from library")}
+                >
+                  <X size={17} weight="bold" aria-hidden="true" />
+                </button>
               </article>
             );
           })}
