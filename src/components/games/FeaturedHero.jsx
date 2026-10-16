@@ -28,7 +28,7 @@ function BackgroundVideo({ paused }) {
     const host = frame.current;
     const iframe = document.createElement("iframe");
     const params = new URLSearchParams({
-      autoplay: "0",
+      autoplay: "1",
       mute: "1",
       controls: "0",
       playsinline: "1",
@@ -173,8 +173,6 @@ export function FeaturedHero({
       style={{
         backgroundImage: `url(${JSON.stringify(background)})`,
         overflow: "hidden",
-        minHeight: "100svh",
-        padding: "130px 0 50px",
       }}
     >
       {allowed && !reducedMotion && isAbby(game) && <BackgroundVideo paused={paused} />}
