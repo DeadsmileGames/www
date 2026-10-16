@@ -4,6 +4,7 @@ import * as m from "motion/react-m";
 import { useSearchParams } from "react-router-dom";
 import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useContent } from "../hooks/useContent";
 import { safeImageUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
@@ -174,7 +175,7 @@ export function Videos() {
                         </time>
                       )}
                       {latestDescription && (
-                        <p className="videos-page__hero-description">{latestDescription}</p>
+                        <p className="videos-page__hero-description"><AutoLinkText>{latestDescription}</AutoLinkText></p>
                       )}
                       <div className="rs-hero__actions videos-page__hero-actions">
                         <button
