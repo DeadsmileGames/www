@@ -1,7 +1,7 @@
 import { useLanguage } from "../context/LanguageContext";
 import { useGames } from "../hooks/useGames";
 import { SkeletonPage } from "../components/ui/Skeleton";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useLocation, useOutlet } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
@@ -12,21 +12,13 @@ import { SearchOverlay } from "../components/search/SearchOverlay";
 import { CookieConsent } from "../components/ui/CookieConsent";
 import { PremiereBanner } from "../components/videos/PremiereBanner";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
-import { useAuth } from "../hooks/useAuth";
 import { usePremiere } from "../hooks/usePremiere";
 import { safeImageUrl } from "../utils/urls";
 import { getReleaseTimestamp } from "../utils/releaseDate";
 import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
 
-const AdminComposer = lazy(() =>
-  import("../components/admin/AdminComposer").then((module) => ({
-    default: module.AdminComposer,
-  })),
-);
-
 export function AppLayout() {
   const { t } = useLanguage();
-  const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
   const [bannerClock, setBannerClock] = useState(() => Date.now());
@@ -226,12 +218,6 @@ export function AppLayout() {
         background={safeImageUrl(premiere?.screenshots?.[0])}
         onClose={() => setPremiereOpen(false)}
       />
-
-      {!isAuthPage && user?.role === "admin" && (
-        <Suspense fallback={null}>
-          <AdminComposer />
-        </Suspense>
-      )}
 
       {!isAuthPage && <CookieConsent />}
     </>
