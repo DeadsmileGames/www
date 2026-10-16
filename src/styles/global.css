@@ -421,8 +421,8 @@ fieldset {
 }
 .studio-motto {
   font:
-    700 clamp(21px, 2.2vw, 30px)/1.3 Gadugi,
-    sans-serif;
+    700 clamp(21px, 2.2vw, 30px)/1.3 Poppins,
+    "Berlin sans fb demi", sans-serif;
   color: #b8b8b8;
   margin-bottom: 18px;
 }
