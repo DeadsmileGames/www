@@ -88,7 +88,7 @@ function BackgroundVideo({ paused }) {
     if (window.YT?.Player) ready();
     else {
       window.onYouTubeIframeAPIReady = onReady;
-      script.src = "https://www.youtube.com/iframe_api";
+      script.src = "https:
       script.async = true;
       document.head.appendChild(script);
     }
