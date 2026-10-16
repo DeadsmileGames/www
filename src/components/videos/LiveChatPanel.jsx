@@ -5,7 +5,7 @@ import { safeImageUrl } from "../../utils/urls";
 
 const initialState = { status: "loading", messages: [], pollingIntervalMillis: 15000 };
 
-export function LiveChatPanel({ videoId, videoState }) {
+export function LiveChatPanel({ videoId, videoState, onBroadcastEnded }) {
   const { t, language } = useLanguage();
   const [chat, setChat] = useState(initialState);
   const messagesRef = useRef(null);
@@ -24,6 +24,14 @@ export function LiveChatPanel({ videoId, videoState }) {
       try {
         const data = await api.get(`/videos/${encodeURIComponent(videoId)}/live-chat`);
         if (!active) return;
+
+        if (
+          data?.state === "completed" ||
+          (videoState === "live" && data?.state === "none")
+        ) {
+          onBroadcastEnded?.();
+          return;
+        }
 
         const messages = Array.isArray(data?.messages) ? data.messages.slice(-80) : [];
         const status =
@@ -54,7 +62,7 @@ export function LiveChatPanel({ videoId, videoState }) {
       active = false;
       if (timer !== null) window.clearTimeout(timer);
     };
-  }, [videoId, videoState]);
+  }, [videoId, videoState, onBroadcastEnded]);
 
   useEffect(() => {
     const list = messagesRef.current;
