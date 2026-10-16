@@ -391,7 +391,7 @@ export function Support() {
             )}
             <label>
               {t("Email")} <span aria-hidden="true">*</span>
-              <input type="email" required maxLength="254" value={form.email} onChange={change("email")} autoComplete="email" placeholder="voce@exemplo.com" />
+              <input type="email" required maxLength="254" value={form.email} onChange={change("email")} autoComplete="email" placeholder={t("Email address")} />
             </label>
             <label>
               {t("Category")} <span aria-hidden="true">*</span>
