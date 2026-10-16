@@ -46,10 +46,10 @@ export function Videos() {
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
   const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.thumbnail);
-  const publishedAt = latest?.youtube?.publishedAt || latest?.published_at;
-  const publishedDate =
-    publishedAt && Number.isFinite(Date.parse(publishedAt))
-      ? new Date(publishedAt).toLocaleDateString(language, {
+  const releaseAt = latest?.youtube?.actualStartedAt || latest?.youtube?.startsAt || null;
+  const releaseDate =
+    releaseAt && Number.isFinite(Date.parse(releaseAt))
+      ? new Date(releaseAt).toLocaleDateString(language, {
           dateStyle: "long",
           timeZone: "UTC",
         })
@@ -74,9 +74,9 @@ export function Videos() {
               <div className="videos-page__hero-copy">
                 <p className="eyebrow">{t("Videos")}</p>
                 <h1 className="rs-hero__title">{latestTitle}</h1>
-                {publishedDate && (
-                  <time className="news-page__date" dateTime={publishedAt}>
-                    {publishedDate}
+                {releaseDate && (
+                  <time className="news-page__date" dateTime={releaseAt}>
+                    {releaseDate}
                   </time>
                 )}
                 {latestDescription && (
