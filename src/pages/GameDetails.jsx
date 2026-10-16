@@ -61,7 +61,7 @@ function getCalendarDateParts(timestamp) {
 
 function getReleaseTimestamp(value) {
   if (!value) return Number.NaN;
-  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return Date.parse(value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return Date.parse(value);
 
   const [year, month, day] = value.split("-").map(Number);
   const targetAsUtc = Date.UTC(year, month - 1, day);
@@ -125,6 +125,7 @@ export function GameDetails() {
   const releaseDateValue = game?.releaseDate || "";
   const releaseTimestamp = getReleaseTimestamp(releaseDateValue);
   useEffect(() => {
+    setReleaseNow(Date.now());
     if (
       game?.status !== "in_development" ||
       !Number.isFinite(releaseTimestamp) ||
