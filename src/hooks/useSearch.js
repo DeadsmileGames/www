@@ -30,7 +30,7 @@ export function useSearch(query, { page = 1, limit = 10 } = {}) {
     setState((s) => ({ ...s, status: "loading", error: null }));
 
     api
-      .get("/search", { q: trimmed, page, limit, language })
+      .get("/search", { q: trimmed, page, limit })
       .then((data) => {
         if (cancelled) return;
         setState({
