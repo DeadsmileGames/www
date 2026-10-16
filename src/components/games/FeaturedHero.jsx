@@ -1,4 +1,5 @@
 import { useLanguage } from "../../context/LanguageContext";
+import { AutoLinkText } from "../ui/AutoLinkText";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useReducedMotion } from "motion/react";
@@ -234,7 +235,7 @@ export function FeaturedHero({
               }}
             >
               <h1 className="rs-hero__title">{item.title}</h1>
-              <p className="game-hero__description">{item.shortDescription}</p>
+              <p className="game-hero__description"><AutoLinkText>{item.shortDescription}</AutoLinkText></p>
               <div className="studio-actions">
                 <Link
                   className="btn btn--primary"
