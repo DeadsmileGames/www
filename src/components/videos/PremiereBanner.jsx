@@ -6,7 +6,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
 import { safeImageUrl } from "../../utils/urls";
 
-export function PremiereBanner({ premiere, onOpen }) {
+export function PremiereBanner({ premiere, onOpen, onExpandedChange }) {
   const { t, language } = useLanguage();
   const reducedMotion = useReducedMotion();
   const bannerRef = useRef(null);
@@ -55,7 +55,17 @@ export function PremiereBanner({ premiere, onOpen }) {
 
   useEffect(() => {
     setExpanded(false);
-  }, [premiere.kind, premiere.slug, premiere.id]);
+    onExpandedChange?.(false);
+  }, [premiere.kind, premiere.slug, premiere.id, onExpandedChange]);
+
+  useEffect(() => {
+    if (!isGameRelease || !expanded) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [expanded, isGameRelease]);
 
   useLayoutEffect(() => {
     const banner = bannerRef.current;
@@ -74,7 +84,16 @@ export function PremiereBanner({ premiere, onOpen }) {
       observer.disconnect();
       root.style.removeProperty("--premiere-banner-height");
     };
-  }, []);
+  }, [expanded]);
+
+  const expandPreview = () => {
+    setExpanded(true);
+    onExpandedChange?.(true);
+  };
+  const collapsePreview = () => {
+    setExpanded(false);
+    onExpandedChange?.(false);
+  };
 
   return (
     <motion.div
@@ -116,7 +135,7 @@ export function PremiereBanner({ premiere, onOpen }) {
                 <Link
                   to={`/games/${encodeURIComponent(premiere.slug)}`}
                   className="btn btn--primary"
-                  onClick={() => setExpanded(false)}
+                  onClick={collapsePreview}
                 >
                   {t("View game")}
                   <ArrowUpRight size={18} weight="bold" aria-hidden="true" />
