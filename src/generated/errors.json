@@ -514,5 +514,10 @@
     "GAME_UNINSTALL_FAILED": "No se pudo desinstalar el juego. Ciérralo y comprueba los permisos de la carpeta antes de volver a intentarlo.",
     "GAME_DOWNLOAD_IN_PROGRESS": "Ya hay una descarga o actualización de este juego en curso.",
     "UPDATE_START_FAILED": "No se pudo iniciar el actualizador. Inténtalo de nuevo o usa el instalador oficial."
-  }
+  },
+  "de": {},
+  "fr": {},
+  "ja": {},
+  "ko": {},
+  "ru": {}
 }
