@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
@@ -11,6 +11,22 @@ import { YouTubeBroadcastBadge } from "../components/videos/YouTubeBroadcastBadg
 
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
+function videoLaunchTimestamp(video) {
+  const dates = [
+    video?.youtube?.actualStartedAt,
+    video?.youtube?.startsAt,
+    video?.youtube?.publishedAt,
+    video?.published_at,
+  ];
+
+  for (const value of dates) {
+    const timestamp = Date.parse(value || "");
+    if (Number.isFinite(timestamp)) return timestamp;
+  }
+
+  return 0;
+}
+
 export function Videos() {
   const { t, language } = useLanguage();
   const [params, setParams] = useSearchParams();
@@ -20,7 +36,43 @@ export function Videos() {
     const timer = window.setInterval(() => void videos.refresh(), 60_000);
     return () => window.clearInterval(timer);
   }, [videos.refresh]);
-  const latest = videos.status === "success" ? videos.data[0] : null;
+  const orderedVideos = useMemo(
+    () =>
+      videos.status === "success" && Array.isArray(videos.data)
+        ? [...videos.data].sort(
+            (a, b) => videoLaunchTimestamp(b) - videoLaunchTimestamp(a),
+          )
+        : [],
+    [videos.data, videos.status],
+  );
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  useEffect(() => {
+    if (orderedVideos.length < 2) {
+      setHeroIndex(0);
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setHeroIndex((current) => (current + 1) % orderedVideos.length);
+    }, 10_000);
+
+    return () => window.clearInterval(timer);
+  }, [orderedVideos.length]);
+
+  const latest = orderedVideos.length
+    ? orderedVideos[heroIndex % orderedVideos.length]
+    : null;
+  const broadcast = latest?.youtube;
+  const broadcastState = broadcast?.state || "none";
+  const heroActionLabel =
+    broadcastState === "upcoming"
+      ? t("Premiere hasn't started yet")
+      : broadcastState === "live"
+        ? t("Watch live now")
+        : broadcast?.actualStartedAt || broadcast?.actualEndedAt
+          ? t("Watch replay")
+          : t("Watch video");
   const selectedId = params.get("video");
   const open = (id) => {
     const next = new URLSearchParams(params);
@@ -47,7 +99,7 @@ export function Videos() {
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
   const thumbnail = getVideoThumbnail(latest, language);
-  const releaseAt = latest?.youtube?.actualStartedAt || latest?.youtube?.startsAt || null;
+  const releaseAt = latest?.youtube?.actualStartedAt || latest?.youtube?.startsAt || latest?.youtube?.publishedAt || latest?.published_at || null;
   const releaseDate =
     releaseAt && Number.isFinite(Date.parse(releaseAt))
       ? new Date(releaseAt).toLocaleDateString(language, {
@@ -86,7 +138,7 @@ export function Videos() {
                 <div className="rs-hero__actions videos-page__hero-actions">
                   <button type="button" className="btn btn--primary" onClick={() => open(latest.id)}>
                     <Play size={20} weight="fill" />
-                    {t("Watch now")}
+                    {heroActionLabel}
                   </button>
                 </div>
               </div>
@@ -94,7 +146,7 @@ export function Videos() {
                 type="button"
                 className="videos-page__hero-preview"
                 onClick={() => open(latest.id)}
-                aria-label={t("Watch now")}
+                aria-label={heroActionLabel}
               >
                 {thumbnail ? (
                   <img src={thumbnail} alt="" />
