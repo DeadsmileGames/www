@@ -642,7 +642,9 @@
     "Link URL": "URL do link",
     "Insert link": "Inserir link",
     "Enter a valid URL.": "Insira uma URL válida.",
-    "Body is required.": "O corpo da notícia é obrigatório."
+    "Body is required.": "O corpo da notícia é obrigatório.",
+    "Close preview": "Fechar prévia",
+    "Upcoming game": "Próximo lançamento"
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1287,7 +1289,9 @@
     "Link URL": "URL del enlace",
     "Insert link": "Insertar enlace",
     "Enter a valid URL.": "Introduce una URL válida.",
-    "Body is required.": "El cuerpo de la noticia es obligatorio."
+    "Body is required.": "El cuerpo de la noticia es obligatorio.",
+    "Close preview": "Cerrar vista previa",
+    "Upcoming game": "Próximo lanzamiento"
   },
   "en": {
     "Retomar": "Resume",
