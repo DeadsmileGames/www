@@ -9,6 +9,7 @@ import { EmptyState } from "../components/ui/EmptyState";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { safeImageUrl } from "../utils/urls";
+import { GameCoverPanel } from "../components/games/GameCoverPanel";
 
 function storePosterFromDetails(details) {
   const images = Array.isArray(details?.microsoftStore?.images)
@@ -158,27 +159,7 @@ export function Library() {
             const cover = safeImageUrl(game.storePoster) || databaseCover;
             const busy = removingId === game.id;
             return (
-              <article className="library-cover" key={game.id}>
-                <Link
-                  to={`/games/${encodeURIComponent(game.slug)}`}
-                  className="library-cover__link"
-                  aria-label={t("View game") + ": " + game.title}
-                >
-                  <img
-                    className="library-cover__image"
-                    src={cover || "/assets/placeholders/game-cover.svg"}
-                    alt=""
-                    loading="lazy"
-                    onError={(event) => {
-                      event.currentTarget.onerror = null;
-                      event.currentTarget.src =
-                        databaseCover && cover !== databaseCover
-                          ? databaseCover
-                          : "/assets/placeholders/game-cover.svg";
-                    }}
-                  />
-                  <span className="library-cover__title">{game.title}</span>
-                </Link>
+              <GameCoverPanel key={game.id} game={game} cover={cover || databaseCover}>
                 <button
                   type="button"
                   className="library-cover__remove"
@@ -190,7 +171,7 @@ export function Library() {
                 >
                   {busy ? <LoadingSpinner className="loading-spinner--icon" /> : <X size={17} weight="bold" aria-hidden="true" />}
                 </button>
-              </article>
+              </GameCoverPanel>
             );
           })}
         </div>
