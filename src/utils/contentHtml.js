@@ -88,6 +88,7 @@ function linkifyPlainUrls(root) {
         const anchor = document.createElement("a");
         anchor.href = validUrl.href;
         anchor.textContent = displayUrl;
+        anchor.setAttribute("data-auto-title", "true");
         anchor.target = "_blank";
         anchor.rel = "noopener noreferrer";
         fragment.append(anchor);
