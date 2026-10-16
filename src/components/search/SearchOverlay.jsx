@@ -1,15 +1,13 @@
-import { useLanguage } from "../../context/LanguageContext";
-import { AutoLinkText } from "../ui/AutoLinkText";
-import { SkeletonSearch } from "../ui/Skeleton";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSearch } from "../../hooks/useSearch";
-import { useMicrosoftStoreCovers } from "../../hooks/useMicrosoftStoreCovers";
+import { useLanguage } from "../../context/LanguageContext";
+import { SkeletonSearch } from "../ui/Skeleton";
 import { EmptyState } from "../ui/EmptyState";
 import { ErrorState } from "../ui/ErrorState";
 import { MagnifyingGlass, X } from "@phosphor-icons/react";
 import { trapFocus } from "../../utils/dom";
-import { safeImageUrl } from "../../utils/urls";
+import { useSearch } from "../../hooks/useSearch";
+import { SearchResults } from "./SearchResults";
 
 export function SearchOverlay({ open, onClose, hasPremiere = false }) {
   const { t } = useLanguage();
@@ -19,7 +17,6 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
   const { status, results, retry, error } = useSearch(open ? query : "");
-  const storeCovers = useMicrosoftStoreCovers(results, { includeUnknown: true });
 
   useEffect(() => {
     if (!open) return;
@@ -31,17 +28,11 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
 
     function handleClickOutside(event) {
       const search = document.querySelector(".search-overlay");
-
-      if (search && !search.contains(event.target)) {
-        closeRef.current();
-      }
+      if (search && !search.contains(event.target)) closeRef.current();
     }
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
   if (!open) return null;
@@ -63,9 +54,9 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={t("Search Deadsmile Games\u2026")}
+            placeholder={t("Search Deadsmile Games…")}
             className="search-overlay__input"
-            aria-label={t("Search games")}
+            aria-label={t("Site search")}
             maxLength={80}
           />
         </div>
@@ -81,7 +72,9 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
 
       <div className="search-overlay__results">
         {status === "idle" && (
-          <p className="search-overlay__hint">{t("Start typing to find a game.")}</p>
+          <p className="search-overlay__hint">
+            {t("Start typing to search games, news, and videos.")}
+          </p>
         )}
 
         {status === "loading" && <SkeletonSearch />}
@@ -98,43 +91,7 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
         )}
 
         {status === "success" && results.length > 0 && (
-          <ul className="search-overlay__list">
-            {results.map((game) => (
-              <li key={game.id}>
-                <div className="search-overlay__result">
-                  <Link
-                    to={`/games/${game.slug}`}
-                    onClick={onClose}
-                    className="search-overlay__result-cover"
-                    aria-label={t("View game") + ": " + game.title}
-                  >
-                    <img
-                      src={
-                        safeImageUrl(storeCovers[String(game.id ?? game.slug)]) ||
-                        safeImageUrl(game.coverImage) ||
-                        "/assets/placeholders/game-cover.svg"
-                      }
-                      alt=""
-                      className="search-overlay__thumb"
-                    />
-                  </Link>
-
-                  <div className="search-overlay__result-copy">
-                    <Link
-                      to={`/games/${game.slug}`}
-                      onClick={onClose}
-                      className="search-overlay__result-title-link"
-                    >
-                      <p className="search-overlay__result-title">{game.title}</p>
-                    </Link>
-                    <p className="search-overlay__result-desc">
-                      <AutoLinkText>{game.shortDescription}</AutoLinkText>
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <SearchResults results={results} onResultClick={onClose} />
         )}
       </div>
     </div>
