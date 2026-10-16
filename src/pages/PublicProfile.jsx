@@ -10,6 +10,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
+import { useMicrosoftStoreCovers } from "../hooks/useMicrosoftStoreCovers";
 import { api, friendlyErrorMessage } from "../services/api";
 import { SkeletonProfile } from "../components/ui/Skeleton";
 import { ErrorState } from "../components/ui/ErrorState";
@@ -36,6 +37,7 @@ export function PublicProfile() {
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [gallery, setGallery] = useState(null);
   const [selected, setSelected] = useState(null);
+  const storeCovers = useMicrosoftStoreCovers(profile?.recentGames || []);
 
   useEffect(() => {
     let active = true;
@@ -204,8 +206,9 @@ export function PublicProfile() {
                     <img
                       className="game-card__image"
                       src={
-                        safeImageUrl(game.coverImage) ||
-                        safeImageUrl(game.heroImage) ||
+                        safeImageUrl(storeCovers[String(game.id ?? game.slug)]) ||
+                        safeImageUrl(game.coverImage || game.cover_image) ||
+                        safeImageUrl(game.heroImage || game.hero_image) ||
                         PLACEHOLDER
                       }
                       alt=""
