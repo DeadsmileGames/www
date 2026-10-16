@@ -202,13 +202,20 @@ let publicGetCacheGeneration = 0;
 
 function isCacheablePublicGet(path, method) {
   if (method !== "GET") return false;
-  if (/^\\/games(?:\\/[^/]+(?:\\/latest)?)?$/.test(path)) return true;
-  if (/^\\/newswire(?:\\/[^/]+)?$/.test(path)) return true;
-  if (/^\\/news(?:\\/[^/]+)?$/.test(path)) return true;
-  if (/^\\/videos(?:\\/[^/]+)?$/.test(path)) return true;
+  const segments = path.split("/").filter(Boolean);
+  if (segments[0] === "games") {
+    return (
+      segments.length === 1 ||
+      (segments.length === 2 && segments[1] !== "download") ||
+      (segments.length === 3 && segments[2] === "latest")
+    );
+  }
+  if (segments[0] === "newswire" || segments[0] === "news") {
+    return segments.length === 1 || segments.length === 2;
+  }
+  if (segments[0] === "videos") return segments.length === 1 || segments.length === 2;
   return ["/downloads", "/products", "/soundtracks", "/search"].includes(path);
 }
-
 function publicGetKey(path, params) {
   const entries = Object.entries(params || {})
     .filter(([, value]) => value !== undefined && value !== null && value !== "")
