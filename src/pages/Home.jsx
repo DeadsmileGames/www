@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useGames } from "../hooks/useGames";
 import { useContent } from "../hooks/useContent";
 import { safeImageUrl, safeHttpsUrl, safeYoutubeEmbedUrl } from "../utils/urls";
+import { getVideoThumbnail } from "../utils/videoThumbnail";
 import { Play } from "@phosphor-icons/react";
 
 function ContentState({ resource, empty, children, skeleton }) {
@@ -28,7 +29,7 @@ function ContentState({ resource, empty, children, skeleton }) {
 }
 
 export function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const catalog = useGames({ limit: 8 });
   const news = useContent("/newswire", { limit: 3 });
   const videos = useContent("/videos", { limit: 48 });
@@ -97,8 +98,8 @@ export function Home() {
                     }
                   >
                     <span className="video-visual">
-                      {safeImageUrl(video.thumbnail) && (
-                        <img src={safeImageUrl(video.thumbnail)} alt="" loading="lazy" />
+                      {getVideoThumbnail(video, language) && (
+                        <img src={getVideoThumbnail(video, language)} alt="" loading="lazy" />
                       )}
                       <span className="play-button">
                         <Play size={26} weight="fill" />
