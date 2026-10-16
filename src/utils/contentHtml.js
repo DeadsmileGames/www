@@ -89,6 +89,7 @@ function linkifyPlainUrls(root) {
         anchor.href = validUrl.href;
         anchor.textContent = displayUrl;
         anchor.setAttribute("data-auto-title", "true");
+        anchor.className = "auto-link-text__link";
         anchor.target = "_blank";
         anchor.rel = "noopener noreferrer";
         fragment.append(anchor);
@@ -119,6 +120,7 @@ export function sanitizeNewswire(
     const label = (link.textContent || "").trim();
     if (/^(?:https?:\/\/|www\.)[^\s]+$/i.test(label)) {
       link.setAttribute("data-auto-title", "true");
+      link.classList.add("auto-link-text__link");
     }
   }
   if (language) {
