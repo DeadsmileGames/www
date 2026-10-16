@@ -27,7 +27,7 @@ function storePosterFromDetails(details) {
   return candidates.map((image) => safeImageUrl(image.url)).find(Boolean) || null;
 }
 
-// Match the Launcher: fetch Store artwork only for products carrying its Store badge.
+
 async function loadStorePosters(games) {
   const candidates = games.filter((game) => game.microsoftStoreBadge && game.slug);
   const posters = new Map();
@@ -41,7 +41,7 @@ async function loadStorePosters(games) {
         const poster = storePosterFromDetails(details);
         if (poster) posters.set(String(game.id), poster);
       } catch {
-        // Store artwork is optional. The database cover remains the fallback.
+        
       }
     }
   });
@@ -66,7 +66,7 @@ export function Library() {
     try {
       const data = await api.get("/library/catalog");
       if (id !== requestId.current) return;
-      // This existing catalog endpoint reports library membership from user entitlements.
+      
       const items = Array.isArray(data?.items)
         ? data.items.filter((game) => game.inLibrary === true)
         : [];
@@ -76,7 +76,7 @@ export function Library() {
       }));
       setGames(normalizedItems);
 
-      // Show database covers immediately, then replace them with Store posters when available.
+      
       void loadStorePosters(normalizedItems).then((posters) => {
         if (id !== requestId.current || posters.size === 0) return;
         setGames((current) =>
