@@ -15,6 +15,8 @@ import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { useAuth } from "../hooks/useAuth";
 import { usePremiere } from "../hooks/usePremiere";
 import { safeImageUrl } from "../utils/urls";
+import { getReleaseTimestamp } from "../utils/releaseDate";
+import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
 
 const AdminComposer = lazy(() =>
   import("../components/admin/AdminComposer").then((module) => ({
@@ -28,6 +30,7 @@ export function AppLayout() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
   const [bannerClock, setBannerClock] = useState(() => Date.now());
+  const [upcomingStoreCover, setUpcomingStoreCover] = useState(null);
   const premiere = usePremiere();
   const { games: gamesNearRelease = [] } = useGames({ limit: 48 });
 
@@ -50,10 +53,7 @@ export function AppLayout() {
   const nextRelease = gamesNearRelease
     .map((game) => {
       const value = game.releaseDate || game.release_date;
-      const timestamp =
-        typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
-          ? new Date(`${value}T00:00:00-03:00`).getTime()
-          : Date.parse(value || "");
+      const timestamp = getReleaseTimestamp(value || "");
       return { game, timestamp };
     })
     .filter(
@@ -64,6 +64,27 @@ export function AppLayout() {
         item.timestamp <= monthFromNow.getTime(),
     )
     .sort((a, b) => a.timestamp - b.timestamp)[0] || null;
+
+  useEffect(() => {
+    let cancelled = false;
+    const game = nextRelease?.game;
+    setUpcomingStoreCover(null);
+    if (!game?.slug) {
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    void loadMicrosoftStoreCovers([game], { includeUnknown: true }).then((covers) => {
+      if (cancelled) return;
+      setUpcomingStoreCover(covers.get(String(game.id ?? game.slug)) || null);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [nextRelease?.game?.id, nextRelease?.game?.slug]);
+
   const upcomingGameBanner = nextRelease
     ? {
         kind: "game",
@@ -72,6 +93,7 @@ export function AppLayout() {
         starts_at: new Date(nextRelease.timestamp).toISOString(),
         slug: nextRelease.game.slug,
         thumbnail:
+          upcomingStoreCover ||
           nextRelease.game.coverImage ||
           nextRelease.game.cover_image ||
           nextRelease.game.heroImage ||
@@ -82,7 +104,7 @@ export function AppLayout() {
           nextRelease.game.coverImage || nextRelease.game.cover_image,
         ].filter(Boolean),
         heroImage: nextRelease.game.heroImage || nextRelease.game.hero_image || null,
-        coverImage: nextRelease.game.coverImage || nextRelease.game.cover_image || null,
+        coverImage: upcomingStoreCover || nextRelease.game.coverImage || nextRelease.game.cover_image || null,
         shortDescription:
           nextRelease.game.shortDescription ||
           nextRelease.game.short_description ||
