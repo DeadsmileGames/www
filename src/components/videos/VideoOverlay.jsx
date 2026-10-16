@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
-import { Play, X, YoutubeLogo } from "@phosphor-icons/react";
+import { CheckCircle, Play, X, YoutubeLogo } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
 import { LiveChatPanel } from "./LiveChatPanel";
@@ -25,7 +25,12 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const relatedResource = useContent("/videos", { limit: 48 });
   const video = resource.status === "success" ? resource.data : null;
   const [chatEnded, setChatEnded] = useState(false);
-  const handleBroadcastEnded = useCallback(() => setChatEnded(true), []);
+  const [premiereEnded, setPremiereEnded] = useState(false);
+  const broadcastWasLive = useRef(false);
+  const handleBroadcastEnded = useCallback(() => {
+    setChatEnded(true);
+    setPremiereEnded(true);
+  }, []);
   const relatedVideos =
     relatedResource.status === "success" && Array.isArray(relatedResource.data)
       ? relatedResource.data
@@ -43,6 +48,14 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const description = video?.youtube?.description || video?.description || "";
   const liveChatEnabled =
     !chatEnded && (youtubeState === "live" || youtubeState === "upcoming");
+
+  useEffect(() => {
+    if (youtubeState === "live") broadcastWasLive.current = true;
+    if (broadcastWasLive.current && !["live", "upcoming"].includes(youtubeState)) {
+      setChatEnded(true);
+      setPremiereEnded(true);
+    }
+  }, [youtubeState]);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
@@ -136,6 +149,16 @@ function Panel({ videoId, background, onClose, onSelect }) {
                 <p>{t("No video source available.")}</p>
               )}
             </div>
+            {premiereEnded && (
+              <aside className="video-overlay__premiere-ended" role="status" aria-live="polite">
+                <CheckCircle size={24} weight="fill" aria-hidden="true" />
+                <p>
+                  {t("Thank you for watching the premiere: {0}", {
+                    0: video.youtube?.title || video.title,
+                  })}
+                </p>
+              </aside>
+            )}
             <div className="video-overlay__details">
               <div className="video-overlay__heading">
                 <div className="video-overlay__heading-copy">
