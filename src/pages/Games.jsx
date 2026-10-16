@@ -38,7 +38,7 @@ export function Games() {
       {status === "success" && games.length === 0 && <EmptyState />}
       {status === "success" && games.length > 0 && (
         <>
-          <GameGrid games={games} />
+          <GameGrid games={games} variant="cover" />
           {pagination && pagination.totalPages > 1 && (
             <div className="games-page__pagination">
               <Button
