@@ -7,6 +7,7 @@ import { CheckCircle, Play, X, YoutubeLogo } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
 import { LiveChatPanel } from "./LiveChatPanel";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 import { setOptionalContent, useOptionalContent } from "../../utils/consent";
 import { trapFocus } from "../../utils/dom";
 import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/urls";
@@ -112,7 +113,11 @@ function Panel({ videoId, background, onClose, onSelect }) {
         <X weight="bold" />
       </button>
       <div className="video-overlay__content">
-        {resource.status === "loading" && <p className="content-state">{t("Loading")}</p>}
+        {resource.status === "loading" && (
+          <p className="content-state" role="status" aria-live="polite">
+            <LoadingSpinner /> {t("Loading")}
+          </p>
+        )}
         {resource.status === "error" && (
           <div className="content-state" role="alert">
             <p>{resource.error}</p>
