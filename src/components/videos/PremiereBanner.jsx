@@ -35,6 +35,10 @@ export function PremiereBanner({ premiere, onOpen }) {
     "/assets/placeholders/game-cover.svg";
   const previewBackgroundImage =
     databaseCoverImage || "/assets/placeholders/game-cover.svg";
+  // The top game-release banner must use the database cover, never the first screenshot.
+  const bannerBackgroundImage = isGameRelease
+    ? previewBackgroundImage
+    : images[0];
   const description = String(
     premiere.shortDescription ||
       premiere.short_description ||
@@ -171,7 +175,7 @@ export function PremiereBanner({ premiere, onOpen }) {
         transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
       >
         <span className="premiere-banner__background" aria-hidden="true">
-          {images[0] && <img src={images[0]} alt="" />}
+          {bannerBackgroundImage && <img src={bannerBackgroundImage} alt="" />}
         </span>
         <button
           type="button"
