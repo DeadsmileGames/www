@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
@@ -23,6 +23,8 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const resource = useContent(`/videos/${encodeURIComponent(videoId)}`);
   const relatedResource = useContent("/videos", { limit: 48 });
   const video = resource.status === "success" ? resource.data : null;
+  const [chatEnded, setChatEnded] = useState(false);
+  const handleBroadcastEnded = useCallback(() => setChatEnded(true), []);
   const relatedVideos =
     relatedResource.status === "success" && Array.isArray(relatedResource.data)
       ? relatedResource.data
@@ -39,7 +41,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const youtubeState = video?.youtube?.state || video?.state || "none";
   const description = video?.youtube?.description || video?.description || "";
   const liveChatEnabled =
-    youtubeState === "live" || youtubeState === "upcoming";
+    !chatEnded && (youtubeState === "live" || youtubeState === "upcoming");
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
@@ -62,7 +64,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
     (gameSlug ? safeImageUrl(`/assets/games/screenshots/${gameSlug}/1.png`) : null) ||
     safeImageUrl(video?.thumbnail) ||
     fallbackImage;
-  const released = video?.youtube?.publishedAt || video?.published_at;
+  const released = video?.youtube?.actualStartedAt || video?.youtube?.startsAt || null;
   useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
 
   useEffect(() => {
@@ -154,27 +156,29 @@ function Panel({ videoId, background, onClose, onSelect }) {
                 </a>
               </div>
             </div>
-            {(description || liveChatEnabled) && (
-              <div
-                className={
-                  "video-overlay__description-layout" +
-                  (description && liveChatEnabled ? " video-overlay__description-layout--live" : "")
-                }
+            <div
+              className={
+                "video-overlay__description-layout" +
+                (liveChatEnabled ? " video-overlay__description-layout--live" : "")
+              }
+            >
+              <section
+                className="video-overlay__description-panel support-card"
+                aria-labelledby="video-overlay-description-title"
               >
-                {description && (
-                  <section
-                    className="video-overlay__description-panel support-card"
-                    aria-labelledby="video-overlay-description-title"
-                  >
-                    <h3 id="video-overlay-description-title">{t("Description")}</h3>
-                    <p className="video-overlay__description">{description}</p>
-                  </section>
-                )}
-                {liveChatEnabled && (
-                  <LiveChatPanel videoId={video.id} videoState={youtubeState} />
-                )}
-              </div>
-            )}
+                <h3 id="video-overlay-description-title">{t("Description")}</h3>
+                <p className="video-overlay__description">
+                  {description || t("No description available yet.")}
+                </p>
+              </section>
+              {liveChatEnabled && (
+                <LiveChatPanel
+                  videoId={video.id}
+                  videoState={youtubeState}
+                  onBroadcastEnded={handleBroadcastEnded}
+                />
+              )}
+            </div>
             <section className="video-overlay__related" aria-labelledby="video-overlay-related-title">
               <h3 id="video-overlay-related-title">{t("Related videos")}</h3>
               {relatedVideos.length > 0 ? (
