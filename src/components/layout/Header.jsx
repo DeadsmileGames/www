@@ -222,7 +222,7 @@ export function Header({ onOpenSearch }) {
                       role="menuitemradio"
                       aria-checked={language === value}
                       key={value}
-                      dir={value === "ar" ? "rtl" : "ltr"}
+                      dir="ltr"
                       onClick={() => {
                         setLanguage(value);
                         setLanguageOpen(false);
