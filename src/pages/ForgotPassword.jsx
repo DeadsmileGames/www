@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { SecurityCaptcha as ReCAPTCHA } from "../components/ui/SecurityCaptcha";
 import { api, friendlyErrorMessage } from "../services/api";
 import { Button } from "../components/ui/Button";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ArrowLeft } from "@phosphor-icons/react";
 
 export function ForgotPassword() {
@@ -110,7 +111,7 @@ export function ForgotPassword() {
             </Link>
           </>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} aria-busy={submitting}>
             {error && (
               <p className="auth-page__error" role="alert">
                 {t(error)}
@@ -140,6 +141,7 @@ export function ForgotPassword() {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={submitting}
               />
             </div>
 
@@ -165,7 +167,7 @@ export function ForgotPassword() {
               className="auth-page__submit"
               disabled={submitting || !recaptchaToken || !siteKey}
             >
-              {submitting ? t("Sending\u2026") : t("Send reset link")}
+              {submitting ? <><LoadingSpinner />{t("Sending\u2026")}</> : t("Send reset link")}
             </Button>
           </form>
         )}

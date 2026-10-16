@@ -1,4 +1,5 @@
 import { DownloadSimple } from "@phosphor-icons/react";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 import { useLanguage } from "../../context/LanguageContext";
 import { safeItchUrl } from "../../utils/urls";
 
@@ -32,7 +33,7 @@ export function StoreOffers({ game, onDownload, downloadBusy = false }) {
                 disabled={downloadBusy}
                 onClick={onDownload}
               >
-                <DownloadSimple weight="bold" />
+                {downloadBusy ? <LoadingSpinner /> : <DownloadSimple weight="bold" />}
                 {t(downloadBusy ? "Preparing download…" : "Download now")}
               </button>
             </div>

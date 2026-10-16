@@ -15,17 +15,21 @@ import {
   MagnifyingGlass,
   List,
   Heart,
+  GameController,
   File,
   LockKey,
+  Globe,
 } from "@phosphor-icons/react";
 
 export function Header({ onOpenSearch }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const ref = useRef(null);
+  const languageRef = useRef(null);
   const { user, status, logout } = useAuth();
   const avatar = status === "authenticated" ? safeImageUrl(user?.avatarUrl) : null;
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const navigate = useNavigate();
   const location = useLocation();
   const { push } = useToast();
@@ -34,11 +38,17 @@ export function Header({ onOpenSearch }) {
   useEffect(() => {
     const f = (e) => {
       if (!ref.current?.contains(e.target)) setAccountOpen(false);
+      if (!languageRef.current?.contains(e.target)) setLanguageOpen(false);
     };
     const key = (event) => {
-      if (event.key === "Escape" && accountOpen) {
+      if (event.key !== "Escape") return;
+      if (accountOpen) {
         setAccountOpen(false);
         ref.current?.querySelector("button")?.focus();
+      }
+      if (languageOpen) {
+        setLanguageOpen(false);
+        languageRef.current?.querySelector("button")?.focus();
       }
     };
     document.addEventListener("mousedown", f);
@@ -47,11 +57,12 @@ export function Header({ onOpenSearch }) {
       document.removeEventListener("mousedown", f);
       document.removeEventListener("keydown", key);
     };
-  }, [accountOpen]);
+  }, [accountOpen, languageOpen]);
 
   useEffect(() => {
     setMobileOpen(false);
     setAccountOpen(false);
+    setLanguageOpen(false);
   }, [location.pathname, location.hash]);
 
   const links = [
@@ -59,7 +70,8 @@ export function Header({ onOpenSearch }) {
     ["/games", t("nav.games")],
     ["/launcher", t("nav.launcher")],
     ["/newswire", t("nav.news")],
-    ["/#videos", t("nav.videos")],
+    ["/videos", t("nav.videos")],
+    ["/soundtracks", t("nav.soundtracks")],
     ["/support", t("nav.support")],
   ];
 
@@ -149,6 +161,10 @@ export function Header({ onOpenSearch }) {
                       <UserCircle weight="bold" />
                       {t("My profile")}
                     </Link>
+                    <Link to="/library" onClick={() => setAccountOpen(false)}>
+                      <GameController weight="bold" />
+                      {t("Your library")}
+                    </Link>
                     <Link to="/wishlist" onClick={() => setAccountOpen(false)}>
                       <Heart weight="bold" />
                       {t("Wishlist")}
@@ -165,6 +181,7 @@ export function Header({ onOpenSearch }) {
                     <hr className="dropdown-divider" />
                     <button
                       type="button"
+                      className="btn btn--danger"
                       onClick={signOut}
                       disabled={signingOut}
                       aria-busy={signingOut}
@@ -180,6 +197,41 @@ export function Header({ onOpenSearch }) {
                 <UserCircle size={24} weight="bold" />
               </Link>
             )}
+
+            <div className="site-header__account-wrap" ref={languageRef}>
+              <button
+                type="button"
+                className="site-header__account-pill"
+                onClick={() => setLanguageOpen((open) => !open)}
+                aria-expanded={languageOpen}
+                aria-label={t("Change language")}
+              >
+                <Globe size={24} weight="bold" />
+              </button>
+              {languageOpen && (
+                <div className="site-header__dropdown" role="menu" aria-label={t("Language")}>
+                  {[
+                    ["en", "English"],
+                    ["pt-BR", "Português (Brasil)"],
+                    ["es", "Español"],
+                  ].map(([value, label]) => (
+                    <button
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={language === value}
+                      key={value}
+                      onClick={() => {
+                        setLanguage(value);
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      <span>{label}</span>
+                      {language === value && <span aria-hidden="true">✓</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <button
               type="button"

@@ -67,7 +67,7 @@ export function safeYoutubeEmbedUrl(value) {
   ) {
     if (parsed.pathname === "/watch") id = parsed.searchParams.get("v") || "";
     else {
-      const match = parsed.pathname.match(/^\/(?:embed|shorts)\/([A-Za-z0-9_-]+)$/);
+      const match = parsed.pathname.match(/^\/(?:embed|shorts|live)\/([A-Za-z0-9_-]+)$/);
       id = match?.[1] || "";
     }
   }

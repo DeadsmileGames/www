@@ -8,6 +8,8 @@ import { LanguageProvider } from "./context/LanguageContext";
 import { ToastProvider } from "./components/ui/Toast";
 import { IconContext } from "@phosphor-icons/react";
 import { RealtimeBridge } from "./services/RealtimeBridge";
+import { ApiAvailabilityGate } from "./app/ApiAvailabilityGate";
+import { domAnimation, LazyMotion, MotionConfig } from "motion/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -19,12 +21,18 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     >
       <LanguageProvider>
         <IconContext.Provider value={{ weight: "bold", size: 20 }}>
-          <AuthProvider>
-            <ToastProvider>
-              <RealtimeBridge />
-              <App />
-            </ToastProvider>
-          </AuthProvider>
+          <MotionConfig reducedMotion="user">
+            <LazyMotion features={domAnimation}>
+              <ApiAvailabilityGate>
+                <AuthProvider>
+                  <ToastProvider>
+                    <RealtimeBridge />
+                    <App />
+                  </ToastProvider>
+                </AuthProvider>
+              </ApiAvailabilityGate>
+            </LazyMotion>
+          </MotionConfig>
         </IconContext.Provider>
       </LanguageProvider>
     </BrowserRouter>

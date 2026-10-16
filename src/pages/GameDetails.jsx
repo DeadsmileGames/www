@@ -14,6 +14,7 @@ import { StoreOffers } from "../components/games/StoreOffers";
 import { StoreInformation, StoreRatings } from "../components/games/StoreInformation";
 import { GameMeta } from "../components/games/GameMeta";
 import { GameGrid } from "../components/games/GameGrid";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonDetail } from "../components/ui/Skeleton";
 import { Lightbox } from "../components/ui/Lightbox";
@@ -22,6 +23,7 @@ import { useWishlist } from "../hooks/useWishlist";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
+import { getVideoThumbnail } from "../utils/videoThumbnail";
 
 const LAUNCHER_DOWNLOAD_URL = "/launcher";
 
@@ -46,9 +48,11 @@ export function GameDetails() {
     userId: null,
     status: "idle",
     inLibrary: false,
+    owned: false,
     error: "",
   });
   const [libraryRevision, setLibraryRevision] = useState(0);
+  const [libraryActionBusy, setLibraryActionBusy] = useState(false);
   const [purchase, setPurchase] = useState({
     open: false,
     status: "idle",
@@ -56,14 +60,30 @@ export function GameDetails() {
   });
   const [launcherMissing, setLauncherMissing] = useState(false);
   const [download, setDownload] = useState({ busy: false, error: "" });
+  const [releaseNow, setReleaseNow] = useState(Date.now());
 
   const game = state.game;
+  const releaseDateValue = game?.releaseDate || "";
+  const releaseTimestamp = /^\d{4}-\d{2}-\d{2}$/.test(releaseDateValue)
+    ? new Date(`${releaseDateValue}T00:00:00`).getTime()
+    : Date.parse(releaseDateValue);
+  useEffect(() => {
+    if (
+      game?.status !== "in_development" ||
+      !Number.isFinite(releaseTimestamp) ||
+      releaseTimestamp <= Date.now()
+    ) {
+      return undefined;
+    }
+    const timer = window.setInterval(() => setReleaseNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [game?.status, game?.releaseDate, releaseTimestamp]);
   const gameId = game?.id || null;
   const isValidGameId = typeof gameId === "string" && gameId.length > 0;
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
   const libraryReady =
     authStatus === "authenticated" && libraryMatches && library.status === "success";
-  const owned = libraryReady && library.inLibrary;
+  const owned = libraryReady && library.owned;
   const showWishlist = libraryReady && isValidGameId && !library.inLibrary;
 
   const {
@@ -115,6 +135,7 @@ export function GameDetails() {
         userId: null,
         status: "idle",
         inLibrary: false,
+        owned: false,
         error: "",
       });
       return undefined;
@@ -128,22 +149,25 @@ export function GameDetails() {
       userId,
       status: "loading",
       inLibrary: false,
+      owned: false,
       error: "",
     });
 
     api
-      .get("/library")
+      .get("/library/catalog")
       .then((data) => {
         if (!Array.isArray(data?.items)) {
           throw { code: "INVALID_RESPONSE" };
         }
 
         if (active && request === libraryRequest.current) {
+          const libraryGame = data.items.find((item) => item.id === gameId);
           setLibrary({
             gameId,
             userId,
             status: "success",
-            inLibrary: data.items.some((item) => item.id === gameId),
+            inLibrary: Boolean(libraryGame?.inLibrary),
+            owned: Boolean(libraryGame?.owned),
             error: "",
           });
         }
@@ -155,6 +179,7 @@ export function GameDetails() {
             userId,
             status: "error",
             inLibrary: false,
+            owned: false,
             error: friendlyErrorMessage(error),
           });
         }
@@ -212,13 +237,15 @@ export function GameDetails() {
 
       if (result.owned) {
         libraryRequest.current++;
-        setLibrary({
+        setLibrary((current) => ({
+          ...current,
           gameId,
           userId: user.id,
           status: "success",
-          inLibrary: true,
+          inLibrary: current.inLibrary || !current.owned,
+          owned: true,
           error: "",
-        });
+        }));
         setPurchase({ open: !launch, status: "owned", message: "" });
 
         if (launch) openInLauncher();
@@ -257,6 +284,7 @@ export function GameDetails() {
           userId: user.id,
           status: "success",
           inLibrary: true,
+          owned: true,
           error: "",
         });
       }
@@ -265,6 +293,32 @@ export function GameDetails() {
       setDownload({ busy: false, error: "" });
     } catch (error) {
       setDownload({ busy: false, error: friendlyErrorMessage(error) });
+    }
+  }
+
+  async function restoreGameToLibrary() {
+    if (libraryActionBusy || !gameId || authStatus !== "authenticated") return;
+    setLibraryActionBusy(true);
+    try {
+      await api.post(`/library/${encodeURIComponent(gameId)}`);
+      libraryRequest.current++;
+      setLibrary((current) => ({
+        ...current,
+        gameId,
+        userId: user.id,
+        status: "success",
+        owned: true,
+        inLibrary: true,
+        error: "",
+      }));
+    } catch (error) {
+      setLibrary((current) => ({
+        ...current,
+        status: "error",
+        error: friendlyErrorMessage(error),
+      }));
+    } finally {
+      setLibraryActionBusy(false);
     }
   }
 
@@ -429,8 +483,21 @@ export function GameDetails() {
             disabled={purchase.status === "checking"}
             onClick={() => (game.isFree ? openInLauncher() : verifyPurchase(false, true))}
           >
-            <GameController weight="bold" />
-            {t("Play in Launcher")}
+            {purchase.status === "checking" ? <LoadingSpinner /> : <GameController weight="bold" />}
+            {purchase.status === "checking" ? t("Verifying…") : t("Play in Launcher")}
+          </button>
+        )}
+
+        {game.status === "released" && libraryReady && library.owned && !library.inLibrary && (
+          <button
+            type="button"
+            className="btn btn--secondary game-details__btn"
+            disabled={libraryActionBusy}
+            aria-busy={libraryActionBusy}
+            onClick={restoreGameToLibrary}
+          >
+            {libraryActionBusy ? <LoadingSpinner /> : <GameController weight="bold" />}
+            {t(libraryActionBusy ? "Adding…" : "Add to library")}
           </button>
         )}
 
@@ -442,7 +509,12 @@ export function GameDetails() {
             disabled={wishlistLoading}
             onClick={toggle}
           >
-            {inWishlist ? (
+            {wishlistLoading ? (
+              <>
+                <LoadingSpinner />
+                <span>{t("Saving…")}</span>
+              </>
+            ) : inWishlist ? (
               <>
                 <HeartStraight weight="bold" />
                 <span>{t("Wishlisted")}</span>
@@ -455,6 +527,28 @@ export function GameDetails() {
             )}
           </button>
         )}
+
+        {game.status === "in_development" &&
+          Number.isFinite(releaseTimestamp) &&
+          releaseTimestamp > releaseNow && (
+            <button
+              type="button"
+              className="btn btn--secondary game-details__btn"
+              disabled
+              aria-label={t("Countdown to launch")}
+            >
+              {t("Release in")}{" "}
+              {(() => {
+                const seconds = Math.max(0, Math.floor((releaseTimestamp - releaseNow) / 1000));
+                const days = Math.floor(seconds / 86400);
+                const hours = Math.floor((seconds % 86400) / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const remaining = seconds % 60;
+                const clock = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remaining).padStart(2, "0")}`;
+                return days > 0 ? `${days}d ${clock}` : clock;
+              })()}
+            </button>
+          )}
       </ProductHero>
 
       <div className="container game-details__body">
@@ -531,13 +625,13 @@ export function GameDetails() {
               <div>
                 {gameVideos.map((video) => (
                   <Link
-                    to={`/?video=${encodeURIComponent(video.id)}#videos`}
+                    to={`/videos?video=${encodeURIComponent(video.id)}`}
                     key={video.id}
                     className="game-video-card"
                   >
                     <span className="game-video-card__visual">
-                      {safeImageUrl(video.thumbnail) && (
-                        <img src={safeImageUrl(video.thumbnail)} alt="" loading="lazy" />
+                      {getVideoThumbnail(video, language) && (
+                        <img src={getVideoThumbnail(video, language)} alt="" loading="lazy" />
                       )}
                       <i>
                         <Play size={20} weight="bold" />
@@ -569,7 +663,7 @@ export function GameDetails() {
                 downloadBusy={download.busy}
               />
 
-              {game.commerceEnabled && game.purchaseUrl && game.itchGameId && !owned && (
+              {game.status === "released" && game.commerceEnabled && game.purchaseUrl && game.itchGameId && !owned && (
                 <div className="game-details__availability-actions">
                   <button
                     type="button"
@@ -577,8 +671,8 @@ export function GameDetails() {
                     disabled={purchase.status === "checking"}
                     onClick={() => verifyPurchase(false)}
                   >
-                    <ShoppingCart weight="bold" />
-                    {t("Verify purchase")}
+                    {purchase.status === "checking" ? <LoadingSpinner /> : <ShoppingCart weight="bold" />}
+                    {purchase.status === "checking" ? t("Verifying…") : t("Verify purchase")}
                   </button>
                 </div>
               )}
@@ -596,7 +690,7 @@ export function GameDetails() {
           <div className="game-details__trailer-list">
             {trailerVideos.map((video, index) => (
               <Link
-                to={`/?video=${encodeURIComponent(video.id)}#videos`}
+                to={`/videos?video=${encodeURIComponent(video.id)}`}
                 className="btn btn--secondary game-details__trailer"
                 key={video.id}
               >
@@ -651,6 +745,7 @@ export function GameDetails() {
       >
         <div className="purchase-dialog">
           <h2 id="purchase-dialog-title">
+            {purchase.status === "checking" && <><LoadingSpinner />{" "}</>}
             {purchase.status === "connect" && t("Connect your itch.io account")}
             {purchase.status === "checking" && t("Checking your library")}
             {purchase.status === "checkout" && t("Complete your purchase")}

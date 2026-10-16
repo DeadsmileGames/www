@@ -2,13 +2,18 @@ import { useLanguage } from "../context/LanguageContext";
 import { SkeletonPage } from "../components/ui/Skeleton";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useOutlet } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 
 import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { SearchOverlay } from "../components/search/SearchOverlay";
 import { CookieConsent } from "../components/ui/CookieConsent";
+import { PremiereBanner } from "../components/videos/PremiereBanner";
+import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { useAuth } from "../hooks/useAuth";
+import { usePremiere } from "../hooks/usePremiere";
+import { safeImageUrl } from "../utils/urls";
 
 const AdminComposer = lazy(() =>
   import("../components/admin/AdminComposer").then((module) => ({
@@ -20,6 +25,8 @@ export function AppLayout() {
   const { t } = useLanguage();
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [premiereOpen, setPremiereOpen] = useState(false);
+  const premiere = usePremiere();
 
   const location = useLocation();
   const outlet = useOutlet();
@@ -67,12 +74,17 @@ export function AppLayout() {
         {t("Skip to content")}
       </a>
 
-      {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
+      <div className={`premiere-shell ${premiere && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
+        {premiere && !isAuthPage && (
+          <PremiereBanner premiere={premiere} onOpen={() => setPremiereOpen(true)} />
+        )}
+        {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
+      </div>
 
       <main id="main-content">
         <Suspense fallback={<SkeletonPage path={location.pathname} />}>
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+            <m.div
               className="page-transition"
               key={location.pathname}
               initial={{ opacity: 0 }}
@@ -88,14 +100,24 @@ export function AppLayout() {
               }}
             >
               {outlet}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </Suspense>
       </main>
 
       {!isAuthPage && <Footer />}
 
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        hasPremiere={Boolean(premiere && !isAuthPage)}
+      />
+
+      <VideoOverlay
+        videoId={premiereOpen && premiere ? premiere.id : null}
+        background={safeImageUrl(premiere?.screenshots?.[0])}
+        onClose={() => setPremiereOpen(false)}
+      />
 
       {!isAuthPage && user?.role === "admin" && (
         <Suspense fallback={null}>

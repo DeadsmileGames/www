@@ -1,0 +1,139 @@
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
+import { useLanguage } from "../context/LanguageContext";
+import { API_BASE_URL } from "../services/api";
+
+const HEALTH_CHECK_INTERVAL = 15_000;
+const OFFLINE_RETRY_INTERVAL = 12_000;
+const QUICK_RETRY_DELAY = 1_200;
+const INITIAL_RETRY_INTERVAL = 5_000;
+const HEALTH_TIMEOUT = 4_500;
+
+function MaintenanceScreen() {
+  const { t } = useLanguage();
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <m.main
+      className="maintenance-screen"
+      role="status"
+      aria-live="polite"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: "easeOut" }}
+    >
+      <m.div
+        className="maintenance-screen__content"
+        initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: reducedMotion ? 0.01 : 0.24, ease: "easeOut" }}
+      >
+        <h1>{t("We're performing maintenance.")}</h1>
+        <p className="maintenance-screen__hint">
+          {t("Please wait a little and come back later. We'll keep you updated on X.")}
+        </p>
+        <a
+          className="maintenance-screen__social"
+          href="https://x.com/DeadsmileGames"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          @DeadsmileGames <span>{t("on X")}</span>
+        </a>
+      </m.div>
+    </m.main>
+  );
+}
+
+export function ApiAvailabilityGate({ children }) {
+  const [available, setAvailable] = useState(false);
+  const availableOnce = useRef(false);
+  const reducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    let active = true;
+    let timer = null;
+    let failures = 0;
+
+    const schedule = (delay) => {
+      if (active) timer = window.setTimeout(probe, delay);
+    };
+
+    async function probe() {
+      if (!active) return;
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), HEALTH_TIMEOUT);
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/health`, {
+          method: "GET",
+          cache: "no-store",
+          credentials: "include",
+          headers: { Accept: "application/json" },
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("API health check failed");
+        const result = await response.json();
+        if (result?.status !== "ok") throw new Error("API is not ready");
+        if (!active) return;
+
+        failures = 0;
+        availableOnce.current = true;
+        setAvailable(true);
+        schedule(HEALTH_CHECK_INTERVAL);
+      } catch {
+        if (!active) return;
+        failures += 1;
+        if (availableOnce.current && failures >= 2) setAvailable(false);
+        schedule(
+          availableOnce.current
+            ? failures === 1
+              ? QUICK_RETRY_DELAY
+              : OFFLINE_RETRY_INTERVAL
+            : INITIAL_RETRY_INTERVAL,
+        );
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    }
+
+    void probe();
+    return () => {
+      active = false;
+      if (timer !== null) window.clearTimeout(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (available) return undefined;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      document.body.style.overflow = previousBodyOverflow;
+    };
+  }, [available]);
+
+  return (
+    <AnimatePresence mode="sync" initial={false}>
+      {available ? (
+        <m.div
+          key="site-ready"
+          className="api-availability-site"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: "easeOut" }}
+        >
+          {children}
+        </m.div>
+      ) : (
+        <MaintenanceScreen key="site-maintenance" />
+      )}
+    </AnimatePresence>
+  );
+}
