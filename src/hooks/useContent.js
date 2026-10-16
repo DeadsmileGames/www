@@ -21,7 +21,7 @@ export function useContent(path, params = {}) {
     const id = ++requestId.current;
     if (!silent) setState((current) => ({ ...current, status: "loading", error: "" }));
     try {
-      const data = await api.get(path, JSON.parse(paramsKey));
+      const data = await api.get(path, { ...JSON.parse(paramsKey), language });
       if (id === requestId.current)
         setState({ status: "success", data: data ?? [], error: "" });
       return data;
