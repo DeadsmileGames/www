@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useContent } from "../hooks/useContent";
 import { safeImageUrl } from "../utils/urls";
 import { ErrorState } from "../components/ui/ErrorState";
@@ -75,7 +76,7 @@ export function GameLatest() {
                       {item.title}
                     </Link>
                   </h2>
-                  {item.excerpt && <p>{item.excerpt}</p>}
+                  {item.excerpt && <p><AutoLinkText>{item.excerpt}</AutoLinkText></p>}
                   <Link
                     to={`/newswire/${encodeURIComponent(item.slug)}`}
                     className="game-latest-page__read-more"
