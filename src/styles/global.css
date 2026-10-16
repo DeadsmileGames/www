@@ -1268,7 +1268,7 @@ fieldset {
   align-items: center;
   gap: 10px;
   padding: 12px 14px;
-  border: 1px solid transparent;
+  border: 0;
   border-radius: 10px;
   background: transparent;
   color: #c8c8c8;
@@ -1277,13 +1277,11 @@ fieldset {
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .account-nav-item:hover {
-  border-color: #353535;
   background: #ffffff0a;
   color: #fff;
 }
 .account-nav-item.is-active,
 .account-nav-item--active {
-  border-color: #e7e7e7;
   background: #e7e7e7;
   color: #111;
 }
@@ -1313,7 +1311,6 @@ fieldset {
   gap: 24px;
   margin: 0 0 30px;
   padding: 24px 28px;
-  border: 1px solid #303030;
   border-radius: 15px;
   background: #181818;
 }
@@ -1336,7 +1333,6 @@ fieldset {
 }
 .account-page .account-page__content > #account-tab-content {
   padding: clamp(20px, 2.2vw, 32px);
-  border: 1px solid #303030;
   border-radius: 15px;
 }
 .account-page .account-block:last-child {
@@ -1884,7 +1880,6 @@ fieldset {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  border-bottom: 1px solid #444;
   padding: 15px 0;
 }
 .admin-manage__item img {
