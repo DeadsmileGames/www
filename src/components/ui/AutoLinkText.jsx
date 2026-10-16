@@ -73,6 +73,7 @@ export function AutoLinkText({ children, as: Tag = "span", ...props }) {
         ) : (
           <a
             key={part.href + "-" + index}
+            className="auto-link-text__link"
             href={part.href}
             target="_blank"
             rel="noopener noreferrer"
