@@ -5023,24 +5023,6 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Monochrome language flag marks */
-.site-header__dropdown .language-option__flag {
-  display: block;
-  width: 22px;
-  height: 17px;
-  flex: 0 0 22px;
-  overflow: visible;
-}
-.site-header__dropdown button[aria-checked="true"] .language-option__flag {
-  color: #111;
-}
-.site-header__dropdown button .language-option__check {
-  margin-inline-start: auto;
-  font-weight: 800;
-}
-.site-header__dropdown[aria-label="Language"] button {
-  gap: 10px;
-}
 html[dir="rtl"] {
   direction: rtl;
 }
@@ -5054,6 +5036,4 @@ html[dir="rtl"] .site-header__dropdown {
 html[dir="rtl"] .site-header__actions {
   direction: ltr;
 }
-html[dir="rtl"] .site-header__dropdown .language-option__check {
-  margin-inline-start: auto;
-}
+html[dir="rtl"] 
