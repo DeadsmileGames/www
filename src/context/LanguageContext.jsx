@@ -121,28 +121,13 @@ const strings = {
   },
 };
 const LanguageContext = createContext(null);
-function browserLanguage() {
-  const candidates =
-    typeof navigator === "undefined"
-      ? []
-      : Array.isArray(navigator.languages) && navigator.languages.length
-        ? navigator.languages
-        : [navigator.language];
-  const languages = candidates.map((value) => String(value || "").toLowerCase());
-  for (const value of languages) {
-    if (value === "pt" || value.startsWith("pt-")) return "pt-BR";
-    if (value === "es" || value.startsWith("es-")) return "es";
-    if (value === "en" || value.startsWith("en-")) return "en";
-  }
-  return "en";
-}
 export function LanguageProvider({ children }) {
   const [language, updateLanguage] = useState(() => {
     try {
       const value = localStorage.getItem("deadsmile.language");
-      return ["en", "pt-BR", "es"].includes(value) ? value : browserLanguage();
+      return ["en", "pt-BR", "es"].includes(value) ? value : "en";
     } catch {
-      return browserLanguage();
+      return "en";
     }
   });
   const setLanguage = (value) => {
