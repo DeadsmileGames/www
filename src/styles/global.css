@@ -3776,7 +3776,7 @@ input[type="file"]::file-selector-button {
   min-height: min(68vh, 680px);
   overflow: hidden;
   isolation: isolate;
-  background: #101010;
+  background: #0f0f0f;
   color: #fff;
 }
 .videos-page__hero .game-hero__background {
