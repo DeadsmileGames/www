@@ -16,8 +16,6 @@ import {
   List,
   Heart,
   GameController,
-  File,
-  LockKey,
   Globe,
 } from "@phosphor-icons/react";
 
@@ -174,15 +172,6 @@ export function Header({ onOpenSearch, searchOpen = false }) {
                     <Link to="/wishlist" onClick={() => setAccountOpen(false)}>
                       <Heart weight="bold" />
                       {t("Wishlist")}
-                    </Link>
-                    <hr className="dropdown-divider" />
-                    <Link to="/presskit" onClick={() => setAccountOpen(false)}>
-                      <File weight="bold" />
-                      {t("Press Kit")}
-                    </Link>
-                    <Link to="/privacy" onClick={() => setAccountOpen(false)}>
-                      <LockKey weight="bold" />
-                      {t("Privacy")}
                     </Link>
                     <hr className="dropdown-divider" />
                     <button
