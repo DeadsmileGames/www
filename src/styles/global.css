@@ -290,6 +290,18 @@ fieldset {
   align-items: center;
   gap: 35px;
   background: #151515;
+  transform: translateY(0);
+  transition: transform 240ms ease;
+  will-change: transform;
+}
+.site-header__inner--hidden {
+  transform: translateY(calc(-100% - 2px));
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header__inner {
+    transition: none;
+  }
 }
 .site-header__brand {
   width: 75px;
@@ -2007,7 +2019,24 @@ fieldset {
 }
 .admin-manage__item-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.admin-manage__item-actions .btn {
+  min-height: 40px;
+  padding: 8px 13px;
+  gap: 8px;
+  border-radius: 6px;
+  border-bottom-width: 3px;
+  font-size: 13px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.admin-manage__item-actions .btn svg {
+  flex-shrink: 0;
 }
 .news-card__visual img {
   aspect-ratio: 16/10;
