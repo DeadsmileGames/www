@@ -21,64 +21,6 @@ import {
   Globe,
 } from "@phosphor-icons/react";
 
-function LanguageFlag({ language }) {
-  const common = {
-    viewBox: "0 0 24 18",
-    className: "language-option__flag",
-    "aria-hidden": true,
-    focusable: "false",
-  };
-
-  const details = {
-    en: (
-      <>
-        <path d="M4 4.2 20 14.8M20 4.2 4 14.8" stroke="#1a1a1a" strokeWidth="2" />
-        <path d="M12 3.5v12.8M3.5 9h17" stroke="#1a1a1a" strokeWidth="4" />
-        <path d="M12 3.5v12.8M3.5 9h17" stroke="currentColor" strokeWidth="1.6" />
-      </>
-    ),
-    "pt-BR": (
-      <>
-        <path d="m12 4 7 5-7 5-7-5 7-5Z" fill="#1a1a1a" />
-        <circle cx="12" cy="9" r="2.6" fill="currentColor" />
-        <path d="M9.8 8.5c1.5-.4 2.8-.2 4.1.4" stroke="#1a1a1a" strokeWidth=".75" />
-      </>
-    ),
-    es: (
-      <>
-        <path d="M3 7h18v4H3z" fill="#1a1a1a" />
-        <path d="M8 8.4h2.2v2.2H8z" fill="currentColor" />
-      </>
-    ),
-    "zh-CN": (
-      <>
-        <path d="m7 5 .7 1.5 1.7.2-1.3 1.1.4 1.7L7 8.6l-1.5.9.4-1.7-1.3-1.1 1.7-.2L7 5Z" fill="#1a1a1a" />
-        <path d="m12.2 5 .3.8.9.1-.7.6.2.9-.7-.5-.7.5.2-.9-.7-.6.9-.1.3-.8Zm3.5 2-.3.8-.9.1.7.6-.2.9.7-.5.7.5-.2-.9.7-.6-.9-.1-.3-.8Zm-.6 4 .3.8.9.1-.7.6.2.9-.7-.5-.7.5.2-.9-.7-.6.9-.1.3-.8Z" fill="#1a1a1a" />
-      </>
-    ),
-    hi: (
-      <>
-        <path d="M3 6.8h18M3 11.2h18" stroke="#1a1a1a" strokeWidth="1.5" />
-        <circle cx="12" cy="9" r="2" fill="none" stroke="#1a1a1a" strokeWidth=".9" />
-        <circle cx="12" cy="9" r=".55" fill="#1a1a1a" />
-      </>
-    ),
-    ar: (
-      <>
-        <path d="M5 7.2c1.4-1.3 2.4.8 3.7-.3 1.3-1.2 2.6.8 4-.1 1.5-1 2.2.7 3.3-.1" stroke="#1a1a1a" strokeWidth="1.1" strokeLinecap="round" />
-        <path d="M5 9.5h12M7 12.4h10M5 14.2h6" stroke="#1a1a1a" strokeWidth="1.1" strokeLinecap="round" />
-      </>
-    ),
-  };
-
-  return (
-    <svg {...common}>
-      <path d="M2.5 2.5h19v12.8L12 13l-9.5 2.3V2.5Z" fill="currentColor" />
-      {details[language] || details.en}
-    </svg>
-  );
-}
-
 export function Header({ onOpenSearch }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -269,12 +211,17 @@ export function Header({ onOpenSearch }) {
               {languageOpen && (
                 <div className="site-header__dropdown" role="menu" aria-label={t("Language")}>
                   {[
-                    ["en", "English"],
-                    ["pt-BR", "Português (Brasil)"],
-                    ["es", "Español"],
-                    ["zh-CN", "简体中文"],
-                    ["hi", "हिन्दी"],
                     ["ar", "العربية"],
+                    ["zh-CN", "简体中文"],
+                    ["en", "English"],
+                    ["fr", "Français"],
+                    ["de", "Deutsch"],
+                    ["hi", "हिन्दी"],
+                    ["ja", "日本語"],
+                    ["ko", "한국어"],
+                    ["pt-BR", "Português (Brasil)"],
+                    ["ru", "Русский"],
+                    ["es", "Español"],
                   ].map(([value, label]) => (
                     <button
                       type="button"
@@ -287,9 +234,7 @@ export function Header({ onOpenSearch }) {
                         setLanguageOpen(false);
                       }}
                     >
-                      <LanguageFlag language={value} />
                       <span>{label}</span>
-                      {language === value && <span className="language-option__check" aria-hidden="true">✓</span>}
                     </button>
                   ))}
                 </div>
