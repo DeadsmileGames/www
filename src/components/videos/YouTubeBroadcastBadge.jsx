@@ -10,7 +10,7 @@ export function YouTubeBroadcastBadge({ video }) {
   return (
     <span
       className="game-card__badge"
-      style={{ backgroundColor: "#e62117", color: "#fff", fontFamily: "Poppins, sans-serif", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", borderRadius: "4px", padding: "5px 10px", zIndex: 2 }}
+      style={{ backgroundColor: "#e62117", color: "#fff", fontFamily: "var(--font-body)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.04em", borderRadius: "4px", padding: "5px 10px", zIndex: 2 }}
       aria-label={t(label)}
     >
       {t(label)}
