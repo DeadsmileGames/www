@@ -1824,45 +1824,6 @@ fieldset {
   margin: 0 auto 20px;
   color: #b8b8b8;
 }
-.admin-composer {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 100;
-}
-.admin-composer__toggle {
-  width: 55px;
-  height: 55px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: #2a5488;
-}
-.admin-composer__menu {
-  position: absolute;
-  right: 0;
-  bottom: 65px;
-  width: 230px;
-  padding: 15px;
-  background: #242424;
-  border: 1px solid #555;
-}
-.admin-composer__menu button,
-.admin-composer__menu a {
-  display: flex;
-  gap: 12px;
-  width: 100%;
-  background: none;
-  border: 0;
-  padding: 12px;
-  text-align: left;
-}
-.admin-composer__label {
-  color: #aaa;
-  font-size: 12px;
-  padding: 10px;
-}
 .admin-modal__row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2860,9 +2821,6 @@ input[type="file"]::file-selector-button {
 .admin-field {
   display: grid;
   gap: 8px;
-}
-.admin-composer__manage {
-  align-items: center;
 }
 .admin-manage__item > div:first-child {
   min-width: 0;
