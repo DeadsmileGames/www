@@ -20,6 +20,7 @@ import {
   DeviceMobile,
 } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useAuth } from "../hooks/useAuth";
 import { api, friendlyErrorMessage } from "../services/api";
 import { Button } from "../components/ui/Button";
@@ -818,7 +819,7 @@ export function Account() {
                     whiteSpace: "pre-line",
                   }}
                 >
-                  {user.bio}
+                  <AutoLinkText>{user.bio}</AutoLinkText>
                 </p>
               )}
 
