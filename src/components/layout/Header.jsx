@@ -211,17 +211,11 @@ export function Header({ onOpenSearch }) {
               {languageOpen && (
                 <div className="site-header__dropdown" role="menu" aria-label={t("Language")}>
                   {[
-                    ["ar", "العربية"],
-                    ["zh-CN", "简体中文"],
-                    ["en", "English"],
-                    ["fr", "Français"],
                     ["de", "Deutsch"],
-                    ["hi", "हिन्दी"],
-                    ["ja", "日本語"],
-                    ["ko", "한국어"],
-                    ["pt-BR", "Português (Brasil)"],
-                    ["ru", "Русский"],
+                    ["en", "English"],
                     ["es", "Español"],
+                    ["fr", "Français"],
+                    ["pt-BR", "Português (Brasil)"],
                   ].map(([value, label]) => (
                     <button
                       type="button"
