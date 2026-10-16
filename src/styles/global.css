@@ -353,7 +353,7 @@ fieldset {
   gap: 4px;
   background: #1a1a1a;
   border: 0;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
 }
 .site-header__dropdown a,
@@ -367,7 +367,7 @@ fieldset {
   padding: 10px 12px;
   border: 0;
   border-bottom: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   background: transparent;
   color: #f0f0f0;
   text-align: left;
