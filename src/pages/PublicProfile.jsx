@@ -10,6 +10,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useMicrosoftStoreCovers } from "../hooks/useMicrosoftStoreCovers";
 import { api, friendlyErrorMessage } from "../services/api";
 import { SkeletonProfile } from "../components/ui/Skeleton";
@@ -151,7 +152,7 @@ export function PublicProfile() {
               overflowWrap: "anywhere",
             }}
           >
-            {profile.bio || t("No bio yet.")}
+            <AutoLinkText>{profile.bio || t("No bio yet.")}</AutoLinkText>
           </p>
 
           <div className="profile-page__facts">
