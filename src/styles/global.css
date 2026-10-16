@@ -2839,9 +2839,14 @@ input[type="file"]::file-selector-button {
 .admin-field input:not([type="checkbox"]):not([type="range"]):not([type="file"]),
 .admin-field textarea,
 .admin-field select {
-  border: 0;
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   background: #171717;
+}
+.admin-field .admin-modal__error {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
 }
 .admin-manage__item > div:first-child {
   min-width: 0;
@@ -3785,8 +3790,10 @@ input[type="file"]::file-selector-button {
   }
   .premiere-banner__text {
     max-width: 100%;
-    white-space: nowrap;
-    font-size: 15px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: clamp(13px, 3.4vw, 15px);
+    line-height: 1.35;
   }
   .premiere-banner--expanded {
     min-height: 190px;
@@ -4988,7 +4995,7 @@ input[type="file"]::file-selector-button {
   max-height: 420px;
   padding: 13px 14px;
   overflow: auto;
-  border: 0;
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   background: #171717;
   color: inherit;
@@ -5361,22 +5368,6 @@ html[dir="rtl"] .site-header__actions {
     height: max(100%, 56.25vw) !important;
     max-width: none !important;
     transform: translate(-50%, -50%) !important;
-  }
-}
-
-/* The navigation hides while scrolling down, but the premiere banner stays fixed. */
-.site-header__inner {
-  transform: translateY(0);
-  transition: transform 240ms ease;
-  will-change: transform;
-}
-.site-header__inner--hidden {
-  transform: translateY(calc(-100% - 2px));
-  pointer-events: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .site-header__inner {
-    transition: none;
   }
 }
 
