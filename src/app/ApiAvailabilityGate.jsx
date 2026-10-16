@@ -3,6 +3,7 @@ import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 import { useLanguage } from "../context/LanguageContext";
 import { API_BASE_URL } from "../services/api";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
 const HEALTH_CHECK_INTERVAL = 15_000;
 const OFFLINE_RETRY_INTERVAL = 12_000;
@@ -47,8 +48,27 @@ function MaintenanceScreen() {
   );
 }
 
+function CheckingScreen() {
+  const { t } = useLanguage();
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <m.main
+      className="api-availability-checking"
+      role="status"
+      aria-label={t("Loading")}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reducedMotion ? 0.01 : 0.2, ease: "easeOut" }}
+    >
+      <LoadingSpinner className="api-availability-checking__spinner" />
+    </m.main>
+  );
+}
+
 export function ApiAvailabilityGate({ children }) {
-  const [available, setAvailable] = useState(false);
+  const [availability, setAvailability] = useState("checking");
   const availableOnce = useRef(false);
   const reducedMotion = useReducedMotion();
 
@@ -81,12 +101,12 @@ export function ApiAvailabilityGate({ children }) {
 
         failures = 0;
         availableOnce.current = true;
-        setAvailable(true);
+        setAvailability("available");
         schedule(HEALTH_CHECK_INTERVAL);
       } catch {
         if (!active) return;
         failures += 1;
-        if (availableOnce.current && failures >= 2) setAvailable(false);
+        if (failures >= 2) setAvailability("unavailable");
         schedule(
           availableOnce.current
             ? failures === 1
@@ -107,7 +127,7 @@ export function ApiAvailabilityGate({ children }) {
   }, []);
 
   useEffect(() => {
-    if (available) return undefined;
+    if (availability === "available") return undefined;
     const previousDocumentOverflow = document.documentElement.style.overflow;
     const previousBodyOverflow = document.body.style.overflow;
     document.documentElement.style.overflow = "hidden";
@@ -116,11 +136,11 @@ export function ApiAvailabilityGate({ children }) {
       document.documentElement.style.overflow = previousDocumentOverflow;
       document.body.style.overflow = previousBodyOverflow;
     };
-  }, [available]);
+  }, [availability]);
 
   return (
     <AnimatePresence mode="sync" initial={false}>
-      {available ? (
+      {availability === "available" ? (
         <m.div
           key="site-ready"
           className="api-availability-site"
@@ -131,6 +151,8 @@ export function ApiAvailabilityGate({ children }) {
         >
           {children}
         </m.div>
+      ) : availability === "checking" ? (
+        <CheckingScreen key="site-checking" />
       ) : (
         <MaintenanceScreen key="site-maintenance" />
       )}
