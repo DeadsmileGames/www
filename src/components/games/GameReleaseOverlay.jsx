@@ -20,11 +20,15 @@ export function GameReleaseOverlay({ game, onClose }) {
     return trapFocus(panelRef.current, () => closeRef.current?.());
   }, [game?.slug]);
 
-  const image =
+  const backgroundImage =
     safeImageUrl(game?.screenshots?.[0]) ||
-    safeImageUrl(game?.thumbnail) ||
     safeImageUrl(game?.heroImage) ||
+    safeImageUrl(game?.thumbnail) ||
+    "/assets/placeholders/game-cover.svg";
+  const posterImage =
     safeImageUrl(game?.coverImage) ||
+    safeImageUrl(game?.thumbnail) ||
+    safeImageUrl(game?.screenshots?.[0]) ||
     "/assets/placeholders/game-cover.svg";
   const releaseTimestamp = Date.parse(game?.starts_at || "");
   const releaseDate = Number.isFinite(releaseTimestamp)
@@ -54,7 +58,7 @@ export function GameReleaseOverlay({ game, onClose }) {
           exit={{ y: "-100%" }}
           transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
         >
-          <img className="game-release-overlay__background" src={image} alt="" />
+          <img className="game-release-overlay__background" src={backgroundImage} alt="" />
           <div className="game-release-overlay__scrim" />
           <button
             type="button"
@@ -67,7 +71,7 @@ export function GameReleaseOverlay({ game, onClose }) {
 
           <div className="game-release-overlay__content">
             <div className="game-release-overlay__poster">
-              <img src={image} alt="" />
+              <img src={posterImage} alt="" />
             </div>
             <div className="game-release-overlay__details">
               <p className="game-release-overlay__eyebrow">{t("Upcoming game")}</p>
