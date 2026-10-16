@@ -158,6 +158,7 @@ export function GameDetails() {
 
     releaseRefreshRequested.current = true;
     let active = true;
+    let retryTimer = null;
 
     api
       .get(`/games/${encodeURIComponent(slug)}`)
@@ -165,11 +166,17 @@ export function GameDetails() {
         if (active) setState({ status: "success", game: result, error: null });
       })
       .catch(() => {
-        if (active) releaseRefreshRequested.current = false;
+        if (active) {
+          retryTimer = window.setTimeout(() => {
+            releaseRefreshRequested.current = false;
+            setReleaseNow(Date.now());
+          }, 5000);
+        }
       });
 
     return () => {
       active = false;
+      if (retryTimer !== null) window.clearTimeout(retryTimer);
     };
   }, [game?.slug, game?.status, game?.releaseDate, releaseTimestamp, releaseNow, slug]);
   const gameId = game?.id || null;
@@ -623,8 +630,7 @@ export function GameDetails() {
         )}
 
         {game.status === "in_development" &&
-          Number.isFinite(releaseTimestamp) &&
-          releaseTimestamp > releaseNow && (
+          Number.isFinite(releaseTimestamp) && (
             <button
               type="button"
               className="btn btn--secondary game-details__btn"
