@@ -57,7 +57,7 @@ export function useSearch(query, { page = 1, limit = 10 } = {}) {
 
   useEffect(() => {
     const update = (event) => {
-      if (/^game\.(published|updated|deleted)$/.test(event.detail?.event_type || ""))
+      if (/^(game|news|video)\.(published|updated|deleted)$/.test(event.detail?.event_type || ""))
         retry();
     };
     window.addEventListener("deadsmile:live", update);
