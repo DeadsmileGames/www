@@ -5261,7 +5261,8 @@ html[dir="rtl"] .site-header__actions {
   color: #aaa;
 }
 .videos-showcase__content {
-  width: min(100% - 80px, 1720px);
+  width: calc(100% - 80px);
+  max-width: 1720px;
   margin: 0 auto;
 }
 .videos-showcase__state {
