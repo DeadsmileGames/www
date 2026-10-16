@@ -3537,12 +3537,9 @@ input[type="file"]::file-selector-button {
   opacity: 1;
 }
 
-/* Fine-tune the top banner image on desktop only; fullscreen and mobile stay unchanged. */
+/* Shift the top banner image down on desktop only; keep its original full width. */
 @media (min-width: 761px) {
   .premiere-banner:not(.premiere-banner--fullscreen) .premiere-banner__background img {
-    flex: 0 0 90%;
-    width: 90%;
-    margin-inline: auto;
     object-position: 50% calc(50% - 150px);
   }
 }
