@@ -721,7 +721,7 @@ export function AdminComposer() {
           {loadingItems ? (
             <SkeletonRows />
           ) : (
-            sections.map(({ key, label, icon: Icon }) => {
+            sections.map(({ key, label }) => {
               const list = items[key] || [];
               return (
                 <section key={key} className="admin-manage__section">
