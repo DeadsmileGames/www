@@ -27,9 +27,7 @@ export function PremiereBanner({ premiere, onOpen }) {
     .slice(0, 3);
   const databaseCoverImage =
     safeImageUrl(premiere.databaseCoverImage) ||
-    safeImageUrl(premiere.database_cover_image) ||
-    safeImageUrl(premiere.coverImage) ||
-    safeImageUrl(premiere.cover_image);
+    safeImageUrl(premiere.database_cover_image);
   const coverImage =
     safeImageUrl(premiere.coverImage) ||
     safeImageUrl(premiere.thumbnail) ||
