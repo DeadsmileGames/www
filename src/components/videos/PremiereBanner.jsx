@@ -30,6 +30,7 @@ export function PremiereBanner({ premiere, onOpen }) {
     safeImageUrl(premiere.thumbnail) ||
     safeImageUrl(premiere.heroImage) ||
     "/assets/placeholders/game-cover.svg";
+  const previewBackgroundImage = images[0] || coverImage;
   const description = String(
     premiere.shortDescription ||
       premiere.short_description ||
@@ -105,9 +106,7 @@ export function PremiereBanner({ premiere, onOpen }) {
           transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
         >
           <span className="premiere-banner__background" aria-hidden="true">
-            {images.map((url) => (
-              <img key={url} src={url} alt="" />
-            ))}
+            <img src={previewBackgroundImage} alt="" />
           </span>
           <div className="premiere-banner__expanded-content">
             <img
