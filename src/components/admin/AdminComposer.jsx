@@ -334,8 +334,9 @@ export function AdminComposer() {
   }, [t]);
 
   useEffect(() => {
+    if (user?.role !== "admin") return;
     void loadManageItems();
-  }, [loadManageItems]);
+  }, [loadManageItems, user?.role]);
 
   async function openManage() {
     await loadManageItems();
@@ -416,7 +417,13 @@ export function AdminComposer() {
           <header>
             <div>
               <h2 id="admin-composer-title">
-                {editing ? t("Edit") : t("Publish")} {type === "newsletter" ? t("Newswire") : type === "video" ? t("Video") : t("Game")}
+                {editing
+                  ? `${t("Edit")} ${type === "newsletter" ? t("Newswire") : type === "video" ? t("Video") : t("Game")}`
+                  : type === "newsletter"
+                    ? t("Publish news")
+                    : type === "video"
+                      ? t("Add video")
+                      : t("Add game")}
               </h2>
             </div>
             <button
