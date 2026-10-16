@@ -77,7 +77,7 @@ a {
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #fff;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
 }
 
 .container-light-nav {
@@ -206,7 +206,7 @@ a {
 .paragraph {
   width: 75%;
   margin-bottom: 1vh;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
   color: #5a5a5a;
   font-size: 2.15vh;
   line-height: 105%;
@@ -222,7 +222,7 @@ a {
   -webkit-flex: 0 auto;
   -ms-flex: 0 auto;
   flex: 0 auto;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
   color: #5a5a5a;
   font-size: 1.7vh;
   line-height: 100%;
@@ -418,7 +418,7 @@ a {
   background-image: radial-gradient(circle farthest-corner at 50% 50%, #1d252e, #1d252e);
   background-position: 0px 0px;
   background-size: auto;
-  font-family: "Berlin sans fb demi", Poppins, sans-serif;
+  font-family: var(--font-display);
   background-clip: border-box;
   -webkit-text-fill-color: inherit;
 }
@@ -555,7 +555,7 @@ a {
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
   font-weight: 700;
   text-align: center;
 }
@@ -828,14 +828,14 @@ a {
   -webkit-justify-content: space-around;
   -ms-flex-pack: distribute;
   justify-content: space-around;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
   color: #f0f0f0;
   font-weight: 700;
 }
 
 .div-about-us {
   margin-top: 5%;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
 }
 
 .heading-3 {
@@ -857,7 +857,7 @@ a {
 }
 
 .div-socials {
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
 }
 
 .heading-4 {
@@ -906,7 +906,7 @@ a {
   -webkit-align-self: center;
   -ms-flex-item-align: center;
   align-self: center;
-  font-family: Poppins, "Berlin sans fb demi", sans-serif;
+  font-family: var(--font-body);
   font-size: 2.75vh;
   line-height: 120%;
 }
@@ -943,7 +943,7 @@ a {
   -webkit-transform: translate(0px, 0px);
   -ms-transform: translate(0px, 0px);
   transform: translate(0px, 0px);
-  font-family: "Berlin sans fb demi", Poppins, sans-serif;
+  font-family: var(--font-display);
   font-weight: 400;
 }
 
