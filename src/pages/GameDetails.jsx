@@ -509,7 +509,12 @@ export function GameDetails() {
             disabled={wishlistLoading}
             onClick={toggle}
           >
-            {inWishlist ? (
+            {wishlistLoading ? (
+              <>
+                <LoadingSpinner />
+                <span>{t("Saving…")}</span>
+              </>
+            ) : inWishlist ? (
               <>
                 <HeartStraight weight="bold" />
                 <span>{t("Wishlisted")}</span>
@@ -740,6 +745,7 @@ export function GameDetails() {
       >
         <div className="purchase-dialog">
           <h2 id="purchase-dialog-title">
+            {purchase.status === "checking" && <><LoadingSpinner />{" "}</>}
             {purchase.status === "connect" && t("Connect your itch.io account")}
             {purchase.status === "checking" && t("Checking your library")}
             {purchase.status === "checkout" && t("Complete your purchase")}
@@ -777,11 +783,8 @@ export function GameDetails() {
                 type="button"
                 className="btn btn--primary"
                 onClick={() => verifyPurchase(false)}
-                disabled={purchase.status === "checking"}
-                aria-busy={purchase.status === "checking"}
               >
-                {purchase.status === "checking" ? <LoadingSpinner /> : null}
-                {purchase.status === "checking" ? t("Verifying…") : t("Verify purchase")}
+                {t("Verify purchase")}
               </button>
             )}
 
