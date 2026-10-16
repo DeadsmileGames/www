@@ -93,7 +93,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                   <p>{t("Allow YouTube content to play this video.")}</p>
                   <button
                     type="button"
-                    className="btn btn--secondary"
+                    className="btn btn--player"
                     onClick={() => {
                       setOptionalContent(true);
                       setPlaying(true);
@@ -149,7 +149,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                 </div>
                 {external && (
                   <a
-                    className="btn btn--secondary soundtrack-overlay__youtube"
+                    className="btn btn--player soundtrack-overlay__youtube"
                     href={external}
                     target="_blank"
                     rel="noopener noreferrer"
