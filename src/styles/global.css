@@ -4491,6 +4491,13 @@ input[type="file"]::file-selector-button {
 }
 
 /* Shared, accessible in-button feedback for async actions. */
+.loading-spinner--icon {
+  width: 0.9em;
+  height: 0.9em;
+  flex-basis: 0.9em;
+  margin-right: 0;
+  border-width: 2px;
+}
 .loading-spinner {
   display: inline-block;
   width: 1em;
