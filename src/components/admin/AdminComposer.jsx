@@ -25,6 +25,9 @@ const initial = {
   image: "",
   category: "Devlog",
   thumbnail: "",
+  thumbnailEn: "",
+  thumbnailPtBr: "",
+  thumbnailEs: "",
   videoUrl: "",
   durationSeconds: "",
   slug: "",
@@ -166,6 +169,9 @@ export function AdminComposer() {
           title: detail.title || "",
           category: detail.category || "",
           thumbnail: detail.thumbnail || "",
+          thumbnailEn: detail.thumbnail_en || "",
+          thumbnailPtBr: detail.thumbnail_pt_br || "",
+          thumbnailEs: detail.thumbnail_es || "",
           videoUrl: detail.video_url || "",
           durationSeconds: detail.duration_seconds ?? "",
         };
@@ -239,6 +245,9 @@ export function AdminComposer() {
           title: form.title,
           category: form.category,
           thumbnail: form.thumbnail,
+          thumbnailEn: form.thumbnailEn,
+          thumbnailPtBr: form.thumbnailPtBr,
+          thumbnailEs: form.thumbnailEs,
           videoUrl: form.videoUrl || null,
           durationSeconds: form.durationSeconds ? Number(form.durationSeconds) : null,
         };
@@ -505,6 +514,27 @@ export function AdminComposer() {
                   maxLength={2000}
                   value={form.thumbnail}
                   onChange={set("thumbnail")}
+                />
+                <Field
+                  label={t("Thumbnail URL (English)")}
+                  maxLength={2000}
+                  value={form.thumbnailEn}
+                  onChange={set("thumbnailEn")}
+                  placeholder="https://…"
+                />
+                <Field
+                  label={t("Thumbnail URL (Portuguese)")}
+                  maxLength={2000}
+                  value={form.thumbnailPtBr}
+                  onChange={set("thumbnailPtBr")}
+                  placeholder="https://…"
+                />
+                <Field
+                  label={t("Thumbnail URL (Spanish)")}
+                  maxLength={2000}
+                  value={form.thumbnailEs}
+                  onChange={set("thumbnailEs")}
+                  placeholder="https://…"
                 />
                 <Field
                   label={t("Duration (seconds)")}
