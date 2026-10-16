@@ -10,7 +10,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-OPERATIONAL-green" alt="Status: Operational">
-  <img src="https://img.shields.io/badge/VERSION-1.7.1-gold" alt="Version 1.7.1">
+  <img src="https://img.shields.io/badge/VERSION-1.0.0-gold" alt="Version 1.0.0">
   <img src="https://img.shields.io/badge/PLATFORM-WEB-red" alt="Platform: Web">
   <img src="https://img.shields.io/badge/TECH-React%20%7C%20Vite-blue" alt="React and Vite">
   <img src="https://img.shields.io/badge/ACCESSIBLE-Responsive%20UI-purple" alt="Responsive UI">
