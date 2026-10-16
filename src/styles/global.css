@@ -3540,7 +3540,7 @@ input[type="file"]::file-selector-button {
 /* Shift the top banner image down on desktop only; keep its original full width. */
 @media (min-width: 761px) {
   .premiere-banner:not(.premiere-banner--fullscreen) .premiere-banner__background img {
-    object-position: 50% calc(50% - 150px);
+    object-position: 50% calc(50% - 120px);
   }
 }
 .premiere-banner__trigger {
