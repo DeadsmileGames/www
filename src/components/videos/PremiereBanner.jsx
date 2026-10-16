@@ -21,14 +21,12 @@ export function PremiereBanner({ premiere, onOpen }) {
     ? getReleaseTimestamp(premiere.starts_at || "")
     : Date.parse(premiere.starts_at || "");
   const seconds = useCountdown(releaseTimestamp);
-  const images = (premiere.screenshots?.length ? premiere.screenshots : [premiere.thumbnail])
-    .map(safeImageUrl)
-    .filter(Boolean)
-    .slice(0, 3);
   const databaseCoverImage =
+    safeImageUrl(premiere.game_cover_image) ||
     safeImageUrl(premiere.databaseCoverImage) ||
     safeImageUrl(premiere.database_cover_image);
   const coverImage =
+    safeImageUrl(premiere.game_cover_image) ||
     safeImageUrl(premiere.coverImage) ||
     safeImageUrl(premiere.thumbnail) ||
     safeImageUrl(premiere.heroImage) ||
@@ -37,7 +35,7 @@ export function PremiereBanner({ premiere, onOpen }) {
     databaseCoverImage || "/assets/placeholders/game-cover.svg";
   const bannerBackgroundImage = isGameRelease
     ? previewBackgroundImage
-    : images[0];
+    : databaseCoverImage || "/assets/placeholders/game-cover.svg";
   const description = String(
     premiere.shortDescription ||
       premiere.short_description ||
