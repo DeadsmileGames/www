@@ -1,15 +1,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, X } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
 import { safeImageUrl } from "../../utils/urls";
+import { trapFocus } from "../../utils/dom";
 
-export function PremiereBanner({ premiere, onOpen, onExpandedChange }) {
+export function PremiereBanner({ premiere, onOpen }) {
   const { t, language } = useLanguage();
   const reducedMotion = useReducedMotion();
   const bannerRef = useRef(null);
+  const previewRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const isGameRelease = premiere.kind === "game";
   const seconds = useCountdown(Date.parse(premiere.starts_at));
@@ -55,8 +58,7 @@ export function PremiereBanner({ premiere, onOpen, onExpandedChange }) {
 
   useEffect(() => {
     setExpanded(false);
-    onExpandedChange?.(false);
-  }, [premiere.kind, premiere.slug, premiere.id, onExpandedChange]);
+  }, [premiere.kind, premiere.slug, premiere.id]);
 
   useEffect(() => {
     if (!isGameRelease || !expanded) return undefined;
@@ -84,84 +86,108 @@ export function PremiereBanner({ premiere, onOpen, onExpandedChange }) {
       observer.disconnect();
       root.style.removeProperty("--premiere-banner-height");
     };
-  }, [expanded]);
+  }, []);
 
-  const expandPreview = () => {
-    setExpanded(true);
-    onExpandedChange?.(true);
-  };
-  const collapsePreview = () => {
-    setExpanded(false);
-    onExpandedChange?.(false);
-  };
+  const expandPreview = () => setExpanded(true);
+  const collapsePreview = () => setExpanded(false);
+
+  useEffect(() => {
+    if (!isGameRelease || !expanded) return undefined;
+    return trapFocus(previewRef.current, collapsePreview);
+  }, [expanded, isGameRelease]);
+
+  const expandedPreview = isGameRelease && expanded
+    ? createPortal(
+        <motion.div
+          layout
+          ref={previewRef}
+          className="premiere-banner premiere-banner--expanded premiere-banner--fullscreen"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="premiere-banner-preview-title"
+          tabIndex={-1}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: reducedMotion ? 0.01 : 0.22, ease: "easeOut" }}
+        >
+          <span className="premiere-banner__background" aria-hidden="true">
+            {images.map((url) => (
+              <img key={url} src={url} alt="" />
+            ))}
+          </span>
+          <div className="premiere-banner__expanded-content">
+            <img
+              className="premiere-banner__cover"
+              src={coverImage}
+              alt=""
+              onError={(event) => {
+                event.currentTarget.onerror = null;
+                event.currentTarget.src = "/assets/placeholders/game-cover.svg";
+              }}
+            />
+            <div className="premiere-banner__details">
+              <h1 className="premiere-banner__title" id="premiere-banner-preview-title">
+                {premiere.title}
+              </h1>
+              {releaseDate && (
+                <p className="premiere-banner__date">
+                  <span>{t("Release date")}:</span>{" "}
+                  <time dateTime={premiere.starts_at}>{releaseDate}</time>
+                </p>
+              )}
+              {description && <p className="premiere-banner__description">{description}</p>}
+              {premiere.slug && (
+                <div className="premiere-banner__actions">
+                  <Link
+                    to={`/games/${encodeURIComponent(premiere.slug)}`}
+                    className="btn btn--primary"
+                    onClick={collapsePreview}
+                  >
+                    {t("View game")}
+                    <ArrowUpRight size={18} weight="bold" aria-hidden="true" />
+                  </Link>
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              className="premiere-banner__collapse"
+              onClick={collapsePreview}
+              aria-label={t("Close preview")}
+            >
+              <X size={20} weight="bold" />
+            </button>
+          </div>
+        </motion.div>,
+        document.body,
+      )
+    : null;
 
   return (
-    <motion.div
-      layout
-      ref={bannerRef}
-      className={`premiere-banner${isGameRelease && expanded ? " premiere-banner--expanded" : ""}`}
-      initial={{ y: "-100%" }}
-      animate={{ y: 0 }}
-      transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
-    >
-      <span className="premiere-banner__background" aria-hidden="true">
-        {images.map((url) => (
-          <img key={url} src={url} alt="" />
-        ))}
-      </span>
-
-      {isGameRelease && expanded ? (
-        <div className="premiere-banner__expanded-content">
-          <img
-            className="premiere-banner__cover"
-            src={coverImage}
-            alt=""
-            onError={(event) => {
-              event.currentTarget.onerror = null;
-              event.currentTarget.src = "/assets/placeholders/game-cover.svg";
-            }}
-          />
-          <div className="premiere-banner__details">
-            <h2 className="premiere-banner__title">{premiere.title}</h2>
-            {releaseDate && (
-              <p className="premiere-banner__date">
-                <span>{t("Release date")}:</span>{" "}
-                <time dateTime={premiere.starts_at}>{releaseDate}</time>
-              </p>
-            )}
-            {description && <p className="premiere-banner__description">{description}</p>}
-            {premiere.slug && (
-              <div className="premiere-banner__actions">
-                <Link
-                  to={`/games/${encodeURIComponent(premiere.slug)}`}
-                  className="btn btn--primary"
-                  onClick={collapsePreview}
-                >
-                  {t("View game")}
-                  <ArrowUpRight size={18} weight="bold" aria-hidden="true" />
-                </Link>
-              </div>
-            )}
-          </div>
-          <button
-            type="button"
-            className="premiere-banner__collapse"
-            onClick={() => setExpanded(false)}
-            aria-label={t("Close preview")}
-          >
-            <X size={20} weight="bold" />
-          </button>
-        </div>
-      ) : (
+    <>
+      <motion.div
+        ref={bannerRef}
+        className="premiere-banner"
+        initial={{ y: "-100%" }}
+        animate={{ y: 0 }}
+        transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
+      >
+        <span className="premiere-banner__background" aria-hidden="true">
+          {images.map((url) => (
+            <img key={url} src={url} alt="" />
+          ))}
+        </span>
         <button
           type="button"
           className="premiere-banner__trigger"
-          onClick={isGameRelease ? () => setExpanded(true) : onOpen}
+          onClick={isGameRelease ? expandPreview : onOpen}
           aria-expanded={isGameRelease ? expanded : undefined}
         >
           <span className="premiere-banner__text">{bannerLabel}</span>
         </button>
-      )}
-    </motion.div>
+      </motion.div>
+      {expandedPreview}
+    </>
   );
 }
