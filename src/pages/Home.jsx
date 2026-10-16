@@ -7,6 +7,7 @@ import { useContent } from "../hooks/useContent";
 import { safeImageUrl, safeHttpsUrl, safeYoutubeEmbedUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
 import { Play } from "@phosphor-icons/react";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 
 function ContentState({ resource, empty, children, skeleton }) {
   const { t } = useLanguage();
@@ -139,7 +140,7 @@ export function Home() {
                     )}
                     <small>{item.category || t("News")}</small>
                     <h3>{item.title}</h3>
-                    <p>{item.excerpt}</p>
+                    <p><AutoLinkText>{item.excerpt}</AutoLinkText></p>
                     <span className="btn btn--primary">{t("Read story \u2192")}</span>
                   </Link>
                 ))}
