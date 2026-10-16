@@ -36,7 +36,7 @@ export function AppLayout() {
     .map((game) => {
       const value = game.releaseDate || game.release_date;
       const timestamp =
-        typeof value === "string" && /^\\d{4}-\\d{2}-\\d{2}$/.test(value)
+        typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)
           ? new Date(`${value}T00:00:00-03:00`).getTime()
           : Date.parse(value || "");
       return { game, timestamp };
