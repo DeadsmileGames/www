@@ -37,7 +37,7 @@ export function PublicProfile() {
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [gallery, setGallery] = useState(null);
   const [selected, setSelected] = useState(null);
-  const storeCovers = useMicrosoftStoreCovers(profile?.recentGames || []);
+  const storeCovers = useMicrosoftStoreCovers(profile?.recentGames || [], { includeUnknown: true });
 
   useEffect(() => {
     let active = true;
