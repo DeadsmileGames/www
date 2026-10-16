@@ -25,12 +25,16 @@ export function PremiereBanner({ premiere, onOpen }) {
     .map(safeImageUrl)
     .filter(Boolean)
     .slice(0, 3);
-  const coverImage =
+  const databaseCoverImage =
     safeImageUrl(premiere.coverImage) ||
+    safeImageUrl(premiere.cover_image);
+  const coverImage =
+    databaseCoverImage ||
     safeImageUrl(premiere.thumbnail) ||
     safeImageUrl(premiere.heroImage) ||
     "/assets/placeholders/game-cover.svg";
-  const previewBackgroundImage = coverImage;
+  const previewBackgroundImage =
+    databaseCoverImage || "/assets/placeholders/game-cover.svg";
   const description = String(
     premiere.shortDescription ||
       premiere.short_description ||
