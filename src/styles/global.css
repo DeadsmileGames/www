@@ -1639,6 +1639,46 @@ fieldset {
   min-width: 0;
   flex: 1 1 auto;
 }
+
+.search-result-type {
+  display: block;
+  margin-bottom: 4px;
+  color: #8ab4f8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.search-page__list {
+  display: grid;
+  gap: 10px;
+}
+
+.search-page__list .search-overlay__result {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .search-overlay__result {
+    gap: 14px;
+    padding: 13px;
+  }
+
+  .search-overlay__result-cover {
+    flex-basis: 78px;
+  }
+
+  .search-overlay__thumb {
+    width: 78px;
+    height: 64px;
+  }
+
+  .search-overlay__result-title {
+    font-size: 17px;
+  }
+}
 .auto-link-text__link {
   color: #8ab4f8;
   text-decoration: underline;
