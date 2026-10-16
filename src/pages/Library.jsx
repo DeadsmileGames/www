@@ -10,45 +10,7 @@ import { SkeletonGameGrid } from "../components/ui/Skeleton";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { safeImageUrl } from "../utils/urls";
 import { GameCoverPanel } from "../components/games/GameCoverPanel";
-
-function storePosterFromDetails(details) {
-  const images = Array.isArray(details?.microsoftStore?.images)
-    ? details.microsoftStore.images
-    : [];
-  const candidates = images
-    .filter((image) =>
-      typeof image?.url === "string" &&
-      /poster|boxart|cover/i.test(image?.purpose || ""),
-    )
-    .sort((a, b) => {
-      const aPortrait = Number(a.height || 0) > Number(a.width || 0) ? 1 : 0;
-      const bPortrait = Number(b.height || 0) > Number(b.width || 0) ? 1 : 0;
-      return bPortrait - aPortrait || Number(b.height || 0) - Number(a.height || 0);
-    });
-  return candidates.map((image) => safeImageUrl(image.url)).find(Boolean) || null;
-}
-
-
-async function loadStorePosters(games) {
-  const candidates = games.filter((game) => game.microsoftStoreBadge && game.slug);
-  const posters = new Map();
-  let next = 0;
-  const workers = Array.from({ length: Math.min(4, candidates.length) }, async () => {
-    while (next < candidates.length) {
-      const game = candidates[next++];
-      try {
-        const details = await api.get(`/games/${encodeURIComponent(game.slug)}`);
-        if (String(details?.id || "") !== String(game.id)) continue;
-        const poster = storePosterFromDetails(details);
-        if (poster) posters.set(String(game.id), poster);
-      } catch {
-        
-      }
-    }
-  });
-  await Promise.all(workers);
-  return posters;
-}
+import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
 
 export function Library() {
   const { t, language } = useLanguage();
@@ -78,11 +40,11 @@ export function Library() {
       setGames(normalizedItems);
 
       
-      void loadStorePosters(normalizedItems).then((posters) => {
+      void loadMicrosoftStoreCovers(normalizedItems).then((posters) => {
         if (id !== requestId.current || posters.size === 0) return;
         setGames((current) =>
           current.map((game) => {
-            const poster = posters.get(String(game.id));
+            const poster = posters.get(String(game.id ?? game.slug));
             return poster ? { ...game, storePoster: poster } : game;
           }),
         );
