@@ -2,7 +2,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useGames } from "../hooks/useGames";
 import { SkeletonPage } from "../components/ui/Skeleton";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { useLocation, useOutlet } from "react-router-dom";
+import { useLocation, useNavigate, useOutlet } from "react-router-dom";
 import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 
@@ -54,6 +54,7 @@ export function AppLayout() {
         state: "upcoming",
         title: nextRelease.game.title,
         starts_at: new Date(nextRelease.timestamp).toISOString(),
+        slug: nextRelease.game.slug,
         thumbnail:
           nextRelease.game.coverImage ||
           nextRelease.game.cover_image ||
@@ -76,6 +77,7 @@ export function AppLayout() {
       : premiere;
 
   const location = useLocation();
+  const navigate = useNavigate();
   const outlet = useOutlet();
   const reducedMotion = useReducedMotion();
 
@@ -122,8 +124,17 @@ export function AppLayout() {
       </a>
 
       <div className={`premiere-shell ${bannerContent && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
-        {premiere && !isAuthPage && (
-          <PremiereBanner premiere={premiere} onOpen={() => setPremiereOpen(true)} />
+        {bannerContent && !isAuthPage && (
+          <PremiereBanner
+            premiere={bannerContent}
+            onOpen={() => {
+              if (bannerContent.kind === "game" && bannerContent.slug) {
+                navigate(`/games/${encodeURIComponent(bannerContent.slug)}`);
+              } else if (bannerContent.kind !== "game") {
+                setPremiereOpen(true);
+              }
+            }}
+          />
         )}
         {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} />}
       </div>
