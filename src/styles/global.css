@@ -383,14 +383,14 @@ fieldset {
   background: #fff;
   color: #111;
   border: 0;
-  border-radius: 999px;
+  border-radius: 10px;
 }
 .site-header__dropdown button.btn--danger {
   justify-content: flex-start;
   margin-top: 4px;
   border: 0;
   border-bottom: 0;
-  border-radius: 999px;
+  border-radius: 10px;
   background: #a53636;
   color: #fff;
 }
