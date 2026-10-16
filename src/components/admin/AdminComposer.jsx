@@ -890,10 +890,21 @@ export function AdminComposer() {
                       <div className="admin-modal__row">
                         <label className="admin-field">
                           <span>{t("Access")}</span>
-                          <select value={form.accessType} onChange={set("accessType")}>
+                          <select
+                            name="accessType"
+                            value={form.accessType}
+                            onChange={set("accessType")}
+                            aria-invalid={fieldErrors.accessType ? "true" : undefined}
+                            aria-describedby={fieldErrors.accessType ? "accessType-error" : undefined}
+                          >
                             <option value="free">{t("Free")}</option>
                             <option value="paid">{t("Paid")}</option>
                           </select>
+                          {fieldErrors.accessType && (
+                            <small id="accessType-error" className="admin-modal__error" role="alert">
+                              {fieldErrors.accessType}
+                            </small>
+                          )}
                         </label>
                         <Field
                           label={t("itch.io game page (optional)")}
