@@ -342,6 +342,7 @@ export function SkeletonPage({ path }) {
           </div>
         </div>
       </>
+    );
   } else if (path === "/account") {
     className = "account-page container";
     content = (
