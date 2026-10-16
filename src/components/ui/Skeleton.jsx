@@ -289,6 +289,21 @@ export function SkeletonPage({ path }) {
   } else if (/^\/profile\//.test(path)) {
     className = "profile-page container";
     content = <SkeletonProfile />;
+  } else if (path === "/admin") {
+    className = "account-page container";
+    content = (
+      <>
+        <div className="studio-actions" style={{ marginTop: 0, marginBottom: 32 }}>
+          <Skeleton style={{ width: 150, height: 46 }} />
+          <Skeleton style={{ width: 130, height: 46 }} />
+          <Skeleton style={{ width: 130, height: 46 }} />
+        </div>
+        <section className="support-card support-faq-panel">
+          <Skeleton style={{ width: "42%", height: 30, marginBottom: 24 }} />
+          <SkeletonRows count={5} />
+        </section>
+      </>
+    );
   } else if (path === "/account") {
     className = "account-page container";
     content = (
