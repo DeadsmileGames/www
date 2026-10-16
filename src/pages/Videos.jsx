@@ -65,9 +65,20 @@ export function Videos() {
     : null;
   const broadcast = latest?.youtube;
   const broadcastState = broadcast?.state || "none";
+  const scheduledStartAt = broadcastState === "upcoming" ? broadcast?.startsAt : null;
+  const scheduledPremiereDate =
+    scheduledStartAt && Number.isFinite(Date.parse(scheduledStartAt))
+      ? new Intl.DateTimeFormat(language, {
+          dateStyle: "medium",
+          timeStyle: "short",
+          timeZone: "America/Sao_Paulo",
+        }).format(new Date(scheduledStartAt))
+      : null;
   const heroActionLabel =
     broadcastState === "upcoming"
-      ? t("Premiere hasn't started yet")
+      ? scheduledPremiereDate
+        ? t("Premiere starts on {0}", { 0: scheduledPremiereDate })
+        : t("Premiere hasn't started yet")
       : broadcastState === "live"
         ? t("Watch live now")
         : broadcast?.actualStartedAt || broadcast?.actualEndedAt
