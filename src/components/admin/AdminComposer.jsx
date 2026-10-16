@@ -944,6 +944,49 @@ function NewswireBodyEditor({ label, value, onChange, maxLength }) {
         aria-label={label}
         aria-multiline="true"
         aria-required="true"
+        onPaste={(event) => {
+          event.preventDefault();
+          const editor = editorRef.current;
+          const pastedText = event.clipboardData?.getData("text/plain");
+          if (!editor || typeof pastedText !== "string" || !pastedText) return;
+
+          const selection = window.getSelection();
+          let range =
+            selection?.rangeCount &&
+            editor.contains(selection.getRangeAt(0).commonAncestorContainer)
+              ? selection.getRangeAt(0)
+              : null;
+          if (!range) {
+            range = document.createRange();
+            range.selectNodeContents(editor);
+            range.collapse(false);
+          }
+
+          range.deleteContents();
+          const fragment = document.createDocumentFragment();
+          const lines = pastedText.replace(/\\r\\n?/g, "\\n").split("\\n");
+          lines.forEach((line, index) => {
+            if (index) fragment.append(document.createElement("br"));
+            fragment.append(document.createTextNode(line));
+          });
+          const lastNode = fragment.lastChild;
+          range.insertNode(fragment);
+          if (lastNode) {
+            range.setStartAfter(lastNode);
+            range.collapse(true);
+            selection?.removeAllRanges();
+            selection?.addRange(range);
+          }
+
+          if (editor.textContent.length > maxLength) {
+            editor.innerHTML = value || "";
+            return;
+          }
+
+          editor.focus();
+          savedRangeRef.current = range.cloneRange();
+          onChange(editor.innerHTML);
+        }}
         onInput={(event) => {
           if (event.currentTarget.textContent.length > maxLength) {
             event.currentTarget.innerHTML = value || "";
