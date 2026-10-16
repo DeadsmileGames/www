@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, useReducedMotion } from "motion/react";
+import * as m from "motion/react-m";
 import { useSearchParams } from "react-router-dom";
 import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
@@ -29,6 +31,7 @@ function videoLaunchTimestamp(video) {
 
 export function Videos() {
   const { t, language } = useLanguage();
+  const reducedMotion = useReducedMotion();
   const [params, setParams] = useSearchParams();
   const videos = useContent("/videos", { limit: 48 });
 
@@ -70,14 +73,13 @@ export function Videos() {
     scheduledStartAt && Number.isFinite(Date.parse(scheduledStartAt))
       ? new Intl.DateTimeFormat(language, {
           dateStyle: "medium",
-          timeStyle: "short",
           timeZone: "America/Sao_Paulo",
         }).format(new Date(scheduledStartAt))
       : null;
   const heroActionLabel =
     broadcastState === "upcoming"
       ? scheduledPremiereDate
-        ? t("Premiere starts on {0}", { 0: scheduledPremiereDate })
+        ? t("Premieres on {0}", { 0: scheduledPremiereDate })
         : t("Premiere hasn't started yet")
       : broadcastState === "live"
         ? t("Watch live now")
@@ -123,21 +125,49 @@ export function Videos() {
     <div className="videos-page">
       {latest && (
         <header className="rs-hero videos-page__hero">
-          <img
-            className="game-hero__background"
-            src={gameScreenshot}
-            alt=""
-            onError={(event) => {
-              event.currentTarget.onerror = null;
-              event.currentTarget.src = fallbackImage;
-            }}
-          />
+          <div className="videos-page__hero-background-stage" aria-hidden="true">
+            <AnimatePresence initial={false} mode="sync">
+              <m.div
+                key={latest.id}
+                className="videos-page__hero-background-slide"
+                initial={{ x: reducedMotion ? 0 : "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: reducedMotion ? 0 : "-100%" }}
+                transition={{
+                  duration: reducedMotion ? 0.01 : 0.72,
+                  ease: [0.22, 0.61, 0.36, 1],
+                }}
+              >
+                <img
+                  className="game-hero__background"
+                  src={gameScreenshot}
+                  alt=""
+                  onError={(event) => {
+                    event.currentTarget.onerror = null;
+                    event.currentTarget.src = fallbackImage;
+                  }}
+                />
+              </m.div>
+            </AnimatePresence>
+          </div>
           <div className="rs-hero__overlay" />
           <div className="rs-hero__content container">
-            <div className="videos-page__hero-grid">
-              <div className="videos-page__hero-copy">
-                <p className="eyebrow">{t("Videos")}</p>
-                <h1 className="rs-hero__title">{latestTitle}</h1>
+            <div className="videos-page__hero-stage">
+              <AnimatePresence initial={false} mode="sync">
+                <m.div
+                  key={latest.id}
+                  className="videos-page__hero-slide"
+                  initial={{ x: reducedMotion ? 0 : "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: reducedMotion ? 0 : "-100%" }}
+                  transition={{
+                    duration: reducedMotion ? 0.01 : 0.72,
+                    ease: [0.22, 0.61, 0.36, 1],
+                  }}
+                >
+                  <div className="videos-page__hero-grid">
+                    <div className="videos-page__hero-copy">
+                      <h1 className="rs-hero__title">{latestTitle}</h1>
                 {releaseDate && (
                   <time className="news-page__date" dateTime={releaseAt}>
                     {releaseDate}
@@ -169,6 +199,9 @@ export function Videos() {
                 </span>
                 <YouTubeBroadcastBadge video={latest} />
               </button>
+                  </div>
+                </m.div>
+              </AnimatePresence>
             </div>
           </div>
         </header>
