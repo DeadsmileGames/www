@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../context/LanguageContext";
+import { AutoLinkText } from "../ui/AutoLinkText";
 import { api } from "../../services/api";
 import { safeImageUrl } from "../../utils/urls";
 
@@ -133,7 +134,7 @@ export function LiveChatPanel({ videoId, videoState, onBroadcastEnded }) {
                   <strong>{message.authorName}</strong>
                   {time && <time dateTime={message.publishedAt}>{time}</time>}
                 </header>
-                <p>{message.message}</p>
+                <p><AutoLinkText>{message.message}</AutoLinkText></p>
               </div>
             </article>
           );
