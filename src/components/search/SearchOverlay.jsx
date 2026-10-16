@@ -18,7 +18,7 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
   const { status, results, retry, error } = useSearch(open ? query : "");
-  const storeCovers = useMicrosoftStoreCovers(results);
+  const storeCovers = useMicrosoftStoreCovers(results, { includeUnknown: true });
 
   useEffect(() => {
     if (!open) return;
