@@ -59,26 +59,33 @@ export function AppLayout() {
 
   const nextReleaseGame = nextRelease?.game || null;
 
+  const nextReleaseGameId = nextReleaseGame?.id;
+  const nextReleaseGameSlug = nextReleaseGame?.slug;
+
   useEffect(() => {
     let cancelled = false;
     setUpcomingStoreCover(null);
-    if (!nextReleaseGame?.slug) {
+    if (!nextReleaseGameSlug) {
       return () => {
         cancelled = true;
       };
     }
 
-    void loadMicrosoftStoreCovers([nextReleaseGame], { includeUnknown: true }).then((covers) => {
+    const gameForCover = {
+      id: nextReleaseGameId,
+      slug: nextReleaseGameSlug,
+    };
+    void loadMicrosoftStoreCovers([gameForCover], { includeUnknown: true }).then((covers) => {
       if (cancelled) return;
       setUpcomingStoreCover(
-        covers.get(String(nextReleaseGame.id ?? nextReleaseGame.slug)) || null,
+        covers.get(String(nextReleaseGameId ?? nextReleaseGameSlug)) || null,
       );
     });
 
     return () => {
       cancelled = true;
     };
-  }, [nextReleaseGame]);
+  }, [nextReleaseGameId, nextReleaseGameSlug]);
 
   const upcomingGameBanner = nextRelease
     ? {
@@ -146,7 +153,7 @@ export function AppLayout() {
   }, [location.pathname, location.hash]);
 
   useEffect(() => {
-    const canonicalUrl = `https://deadsmilegames.vercel.app${location.pathname || "/"}`;
+    const canonicalUrl = new URL(location.pathname || "/", window.location.origin).toString();
 
     const canonical = document.querySelector('link[rel="canonical"]');
 
