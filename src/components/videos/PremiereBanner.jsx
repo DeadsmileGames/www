@@ -30,7 +30,7 @@ export function PremiereBanner({ premiere, onOpen }) {
     safeImageUrl(premiere.thumbnail) ||
     safeImageUrl(premiere.heroImage) ||
     "/assets/placeholders/game-cover.svg";
-  const previewBackgroundImage = images[0] || coverImage;
+  const previewBackgroundImage = coverImage;
   const description = String(
     premiere.shortDescription ||
       premiere.short_description ||
