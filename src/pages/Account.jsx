@@ -38,27 +38,6 @@ const TABS = [
   { id: "games", label: "Games & saves", icon: GameController },
 ];
 
-const SHORTCUTS = [
-  {
-    id: "profile",
-    title: "Profile Details",
-    text: "Manage how your public profile appears across the site.",
-    icon: User,
-  },
-  {
-    id: "security",
-    title: "Security",
-    text: "Add an extra layer of security to your account.",
-    icon: ShieldCheck,
-  },
-  {
-    id: "games",
-    title: "Games & saves",
-    text: "Back up, restore and manage saves for supported games in your library.",
-    icon: GameController,
-  },
-];
-
 const CROP_VIEWPORT = 260;
 const OUTPUT_SIZE = 420;
 
@@ -743,7 +722,67 @@ export function Account() {
         <span>{t("Back")}</span>
       </Link>
 
-      <h1 style={{ marginBottom: 40 }}>{t("Account")}</h1>
+      <h1>{t("Account")}</h1>
+
+      <header className="profile-page__hero">
+        <div className="account-page__avatar" style={{ flexShrink: 0 }}>
+          <div
+            className="account-page__avatar-inner"
+            style={{ width: 110, height: 110, fontSize: 40 }}
+          >
+            {avatar ? (
+              <img src={avatar} alt="" />
+            ) : (
+              user.username.slice(0, 1).toUpperCase()
+            )}
+          </div>
+
+          <label className="avatar-upload-dot" aria-label={t("Adjust photo")}>
+            <PencilSimple size={20} weight="bold" />
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              aria-label={t("Adjust photo")}
+              disabled={saving || deleting}
+              onChange={(event) => {
+                navigate("/account#profile", { replace: true });
+                onAvatarSelect(event);
+              }}
+            />
+          </label>
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2
+            style={{
+              marginBottom: 16,
+              overflowWrap: "anywhere",
+            }}
+          >
+            {user.username}
+          </h2>
+
+          {user.bio && (
+            <p
+              style={{
+                marginBottom: 12,
+                whiteSpace: "pre-line",
+              }}
+            >
+              <AutoLinkText>{user.bio}</AutoLinkText>
+            </p>
+          )}
+
+          <div className="profile-page__facts">
+            {createdDate && (
+              <span>
+                {t("Created on")} {createdDate}
+              </span>
+            )}
+            {user.location && <span>{user.location}</span>}
+          </div>
+        </div>
+      </header>
 
       <div className="account-page__layout">
         <aside aria-label={t("Account")}>
@@ -774,113 +813,6 @@ export function Account() {
         </aside>
 
         <div className="account-page__content">
-          <header className="profile-page__hero">
-            <div className="account-page__avatar" style={{ flexShrink: 0 }}>
-              <div
-                className="account-page__avatar-inner"
-                style={{ width: 110, height: 110, fontSize: 40 }}
-              >
-                {avatar ? (
-                  <img src={avatar} alt="" />
-                ) : (
-                  user.username.slice(0, 1).toUpperCase()
-                )}
-              </div>
-
-              <label className="avatar-upload-dot" aria-label={t("Adjust photo")}>
-                <PencilSimple size={20} weight="bold" />
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  aria-label={t("Adjust photo")}
-                  disabled={saving || deleting}
-                  onChange={(event) => {
-                    navigate("/account#profile", { replace: true });
-                    onAvatarSelect(event);
-                  }}
-                />
-              </label>
-            </div>
-
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <h2
-                style={{
-                  marginBottom: 16,
-                  overflowWrap: "anywhere",
-                }}
-              >
-                {user.username}
-              </h2>
-
-              {user.bio && (
-                <p
-                  style={{
-                    marginBottom: 12,
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  <AutoLinkText>{user.bio}</AutoLinkText>
-                </p>
-              )}
-
-              <div className="profile-page__facts">
-                {createdDate && (
-                  <span>
-                    {t("Created on")} {createdDate}
-                  </span>
-                )}
-                {user.location && <span>{user.location}</span>}
-              </div>
-            </div>
-          </header>
-
-          <div className="game-grid" style={{ marginBottom: 40 }}>
-            {SHORTCUTS.map((item) => {
-              const Icon = item.icon;
-
-              return (
-                <Link
-                  key={item.id}
-                  to={`/account#${item.id}`}
-                  className="support-card support-faq-panel"
-                  style={{
-                    minHeight: 230,
-                    padding: 24,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    gap: 16,
-                  }}
-                >
-                  <span
-                    className="connection-row__icon"
-                    style={{ width: 56, height: 56 }}
-                  >
-                    <Icon size={28} weight="bold" />
-                  </span>
-
-                  <h3 style={{ margin: 0 }}>{t(item.title)}</h3>
-                  <p
-                    style={{
-                      margin: 0,
-                      color: "var(--color-text-secondary)",
-                    }}
-                  >
-                    {t(item.text)}
-                  </p>
-
-                  <CaretRight
-                    size={20}
-                    style={{
-                      marginTop: "auto",
-                      alignSelf: "flex-end",
-                    }}
-                  />
-                </Link>
-              );
-            })}
-          </div>
-
           <div id="account-tab-content" className="support-faq-panel support-card">
             {activeTab === "profile" && (
               <section className="account-block" aria-labelledby="account-profile-title">
