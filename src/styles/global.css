@@ -3531,6 +3531,11 @@ input[type="file"]::file-selector-button {
   object-fit: cover;
   opacity: 0.4;
 }
+.premiere-banner:not(.premiere-banner--expanded) .premiere-banner__background img {
+  flex: 0 0 100%;
+  width: 100%;
+  opacity: 1;
+}
 .premiere-banner__trigger {
   position: relative;
   z-index: 1;
