@@ -1,4 +1,5 @@
 import { useLanguage } from "../context/LanguageContext";
+import { useGames } from "../hooks/useGames";
 import { SkeletonPage } from "../components/ui/Skeleton";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useOutlet } from "react-router-dom";
@@ -27,6 +28,52 @@ export function AppLayout() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
   const premiere = usePremiere();
+  const { games: gamesNearRelease = [] } = useGames({ limit: 48, status: "in_development" });
+  const now = Date.now();
+  const monthFromNow = new Date(now);
+  monthFromNow.setMonth(monthFromNow.getMonth() + 1);
+  const nextRelease = gamesNearRelease
+    .map((game) => {
+      const value = game.releaseDate || game.release_date;
+      const timestamp =
+        typeof value === "string" && /^\\d{4}-\\d{2}-\\d{2}$/.test(value)
+          ? new Date(`${value}T00:00:00-03:00`).getTime()
+          : Date.parse(value || "");
+      return { game, timestamp };
+    })
+    .filter(
+      (item) =>
+        Number.isFinite(item.timestamp) &&
+        item.timestamp > now &&
+        item.timestamp <= monthFromNow.getTime(),
+    )
+    .sort((a, b) => a.timestamp - b.timestamp)[0] || null;
+  const upcomingGameBanner = nextRelease
+    ? {
+        kind: "game",
+        state: "upcoming",
+        title: nextRelease.game.title,
+        starts_at: new Date(nextRelease.timestamp).toISOString(),
+        thumbnail:
+          nextRelease.game.coverImage ||
+          nextRelease.game.cover_image ||
+          nextRelease.game.heroImage ||
+          nextRelease.game.hero_image ||
+          null,
+        screenshots: [
+          nextRelease.game.heroImage || nextRelease.game.hero_image,
+          nextRelease.game.coverImage || nextRelease.game.cover_image,
+        ].filter(Boolean),
+      }
+    : null;
+  const premiereTimestamp = Date.parse(premiere?.starts_at || "");
+  const bannerContent =
+    upcomingGameBanner &&
+    (premiere?.state !== "upcoming" ||
+      !Number.isFinite(premiereTimestamp) ||
+      nextRelease.timestamp < premiereTimestamp)
+      ? upcomingGameBanner
+      : premiere;
 
   const location = useLocation();
   const outlet = useOutlet();
@@ -74,7 +121,7 @@ export function AppLayout() {
         {t("Skip to content")}
       </a>
 
-      <div className={`premiere-shell ${premiere && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
+      <div className={`premiere-shell ${bannerContent && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
         {premiere && !isAuthPage && (
           <PremiereBanner premiere={premiere} onOpen={() => setPremiereOpen(true)} />
         )}
