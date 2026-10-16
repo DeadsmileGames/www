@@ -10,6 +10,7 @@ import { LiveChatPanel } from "./LiveChatPanel";
 import { setOptionalContent, useOptionalContent } from "../../utils/consent";
 import { trapFocus } from "../../utils/dom";
 import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/urls";
+import { getVideoThumbnail } from "../../utils/videoThumbnail";
 
 const fallbackImage = "/assets/games/screenshots/light/1.png";
 
@@ -62,7 +63,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
     safeImageUrl(video?.game_screenshot) ||
     safeImageUrl(video?.screenshots?.[0]) ||
     (gameSlug ? safeImageUrl(`/assets/games/screenshots/${gameSlug}/1.png`) : null) ||
-    safeImageUrl(video?.thumbnail) ||
+    getVideoThumbnail(video, language) ||
     fallbackImage;
   const released = video?.youtube?.actualStartedAt || video?.youtube?.startsAt || null;
   useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
@@ -184,7 +185,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
               {relatedVideos.length > 0 ? (
                 <div className="video-overlay__related-grid">
                   {relatedVideos.map((related) => {
-                    const thumbnail = safeImageUrl(related.youtube?.thumbnail || related.thumbnail);
+                    const thumbnail = getVideoThumbnail(related, language);
                     return (
                       <button
                         key={related.id}
