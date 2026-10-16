@@ -7,6 +7,7 @@ import { Reveal } from "../components/ui/Reveal";
 import { useGames } from "../hooks/useGames";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Lightbox } from "../components/ui/Lightbox";
+import { formatReleaseDate } from "../utils/releaseDate";
 
 export function PressKit() {
   const { t, language } = useLanguage();
@@ -123,13 +124,10 @@ export function PressKit() {
                     </li>
                     <li>
                       <strong>{t("Release:")}</strong>{" "}
-                      {game.releaseDate
-                        ? new Date(game.releaseDate).toLocaleDateString(language, {
-                            year: "numeric",
-                            month: "long",
-                            timeZone: "UTC",
-                          })
-                        : t("To be announced")}
+                      {formatReleaseDate(game.releaseDate, language, {
+                        year: "numeric",
+                        month: "long",
+                      }) || t("To be announced")}
                     </li>
                     <li>
                       <strong>{t("Status:")}</strong> {t(game.status) || "—"}
