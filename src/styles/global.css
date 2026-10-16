@@ -4262,19 +4262,6 @@ input[type="file"]::file-selector-button {
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(9px);
 }
-.soundtrack-overlay__metadata {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px 15px;
-  color: #bdbdbd;
-  font-size: 13px;
-}
-.soundtrack-overlay__metadata > span + span::before,
-.soundtrack-overlay__metadata > time::before {
-  content: "·";
-  margin-right: 15px;
-  color: #777;
-}
 .soundtrack-overlay__youtube {
   display: inline-flex;
   flex: 0 0 auto;
