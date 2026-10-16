@@ -4849,15 +4849,13 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Full-screen game release preview keeps the page layout anchored. */
-.premiere-shell--with-banner.premiere-shell--game-expanded {
-  padding-top: 52px;
-}
-.premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner {
+
+/* The expanded game banner is portaled to the document body. */
+.premiere-banner--fullscreen {
   position: fixed;
   inset: 0;
-  z-index: 1200;
-  width: 100%;
+  z-index: 2000;
+  width: 100vw;
   height: 100vh;
   height: 100dvh;
   min-height: 100vh;
@@ -4865,33 +4863,33 @@ input[type="file"]::file-selector-button {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
+  isolation: isolate;
 }
-.premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__background {
-  position: fixed;
+.premiere-banner--fullscreen .premiere-banner__background {
+  position: absolute;
+  inset: 0;
 }
-.premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner--expanded::after {
-  position: fixed;
+.premiere-banner--fullscreen .premiere-banner--expanded::after {
+  position: absolute;
+  inset: 0;
 }
-.premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__expanded-content {
+.premiere-banner--fullscreen .premiere-banner__expanded-content {
+  width: min(1120px, calc(100% - 72px));
   min-height: 100%;
   align-content: center;
-  padding-top: max(48px, 7vh);
+  padding-top: max(64px, 8vh);
   padding-bottom: max(48px, 7vh);
 }
-.premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__cover {
-  width: 100%;
+.premiere-banner--fullscreen .premiere-banner__cover {
   max-height: 56vh;
 }
-.premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__collapse {
+.premiere-banner--fullscreen .premiere-banner__collapse {
   position: fixed;
   top: 22px;
   right: 24px;
 }
 @media (max-width: 760px) {
-  .premiere-shell--with-banner.premiere-shell--game-expanded {
-    padding-top: 56px;
-  }
-  .premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__expanded-content {
+  .premiere-banner--fullscreen .premiere-banner__expanded-content {
     min-height: 100%;
     grid-template-columns: minmax(100px, 30vw) minmax(0, 1fr);
     align-content: center;
@@ -4901,16 +4899,16 @@ input[type="file"]::file-selector-button {
     padding-top: 64px;
     padding-bottom: 40px;
   }
-  .premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__cover {
+  .premiere-banner--fullscreen .premiere-banner__cover {
     max-height: 43vh;
   }
-  .premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__details {
+  .premiere-banner--fullscreen .premiere-banner__details {
     padding-right: 0;
   }
-  .premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__description {
+  .premiere-banner--fullscreen .premiere-banner__description {
     -webkit-line-clamp: 5;
   }
-  .premiere-shell--with-banner.premiere-shell--game-expanded .premiere-banner__collapse {
+  .premiere-banner--fullscreen .premiere-banner__collapse {
     top: 12px;
     right: 12px;
   }
