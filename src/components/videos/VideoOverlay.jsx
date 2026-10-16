@@ -142,7 +142,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
         {resource.status === "error" && (
           <div className="content-state" role="alert">
             <p>{resource.error}</p>
-            <button type="button" className="btn btn--secondary" onClick={resource.retry}>
+            <button type="button" className="btn btn--player" onClick={resource.retry}>
               {t("Try again")}
             </button>
           </div>
@@ -155,7 +155,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
                   <p>{t("Allow YouTube content to play this video.")}</p>
                   <button
                     type="button"
-                    className="btn btn--secondary"
+                    className="btn btn--player"
                     onClick={() => setOptionalContent(true)}
                   >
                     {t("Allow YouTube")}
@@ -170,7 +170,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
                   allowFullScreen
                 />
               ) : external ? (
-                <a className="btn" href={external} target="_blank" rel="noopener noreferrer">
+                <a className="btn btn--player" href={external} target="_blank" rel="noopener noreferrer">
                   {t("Open video")}
                 </a>
               ) : (
@@ -202,7 +202,7 @@ function Panel({ videoId, background, onClose, onSelect }) {
                   )}
                 </div>
                 <a
-                  className="btn btn--secondary video-overlay__subscribe"
+                  className="btn btn--player video-overlay__subscribe"
                   href="https://www.youtube.com/@DeadsmileGames?sub_confirmation=1"
                   target="_blank"
                   rel="noopener noreferrer"
