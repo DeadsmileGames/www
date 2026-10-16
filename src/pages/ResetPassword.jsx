@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, friendlyErrorMessage } from "../services/api";
 import { Button } from "../components/ui/Button";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ArrowLeft } from "@phosphor-icons/react";
 
 function readResetToken() {
@@ -79,7 +80,7 @@ export function ResetPassword() {
             {t("Password updated. Redirecting to sign in\u2026")}
           </p>
         ) : (
-          <form onSubmit={handleSubmit} noValidate>
+          <form onSubmit={handleSubmit} noValidate aria-busy={submitting}>
             {error && (
               <p className="auth-page__error" role="alert">
                 {t(error)}
@@ -99,6 +100,7 @@ export function ResetPassword() {
                 autoComplete="new-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                disabled={submitting}
               />
             </div>
             <div className="auth-page__field">
@@ -112,6 +114,7 @@ export function ResetPassword() {
                 autoComplete="new-password"
                 value={confirm}
                 onChange={(event) => setConfirm(event.target.value)}
+                disabled={submitting}
               />
             </div>
             <Button
@@ -119,7 +122,7 @@ export function ResetPassword() {
               className="auth-page__submit"
               disabled={submitting || !token}
             >
-              {submitting ? t("Updating\u2026") : t("Update password")}
+              {submitting ? <><LoadingSpinner />{t("Updating\u2026")}</> : t("Update password")}
             </Button>
           </form>
         )}
