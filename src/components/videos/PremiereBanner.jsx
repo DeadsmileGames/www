@@ -6,6 +6,7 @@ import { ArrowUpRight, X } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
 import { safeImageUrl } from "../../utils/urls";
+import { formatReleaseDate, getReleaseTimestamp } from "../../utils/releaseDate";
 import { trapFocus } from "../../utils/dom";
 
 export function PremiereBanner({ premiere, onOpen }) {
@@ -15,7 +16,10 @@ export function PremiereBanner({ premiere, onOpen }) {
   const previewRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const isGameRelease = premiere.kind === "game";
-  const seconds = useCountdown(Date.parse(premiere.starts_at));
+  const releaseTimestamp = isGameRelease
+    ? getReleaseTimestamp(premiere.starts_at || "")
+    : Date.parse(premiere.starts_at || "");
+  const seconds = useCountdown(releaseTimestamp);
   const images = (premiere.screenshots?.length ? premiere.screenshots : [premiere.thumbnail])
     .map(safeImageUrl)
     .filter(Boolean)
@@ -31,13 +35,9 @@ export function PremiereBanner({ premiere, onOpen }) {
       premiere.description ||
       "",
   ).trim();
-  const releaseTimestamp = Date.parse(premiere.starts_at || "");
   const releaseDate =
     isGameRelease && Number.isFinite(releaseTimestamp)
-      ? new Intl.DateTimeFormat(language, {
-          dateStyle: "long",
-          timeZone: "America/Sao_Paulo",
-        }).format(new Date(releaseTimestamp))
+      ? formatReleaseDate(premiere.starts_at, language, { dateStyle: "long" })
       : null;
   const waiting = isGameRelease
     ? seconds > 0
