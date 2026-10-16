@@ -22,6 +22,7 @@ import { Modal } from "../components/ui/Modal";
 import { useWishlist } from "../hooks/useWishlist";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
 import { getReleaseTimestamp } from "../utils/releaseDate";
@@ -718,7 +719,7 @@ export function GameDetails() {
           <section className="launcher-page__about" style={{ marginTop: 0 }}>
             <h2 className="launcher-page__section-title">{t("games.about")}</h2>
             <p className="game-details__description">
-              {game.description || game.shortDescription}
+              <AutoLinkText>{game.description || game.shortDescription}</AutoLinkText>
             </p>
 
             {store && (
