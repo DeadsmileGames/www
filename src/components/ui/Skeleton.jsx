@@ -242,7 +242,7 @@ export function SkeletonSearch() {
 
 export function SkeletonPage({ path }) {
   const { t } = useLanguage();
-  if (path === "/launcher" || /^\/games\//.test(path))
+  if (path === "/launcher" || /^\/games\
     return <SkeletonDetail launcher={path === "/launcher"} />;
   if (path === "/")
     return (
@@ -280,13 +280,13 @@ export function SkeletonPage({ path }) {
     );
   let content;
   let className = "games-page container";
-  if (/^\/newswire\//.test(path)) {
+  if (/^\/newswire\
     className = "news-detail container";
     content = <SkeletonNews detail />;
   } else if (path === "/newswire") {
     className = "news-page container";
     content = <SkeletonNews />;
-  } else if (/^\/profile\//.test(path)) {
+  } else if (/^\/profile\
     className = "profile-page container";
     content = <SkeletonProfile />;
   } else if (path === "/account") {
