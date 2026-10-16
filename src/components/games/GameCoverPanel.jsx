@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { safeImageUrl } from "../../utils/urls";
+import { AutoLinkText } from "../ui/AutoLinkText";
 
 export function GameCoverPanel({ game, cover, children }) {
   const { t } = useLanguage();
@@ -33,7 +34,7 @@ export function GameCoverPanel({ game, cover, children }) {
       </Link>
       <div className="game-cover-tile__panel">
         <h2>{game.title}</h2>
-        <p>{description}</p>
+        <p><AutoLinkText>{description}</AutoLinkText></p>
         <div className="game-cover-tile__actions">
           <Link
             to={`/games/${encodeURIComponent(slug)}`}
