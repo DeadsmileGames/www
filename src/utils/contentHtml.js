@@ -75,7 +75,7 @@ function linkifyPlainUrls(root) {
       if (!displayUrl) continue;
 
       fragment.append(document.createTextNode(value.slice(cursor, match.index)));
-      const href = /^www\./i.test(displayUrl) ? \`https://\${displayUrl}\` : displayUrl;
+      const href = /^www\./i.test(displayUrl) ? "https://" + displayUrl : displayUrl;
       let validUrl;
       try {
         validUrl = new URL(href);
