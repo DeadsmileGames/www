@@ -3560,7 +3560,7 @@ input[type="file"]::file-selector-button {
 .premiere-banner__text {
   position: relative;
   display: block;
-  font-family: var(--font-display);
+  font-family: Poppins, sans-serif;
   font-size: 18px;
   text-shadow: 0 1px 8px #000;
 }
