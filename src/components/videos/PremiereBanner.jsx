@@ -8,12 +8,28 @@ export function PremiereBanner({ premiere, onOpen }) {
   const { t } = useLanguage();
   const reducedMotion = useReducedMotion();
   const bannerRef = useRef(null);
+  const isGameRelease = premiere.kind === "game";
   const seconds = useCountdown(Date.parse(premiere.starts_at));
   const images = (premiere.screenshots?.length ? premiere.screenshots : [premiere.thumbnail])
     .map(safeImageUrl)
     .filter(Boolean)
     .slice(0, 3);
-  const waiting = premiere.state === "upcoming" && seconds > 0;
+  const waiting = isGameRelease
+    ? seconds > 0
+    : premiere.state === "upcoming" && seconds > 0;
+  const bannerLabel = isGameRelease
+    ? waiting
+      ? t("{0} launches in {1}", {
+          0: premiere.title,
+          1: formatCountdown(seconds),
+        })
+      : t("{0} releases today", { 0: premiere.title })
+    : waiting
+      ? t("{0} will be available in {1}", {
+          0: premiere.title,
+          1: formatCountdown(seconds),
+        })
+      : t("{0} is now playing", { 0: premiere.title });
 
   useLayoutEffect(() => {
     const banner = bannerRef.current;
@@ -43,28 +59,14 @@ export function PremiereBanner({ premiere, onOpen }) {
       initial={{ y: "-100%" }}
       animate={{ y: 0 }}
       transition={{ duration: reducedMotion ? 0.01 : 0.45, ease: "easeInOut" }}
-      aria-label={
-        waiting
-          ? t("{0} will be available in {1}", {
-              0: premiere.title,
-              1: formatCountdown(seconds),
-            })
-          : t("{0} is now playing", { 0: premiere.title })
-      }
+      aria-label={bannerLabel}
     >
       <span className="premiere-banner__background" aria-hidden="true">
         {images.map((url) => (
           <img key={url} src={url} alt="" />
         ))}
       </span>
-      <span className="premiere-banner__text">
-        {waiting
-          ? t("{0} will be available in {1}", {
-              0: premiere.title,
-              1: formatCountdown(seconds),
-            })
-          : t("{0} is now playing", { 0: premiere.title })}
-      </span>
+      <span className="premiere-banner__text">{bannerLabel}</span>
     </motion.button>
   );
 }
