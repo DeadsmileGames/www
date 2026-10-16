@@ -4372,10 +4372,10 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Library is a compact wall of portrait covers with title chips and a top-right remove control. */
+/* Library cover tiles stay in a fixed portrait ratio while growing to use available width. */
 .library-page__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 176px));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 220px));
   align-items: start;
   gap: 22px 18px;
 }
@@ -4458,7 +4458,7 @@ input[type="file"]::file-selector-button {
 }
 @media (max-width: 760px) {
   .library-page__grid {
-    grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px 13px;
   }
   .library-cover__title {
