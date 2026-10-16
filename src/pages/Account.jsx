@@ -977,10 +977,8 @@ export function Account() {
                       onChange={(event) => setLanguage(event.target.value)}
                       style={{ width: "min(100%, 280px)" }}
                     >
-                      <option value="de">Deutsch</option>
                       <option value="en">English</option>
                       <option value="es">Español</option>
-                      <option value="fr">Français</option>
                       <option value="pt-BR">Português (Brasil)</option>
                     </select>
                   </div>
