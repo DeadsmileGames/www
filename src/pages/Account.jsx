@@ -950,7 +950,7 @@ export function Account() {
                   )}
 
                   <div className="account-block__foot">
-                    <Button type="submit" variant="primary" disabled={saving}>
+                    <Button type="submit" variant="primary" disabled={saving} loading={saving}>
                       {saving ? t("Saving...") : t("Save profile")}
                     </Button>
                   </div>
@@ -1046,7 +1046,7 @@ export function Account() {
                     )}
 
                     <div className="account-block__foot">
-                      <Button type="submit" variant="primary" disabled={saving}>
+                      <Button type="submit" variant="primary" disabled={saving} loading={saving}>
                         {saving
                           ? t("Sending confirmation...")
                           : t("Request email change")}
@@ -1253,6 +1253,7 @@ export function Account() {
                         type="submit"
                         variant="primary"
                         disabled={privacySaving || privacyLoading}
+                        loading={privacySaving}
                       >
                         {privacySaving ? t("Saving...") : t("Save privacy preferences")}
                       </Button>
@@ -1324,6 +1325,7 @@ export function Account() {
                             type="submit"
                             variant="danger"
                             disabled={twoFactorLoading}
+                            loading={twoFactorLoading}
                           >
                             {twoFactorLoading ? t("Disabling…") : t("Disable 2FA")}
                           </Button>
@@ -1390,6 +1392,7 @@ export function Account() {
                             type="submit"
                             variant="primary"
                             disabled={twoFactorLoading}
+                            loading={twoFactorLoading}
                           >
                             {twoFactorLoading ? t("Enabling…") : t("Enable 2FA")}
                           </Button>
@@ -1428,6 +1431,7 @@ export function Account() {
                           variant="primary"
                           onClick={setupTwoFactor}
                           disabled={twoFactorLoading}
+                          loading={twoFactorLoading}
                         >
                           {twoFactorLoading ? t("Loading…") : t("Set up 2FA")}
                         </Button>
@@ -1464,8 +1468,9 @@ export function Account() {
                       variant="secondary"
                       onClick={refreshSessions}
                       disabled={sessionsLoading || Boolean(revokingSessionId)}
+                      loading={sessionsLoading}
                     >
-                      <ArrowClockwise size={18} weight="bold" />
+                      {!sessionsLoading && <ArrowClockwise size={18} weight="bold" />}
                       {sessionsLoading ? t("Refreshing…") : t("Refresh")}
                     </Button>
                   </div>
