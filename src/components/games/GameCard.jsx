@@ -2,13 +2,13 @@ import { useLanguage } from "../../context/LanguageContext";
 import { Link } from "react-router-dom";
 import { safeImageUrl } from "../../utils/urls";
 
-export function GameCard({ game }) {
+export function GameCard({ game, cover }) {
   const { t } = useLanguage();
   return (
     <Link to={`/games/${game.slug}`} className="game-card">
       <div className="game-card__image-wrap">
         <img
-          src={safeImageUrl(game.coverImage) || "/assets/placeholders/game-cover.svg"}
+          src={safeImageUrl(cover) || safeImageUrl(game.coverImage) || "/assets/placeholders/game-cover.svg"}
           alt=""
           className="game-card__image"
           loading="lazy"
