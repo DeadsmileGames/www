@@ -1,6 +1,6 @@
 import { useLanguage } from "../../context/LanguageContext";
 
-// Uses the existing game-card badge position so video cards keep the site UI.
+
 export function YouTubeBroadcastBadge({ video }) {
   const { t } = useLanguage();
   const state = video?.youtube?.state || video?.state;
