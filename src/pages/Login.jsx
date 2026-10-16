@@ -4,6 +4,7 @@ import { SecurityCaptcha as ReCAPTCHA } from "../components/ui/SecurityCaptcha";
 import { useAuth } from "../hooks/useAuth";
 import { api, friendlyErrorMessage } from "../services/api";
 import { Button } from "../components/ui/Button";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ArrowLeft, ShieldCheck } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -219,7 +220,7 @@ export function Login() {
               onClick={resendConfirmation}
               disabled={resending}
             >
-              {resending ? t("Sending...") : t("Resend confirmation email")}
+              {resending ? <><LoadingSpinner />{t("Sending...")}</> : t("Resend confirmation email")}
             </Button>
 
             <Button
@@ -298,7 +299,7 @@ export function Login() {
                 className="auth-page__submit"
                 disabled={submitting || !recaptchaToken}
               >
-                {submitting ? t("auth.signing") : t("auth.login")}
+                {submitting ? <><LoadingSpinner />{t("auth.signing")}</> : t("auth.login")}
               </Button>
             </form>
 
@@ -382,7 +383,7 @@ export function Login() {
               className="auth-page__submit"
               disabled={twoFactorSubmitting}
             >
-              {twoFactorSubmitting ? t("Verifying…") : t("Verify & Sign In")}
+              {twoFactorSubmitting ? <><LoadingSpinner />{t("Verifying…")}</> : t("Verify & Sign In")}
             </Button>
 
             <Button
