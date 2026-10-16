@@ -94,8 +94,6 @@ function Panel({ videoId, onClose, onSelect }) {
     return url.toString();
   })();
   const external = safeHttpsUrl(video?.video_url);
-  const gameSlug =
-    /^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(video?.game_slug || "") ? video.game_slug : null;
   const image = safeImageUrl(video?.game_cover_image) || fallbackImage;
   const released = video?.youtube?.actualStartedAt || video?.youtube?.startsAt || null;
   useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
