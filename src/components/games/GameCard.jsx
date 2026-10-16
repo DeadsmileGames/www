@@ -8,7 +8,7 @@ export function GameCard({ game, cover }) {
     <Link to={`/games/${game.slug}`} className="game-card">
       <div className="game-card__image-wrap">
         <img
-          src={safeImageUrl(cover) || safeImageUrl(game.coverImage) || "/assets/placeholders/game-cover.svg"}
+          src={safeImageUrl(cover) || safeImageUrl(game.coverImage || game.cover_image) || safeImageUrl(game.heroImage || game.hero_image) || "/assets/placeholders/game-cover.svg"}
           alt=""
           className="game-card__image"
           loading="lazy"
