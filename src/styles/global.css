@@ -4695,7 +4695,7 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Sliding video hero transitions */
+
 .videos-page__hero-background-stage {
   position: absolute;
   z-index: 0;
@@ -4730,7 +4730,7 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Library and wishlist cover hover panels */
+
 .game-cover-tile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 220px));
@@ -4897,7 +4897,7 @@ input[type="file"]::file-selector-button {
 }
 
 
-/* Rich-text Newswire body editor */
+
 .admin-rich-editor-field {
   display: flex;
   flex-direction: column;
@@ -4958,7 +4958,7 @@ input[type="file"]::file-selector-button {
 
 
 
-/* The expanded game banner is portaled to the document body. */
+
 .premiere-banner--fullscreen {
   position: fixed;
   inset: 0;
@@ -5038,7 +5038,7 @@ html[dir="rtl"] .site-header__actions {
 }
 
 
-/* Rockstar-inspired hero only. The previous video catalogue styles remain unchanged. */
+
 .videos-page--rockstar-hero {
   padding-top: 80px;
   background: #0f0f0f;

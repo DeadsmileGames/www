@@ -40,11 +40,7 @@ function calendarPartsAt(timestamp) {
   );
 }
 
-/**
- * Release dates are calendar dates, even when the API serializes a SQL DATE
- * as midnight UTC (for example, "2026-11-10T00:00:00.000Z"). Preserve the
- * YYYY-MM-DD portion instead of letting timezone conversion move it a day.
- */
+
 export function getReleaseTimestamp(value) {
   if (!value) return Number.NaN;
   const date = calendarDateParts(value);
@@ -71,10 +67,7 @@ export function getReleaseTimestamp(value) {
   return timestamp;
 }
 
-/**
- * Formats a release date from its stored calendar day, independent of the
- * visitor's timezone and independent of whether the API appends a UTC time.
- */
+
 export function formatReleaseDate(value, language, options = {}) {
   if (!value) return null;
   const date = calendarDateParts(value);
