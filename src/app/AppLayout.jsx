@@ -13,7 +13,6 @@ import { CookieConsent } from "../components/ui/CookieConsent";
 import { PremiereBanner } from "../components/videos/PremiereBanner";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { usePremiere } from "../hooks/usePremiere";
-import { safeImageUrl } from "../utils/urls";
 import { getReleaseTimestamp } from "../utils/releaseDate";
 import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
 
@@ -222,7 +221,6 @@ export function AppLayout() {
 
       <VideoOverlay
         videoId={premiereOpen && premiere ? premiere.id : null}
-        background={safeImageUrl(premiere?.screenshots?.[0])}
         onClose={() => setPremiereOpen(false)}
       />
 
