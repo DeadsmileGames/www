@@ -15,6 +15,7 @@ const Login = page(() => import("./pages/Login"), "Login");
 const Register = page(() => import("./pages/Register"), "Register");
 const VerifyEmail = page(() => import("./pages/VerifyEmail"), "VerifyEmail");
 const Account = page(() => import("./pages/Account"), "Account");
+const AdminPanel = page(() => import("./components/admin/AdminComposer"), "AdminComposer");
 const Privacy = page(() => import("./pages/Privacy"), "Privacy");
 const Terms = page(() => import("./pages/Terms"), "Terms");
 const About = page(() => import("./pages/About"), "About");
@@ -85,6 +86,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Account />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminPanel />
             </ProtectedRoute>
           }
         />
