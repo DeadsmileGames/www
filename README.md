@@ -21,11 +21,11 @@
 </p>
 
 <p align="center">
-  <a href="https://deadsmilegames.vercel.app">Website</a>
+  <a href="https://deadsmilegames.onrender.com">Website</a>
   •
-  <a href="https://deadsmilegames.vercel.app/games">Games</a>
+  <a href="https://deadsmilegames.onrender.com/games">Games</a>
   •
-  <a href="https://deadsmilegames.vercel.app/videos">Videos</a>
+  <a href="https://deadsmilegames.onrender.com/videos">Videos</a>
   •
   <a href="https://github.com/DeadsmileGames/www">Source</a>
   •
