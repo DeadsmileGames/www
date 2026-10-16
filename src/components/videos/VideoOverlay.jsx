@@ -54,11 +54,14 @@ function Panel({ videoId, background, onClose, onSelect }) {
     // Don't treat the temporary empty state during a language refresh as the end of a broadcast.
     if (resource.status !== "success" || !video?.id || !video?.youtube?.state) return;
     if (youtubeState === "live") broadcastWasLive.current = true;
-    if (broadcastWasLive.current && !["live", "upcoming"].includes(youtubeState)) {
+    const broadcastHasEnded =
+      !["live", "upcoming"].includes(youtubeState) &&
+      (broadcastWasLive.current || Boolean(video.youtube.actualStartedAt));
+    if (broadcastHasEnded) {
       setChatEnded(true);
       setPremiereEnded(true);
     }
-  }, [resource.status, video?.id, video?.youtube?.state, youtubeState]);
+  }, [resource.status, video?.id, video?.youtube?.state, video?.youtube?.actualStartedAt, youtubeState]);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
