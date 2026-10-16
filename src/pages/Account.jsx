@@ -725,11 +725,8 @@ export function Account() {
       <h1>{t("Account")}</h1>
 
       <header className="profile-page__hero">
-        <div className="account-page__avatar" style={{ flexShrink: 0 }}>
-          <div
-            className="account-page__avatar-inner"
-            style={{ width: 110, height: 110, fontSize: 40 }}
-          >
+        <div className="account-page__avatar">
+          <div className="account-page__avatar-inner">
             {avatar ? (
               <img src={avatar} alt="" />
             ) : (
@@ -752,23 +749,11 @@ export function Account() {
           </label>
         </div>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h2
-            style={{
-              marginBottom: 16,
-              overflowWrap: "anywhere",
-            }}
-          >
-            {user.username}
-          </h2>
+        <div>
+          <h2>{user.username}</h2>
 
           {user.bio && (
-            <p
-              style={{
-                marginBottom: 12,
-                whiteSpace: "pre-line",
-              }}
-            >
+            <p>
               <AutoLinkText>{user.bio}</AutoLinkText>
             </p>
           )}
