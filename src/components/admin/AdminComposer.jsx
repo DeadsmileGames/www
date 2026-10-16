@@ -3,6 +3,7 @@ import { SkeletonRows } from "../ui/Skeleton";
 import { useState } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 import { api, friendlyErrorMessage } from "../../services/api";
 import { useAuth } from "../../hooks/useAuth";
 import {
@@ -701,11 +702,13 @@ export function AdminComposer() {
             )}
 
             <Button type="submit" disabled={saving}>
-              {saving
-                ? t("Saving\u2026")
-                : editing
-                  ? t("Save changes")
-                  : t("Save & publish")}
+              {saving ? (
+                <><LoadingSpinner />{t("Saving\u2026")}</>
+              ) : editing ? (
+                t("Save changes")
+              ) : (
+                t("Save & publish")
+              )}
             </Button>
           </form>
         </div>
