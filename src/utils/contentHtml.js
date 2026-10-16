@@ -115,6 +115,12 @@ export function sanitizeNewswire(
   const template = document.createElement("template");
   template.innerHTML = clean;
   linkifyPlainUrls(template.content);
+  for (const link of template.content.querySelectorAll("a[href]")) {
+    const label = (link.textContent || "").trim();
+    if (/^(?:https?:\/\/|www\.)[^\s]+$/i.test(label)) {
+      link.setAttribute("data-auto-title", "true");
+    }
+  }
   if (language) {
     for (const image of template.content.querySelectorAll("img")) {
       const src = microsoftBadgeImage(image.getAttribute("src"), language);
