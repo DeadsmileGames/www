@@ -2848,6 +2848,12 @@ input[type="file"]::file-selector-button {
   font-size: 13px;
   line-height: 1.45;
 }
+.admin-field input[aria-invalid="true"],
+.admin-field textarea[aria-invalid="true"],
+.admin-field select[aria-invalid="true"],
+.admin-rich-editor[aria-invalid="true"] {
+  border-color: #ffafaf;
+}
 .admin-manage__item > div:first-child {
   min-width: 0;
 }
