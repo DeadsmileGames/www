@@ -12,8 +12,8 @@
   --color-accent: #f0f0f0;
   --color-danger: #ff9f9f;
   --color-success: #a8ddb2;
-  --font-display: "Berlin sans fb demi", Arial, sans-serif;
-  --font-body: Gadugi, Arial, sans-serif;
+  --font-display: "Berlin sans fb demi", Poppins, sans-serif;
+  --font-body: Poppins, "Berlin sans fb demi", sans-serif;
   --header-height: 76px;
   --content-max: 1120px;
 }
