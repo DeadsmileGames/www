@@ -4337,3 +4337,51 @@ input[type="file"]::file-selector-button {
     transition: none;
   }
 }
+
+
+/* Library artwork follows the Launcher layout: centered 2:3 poster at the left of each card. */
+.library-page__grid > .library-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: stretch;
+  min-height: 168px;
+}
+.library-page__grid .library-card__image-link {
+  align-self: center;
+  width: 112px;
+  height: 168px;
+  aspect-ratio: 2 / 3;
+  flex: 0 0 112px;
+  margin: 0;
+  background: #111;
+}
+.library-page__grid .library-card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.library-page__grid .library-card__body {
+  min-width: 0;
+  padding: 16px;
+  gap: 14px;
+}
+.library-page__grid .library-card__actions {
+  align-items: stretch;
+}
+@media (max-width: 760px) {
+  .library-page__grid > .library-card {
+    grid-template-columns: 96px minmax(0, 1fr);
+    min-height: 144px;
+  }
+  .library-page__grid .library-card__image-link {
+    width: 96px;
+    height: 144px;
+    flex-basis: 96px;
+  }
+  .library-page__grid .library-card__body {
+    padding: 12px;
+    gap: 12px;
+  }
+}
