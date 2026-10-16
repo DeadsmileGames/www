@@ -60,15 +60,6 @@ export function PremiereBanner({ premiere, onOpen }) {
     setExpanded(false);
   }, [premiere.kind, premiere.slug, premiere.id]);
 
-  useEffect(() => {
-    if (!isGameRelease || !expanded) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [expanded, isGameRelease]);
-
   useLayoutEffect(() => {
     const banner = bannerRef.current;
     if (!banner) return undefined;
