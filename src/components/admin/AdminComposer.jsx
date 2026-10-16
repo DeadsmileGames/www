@@ -945,9 +945,11 @@ function NewswireBodyEditor({ label, value, onChange, maxLength }) {
         aria-multiline="true"
         aria-required="true"
         onInput={(event) => {
-          if (event.currentTarget.textContent.length <= maxLength) {
-            onChange(event.currentTarget.innerHTML);
+          if (event.currentTarget.textContent.length > maxLength) {
+            event.currentTarget.innerHTML = value || "";
+            return;
           }
+          onChange(event.currentTarget.innerHTML);
         }}
         onKeyUp={rememberSelection}
         onMouseUp={rememberSelection}
