@@ -120,7 +120,7 @@ async function getCsrfToken({ force = false } = {}) {
   return pending;
 }
 
-async function request(path, { method = "GET", body, params, retryCsrf = true } = {}) {
+async function executeRequest(path, { method = "GET", body, params, retryCsrf = true } = {}) {
   validatePath(path);
   const authMutation =
     method === "POST" &&
@@ -192,6 +192,73 @@ async function request(path, { method = "GET", body, params, retryCsrf = true } 
     );
   }
   return payload?.data;
+}
+
+const PUBLIC_GET_CACHE_TTL_MS = 10_000;
+const PUBLIC_GET_CACHE_LIMIT = 100;
+const publicGetCache = new Map();
+const publicGetRequests = new Map();
+let publicGetCacheGeneration = 0;
+
+function isCacheablePublicGet(path, method) {
+  if (method !== "GET") return false;
+  if (/^\\/games(?:\\/[^/]+(?:\\/latest)?)?$/.test(path)) return true;
+  if (/^\\/newswire(?:\\/[^/]+)?$/.test(path)) return true;
+  if (/^\\/news(?:\\/[^/]+)?$/.test(path)) return true;
+  if (/^\\/videos(?:\\/[^/]+)?$/.test(path)) return true;
+  return ["/downloads", "/products", "/soundtracks", "/search"].includes(path);
+}
+
+function publicGetKey(path, params) {
+  const entries = Object.entries(params || {})
+    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+    .sort(([a], [b]) => a.localeCompare(b));
+  const query = new URLSearchParams(entries).toString();
+  return `${errorLocale()}\\n${path}${query ? `?${query}` : ""}`;
+}
+
+function clearPublicGetCache() {
+  publicGetCacheGeneration += 1;
+  publicGetCache.clear();
+  publicGetRequests.clear();
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("deadsmile:live", clearPublicGetCache);
+  window.addEventListener("deadsmile:auth-invalidated", clearPublicGetCache);
+}
+
+async function request(path, options = {}) {
+  const method = options?.method || "GET";
+  if (!isCacheablePublicGet(path, method)) return executeRequest(path, options);
+
+  const key = publicGetKey(path, options?.params);
+  const now = Date.now();
+  const cached = publicGetCache.get(key);
+  if (cached && cached.expiresAt > now) return cached.data;
+  if (cached) publicGetCache.delete(key);
+
+  const existing = publicGetRequests.get(key);
+  if (existing) return existing;
+
+  const generation = publicGetCacheGeneration;
+  const pending = executeRequest(path, options);
+  publicGetRequests.set(key, pending);
+  try {
+    const data = await pending;
+    if (generation === publicGetCacheGeneration) {
+      if (publicGetCache.size >= PUBLIC_GET_CACHE_LIMIT) {
+        publicGetCache.delete(publicGetCache.keys().next().value);
+      }
+      publicGetCache.set(key, {
+        data,
+        expiresAt: Date.now() + PUBLIC_GET_CACHE_TTL_MS,
+      });
+    }
+    return data;
+  } finally {
+    if (publicGetRequests.get(key) === pending) publicGetRequests.delete(key);
+  }
 }
 
 export const api = {
