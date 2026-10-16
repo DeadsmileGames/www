@@ -26,6 +26,64 @@ import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../ut
 import { getVideoThumbnail } from "../utils/videoThumbnail";
 
 const LAUNCHER_DOWNLOAD_URL = "/launcher";
+const GAME_RELEASE_TIME_ZONE = "America/Sao_Paulo";
+const RELEASE_DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: GAME_RELEASE_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+const RELEASE_DATETIME_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  timeZone: GAME_RELEASE_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+});
+
+function getCalendarParts(timestamp, formatter) {
+  return Object.fromEntries(
+    formatter.formatToParts(new Date(timestamp)).map(({ type, value }) => [type, value]),
+  );
+}
+
+function getCalendarDateParts(timestamp) {
+  const parts = getCalendarParts(timestamp, RELEASE_DATE_FORMATTER);
+  return {
+    year: Number(parts.year),
+    month: Number(parts.month),
+    day: Number(parts.day),
+  };
+}
+
+function getReleaseTimestamp(value) {
+  if (!value) return Number.NaN;
+  if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(value)) return Date.parse(value);
+
+  const [year, month, day] = value.split("-").map(Number);
+  const targetAsUtc = Date.UTC(year, month - 1, day);
+  let timestamp = targetAsUtc;
+
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const parts = getCalendarParts(timestamp, RELEASE_DATETIME_FORMATTER);
+    const representedAsUtc = Date.UTC(
+      Number(parts.year),
+      Number(parts.month) - 1,
+      Number(parts.day),
+      Number(parts.hour),
+      Number(parts.minute),
+      Number(parts.second),
+    );
+    const adjustment = targetAsUtc - representedAsUtc;
+    timestamp += adjustment;
+    if (adjustment === 0) break;
+  }
+
+  return timestamp;
+}
 
 export function GameDetails() {
   const { slug } = useParams();
@@ -61,12 +119,11 @@ export function GameDetails() {
   const [launcherMissing, setLauncherMissing] = useState(false);
   const [download, setDownload] = useState({ busy: false, error: "" });
   const [releaseNow, setReleaseNow] = useState(Date.now());
+  const releaseRefreshRequested = useRef(false);
 
   const game = state.game;
   const releaseDateValue = game?.releaseDate || "";
-  const releaseTimestamp = /^\d{4}-\d{2}-\d{2}$/.test(releaseDateValue)
-    ? new Date(`${releaseDateValue}T00:00:00`).getTime()
-    : Date.parse(releaseDateValue);
+  const releaseTimestamp = getReleaseTimestamp(releaseDateValue);
   useEffect(() => {
     if (
       game?.status !== "in_development" ||
@@ -75,9 +132,45 @@ export function GameDetails() {
     ) {
       return undefined;
     }
-    const timer = window.setInterval(() => setReleaseNow(Date.now()), 1000);
+    const timer = window.setInterval(() => {
+      const now = Date.now();
+      setReleaseNow(now);
+      if (now >= releaseTimestamp) window.clearInterval(timer);
+    }, 1000);
     return () => window.clearInterval(timer);
   }, [game?.status, game?.releaseDate, releaseTimestamp]);
+
+  useEffect(() => {
+    releaseRefreshRequested.current = false;
+  }, [slug]);
+
+  useEffect(() => {
+    if (
+      game?.slug !== slug ||
+      game?.status !== "in_development" ||
+      !Number.isFinite(releaseTimestamp) ||
+      releaseTimestamp > releaseNow ||
+      releaseRefreshRequested.current
+    ) {
+      return undefined;
+    }
+
+    releaseRefreshRequested.current = true;
+    let active = true;
+
+    api
+      .get(`/games/${encodeURIComponent(slug)}`)
+      .then((result) => {
+        if (active) setState({ status: "success", game: result, error: null });
+      })
+      .catch(() => {
+        if (active) releaseRefreshRequested.current = false;
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [game?.slug, game?.status, game?.releaseDate, releaseTimestamp, releaseNow, slug]);
   const gameId = game?.id || null;
   const isValidGameId = typeof gameId === "string" && gameId.length > 0;
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
@@ -539,43 +632,66 @@ export function GameDetails() {
             >
               {t("Release in")}{" "}
               {(() => {
-                const now = new Date(releaseNow);
-                const releaseDate = new Date(releaseTimestamp);
+                const remainingMs = Math.max(0, releaseTimestamp - releaseNow);
+                const totalSeconds = Math.ceil(remainingMs / 1000);
+
+                if (remainingMs <= 24 * 60 * 60 * 1000) {
+                  const hours = Math.floor(totalSeconds / 3600);
+                  const minutes = Math.floor((totalSeconds % 3600) / 60);
+                  const seconds = totalSeconds % 60;
+                  return [
+                    String(hours).padStart(2, "0"),
+                    String(minutes).padStart(2, "0"),
+                    String(seconds).padStart(2, "0"),
+                  ].join(":");
+                }
+
+                if (remainingMs <= 10 * 24 * 60 * 60 * 1000) {
+                  const totalMinutes = Math.ceil(remainingMs / 60000);
+                  const hours = Math.floor(totalMinutes / 60);
+                  const minutes = totalMinutes % 60;
+                  return `${hours}h ${minutes}min`;
+                }
+
+                const nowParts = getCalendarDateParts(releaseNow);
+                const releaseParts = getCalendarDateParts(releaseTimestamp);
                 const releaseDayKey = Date.UTC(
-                  releaseDate.getFullYear(),
-                  releaseDate.getMonth(),
-                  releaseDate.getDate(),
+                  releaseParts.year,
+                  releaseParts.month - 1,
+                  releaseParts.day,
                 );
 
                 let months =
-                  (releaseDate.getFullYear() - now.getFullYear()) * 12 +
-                  releaseDate.getMonth() -
-                  now.getMonth();
+                  (releaseParts.year - nowParts.year) * 12 +
+                  releaseParts.month -
+                  nowParts.month;
 
                 const getMonthAnchor = (count) => {
-                  const anchor = new Date(now.getFullYear(), now.getMonth() + count, 1);
-                  const lastDay = new Date(
-                    anchor.getFullYear(),
-                    anchor.getMonth() + 1,
-                    0,
-                  ).getDate();
-                  anchor.setDate(Math.min(now.getDate(), lastDay));
-                  return anchor;
+                  const monthIndex = nowParts.month - 1 + count;
+                  const year = nowParts.year + Math.floor(monthIndex / 12);
+                  const monthZeroBased = ((monthIndex % 12) + 12) % 12;
+                  const lastDay = new Date(Date.UTC(year, monthZeroBased + 1, 0)).getUTCDate();
+
+                  return {
+                    year,
+                    month: monthZeroBased + 1,
+                    day: Math.min(nowParts.day, lastDay),
+                  };
                 };
 
                 const anchorForMonths = getMonthAnchor(months);
                 const anchorKey = Date.UTC(
-                  anchorForMonths.getFullYear(),
-                  anchorForMonths.getMonth(),
-                  anchorForMonths.getDate(),
+                  anchorForMonths.year,
+                  anchorForMonths.month - 1,
+                  anchorForMonths.day,
                 );
                 if (months > 0 && anchorKey > releaseDayKey) months -= 1;
 
                 const monthAnchor = getMonthAnchor(months);
                 const monthAnchorKey = Date.UTC(
-                  monthAnchor.getFullYear(),
-                  monthAnchor.getMonth(),
-                  monthAnchor.getDate(),
+                  monthAnchor.year,
+                  monthAnchor.month - 1,
+                  monthAnchor.day,
                 );
                 const days = Math.max(
                   0,
@@ -590,7 +706,7 @@ export function GameDetails() {
                   parts.push(days + " " + t(days === 1 ? "day" : "days"));
                 }
 
-                if (!parts.length && releaseTimestamp > releaseNow) {
+                if (!parts.length && remainingMs > 0) {
                   return t("Less than a day");
                 }
                 return parts.join(", ");
