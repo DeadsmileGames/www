@@ -346,8 +346,11 @@ fieldset {
   z-index: 100;
   top: 45px;
   right: 0;
+  display: flex;
   min-width: 215px;
   padding: 10px;
+  flex-direction: column;
+  gap: 4px;
   background: #1a1a1a;
   border: 0;
   border-radius: 20px;
@@ -1645,6 +1648,8 @@ fieldset {
   margin-top: 18px;
 }
 .search-overlay__list {
+  display: grid;
+  gap: 10px;
   list-style: none;
   padding: 0;
   margin: 0;
