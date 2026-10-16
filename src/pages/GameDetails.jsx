@@ -821,7 +821,7 @@ export function GameDetails() {
         <aside className="game-details__aside">
           <StoreRatings store={store} />
 
-          {game.offers?.length > 0 && (
+          {game.status === "released" && game.offers?.length > 0 && (
             <section
               className="game-meta game-details__availability"
               aria-labelledby="game-availability-title"
