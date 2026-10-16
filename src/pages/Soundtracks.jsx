@@ -11,6 +11,7 @@ import {
   YoutubeLogo,
 } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
+import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useContent } from "../hooks/useContent";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
@@ -168,7 +169,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                 aria-labelledby="soundtrack-overlay-description"
               >
                 <h2 id="soundtrack-overlay-description">{t("Description")}</h2>
-                <p className="video-overlay__description">{track.description}</p>
+                <p className="video-overlay__description"><AutoLinkText>{track.description}</AutoLinkText></p>
               </section>
             )}
 
