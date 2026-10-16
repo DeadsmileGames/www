@@ -461,6 +461,7 @@
     "Feature on homepage": "Destacar na página inicial",
     "Published successfully.": "Publicado com sucesso.",
     "Saving…": "Salvando…",
+    "Deleting…": "Excluindo…",
     "Save & publish": "Salvar e publicar",
     "Content": "Conteúdo",
     "No items published.": "Nenhum item publicado.",
@@ -1087,6 +1088,7 @@
     "Feature on homepage": "Destacar en la página de inicio",
     "Published successfully.": "Publicado correctamente.",
     "Saving…": "Guardando…",
+    "Deleting…": "Eliminando…",
     "Save & publish": "Guardar y publicar",
     "Content": "Contenido",
     "No items published.": "No hay elementos publicados.",
@@ -1270,6 +1272,7 @@
     "No messages yet.": "No messages yet.",
     "Read-only chat from YouTube.": "Read-only chat from YouTube.",
     "No description available yet.": "No description available yet.",
+    "Deleting…": "Deleting…",
     "Thank you for watching the premiere: {0}": "Thank you for watching the premiere: {0}"
   }
 }
