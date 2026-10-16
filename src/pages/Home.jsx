@@ -134,15 +134,21 @@ export function Home() {
             {news.data?.length > 0 && (
               <div className="news-grid">
                 {news.data.map((item) => (
-                  <Link key={item.id} to={`/newswire/${item.slug}`} className="news-tile">
+                  <article key={item.id} className="news-tile">
                     {safeImageUrl(item.image) && (
-                      <img src={safeImageUrl(item.image)} alt="" loading="lazy" />
+                      <Link to={`/newswire/${item.slug}`} aria-label={item.title}>
+                        <img src={safeImageUrl(item.image)} alt="" loading="lazy" />
+                      </Link>
                     )}
                     <small>{item.category || t("News")}</small>
-                    <h3>{item.title}</h3>
+                    <h3>
+                      <Link to={`/newswire/${item.slug}`}>{item.title}</Link>
+                    </h3>
                     <p><AutoLinkText>{item.excerpt}</AutoLinkText></p>
-                    <span className="btn btn--primary">{t("Read story \u2192")}</span>
-                  </Link>
+                    <Link to={`/newswire/${item.slug}`} className="btn btn--primary">
+                      {t("Read story \u2192")}
+                    </Link>
+                  </article>
                 ))}
               </div>
             )}
