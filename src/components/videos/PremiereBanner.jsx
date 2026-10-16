@@ -35,7 +35,6 @@ export function PremiereBanner({ premiere, onOpen }) {
     "/assets/placeholders/game-cover.svg";
   const previewBackgroundImage =
     databaseCoverImage || "/assets/placeholders/game-cover.svg";
-  // The top game-release banner must use the database cover, never the first screenshot.
   const bannerBackgroundImage = isGameRelease
     ? previewBackgroundImage
     : images[0];
