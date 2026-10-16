@@ -12,6 +12,7 @@ import { SearchOverlay } from "../components/search/SearchOverlay";
 import { CookieConsent } from "../components/ui/CookieConsent";
 import { PremiereBanner } from "../components/videos/PremiereBanner";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
+import { GameReleaseOverlay } from "../components/games/GameReleaseOverlay";
 import { useAuth } from "../hooks/useAuth";
 import { usePremiere } from "../hooks/usePremiere";
 import { safeImageUrl } from "../utils/urls";
@@ -27,6 +28,7 @@ export function AppLayout() {
   const { user } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
+  const [gamePreview, setGamePreview] = useState(null);
   const [bannerClock, setBannerClock] = useState(() => Date.now());
   const premiere = usePremiere();
   const { games: gamesNearRelease = [] } = useGames({ limit: 48 });
@@ -81,6 +83,17 @@ export function AppLayout() {
           nextRelease.game.heroImage || nextRelease.game.hero_image,
           nextRelease.game.coverImage || nextRelease.game.cover_image,
         ].filter(Boolean),
+        heroImage: nextRelease.game.heroImage || nextRelease.game.hero_image || null,
+        coverImage: nextRelease.game.coverImage || nextRelease.game.cover_image || null,
+        shortDescription:
+          nextRelease.game.shortDescription ||
+          nextRelease.game.short_description ||
+          nextRelease.game.description ||
+          "",
+        description: nextRelease.game.shortDescription ||
+          nextRelease.game.short_description ||
+          nextRelease.game.description ||
+          "",
       }
     : null;
   const premiereTimestamp = Date.parse(premiere?.starts_at || "");
@@ -147,7 +160,7 @@ export function AppLayout() {
             premiere={bannerContent}
             onOpen={() => {
               if (bannerContent.kind === "game" && bannerContent.slug) {
-                navigate(`/games/${encodeURIComponent(bannerContent.slug)}`);
+                setGamePreview(bannerContent);
               } else if (bannerContent.kind !== "game") {
                 setPremiereOpen(true);
               }
@@ -193,6 +206,10 @@ export function AppLayout() {
         videoId={premiereOpen && premiere ? premiere.id : null}
         background={safeImageUrl(premiere?.screenshots?.[0])}
         onClose={() => setPremiereOpen(false)}
+      />
+      <GameReleaseOverlay
+        game={gamePreview}
+        onClose={() => setGamePreview(null)}
       />
 
       {!isAuthPage && user?.role === "admin" && (
