@@ -4507,7 +4507,7 @@ input[type="file"]::file-selector-button {
   border-right-color: transparent;
   border-radius: 50%;
   vertical-align: -0.12em;
-  margin-right: 0.55em;
+  margin-right: 0;
   animation: loading-spinner-rotate 0.75s linear infinite;
 }
 @keyframes loading-spinner-rotate {
