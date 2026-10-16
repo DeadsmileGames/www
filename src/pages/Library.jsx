@@ -7,6 +7,7 @@ import { api, friendlyErrorMessage } from "../services/api";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
+import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { safeImageUrl } from "../utils/urls";
 
 function storePosterFromDetails(details) {
@@ -187,7 +188,7 @@ export function Library() {
                   aria-label={t("Remove from library") + ": " + game.title}
                   title={t("Remove from library")}
                 >
-                  <X size={17} weight="bold" aria-hidden="true" />
+                  {busy ? <LoadingSpinner className="loading-spinner--icon" /> : <X size={17} weight="bold" aria-hidden="true" />}
                 </button>
               </article>
             );
