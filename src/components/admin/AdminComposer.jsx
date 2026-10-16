@@ -1,6 +1,6 @@
 import { useLanguage } from "../../context/LanguageContext";
 import { SkeletonRows } from "../ui/Skeleton";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
@@ -222,6 +222,13 @@ export function AdminComposer() {
 
   async function submit(event) {
     event.preventDefault();
+    if (
+      type === "newsletter" &&
+      !String(form.body || "").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim()
+    ) {
+      setError(t("Body is required."));
+      return;
+    }
     setSaving(true);
     setError("");
     setSaved(false);
@@ -469,11 +476,10 @@ export function AdminComposer() {
                     ))}
                   </select>
                 </label>
-                <Text
+                <NewswireBodyEditor
                   label={t("Body")}
                   value={form.body}
-                  onChange={set("body")}
-                  required
+                  onChange={(value) => setForm((current) => ({ ...current, body: value }))}
                   maxLength={30000}
                 />
                 <Field
@@ -832,5 +838,172 @@ function Text({ label, ...props }) {
       <span>{label}</span>
       <textarea rows="6" {...props} />
     </label>
+  );
+}
+
+function NewswireBodyEditor({ label, value, onChange, maxLength }) {
+  const { t } = useLanguage();
+  const editorRef = useRef(null);
+  const savedRangeRef = useRef(null);
+  const [linkFormOpen, setLinkFormOpen] = useState(false);
+  const [linkText, setLinkText] = useState("");
+  const [linkUrl, setLinkUrl] = useState("");
+  const [linkError, setLinkError] = useState("");
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (editor && editor.innerHTML !== (value || "")) editor.innerHTML = value || "";
+  }, [value]);
+
+  function rememberSelection() {
+    const editor = editorRef.current;
+    const selection = window.getSelection();
+    if (!editor || !selection?.rangeCount) return;
+    const range = selection.getRangeAt(0);
+    if (editor.contains(range.commonAncestorContainer)) {
+      savedRangeRef.current = range.cloneRange();
+    }
+  }
+
+  function openLinkForm(event) {
+    event.preventDefault();
+    rememberSelection();
+    const selection = window.getSelection();
+    const editor = editorRef.current;
+    const hasSelection =
+      editor &&
+      selection?.rangeCount &&
+      editor.contains(selection.getRangeAt(0).commonAncestorContainer) &&
+      !selection.getRangeAt(0).collapsed;
+    setLinkText(hasSelection ? selection.toString() : "");
+    setLinkUrl("");
+    setLinkError("");
+    setLinkFormOpen((open) => !open);
+  }
+
+  function insertLink(event) {
+    event.preventDefault();
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    let href = linkUrl.trim();
+    if (/^www\./i.test(href)) href = `https://${href}`;
+
+    let parsed;
+    try {
+      parsed = new URL(href);
+    } catch {
+      parsed = null;
+    }
+    if (!parsed || !["https:", "http:", "mailto:"].includes(parsed.protocol)) {
+      setLinkError(t("Enter a valid URL."));
+      return;
+    }
+
+    let range = savedRangeRef.current;
+    if (!range || !editor.contains(range.commonAncestorContainer)) {
+      range = document.createRange();
+      range.selectNodeContents(editor);
+      range.collapse(false);
+    }
+    range.deleteContents();
+
+    const anchor = document.createElement("a");
+    anchor.href = parsed.href;
+    anchor.textContent = linkText.trim() || href;
+    anchor.target = "_blank";
+    anchor.rel = "noopener noreferrer";
+    range.insertNode(anchor);
+
+    const spacer = document.createTextNode(" ");
+    anchor.after(spacer);
+    range.setStartAfter(spacer);
+    range.collapse(true);
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    editor.focus();
+    onChange(editor.innerHTML);
+
+    savedRangeRef.current = range.cloneRange();
+    setLinkFormOpen(false);
+    setLinkText("");
+    setLinkUrl("");
+    setLinkError("");
+  }
+
+  return (
+    <div className="admin-field admin-rich-editor-field">
+      <span>{label}</span>
+      <div
+        ref={editorRef}
+        className="admin-rich-editor"
+        contentEditable
+        suppressContentEditableWarning
+        role="textbox"
+        aria-label={label}
+        aria-multiline="true"
+        aria-required="true"
+        onInput={(event) => {
+          if (event.currentTarget.textContent.length <= maxLength) {
+            onChange(event.currentTarget.innerHTML);
+          }
+        }}
+        onKeyUp={rememberSelection}
+        onMouseUp={rememberSelection}
+      />
+      <div className="admin-rich-editor__toolbar">
+        <button
+          type="button"
+          className="btn btn--secondary"
+          onMouseDown={(event) => event.preventDefault()}
+          onClick={openLinkForm}
+          aria-expanded={linkFormOpen}
+        >
+          {t("Create link")}
+        </button>
+      </div>
+      {linkFormOpen && (
+        <div className="admin-rich-editor__link-form">
+          <label className="admin-field">
+            <span>{t("Link text")}</span>
+            <input
+              type="text"
+              value={linkText}
+              onChange={(event) => setLinkText(event.target.value)}
+              maxLength={500}
+              autoFocus
+            />
+          </label>
+          <label className="admin-field">
+            <span>{t("Link URL")}</span>
+            <input
+              type="text"
+              value={linkUrl}
+              onChange={(event) => setLinkUrl(event.target.value)}
+              maxLength={2000}
+              placeholder="https://…"
+              autoComplete="url"
+            />
+          </label>
+          {linkError && <p className="account-page__error" role="alert">{linkError}</p>}
+          <div className="admin-rich-editor__link-actions">
+            <button type="button" className="btn btn--primary" onClick={insertLink}>
+              {t("Insert link")}
+            </button>
+            <button
+              type="button"
+              className="btn btn--secondary"
+              onClick={() => {
+                setLinkFormOpen(false);
+                setLinkError("");
+              }}
+            >
+              {t("Cancel")}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
