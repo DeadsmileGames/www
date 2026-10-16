@@ -980,6 +980,9 @@ export function Account() {
                       <option value="en">{t("English")}</option>
                       <option value="pt-BR">{t("Português (Brasil)")}</option>
                       <option value="es">{t("Español")}</option>
+                      <option value="zh-CN">简体中文</option>
+                      <option value="hi">हिन्दी</option>
+                      <option value="ar">العربية</option>
                     </select>
                   </div>
                 </section>
