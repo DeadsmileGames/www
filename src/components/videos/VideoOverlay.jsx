@@ -6,6 +6,7 @@ import * as m from "motion/react-m";
 import { Play, X, YoutubeLogo } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useContent } from "../../hooks/useContent";
+import { LiveChatPanel } from "./LiveChatPanel";
 import { setOptionalContent, useOptionalContent } from "../../utils/consent";
 import { trapFocus } from "../../utils/dom";
 import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/urls";
@@ -39,16 +40,6 @@ function Panel({ videoId, background, onClose, onSelect }) {
   const description = video?.youtube?.description || video?.description || "";
   const liveChatEnabled =
     youtubeState === "live" || youtubeState === "upcoming";
-  const youtubeVideoId = embed
-    ? new URL(embed).pathname.split("/").filter(Boolean).pop()
-    : null;
-  const liveChatUrl = (() => {
-    if (!liveChatEnabled || !youtubeVideoId) return null;
-    const url = new URL("https://www.youtube.com/live_chat");
-    url.searchParams.set("v", youtubeVideoId);
-    url.searchParams.set("embed_domain", window.location.hostname);
-    return url.toString();
-  })();
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
@@ -73,6 +64,12 @@ function Panel({ videoId, background, onClose, onSelect }) {
     fallbackImage;
   const released = video?.youtube?.publishedAt || video?.published_at;
   useEffect(() => trapFocus(panelRef.current, () => closeRef.current()), []);
+
+  useEffect(() => {
+    if (!video?.id || !["live", "upcoming"].includes(video?.youtube?.state)) return undefined;
+    const timer = window.setInterval(() => void resource.refresh(), 15_000);
+    return () => window.clearInterval(timer);
+  }, [video?.id, video?.youtube?.state, resource.refresh]);
 
   return (
     <m.div
@@ -157,11 +154,11 @@ function Panel({ videoId, background, onClose, onSelect }) {
                 </a>
               </div>
             </div>
-            {(description || liveChatUrl) && (
+            {(description || liveChatEnabled) && (
               <div
                 className={
                   "video-overlay__description-layout" +
-                  (description && liveChatUrl ? " video-overlay__description-layout--live" : "")
+                  (description && liveChatEnabled ? " video-overlay__description-layout--live" : "")
                 }
               >
                 {description && (
@@ -173,48 +170,8 @@ function Panel({ videoId, background, onClose, onSelect }) {
                     <p className="video-overlay__description">{description}</p>
                   </section>
                 )}
-                {liveChatUrl && (
-                  <section
-                    className="video-overlay__live-chat support-card"
-                    aria-labelledby="video-overlay-live-chat-title"
-                  >
-                    <header className="video-overlay__live-chat-header">
-                      <h3 id="video-overlay-live-chat-title">{t("Live chat")}</h3>
-                      <span className="video-overlay__chat-status">
-                        {t(youtubeState === "live" ? "Live now" : "Premiere")}
-                      </span>
-                    </header>
-                    {allowed ? (
-                      <>
-                        <iframe
-                          className="video-overlay__live-chat-frame"
-                          src={liveChatUrl}
-                          title={t("Live chat")}
-                          loading="lazy"
-                          referrerPolicy="strict-origin-when-cross-origin"
-                        />
-                        <a
-                          className="video-overlay__live-chat-mobile"
-                          href={external || video.video_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {t("Open chat on YouTube")}
-                        </a>
-                      </>
-                    ) : (
-                      <div className="video-overlay__live-chat-consent">
-                        <p>{t("Allow YouTube content to play this video.")}</p>
-                        <button
-                          type="button"
-                          className="btn btn--secondary"
-                          onClick={() => setOptionalContent(true)}
-                        >
-                          {t("Allow YouTube")}
-                        </button>
-                      </div>
-                    )}
-                  </section>
+                {liveChatEnabled && (
+                  <LiveChatPanel videoId={video.id} videoState={youtubeState} />
                 )}
               </div>
             )}
