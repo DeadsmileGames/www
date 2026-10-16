@@ -543,6 +543,13 @@ fieldset {
   flex-wrap: wrap;
   margin-top: 32px;
 }
+
+#home .studio-actions > span[aria-live] {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
 .studio-actions .btn-steam,
 .studio-actions .btn-youtube {
   margin: 0;
