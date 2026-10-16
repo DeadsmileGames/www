@@ -4,6 +4,7 @@ import { Play } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { safeImageUrl } from "../utils/urls";
+import { getVideoThumbnail } from "../utils/videoThumbnail";
 import { SkeletonVideos } from "../components/ui/Skeleton";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { YouTubeBroadcastBadge } from "../components/videos/YouTubeBroadcastBadge";
@@ -45,7 +46,7 @@ export function Videos() {
     latest?.description ||
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
-  const thumbnail = safeImageUrl(latest?.youtube?.thumbnail || latest?.thumbnail);
+  const thumbnail = getVideoThumbnail(latest, language);
   const releaseAt = latest?.youtube?.actualStartedAt || latest?.youtube?.startsAt || null;
   const releaseDate =
     releaseAt && Number.isFinite(Date.parse(releaseAt))
@@ -134,7 +135,7 @@ export function Videos() {
           {videos.status === "success" && videos.data.length > 0 && (
             <div className="video-grid">
               {videos.data.map((video) => {
-                const image = safeImageUrl(video.youtube?.thumbnail || video.thumbnail);
+                const image = getVideoThumbnail(video, language);
                 return (
                   <button
                     type="button"
