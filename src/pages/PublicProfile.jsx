@@ -118,13 +118,20 @@ export function PublicProfile() {
   const avatar = safeImageUrl(profile.avatarUrl);
   const website = safeHttpsUrl(profile.websiteUrl);
   const createdAt = profile.createdAt ? new Date(profile.createdAt) : null;
+  const isLuxjsonProfile = String(profile.username || "").toLowerCase() === "luxjson";
+  const profilePageClassName = `profile-page container${isLuxjsonProfile ? " profile-page--luxjson" : ""}`;
 
   return (
-    <div className="profile-page container">
+    <div className={profilePageClassName}>
       <Link to="/" className="back-link">
         <ArrowLeft weight="bold" />
         <span>{t("Back")}</span>
       </Link>
+      {isLuxjsonProfile && (
+        <div className="profile-page__retro-titlebar">
+          <span>Profile — @luxjson</span>
+        </div>
+      )}
       {profile.isVerified && profile.bannerUrl && !bannerFailed && (
         <div className="profile-page__banner">
           <img src={safeImageUrl(profile.bannerUrl)} alt="" loading="eager" onError={() => setBannerFailed(true)} />
@@ -143,7 +150,7 @@ export function PublicProfile() {
           <h1 className="profile-page__name">
             <span>@{profile.username}</span>
             {profile.isVerified && (
-              <span className="profile-page__verified" title={t("Verified studio account")} aria-label={t("Verified studio account")}>
+              <span className="profile-page__verified" title={t("Verified account")} aria-label={t("Verified account")}>
                 <SealCheck size={23} weight="fill" aria-hidden="true" />
               </span>
             )}
