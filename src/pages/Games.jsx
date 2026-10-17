@@ -7,8 +7,6 @@ import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Button } from "../components/ui/Button";
 import { useLanguage } from "../context/LanguageContext";
-import { ArrowLeft,
-} from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 
 const PAGE_SIZE = 12;
