@@ -60,6 +60,7 @@ export function Account() {
     websiteUrl: user?.websiteUrl || "",
     location: user?.location || "",
     avatarUrl: user?.avatarUrl || null,
+    profileBannerUrl: user?.profileBannerUrl || "",
   });
 
   const [password, setPassword] = useState("");
@@ -584,6 +585,7 @@ export function Account() {
         websiteUrl: form.websiteUrl,
         location: form.location,
         avatarUrl: form.avatarUrl,
+        ...(isOfficialAccount ? { profileBannerUrl: form.profileBannerUrl } : {}),
       });
       await refresh();
     });
@@ -732,6 +734,7 @@ export function Account() {
   }
 
   const avatar = safeImageUrl(form.avatarUrl);
+  const isOfficialAccount = String(user.username || "").toLowerCase() === "deadsmilegames";
   const createdAt = user.createdAt ? new Date(user.createdAt) : null;
   const createdDate =
     createdAt && !Number.isNaN(createdAt.getTime())
@@ -887,6 +890,27 @@ export function Account() {
                       disabled={saving}
                     />
                   </div>
+
+                  {isOfficialAccount && (
+                    <div className="account-row account-row--banner">
+                      <label htmlFor="acc-profile-banner">{t("Profile banner image URL")}</label>
+                      <input
+                        id="acc-profile-banner"
+                        type="url"
+                        maxLength={2000}
+                        value={form.profileBannerUrl}
+                        onChange={set("profileBannerUrl")}
+                        placeholder="https://…"
+                        disabled={saving}
+                      />
+                      <p className="account-page__field-help">{t("Use a direct HTTPS image URL. Only this official profile can show a banner.")}</p>
+                      {safeImageUrl(form.profileBannerUrl) && (
+                        <div className="account-page__banner-preview">
+                          <img src={safeImageUrl(form.profileBannerUrl)} alt="" loading="lazy" />
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {profileError && (
                     <p className="account-page__error" role="alert">
