@@ -8,6 +8,30 @@ import { useAuth } from "../hooks/useAuth";
 export function VerifyEmail() {
   const { t } = useLanguage();
   const location = useLocation();
+  const stateReturnTo = location.state?.from;
+  const stateCandidate =
+    typeof stateReturnTo === "string"
+      ? stateReturnTo
+      : stateReturnTo?.pathname
+        ? `${stateReturnTo.pathname}${stateReturnTo.search || ""}${stateReturnTo.hash || ""}`
+        : "";
+  let storedReturnTo = "";
+  try {
+    storedReturnTo = window.localStorage.getItem("deadsmile:auth:returnTo") || "";
+  } catch {
+    // Local storage is optional; location state remains available.
+  }
+  const returnToCandidate = stateCandidate || storedReturnTo;
+  const returnTo =
+    returnToCandidate.startsWith("/") &&
+    !returnToCandidate.startsWith("//") &&
+    !returnToCandidate.includes("\\") &&
+    !/[\u0000-\u001f]/.test(returnToCandidate)
+      ? returnToCandidate
+      : "";
+  const loginPath = returnTo
+    ? `/login?returnTo=${encodeURIComponent(returnTo)}`
+    : "/login";
   const { refresh } = useAuth();
 
   const [token] = useState(() => {
@@ -96,7 +120,7 @@ export function VerifyEmail() {
         )}
 
         {status !== "loading" && (
-          <Link className="btn btn--primary" to="/login">
+          <Link className="btn btn--primary" to={loginPath} state={returnTo ? { from: returnTo } : undefined}>
             {t("Go to login")}
           </Link>
         )}
