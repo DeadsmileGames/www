@@ -6,7 +6,6 @@ import { useAuth } from "../hooks/useAuth";
 export function ProtectedRoute({ children, role }) {
   const { status, user, error, refresh } = useAuth();
   const location = useLocation();
-  const windows95Prefix = /^\/1995(?:\/|$)/.test(window.location.pathname) ? "/1995" : "";
 
   if (status === "loading") return <SkeletonPage path={location.pathname} />;
 
@@ -18,11 +17,11 @@ export function ProtectedRoute({ children, role }) {
     );
 
   if (status !== "authenticated") {
-    return <Navigate to={`${windows95Prefix}/login`} state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (role && user?.role !== role) {
-    return <Navigate to={`${windows95Prefix}/account`} replace />;
+    return <Navigate to="/account" replace />;
   }
 
   return children;

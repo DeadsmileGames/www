@@ -1,5 +1,5 @@
-import { lazy, useMemo } from "react";
-import { Navigate, useLocation, useParams, useRoutes } from "react-router-dom";
+import { lazy } from "react";
+import { Navigate, useParams, Routes, Route } from "react-router-dom";
 import { AppLayout } from "./app/AppLayout";
 import { ProtectedRoute } from "./app/ProtectedRoute";
 
@@ -34,89 +34,111 @@ const PublicProfile = page(() => import("./pages/PublicProfile"), "PublicProfile
 const SpecialThanks = page(() => import("./pages/SpecialThanks"), "SpecialThanks");
 const ForgotPassword = page(() => import("./pages/ForgotPassword"), "ForgotPassword");
 const ResetPassword = page(() => import("./pages/ResetPassword"), "ResetPassword");
-const NewsletterAction = page(() => import("./pages/NewsletterAction"), "NewsletterAction");
-
-function LegacyNews({ windows95Mode }) {
+const NewsletterAction = page(
+  () => import("./pages/NewsletterAction"),
+  "NewsletterAction",
+);
+function LegacyNews() {
   const { slug } = useParams();
-  const prefix = windows95Mode ? "/1995" : "";
   return (
-    <Navigate
-      replace
-      to={slug
-        ? `${prefix}/newswire/${encodeURIComponent(slug)}`
-        : `${prefix}/newswire`}
-    />
+    <Navigate replace to={slug ? `/newswire/${encodeURIComponent(slug)}` : "/newswire"} />
   );
 }
 
-function PreorderRegisterRedirect({ windows95Mode }) {
+function PreorderRegisterRedirect() {
   const { slug } = useParams();
-  const prefix = windows95Mode ? "/1995" : "";
-  return <Navigate replace to={`${prefix}/games/${encodeURIComponent(slug)}/preorder`} />;
-}
-
-function createAppRoutes(windows95Mode) {
-  return [
-    {
-      element: <AppLayout windows95Mode={windows95Mode} />,
-      children: [
-        { path: "/", element: <Home /> },
-        { path: "/privacy", element: <Privacy /> },
-        { path: "/terms", element: <Terms /> },
-        { path: "/presskit", element: <PressKit /> },
-        { path: "/games", element: <Games /> },
-        { path: "/games/:slug/latest", element: <GameLatest /> },
-        { path: "/games/:slug/preorder/confirm/:token", element: <PreorderConfirm /> },
-        {
-          path: "/games/:slug/preorder/reward/:token",
-          element: <ProtectedRoute><PreorderReward /></ProtectedRoute>,
-        },
-        {
-          path: "/games/:slug/preorder/reward",
-          element: <ProtectedRoute><PreorderReward /></ProtectedRoute>,
-        },
-        {
-          path: "/games/:slug/preorder/register",
-          element: <PreorderRegisterRedirect windows95Mode={windows95Mode} />,
-        },
-        { path: "/games/:slug/preorder", element: <Preorder /> },
-        { path: "/launcher", element: <Launcher /> },
-        { path: "/videos", element: <Videos /> },
-        { path: "/soundtracks", element: <Soundtracks /> },
-        { path: "/games/:slug", element: <GameDetails /> },
-        { path: "/wishlist", element: <ProtectedRoute><Wishlist /></ProtectedRoute> },
-        { path: "/library", element: <ProtectedRoute><Library /></ProtectedRoute> },
-        { path: "/news", element: <LegacyNews windows95Mode={windows95Mode} /> },
-        { path: "/news/:slug", element: <LegacyNews windows95Mode={windows95Mode} /> },
-        { path: "/newswire", element: <News /> },
-        { path: "/newswire/:slug", element: <News /> },
-        { path: "/support", element: <Support /> },
-        { path: "/about", element: <About /> },
-        { path: "/specialthanks", element: <SpecialThanks /> },
-        { path: "/search", element: <Search /> },
-        { path: "/login", element: <Login /> },
-        { path: "/register", element: <Register /> },
-        { path: "/verify-email", element: <VerifyEmail /> },
-        { path: "/account", element: <ProtectedRoute><Account /></ProtectedRoute> },
-        { path: "/admin", element: <ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute> },
-        { path: "/profile/:username", element: <PublicProfile /> },
-        { path: "/forgot-password", element: <ForgotPassword /> },
-        { path: "/reset-password", element: <ResetPassword /> },
-        { path: "/newsletter/confirm", element: <NewsletterAction action="confirm" /> },
-        { path: "/newsletter/unsubscribe", element: <NewsletterAction action="unsubscribe" /> },
-        { path: "*", element: <NotFound /> },
-      ],
-    },
-  ];
+  return <Navigate replace to={`/games/${encodeURIComponent(slug)}/preorder`} />;
 }
 
 export default function App() {
-  const location = useLocation();
-  const windows95Mode = /^\/1995(?:\/|$)/.test(location.pathname);
-  const routeLocation = windows95Mode
-    ? { ...location, pathname: location.pathname.replace(/^\/1995(?=\/|$)/, "") || "/" }
-    : undefined;
-  const routes = useMemo(() => createAppRoutes(windows95Mode), [windows95Mode]);
-
-  return useRoutes(routes, routeLocation);
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/presskit" element={<PressKit />} />
+        <Route path="/games" element={<Games />} />
+        <Route path="/games/:slug/latest" element={<GameLatest />} />
+        <Route path="/games/:slug/preorder/confirm/:token" element={<PreorderConfirm />} />
+        <Route
+          path="/games/:slug/preorder/reward/:token"
+          element={
+            <ProtectedRoute>
+              <PreorderReward />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/games/:slug/preorder/reward"
+          element={
+            <ProtectedRoute>
+              <PreorderReward />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/games/:slug/preorder/register" element={<PreorderRegisterRedirect />} />
+        <Route path="/games/:slug/preorder" element={<Preorder />} />
+        <Route path="/launcher" element={<Launcher />} />
+        <Route path="/videos" element={<Videos />} />
+        <Route path="/soundtracks" element={<Soundtracks />} />
+        <Route path="/games/:slug" element={<GameDetails />} />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            <ProtectedRoute>
+              <Library />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/news" element={<LegacyNews />} />
+        <Route path="/news/:slug" element={<LegacyNews />} />
+        <Route path="/newswire" element={<News />} />
+        <Route path="/newswire/:slug" element={<News />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/specialthanks" element={<SpecialThanks />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminPanel />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/profile/:username" element={<PublicProfile />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route
+          path="/newsletter/confirm"
+          element={<NewsletterAction action="confirm" />}
+        />
+        <Route
+          path="/newsletter/unsubscribe"
+          element={<NewsletterAction action="unsubscribe" />}
+        />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  );
 }

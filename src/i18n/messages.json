@@ -815,11 +815,7 @@
     "Name removed from the list.": "Nome removido da lista.",
     "No names have been added yet.": "Nenhum nome foi adicionado ainda.",
     "Delete this name?": "Excluir este nome?",
-    "Back to home": "Voltar para a página inicial",
-    "Windows 95 mode": "Modo Windows 95",
-    "This action cannot be completed in Windows 95 mode.": "Esta ação não pode ser realizada no modo Windows 95.",
-    "Redirecting to the standard site in {seconds} seconds…": "Redirecionando para a versão normal do site em {seconds} segundos…",
-    "Redirect countdown": "Contagem regressiva do redirecionamento"
+    "Back to home": "Voltar para a página inicial"
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -1637,11 +1633,7 @@
     "Name removed from the list.": "Nombre eliminado de la lista.",
     "No names have been added yet.": "Todavía no se ha añadido ningún nombre.",
     "Delete this name?": "¿Eliminar este nombre?",
-    "Back to home": "Volver al inicio",
-    "Windows 95 mode": "Modo Windows 95",
-    "This action cannot be completed in Windows 95 mode.": "Esta acción no se puede realizar en el modo Windows 95.",
-    "Redirecting to the standard site in {seconds} seconds…": "Redirigiendo a la versión normal del sitio en {seconds} segundos…",
-    "Redirect countdown": "Cuenta regresiva de redirección"
+    "Back to home": "Volver al inicio"
   },
   "en": {
     "Retomar": "Resume",
@@ -1806,10 +1798,6 @@
     "Name removed from the list.": "Name removed from the list.",
     "No names have been added yet.": "No names have been added yet.",
     "Delete this name?": "Delete this name?",
-    "Back to home": "Back to home",
-    "Windows 95 mode": "Windows 95 mode",
-    "This action cannot be completed in Windows 95 mode.": "This action cannot be completed in Windows 95 mode.",
-    "Redirecting to the standard site in {seconds} seconds…": "Redirecting to the standard site in {seconds} seconds…",
-    "Redirect countdown": "Redirect countdown"
+    "Back to home": "Back to home"
   }
 }
