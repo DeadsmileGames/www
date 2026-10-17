@@ -1,4 +1,5 @@
-import { useState } from "react";
+import {
+  useState } from "react";
 import { useGames } from "../hooks/useGames";
 import { GameGrid } from "../components/games/GameGrid";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
@@ -7,7 +8,8 @@ import { ErrorState } from "../components/ui/ErrorState";
 import { Button } from "../components/ui/Button";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft,
+} from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 
 const PAGE_SIZE = 12;
@@ -22,10 +24,7 @@ export function Games() {
 
   return (
     <div className="games-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
       <Reveal>
         <header className="games-page__head">
           <h1>{t("games.title")}</h1>
