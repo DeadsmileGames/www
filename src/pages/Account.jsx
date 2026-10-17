@@ -585,7 +585,7 @@ export function Account() {
         websiteUrl: form.websiteUrl,
         location: form.location,
         avatarUrl: form.avatarUrl,
-        ...(isOfficialAccount ? { profileBannerUrl: form.profileBannerUrl } : {}),
+        ...(isPersonalizedAccount ? { profileBannerUrl: form.profileBannerUrl } : {}),
       });
       await refresh();
     });
@@ -734,7 +734,9 @@ export function Account() {
   }
 
   const avatar = safeImageUrl(form.avatarUrl);
-  const isOfficialAccount = String(user.username || "").toLowerCase() === "deadsmilegames";
+  const isPersonalizedAccount = ["deadsmilegames", "luxjson"].includes(
+    String(user.username || "").toLowerCase(),
+  );
   const createdAt = user.createdAt ? new Date(user.createdAt) : null;
   const createdDate =
     createdAt && !Number.isNaN(createdAt.getTime())
@@ -891,7 +893,7 @@ export function Account() {
                     />
                   </div>
 
-                  {isOfficialAccount && (
+                  {isPersonalizedAccount && (
                     <div className="account-row account-row--banner">
                       <label htmlFor="acc-profile-banner">{t("Profile banner image URL")}</label>
                       <input
@@ -903,7 +905,7 @@ export function Account() {
                         placeholder="https://…"
                         disabled={saving}
                       />
-                      <p className="account-page__field-help">{t("Use a direct HTTPS image URL. Only this official profile can show a banner.")}</p>
+                      <p className="account-page__field-help">{t("Use a direct HTTPS image URL. Only verified profiles can show a banner.")}</p>
                       {safeImageUrl(form.profileBannerUrl) && (
                         <div className="account-page__banner-preview">
                           <img src={safeImageUrl(form.profileBannerUrl)} alt="" loading="lazy" />
