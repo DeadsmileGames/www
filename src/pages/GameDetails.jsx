@@ -26,6 +26,7 @@ import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
 import { getReleaseTimestamp } from "../utils/releaseDate";
+import { useServerClock, syncServerClock } from "../hooks/useServerClock";
 
 const LAUNCHER_DOWNLOAD_URL = "/launcher";
 const GAME_RELEASE_TIME_ZONE = "America/Sao_Paulo";
@@ -85,38 +86,24 @@ export function GameDetails() {
   });
   const [launcherMissing, setLauncherMissing] = useState(false);
   const [download, setDownload] = useState({ busy: false, error: "" });
-  const [releaseNow, setReleaseNow] = useState(Date.now());
+  const releaseNow = useServerClock();
+  const [releaseRetryRevision, setReleaseRetryRevision] = useState(0);
   const releaseRefreshRequested = useRef(false);
 
   const game = state.game;
   const releaseDateValue = game?.releaseDate || "";
   const releaseTimestamp = getReleaseTimestamp(releaseDateValue);
   useEffect(() => {
-    const preorderEnd = Date.parse(game?.preorderEndsAt || "");
-    const needsPreorderClock = Boolean(game?.preorderEnabled && Number.isFinite(preorderEnd) && preorderEnd > Date.now());
-    const needsReleaseClock = game?.status === "in_development" && Number.isFinite(releaseTimestamp) && releaseTimestamp > Date.now();
-    setReleaseNow(Date.now());
-    if (!needsPreorderClock && !needsReleaseClock) return undefined;
-    const timer = window.setInterval(() => {
-      const now = Date.now();
-      setReleaseNow(now);
-      const preorderStillRunning = Boolean(game?.preorderEnabled && Number.isFinite(preorderEnd) && preorderEnd > now);
-      const releaseStillRunning = game?.status === "in_development" && Number.isFinite(releaseTimestamp) && releaseTimestamp > now;
-      if (!preorderStillRunning && !releaseStillRunning) window.clearInterval(timer);
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, [game?.status, game?.releaseDate, game?.preorderEnabled, game?.preorderEndsAt, releaseTimestamp]);
-
-  useEffect(() => {
     releaseRefreshRequested.current = false;
   }, [slug]);
+
+  const releaseReached = releaseNow !== null && Number.isFinite(releaseTimestamp) && releaseTimestamp <= releaseNow;
 
   useEffect(() => {
     if (
       game?.slug !== slug ||
       game?.status !== "in_development" ||
-      !Number.isFinite(releaseTimestamp) ||
-      releaseTimestamp > releaseNow ||
+      !releaseReached ||
       releaseRefreshRequested.current
     ) {
       return undefined;
@@ -135,7 +122,8 @@ export function GameDetails() {
         if (active) {
           retryTimer = window.setTimeout(() => {
             releaseRefreshRequested.current = false;
-            setReleaseNow(Date.now());
+            setReleaseRetryRevision((value) => value + 1);
+            void syncServerClock();
           }, 5000);
         }
       });
@@ -144,7 +132,7 @@ export function GameDetails() {
       active = false;
       if (retryTimer !== null) window.clearTimeout(retryTimer);
     };
-  }, [game?.slug, game?.status, game?.releaseDate, releaseTimestamp, releaseNow, slug]);
+  }, [game?.slug, game?.status, game?.releaseDate, releaseTimestamp, releaseReached, releaseRetryRevision, slug]);
   const gameId = game?.id || null;
   const isValidGameId = typeof gameId === "string" && gameId.length > 0;
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
@@ -152,7 +140,7 @@ export function GameDetails() {
     authStatus === "authenticated" && libraryMatches && library.status === "success";
   const hasConfirmedPreorder = libraryReady && library.preorderRegistered;
   const preorderPath = "/games/" + encodeURIComponent(game?.slug || slug) + "/preorder";
-  const preorderWindowOpen = Boolean(game?.preorderEnabled && game?.isFree && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt));
+  const preorderWindowOpen = Boolean(releaseNow !== null && game?.preorderEnabled && game?.isFree && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt));
   const owned = libraryReady && library.owned;
   const showWishlist = libraryReady && isValidGameId && !library.inLibrary;
 
@@ -639,6 +627,7 @@ export function GameDetails() {
         )}
 
         {game.status === "in_development" &&
+          releaseNow !== null &&
           Number.isFinite(releaseTimestamp) && (
             <button
               type="button"
