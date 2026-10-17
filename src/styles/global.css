@@ -5440,7 +5440,7 @@ html[dir="rtl"] .site-header__actions {
 }
 .preorder-card__hero > img {
   position: absolute;
-  z-index: -2;
+  z-index: 0;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -5449,11 +5449,13 @@ html[dir="rtl"] .site-header__actions {
 }
 .preorder-card__hero-overlay {
   position: absolute;
-  z-index: -1;
+  z-index: 1;
   inset: 0;
   background: linear-gradient(0deg, rgb(10 10 10 / 96%) 0%, rgb(10 10 10 / 50%) 48%, rgb(10 10 10 / 8%) 100%);
 }
 .preorder-card__hero-content {
+  position: relative;
+  z-index: 2;
   width: 100%;
   padding: 86px clamp(22px, 4vw, 38px) 28px;
 }
