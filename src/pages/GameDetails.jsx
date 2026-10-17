@@ -93,12 +93,18 @@ export function GameDetails() {
   const releaseDateValue = game?.releaseDate || "";
   const releaseTimestamp = getReleaseTimestamp(releaseDateValue);
   useEffect(() => {
-    setReleaseNow(Date.now());
     const preorderEnd = Date.parse(game?.preorderEndsAt || "");
     const needsPreorderClock = Boolean(game?.preorderEnabled && Number.isFinite(preorderEnd) && preorderEnd > Date.now());
     const needsReleaseClock = game?.status === "in_development" && Number.isFinite(releaseTimestamp) && releaseTimestamp > Date.now();
+    setReleaseNow(Date.now());
     if (!needsPreorderClock && !needsReleaseClock) return undefined;
-    const timer = window.setInterval(() => setReleaseNow(Date.now()), 1000);
+    const timer = window.setInterval(() => {
+      const now = Date.now();
+      setReleaseNow(now);
+      const preorderStillRunning = Boolean(game?.preorderEnabled && Number.isFinite(preorderEnd) && preorderEnd > now);
+      const releaseStillRunning = game?.status === "in_development" && Number.isFinite(releaseTimestamp) && releaseTimestamp > now;
+      if (!preorderStillRunning && !releaseStillRunning) window.clearInterval(timer);
+    }, 1000);
     return () => window.clearInterval(timer);
   }, [game?.status, game?.releaseDate, game?.preorderEnabled, game?.preorderEndsAt, releaseTimestamp]);
 
