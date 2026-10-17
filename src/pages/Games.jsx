@@ -1,5 +1,4 @@
-import {
-  useState } from "react";
+import { useState } from "react";
 import { useGames } from "../hooks/useGames";
 import { GameGrid } from "../components/games/GameGrid";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
