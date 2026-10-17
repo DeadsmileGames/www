@@ -105,7 +105,7 @@ export function Login() {
         return;
       }
 
-      navigate(from, { replace: true });
+      finishLogin();
     } catch (err) {
       setNeedsEmailVerification(err?.code === "EMAIL_NOT_VERIFIED");
       setError(friendlyErrorMessage(err));
@@ -158,7 +158,7 @@ export function Login() {
 
     try {
       await verifyTwoFactor(token);
-      navigate(from, { replace: true });
+      finishLogin();
     } catch (err) {
       if (err?.code === "TWO_FACTOR_CHALLENGE_EXPIRED") {
         setTwoFactorRequired(false);
