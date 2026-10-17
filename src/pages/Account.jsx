@@ -6,7 +6,6 @@ import { Link,
   useLocation,
   useNavigate } from "react-router-dom";
 import {
-  ArrowLeft,
   User,
   GearSix,
   GameController,
