@@ -7,6 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ErrorState } from "../components/ui/ErrorState";
 import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
+import { useServerClock } from "../hooks/useServerClock";
 
 const localeKey = (language) => ["pt-BR", "es", "en"].includes(language) ? language : "en";
 const messages = {
@@ -33,6 +34,7 @@ export function Preorder() {
   const { user, status: authStatus } = useAuth();
   const navigate = useNavigate();
   const locale = localeKey(language);
+  const serverNow = useServerClock();
   const [game, setGame] = useState(null);
   const [form, setForm] = useState({ firstName: "", lastName: "", age: "", email: "" });
   const [status, setStatus] = useState("loading");
@@ -51,9 +53,14 @@ export function Preorder() {
     game.preorderEnabled !== false &&
     Number.isFinite(Date.parse(game.startsAt || "")) &&
     Number.isFinite(Date.parse(game.endsAt || "")) &&
-    Date.now() >= Date.parse(game.startsAt) &&
-    Date.now() < Date.parse(game.endsAt)
+    serverNow !== null && serverNow >= Date.parse(game.startsAt) &&
+    serverNow < Date.parse(game.endsAt)
   );
+  useEffect(() => {
+    if (!hasPreorderRecord && status === "closed" && windowOpen) setStatus("details");
+    else if (!hasPreorderRecord && status === "details" && !windowOpen && serverNow !== null) setStatus("closed");
+  }, [hasPreorderRecord, status, windowOpen, serverNow]);
+
   const currentStep = status === "review" ? 2 :
     ["pending-confirmation", "already-confirmed", "redeemed", "daily-limit", "closed-record", "closed"].includes(status) ? 3 : 1;
 
@@ -117,8 +124,8 @@ export function Preorder() {
             info.preorderEnabled !== false &&
             Number.isFinite(Date.parse(info.startsAt || "")) &&
             Number.isFinite(Date.parse(info.endsAt || "")) &&
-            Date.now() >= Date.parse(info.startsAt) &&
-            Date.now() < Date.parse(info.endsAt);
+            serverNow !== null && serverNow >= Date.parse(info.startsAt) &&
+            serverNow < Date.parse(info.endsAt);
           if (mine.preorderStatus === "expired" && !canRegister) setStatus("closed-record");
           else if (Number(mine.attemptsRemaining ?? 2) <= 0) setStatus("daily-limit");
           else if (!canRegister) setStatus("closed");
