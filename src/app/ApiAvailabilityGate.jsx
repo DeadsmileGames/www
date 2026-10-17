@@ -95,8 +95,13 @@ export function ApiAvailabilityGate({ children }) {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error("API health check failed");
+        if (!response.headers.get("content-type")?.toLowerCase().includes("application/json")) {
+          throw new Error("API health check returned a non-JSON response");
+        }
         const result = await response.json();
-        if (result?.status !== "ok") throw new Error("API is not ready");
+        if (result?.status !== "ok" || result?.service !== "Deadsmile Games API") {
+          throw new Error("API health contract did not match");
+        }
         if (!active) return;
 
         failures = 0;
