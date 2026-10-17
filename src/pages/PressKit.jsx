@@ -2,7 +2,6 @@ import {
   useLanguage } from "../context/LanguageContext";
 import { Skeleton,
   SkeletonLines } from "../components/ui/Skeleton";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ArrowLeft,
   Download,
