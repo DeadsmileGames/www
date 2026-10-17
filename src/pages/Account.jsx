@@ -1,28 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  useState } from "react";
-import { Link,
-  useLocation,
-  useNavigate } from "react-router-dom";
-import {
-  User,
-  GearSix,
-  GameController,
-  ShieldCheck,
-  Gift,
-  Eye,
-  PencilSimple,
-  ArrowCounterClockwise,
-  ArrowClockwise,
-  CheckCircle,
-  WarningCircle,
-  LockKey,
-  CaretRight,
-  X,
-  Desktop,
-  DeviceMobile,
-} from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { User, GearSix, GameController, ShieldCheck, Gift, Eye, PencilSimple, ArrowCounterClockwise, ArrowClockwise, CheckCircle, WarningCircle, LockKey, CaretRight, X, Desktop, DeviceMobile } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useAuth } from "../hooks/useAuth";
