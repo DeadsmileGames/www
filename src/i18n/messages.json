@@ -784,7 +784,10 @@
     "Your reward code": "Seu código de recompensa",
     "The pre-order has ended. You can redeem this code from your account.": "A pré-venda terminou. Você pode resgatar este código pela sua conta.",
     "This code has been generated and is only redeemable when the pre-order ends.": "Este código já foi gerado e só poderá ser resgatado quando a pré-venda terminar.",
-    "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Seu código de recompensa está pronto. Abra a página de gerenciamento da pré-venda para vê-lo; o resgate será liberado quando ela terminar."
+    "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Seu código de recompensa está pronto. Abra a página de gerenciamento da pré-venda para vê-lo; o resgate será liberado quando ela terminar.",
+    "Your reward code will appear here when the pre-order ends.": "Seu código de recompensa aparecerá aqui quando a pré-venda terminar.",
+    "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Seu e-mail está confirmado. O código de recompensa aparecerá na página de gerenciamento quando a pré-venda terminar.",
+    "This pre-order has not ended yet. Your code becomes redeemable after it ends.": "Esta pré-venda ainda não terminou. O código poderá ser resgatado depois que ela terminar."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1570,7 +1573,10 @@
     "Your reward code": "Tu código de recompensa",
     "The pre-order has ended. You can redeem this code from your account.": "La reserva ha terminado. Puedes canjear este código desde tu cuenta.",
     "This code has been generated and is only redeemable when the pre-order ends.": "Este código ya se generó y solo se podrá canjear cuando termine la reserva.",
-    "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Tu código de recompensa está listo. Abre la página de gestión de la reserva para verlo; podrás canjearlo cuando termine."
+    "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Tu código de recompensa está listo. Abre la página de gestión de la reserva para verlo; podrás canjearlo cuando termine.",
+    "Your reward code will appear here when the pre-order ends.": "Tu código de recompensa aparecerá aquí cuando termine la reserva.",
+    "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Tu correo está confirmado. El código aparecerá en la página de gestión cuando termine la reserva.",
+    "This pre-order has not ended yet. Your code becomes redeemable after it ends.": "Esta reserva aún no ha terminado. Podrás canjear el código cuando termine."
   },
   "en": {
     "Retomar": "Resume",
