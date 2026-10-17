@@ -1,14 +1,20 @@
-import { useLanguage } from "../context/LanguageContext";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useLanguage } from "../context/LanguageContext";
+import { useCallback,
+  useEffect,
+  useRef,
+  useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { api, friendlyErrorMessage } from "../services/api";
+import { api,
+  friendlyErrorMessage } from "../services/api";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
 import { GameCoverPanel } from "../components/games/GameCoverPanel";
 import { safeImageUrl } from "../utils/urls";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft,
+} from "@phosphor-icons/react";
 import { useMicrosoftStoreCovers } from "../hooks/useMicrosoftStoreCovers";
 
 export function Wishlist() {
@@ -66,10 +72,7 @@ export function Wishlist() {
   if (loading) {
     return (
       <div className="wishlist-page container">
-        <Link to="/" className="back-link">
-          <ArrowLeft weight="bold" />
-          <span>{t("Back")}</span>
-        </Link>
+        
         <h1>{t("Your Wishlist")}</h1>
         <SkeletonGameGrid count={6} />
       </div>
@@ -79,10 +82,7 @@ export function Wishlist() {
   if (error) {
     return (
       <div className="wishlist-page container">
-        <Link to="/" className="back-link">
-          <ArrowLeft weight="bold" />
-          <span>{t("Back")}</span>
-        </Link>
+        
         <h1>{t("Your Wishlist")}</h1>
         <ErrorState message={error} onRetry={load} />
       </div>
@@ -91,10 +91,7 @@ export function Wishlist() {
 
   return (
     <div className="wishlist-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <div className="wishlist-page__header">
         <h1>{t("Your Wishlist")}</h1>
