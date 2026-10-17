@@ -404,7 +404,8 @@ export function Preorder() {
               <h2>{t("Reward already redeemed")}</h2>
               <p>{t("Your reward has been redeemed. Your pre-order code and personal details have been deleted.")}</p>
               <div className="preorder-form__actions">
-                <Link className="btn btn--primary" to="/library">{t("Open library")}</Link>
+                <Link className="btn btn--primary" to={"/games/" + encodeURIComponent(slug) + "/preorder/reward"}>{t("Your pre-order reward")}</Link>
+                <Link className="btn btn--secondary" to="/library">{t("Open library")}</Link>
                 <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
               </div>
             </div>
@@ -467,7 +468,7 @@ export function PreorderConfirm() {
 
   return (
     <main className="page-shell preorder-page container">
-      <section className="preorder-workspace__state" aria-labelledby="preorder-confirm-title" role={status === "error" ? "alert" : "status"}>
+      <section className="preorder-workspace__state support-card support-faq-panel" aria-labelledby="preorder-confirm-title" role={status === "error" ? "alert" : "status"}>
         {status === "loading" && <><h1 id="preorder-confirm-title">{t("Confirming your pre-order...")}</h1><LoadingSpinner /></>}
         {status === "success" && <><h1 id="preorder-confirm-title">{t("Your pre-order is confirmed.")}</h1><p>{t("Your email is confirmed. The reward code will appear on the management page when the pre-order ends.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}/preorder`}>{t("Manage pre-order")}</Link><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
         {status === "error" && <><h1 id="preorder-confirm-title">{t("Pre-order confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
@@ -477,26 +478,38 @@ export function PreorderConfirm() {
 }
 
 export function PreorderReward() {
-  const { token } = useParams();
+  const { slug, token } = useParams();
   const { t } = useLanguage();
   const [reward, setReward] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const consumedRequest = useRef(false);
   useEffect(() => {
-    if (consumedRequest.current) return undefined;
-    consumedRequest.current = true;
-    api.get(`/preorders/reward/${encodeURIComponent(token)}`)
-      .then((data) => setReward(data))
-      .catch((err) => setError(messages[err?.code] ? t(messages[err.code]) : t("This reward link has already been used or is invalid.")))
-      .finally(() => setLoading(false));
-    return undefined;
-  }, [token, t]);
+    let active = true;
+    const path = token
+      ? `/preorders/reward/${encodeURIComponent(token)}`
+      : `/preorders/${encodeURIComponent(slug)}/reward`;
+    api.get(path)
+      .then((data) => { if (active) setReward(data); })
+      .catch((err) => {
+        if (active) setError(messages[err?.code] ? t(messages[err.code]) : t("This reward link has already been used or is invalid."));
+      })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [slug, token, t]);
 
   if (loading) return <main className="page-shell preorder-page container"><LoadingSpinner /></main>;
-  if (error || !reward) return <main className="page-shell preorder-page container"><ErrorState message={error || t("This reward link has already been used or is invalid.")} /></main>;
+  if (error || !reward) return (
+    <main className="page-shell preorder-page container">
+      <section className="preorder-workspace__state support-card support-faq-panel" role="alert">
+        <ErrorState message={error || t("This reward link has already been used or is invalid.")} />
+        {slug && <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>}
+      </section>
+    </main>
+  );
   const downloadHref = reward.downloadUrl
-    ? `${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}`
+    ? reward.downloadUrl.startsWith("/api/")
+      ? `${API_BASE_URL.replace(/\\/api\\/?$/, "")}${reward.downloadUrl}`
+      : `${API_BASE_URL}${reward.downloadUrl.startsWith("/") ? "" : "/"}${reward.downloadUrl}`
     : null;
   return (
     <main className="page-shell preorder-page container">
