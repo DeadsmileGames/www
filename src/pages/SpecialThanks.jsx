@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Globe } from "@phosphor-icons/react";
+import { Globe } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { api, friendlyErrorMessage } from "../services/api";
 import { CursorTrail } from "../components/ui/CursorTrail";
@@ -67,11 +67,6 @@ export function SpecialThanks() {
       <CursorTrail />
 
       <nav className="special-thanks-page__toolbar" aria-label={t("Page controls")}>
-        <Link to="/" className="btn btn--secondary special-thanks-page__back">
-          <ArrowLeft size={18} weight="bold" aria-hidden="true" />
-          {t("Back to home")}
-        </Link>
-
         <div className="site-header__account-wrap" ref={languageRef}>
           <button
             type="button"
@@ -148,6 +143,10 @@ export function SpecialThanks() {
       <p className="special-thanks-page__intro">
         {t("A big thank-you to the people who have supported and inspired us.")}
       </p>
+
+      <Link to="/" className="special-thanks-page__back">
+        {t("Back to home")}
+      </Link>
     </div>
   );
 }
