@@ -1,6 +1,5 @@
 import {
   useLanguage } from "../context/LanguageContext";
-import { Link } from "react-router-dom";
 import { ArrowLeft,
 } from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
