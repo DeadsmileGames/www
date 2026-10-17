@@ -46,22 +46,25 @@ export function PremiereBanner({ premiere, onOpen }) {
     isGameRelease && Number.isFinite(releaseTimestamp)
       ? formatReleaseDate(premiere.starts_at, language, { dateStyle: "long" })
       : null;
+  const clockUnavailable = seconds === null;
   const waiting = isGameRelease
-    ? seconds > 0
-    : premiere.state === "upcoming" && seconds > 0;
-  const bannerLabel = isGameRelease
-    ? waiting
-      ? t("{0} launches in {1}", {
-          0: premiere.title,
-          1: formatCountdown(seconds),
-        })
-      : t("{0} releases today", { 0: premiere.title })
-    : waiting
-      ? t("{0} will be available in {1}", {
-          0: premiere.title,
-          1: formatCountdown(seconds),
-        })
-      : t("{0} is now playing", { 0: premiere.title });
+    ? clockUnavailable || seconds > 0
+    : premiere.state === "upcoming" && (clockUnavailable || seconds > 0);
+  const bannerLabel = clockUnavailable && waiting
+    ? t("Syncing official time…")
+    : isGameRelease
+      ? waiting
+        ? t("{0} launches in {1}", {
+            0: premiere.title,
+            1: formatCountdown(seconds),
+          })
+        : t("{0} releases today", { 0: premiere.title })
+      : waiting
+        ? t("{0} will be available in {1}", {
+            0: premiere.title,
+            1: formatCountdown(seconds),
+          })
+        : t("{0} is now playing", { 0: premiere.title });
   useEffect(() => {
     setExpanded(false);
   }, [premiere.kind, premiere.slug, premiere.id]);
