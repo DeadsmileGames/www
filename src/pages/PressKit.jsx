@@ -1,12 +1,7 @@
-import {
-  useLanguage } from "../context/LanguageContext";
-import { Skeleton,
-  SkeletonLines } from "../components/ui/Skeleton";
+import { useLanguage } from "../context/LanguageContext";
+import { Skeleton, SkeletonLines } from "../components/ui/Skeleton";
 import { useState } from "react";
-import {
-  Download,
-  GameController,
-} from "@phosphor-icons/react";
+import { Download, GameController } from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 import { useGames } from "../hooks/useGames";
 import { ErrorState } from "../components/ui/ErrorState";
