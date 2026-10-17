@@ -6054,6 +6054,14 @@ input[type="search"]::-webkit-search-results-decoration {
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Comic Sans MS Local";
+  src: url("/fonts/ComicSansMS-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 /* @luxjson only: retro theme inside the existing profile and main content area. */
 main:has(.profile-page--luxjson) {
   background-color: #000;
