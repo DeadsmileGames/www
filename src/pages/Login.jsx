@@ -58,7 +58,7 @@ export function Login() {
     } catch {
       // Local storage is optional; the in-memory redirect still works.
     }
-    finishLogin();
+    navigate(from, { replace: true });
   }
 
   function handleRecaptchaChange(token) {
