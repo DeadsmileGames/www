@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { safeImageUrl } from "../../utils/urls";
@@ -5,6 +6,16 @@ import { AutoLinkText } from "../ui/AutoLinkText";
 
 export function GameCoverPanel({ game, cover, children }) {
   const { t } = useLanguage();
+  const [clockNow, setClockNow] = useState(Date.now());
+  const preorderEnd = Date.parse(game.preorderEndsAt || game.preorder_ends_at || "");
+  const preorderLocked = Boolean(game.preorderLocked && Number.isFinite(preorderEnd) && preorderEnd > clockNow);
+  useEffect(() => {
+    if (!game.preorderLocked || !Number.isFinite(preorderEnd) || preorderEnd <= Date.now()) return undefined;
+    const timer = window.setInterval(() => setClockNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [game.preorderLocked, preorderEnd]);
+  const remaining = Math.max(0, preorderEnd - clockNow);
+  const countdown = [Math.floor(remaining / 86400000), Math.floor((remaining % 86400000) / 3600000), Math.floor((remaining % 3600000) / 60000), Math.floor((remaining % 60000) / 1000)];
   const image = safeImageUrl(cover || game.coverImage || game.cover_image || game.heroImage);
   const slug = game.slug || game.id;
   const description =
@@ -35,6 +46,12 @@ export function GameCoverPanel({ game, cover, children }) {
       <div className="game-cover-tile__panel">
         <h2>{game.title}</h2>
         <p><AutoLinkText>{description}</AutoLinkText></p>
+        {preorderLocked && (
+          <div role="status" style={{ margin: "12px 0", padding: "12px", border: "1px solid var(--color-border)", borderRadius: "8px", background: "var(--color-background-alt)" }}>
+            <strong>{t("Pre-order reserved")}</strong>
+            <p style={{ margin: "4px 0 0", color: "var(--color-text-secondary)" }}>{t("Download unlocks in")} {countdown[0]}d {String(countdown[1]).padStart(2, "0")}h {String(countdown[2]).padStart(2, "0")}m {String(countdown[3]).padStart(2, "0")}s</p>
+          </div>
+        )}
         <div className="game-cover-tile__actions">
           <Link
             to={`/games/${encodeURIComponent(slug)}`}
