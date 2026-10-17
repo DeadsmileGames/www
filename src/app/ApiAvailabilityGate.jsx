@@ -14,12 +14,17 @@ const PUBLIC_API_PROBE_INTERVAL = 60_000;
 const PUBLIC_API_PROBE_PATHS = [
   "/games?limit=1",
   "/news?limit=1",
+  "/newswire?limit=1",
   "/videos?limit=1",
+  "/videos/premiere",
   "/downloads",
   "/products",
   "/soundtracks",
   "/special-thanks",
+  "/search?q=deadsmile&limit=1",
+  "/preorders",
   "/platform/status",
+  "/platform/events?after=0&limit=1",
 ];
 
 function MaintenanceScreen() {
