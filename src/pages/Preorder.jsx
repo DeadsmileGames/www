@@ -5,6 +5,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../hooks/useAuth";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ErrorState } from "../components/ui/ErrorState";
+import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
 
 const localeKey = (language) => ["pt-BR", "es", "en"].includes(language) ? language : "en";
 const messages = {
@@ -82,6 +83,15 @@ export function Preorder() {
         }
         if (!active) return;
         setGame(info);
+        void loadMicrosoftStoreCovers([info], { includeUnknown: true }).then((covers) => {
+          if (!active) return;
+          const storeCover = covers.get(String(info.id)) || covers.get(String(info.slug));
+          if (storeCover) {
+            setGame((current) => current?.slug === info.slug
+              ? { ...current, coverImage: storeCover }
+              : current);
+          }
+        });
         setAttemptsRemaining(Number(mine.attemptsRemaining ?? 2));
         setHasPreorderRecord(Boolean(mine.hasPreorderRecord));
         if (mine.preorderStatus === "confirmed") {
@@ -248,9 +258,9 @@ export function Preorder() {
   );
 
   const stages = [
-    { number: 1, title: t("Your details"), description: t("Enter the details for your pre-order.") },
-    { number: 2, title: t("Review"), description: t("Check everything before saving.") },
-    { number: 3, title: t("Email confirmation"), description: t("Confirm from your inbox to finish.") },
+    { number: 1, title: t("Your details") },
+    { number: 2, title: t("Review") },
+    { number: 3, title: t("Email confirmation") },
   ];
 
   return (
@@ -266,15 +276,15 @@ export function Preorder() {
 
       <div className="preorder-workspace">
         <aside className="preorder-workspace__sidebar" aria-label={t("Pre-order steps")}>
-          <p className="preorder-workspace__eyebrow">{t("YOUR PRE-ORDER")}</p>
+          <p className="preorder-workspace__steps-title">{t("Pre-order steps")}</p>
           <ol className="preorder-steps">
             {stages.map((stage) => {
               const complete = stage.number < currentStep || (stage.number === 3 && status === "already-confirmed");
               const active = stage.number === currentStep;
               return (
                 <li key={stage.number} className={`preorder-steps__item${active ? " is-active" : ""}${complete ? " is-complete" : ""}`}>
-                  <span className="preorder-steps__number">{complete ? "✓" : stage.number}</span>
-                  <span className="preorder-steps__copy"><strong>{stage.title}</strong><small>{stage.description}</small></span>
+                  <span className="preorder-steps__number">{complete ? "✓" : String(stage.number).padStart(2, "0")}</span>
+                  <span className="preorder-steps__copy"><strong>{stage.title}</strong></span>
                 </li>
               );
             })}
@@ -333,8 +343,7 @@ export function Preorder() {
 
           {status === "pending-confirmation" && (
             <div className="preorder-workspace__state" role="status">
-              <span className="preorder-workspace__state-mark" aria-hidden="true">✉</span>
-              <p className="preorder-workspace__eyebrow">{t("STEP 03 / 03")}</p>
+              
               <h2>{t("Check your email to confirm")}</h2>
               <p>{t("We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update.")}</p>
               <div className="preorder-live-indicator"><span />{t("Waiting for email confirmation")}</div>
@@ -348,7 +357,6 @@ export function Preorder() {
 
           {status === "already-confirmed" && (
             <div className="preorder-workspace__state" role="status">
-              <p className="preorder-workspace__eyebrow">{t("STEP 03 / 03")}</p>
               <h2>{t("Your pre-order is confirmed.")}</h2>
               <p>{t("Your pre-order is now linked to your account and will appear in your library, locked until the release countdown ends.")}</p>
               <button className="btn btn--primary" type="button" disabled>{t("Already in pre-order")}</button>
@@ -361,7 +369,6 @@ export function Preorder() {
 
           {status === "daily-limit" && (
             <div className="preorder-workspace__state" role="status">
-              <p className="preorder-workspace__eyebrow">{t("SIGN-UP LIMIT")}</p>
               <h2>{t("You have used both pre-order sign-up attempts for this game today.")}</h2>
               <p>{t("You can sign up for this pre-order again tomorrow.")}</p>
               {hasPreorderRecord && <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>}
@@ -415,12 +422,11 @@ export function PreorderConfirm() {
   }, [slug, token, t]);
 
   return (
-    <main className="page-shell preorder-page">
-      <section className="preorder-card preorder-card--message" aria-labelledby="preorder-confirm-title">
-        <div className="preorder-card__brand">DEADSMILE <span>GAMES</span></div>
+    <main className="page-shell preorder-page container">
+      <section className="preorder-workspace__state" aria-labelledby="preorder-confirm-title" role={status === "error" ? "alert" : "status"}>
         {status === "loading" && <><h1 id="preorder-confirm-title">{t("Confirming your pre-order...")}</h1><LoadingSpinner /></>}
-        {status === "success" && <div role="status"><h1 id="preorder-confirm-title">{t("Your pre-order is confirmed.")}</h1><p>{t("Your pre-order has been confirmed. Return to the game page to see your status.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></div>}
-        {status === "error" && <div role="alert"><h1 id="preorder-confirm-title">{t("Pre-order confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></div>}
+        {status === "success" && <><h1 id="preorder-confirm-title">{t("Your pre-order is confirmed.")}</h1><p>{t("Your pre-order has been confirmed. Return to the game page to see your status.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
+        {status === "error" && <><h1 id="preorder-confirm-title">{t("Pre-order confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
       </section>
     </main>
   );
