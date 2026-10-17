@@ -85,6 +85,7 @@ export function GameDetails() {
   const [launcherMissing, setLauncherMissing] = useState(false);
   const [download, setDownload] = useState({ busy: false, error: "" });
   const [releaseNow, setReleaseNow] = useState(Date.now());
+  const [preorderConfirmedLocally, setPreorderConfirmedLocally] = useState(false);
   const releaseRefreshRequested = useRef(false);
 
   const game = state.game;
@@ -102,6 +103,14 @@ export function GameDetails() {
 
   useEffect(() => {
     releaseRefreshRequested.current = false;
+  }, [slug]);
+
+  useEffect(() => {
+    try {
+      setPreorderConfirmedLocally(window.localStorage.getItem(`deadsmile:preorder:${slug}`) === "confirmed");
+    } catch {
+      setPreorderConfirmedLocally(false);
+    }
   }, [slug]);
 
   useEffect(() => {
@@ -561,10 +570,16 @@ export function GameDetails() {
           </button>
         )}
 
-        {game.preorderEnabled && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt) && (
-          <Link to={`/games/${encodeURIComponent(game.slug)}/preorder`} className="btn btn--primary game-details__btn">
-            {t("Pre-order")}
-          </Link>
+        {game.preorderEnabled && game.isFree && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt) && (
+          preorderConfirmedLocally ? (
+            <button type="button" className="btn btn--primary game-details__btn" disabled aria-disabled="true">
+              {t("Already in pre-order")}
+            </button>
+          ) : (
+            <Link to={`/games/${encodeURIComponent(game.slug)}/preorder`} className="btn btn--primary game-details__btn">
+              {t("Pre-order")}
+            </Link>
+          )
         )}
 
         {game.status === "in_development" &&

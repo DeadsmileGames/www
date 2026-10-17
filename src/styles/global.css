@@ -5406,3 +5406,190 @@ html[dir="rtl"] .site-header__actions {
   }
 }
 
+
+
+/* Preorder registration: centered, editorial card matching the news detail surface. */
+.preorder-page {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 65vh;
+  padding: clamp(28px, 5vw, 76px) 20px 84px;
+}
+.preorder-page .preorder-card {
+  width: min(100%, 760px);
+  min-width: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  color: #f0f0f0;
+  background: #181818;
+  border: 1px solid #343434;
+  border-radius: 16px;
+  box-shadow: 0 24px 70px rgb(0 0 0 / 28%);
+}
+.preorder-card__hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 270px;
+  isolation: isolate;
+  overflow: hidden;
+  background: radial-gradient(ellipse at top, #343434 0%, #181818 70%);
+}
+.preorder-card__hero > img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+}
+.preorder-card__hero-overlay {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(0deg, rgb(10 10 10 / 96%) 0%, rgb(10 10 10 / 50%) 48%, rgb(10 10 10 / 8%) 100%);
+}
+.preorder-card__hero-content {
+  width: 100%;
+  padding: 86px clamp(22px, 4vw, 38px) 28px;
+}
+.preorder-card__hero-content .news-detail__eyebrow {
+  margin: 0 0 10px;
+  color: #ff6464;
+}
+.preorder-card__hero-content h1 {
+  max-width: 100%;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(28px, 4.2vw, 42px);
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+.preorder-card__body {
+  padding: clamp(22px, 4vw, 38px);
+}
+.preorder-card__intro {
+  margin: 0 0 26px;
+  color: #c4c4c4;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.preorder-form {
+  display: grid;
+  gap: 22px;
+  min-width: 0;
+}
+.preorder-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  min-width: 0;
+}
+.preorder-form .admin-field {
+  min-width: 0;
+  margin: 0;
+}
+.preorder-form .admin-field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+.preorder-form__privacy {
+  margin: -5px 0 0;
+  color: #999;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.preorder-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.preorder-notice {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  padding: clamp(18px, 3vw, 28px);
+  background: #111;
+  border: 1px solid #343434;
+  border-radius: 10px;
+}
+.preorder-notice h2 {
+  margin: 0;
+  font-size: clamp(21px, 3vw, 27px);
+  line-height: 1.25;
+}
+.preorder-notice p,
+.preorder-card--message p {
+  margin: 0;
+  color: #b8b8b8;
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.preorder-card--message {
+  padding: clamp(24px, 5vw, 44px);
+}
+.preorder-card--message > .btn,
+.preorder-card--message > a {
+  margin-top: 18px;
+}
+.preorder-card__brand {
+  margin-bottom: 28px;
+  color: #f0f0f0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: .4px;
+}
+.preorder-card__brand span {
+  color: #ff3b3b;
+}
+.preorder-card--message h1 {
+  margin: 0 0 14px;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.2;
+}
+.preorder-card--message .btn {
+  margin-top: 22px;
+}
+.preorder-page .account-page__error {
+  margin: 0;
+}
+.preorder-page .btn:disabled {
+  cursor: not-allowed;
+  opacity: .62;
+}
+@media (max-width: 600px) {
+  .preorder-page {
+    padding: 22px 12px 52px;
+  }
+  .preorder-page .preorder-card {
+    border-radius: 12px;
+  }
+  .preorder-card__hero {
+    min-height: 210px;
+  }
+  .preorder-card__hero-content {
+    padding: 68px 20px 22px;
+  }
+  .preorder-form__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .preorder-card__body {
+    padding: 21px 18px 24px;
+  }
+  .preorder-form__actions,
+  .preorder-form__actions .btn {
+    width: 100%;
+  }
+  .preorder-form__actions .btn {
+    justify-content: center;
+  }
+}

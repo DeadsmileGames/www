@@ -733,7 +733,19 @@
     "Redeem": "Resgatar",
     "Enter a valid six-digit code.": "Digite um código válido de seis dígitos.",
     "Reward code redeemed. Opening your reward…": "Código resgatado. Abrindo sua recompensa…",
-    "Reward code could not be redeemed. Check that the code matches your account email and has not been used.": "Não foi possível resgatar o código. Confira se ele corresponde ao e-mail da sua conta e se ainda não foi usado."
+    "Reward code could not be redeemed. Check that the code matches your account email and has not been used.": "Não foi possível resgatar o código. Confira se ele corresponde ao e-mail da sua conta e se ainda não foi usado.",
+    "Already in pre-order": "Você já está na pré-venda",
+    "You're already signed up for this pre-order.": "Você já está inscrito nesta pré-venda.",
+    "Your pre-order is confirmed. You don't need to register again.": "Sua participação está confirmada. Você não precisa se inscrever novamente.",
+    "Check your email to confirm": "Confira seu e-mail para confirmar",
+    "We sent a confirmation link. Open it to confirm this pre-order; your spot is reserved only after confirmation.": "Enviamos um link de confirmação. Abra-o para confirmar sua inscrição; sua vaga só será reservada depois da confirmação.",
+    "We will email you a confirmation link first. You are only registered after opening that link.": "Primeiro enviaremos um link de confirmação por e-mail. Sua inscrição só será concluída depois que você abrir o link.",
+    "Confirming your pre-order...": "Confirmando sua pré-venda…",
+    "Your pre-order is confirmed.": "Sua pré-venda está confirmada.",
+    "Your pre-order has been confirmed. Return to the game page to see your status.": "Sua participação foi confirmada. Volte à página do jogo para ver seu status.",
+    "This confirmation link is invalid or has expired.": "Este link de confirmação é inválido ou expirou.",
+    "Pre-order confirmation": "Confirmação da pré-venda",
+    "Only free games can have an on-site pre-order.": "A pré-venda dentro do site só está disponível para jogos gratuitos."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1468,7 +1480,19 @@
     "Redeem": "Canjear",
     "Enter a valid six-digit code.": "Introduce un código válido de seis dígitos.",
     "Reward code redeemed. Opening your reward…": "Código canjeado. Abriendo tu recompensa…",
-    "Reward code could not be redeemed. Check that the code matches your account email and has not been used.": "No se pudo canjear el código. Comprueba que coincida con el correo de tu cuenta y que no se haya usado."
+    "Reward code could not be redeemed. Check that the code matches your account email and has not been used.": "No se pudo canjear el código. Comprueba que coincida con el correo de tu cuenta y que no se haya usado.",
+    "Already in pre-order": "Ya estás en la reserva",
+    "You're already signed up for this pre-order.": "Ya estás registrado para esta reserva.",
+    "Your pre-order is confirmed. You don't need to register again.": "Tu participación está confirmada. No necesitas registrarte otra vez.",
+    "Check your email to confirm": "Revisa tu correo para confirmar",
+    "We sent a confirmation link. Open it to confirm this pre-order; your spot is reserved only after confirmation.": "Te enviamos un enlace de confirmación. Ábrelo para confirmar la reserva; tu lugar solo se reserva después de confirmarla.",
+    "We will email you a confirmation link first. You are only registered after opening that link.": "Primero te enviaremos un enlace de confirmación por correo. El registro solo se completa después de abrirlo.",
+    "Confirming your pre-order...": "Confirmando tu reserva…",
+    "Your pre-order is confirmed.": "Tu reserva está confirmada.",
+    "Your pre-order has been confirmed. Return to the game page to see your status.": "Tu participación ha sido confirmada. Vuelve a la página del juego para ver tu estado.",
+    "This confirmation link is invalid or has expired.": "Este enlace de confirmación no es válido o ha caducado.",
+    "Pre-order confirmation": "Confirmación de reserva",
+    "Only free games can have an on-site pre-order.": "La reserva dentro del sitio solo está disponible para juegos gratuitos."
   },
   "en": {
     "Retomar": "Resume",
@@ -1551,6 +1575,18 @@
     "Redeem": "Redeem",
     "Enter a valid six-digit code.": "Enter a valid six-digit code.",
     "Reward code redeemed. Opening your reward…": "Reward code redeemed. Opening your reward…",
-    "Reward code could not be redeemed. Check that the code matches your account email and has not been used.": "Reward code could not be redeemed. Check that the code matches your account email and has not been used."
+    "Reward code could not be redeemed. Check that the code matches your account email and has not been used.": "Reward code could not be redeemed. Check that the code matches your account email and has not been used.",
+    "Already in pre-order": "Already in pre-order",
+    "You're already signed up for this pre-order.": "You're already signed up for this pre-order.",
+    "Your pre-order is confirmed. You don't need to register again.": "Your pre-order is confirmed. You don't need to register again.",
+    "Check your email to confirm": "Check your email to confirm",
+    "We sent a confirmation link. Open it to confirm this pre-order; your spot is reserved only after confirmation.": "We sent a confirmation link. Open it to confirm this pre-order; your spot is reserved only after confirmation.",
+    "We will email you a confirmation link first. You are only registered after opening that link.": "We'll send you a confirmation link first. Your registration is complete only after you open it.",
+    "Confirming your pre-order...": "Confirming your pre-order...",
+    "Your pre-order is confirmed.": "Your pre-order is confirmed.",
+    "Your pre-order has been confirmed. Return to the game page to see your status.": "Your pre-order has been confirmed. Return to the game page to see your status.",
+    "This confirmation link is invalid or has expired.": "This confirmation link is invalid or has expired.",
+    "Pre-order confirmation": "Pre-order confirmation",
+    "Only free games can have an on-site pre-order.": "Only free games can have an on-site pre-order."
   }
 }
