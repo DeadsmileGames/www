@@ -5983,8 +5983,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .profile-page__section-head,
 .profile-page__game,
 .profile-page .profile-achievements article,
-.profile-page .profile-empty,
-.account-page__banner-preview {
+.profile-page .profile-empty {
   border: 0 !important;
 }
 .profile-page__avatar { box-shadow: none !important; }
@@ -5992,8 +5991,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .profile-page__banner,
 .profile-page__game,
 .profile-page .profile-achievements article,
-.profile-page .profile-empty,
-.account-page__banner-preview { box-shadow: none !important; }
+.profile-page .profile-empty { box-shadow: none !important; }
 
 /* Public profile hierarchy: make the identity feel as important as the banner. */
 .profile-page__banner {
@@ -6047,10 +6045,6 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 0 !important;
   box-shadow: none !important;
 }
-.profile-page__game { border-radius: 0; }
-.profile-page .profile-achievements article,
-.profile-page .profile-empty { border-radius: 0; }
-
 /* @luxjson only: comic/dev doodles floating in a starry space. No global theme changes. */
 .profile-page--luxjson {
   box-sizing: border-box;
