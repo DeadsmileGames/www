@@ -1,22 +1,15 @@
-import {
-  sanitizeNewswire } from "../utils/contentHtml";
+import { sanitizeNewswire } from "../utils/contentHtml";
 import { SkeletonNews } from "../components/ui/Skeleton";
-import { useEffect,
-  useRef } from "react";
+import { useEffect, useRef } from "react";
 import { EmptyState } from "../components/ui/EmptyState";
 import { useState } from "react";
 import { ErrorState } from "../components/ui/ErrorState";
-import { Link,
-  useNavigate,
-  useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { useAuth } from "../hooks/useAuth";
 import { Reveal } from "../components/ui/Reveal";
-import {
-  ArrowUpRight,
-  Trash,
-} from "@phosphor-icons/react";
+import { ArrowUpRight, Trash } from "@phosphor-icons/react";
 import { api, friendlyErrorMessage } from "../services/api";
 import { safeImageUrl } from "../utils/urls";
 import { getExternalPageTitle } from "../utils/linkTitles";
