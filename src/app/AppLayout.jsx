@@ -15,23 +15,19 @@ import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { usePremiere } from "../hooks/usePremiere";
 import { getReleaseTimestamp } from "../utils/releaseDate";
 import { loadMicrosoftStoreCovers } from "../utils/microsoftStoreCover";
+import { useServerClock } from "../hooks/useServerClock";
 
 export function AppLayout() {
   const { t } = useLanguage();
   const [searchOpen, setSearchOpen] = useState(false);
   const [premiereOpen, setPremiereOpen] = useState(false);
-  const [bannerClock, setBannerClock] = useState(() => Date.now());
+  const bannerClock = useServerClock();
   const [upcomingStoreCover, setUpcomingStoreCover] = useState(null);
   const premiere = usePremiere();
   const { games: gamesNearRelease = [] } = useGames({ limit: 48 });
 
-  useEffect(() => {
-    const timer = window.setInterval(() => setBannerClock(Date.now()), 30_000);
-    return () => window.clearInterval(timer);
-  }, []);
-
   const now = bannerClock;
-  const monthFromNow = new Date(now);
+  const monthFromNow = new Date(now ?? 0);
   const currentDay = monthFromNow.getDate();
   monthFromNow.setDate(1);
   monthFromNow.setMonth(monthFromNow.getMonth() + 1);
@@ -41,7 +37,7 @@ export function AppLayout() {
     0,
   ).getDate();
   monthFromNow.setDate(Math.min(currentDay, lastDayOfNextMonth));
-  const nextRelease = gamesNearRelease
+  const nextRelease = now === null ? null : gamesNearRelease
     .map((game) => {
       const value = game.releaseDate || game.release_date;
       const timestamp = getReleaseTimestamp(value || "");
@@ -120,6 +116,7 @@ export function AppLayout() {
     : null;
   const premiereTimestamp = Date.parse(premiere?.starts_at || "");
   const hasFuturePremiere =
+    now !== null &&
     premiere?.state === "upcoming" &&
     Number.isFinite(premiereTimestamp) &&
     premiereTimestamp > now;
