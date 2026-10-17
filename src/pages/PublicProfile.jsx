@@ -7,6 +7,7 @@ import {
   Images,
   ShoppingCart,
   Trophy,
+  SealCheck,
   X,
 } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
@@ -36,6 +37,7 @@ export function PublicProfile() {
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
   const [avatarFailed, setAvatarFailed] = useState(false);
+  const [bannerFailed, setBannerFailed] = useState(false);
   const [gallery, setGallery] = useState(null);
   const [selected, setSelected] = useState(null);
   const storeCovers = useMicrosoftStoreCovers(profile?.recentGames || [], { includeUnknown: true });
@@ -46,6 +48,7 @@ export function PublicProfile() {
     setProfile(null);
     setError("");
     setAvatarFailed(false);
+    setBannerFailed(false);
     setGallery(null);
     setSelected(null);
 
@@ -122,7 +125,12 @@ export function PublicProfile() {
         <ArrowLeft weight="bold" />
         <span>{t("Back")}</span>
       </Link>
-      <header className="profile-page__hero">
+      {profile.isVerified && profile.bannerUrl && !bannerFailed && (
+        <div className="profile-page__banner">
+          <img src={safeImageUrl(profile.bannerUrl)} alt="" loading="eager" onError={() => setBannerFailed(true)} />
+        </div>
+      )}
+      <header className={`profile-page__hero${profile.isVerified ? " profile-page__hero--official" : ""}`}>
         <div className="profile-page__avatar">
           {avatar && !avatarFailed ? (
             <img src={avatar} alt="" onError={() => setAvatarFailed(true)} />
@@ -131,27 +139,16 @@ export function PublicProfile() {
           )}
         </div>
 
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <h1
-            style={{
-              fontSize: 36,
-              lineHeight: "36px",
-              margin: "0 0 20px",
-              overflowWrap: "anywhere",
-            }}
-          >
-            @{profile.username}
+        <div className="profile-page__identity">
+          <h1 className="profile-page__name">
+            <span>@{profile.username}</span>
+            {profile.isVerified && (
+              <span className="profile-page__verified" title={t("Verified studio account")} aria-label={t("Verified studio account")}>
+                <SealCheck size={23} weight="fill" aria-hidden="true" />
+              </span>
+            )}
           </h1>
-
-          <p
-            style={{
-              fontSize: 16,
-              lineHeight: "20px",
-              margin: "0 0 12px",
-              whiteSpace: "pre-line",
-              overflowWrap: "anywhere",
-            }}
-          >
+          <p className="profile-page__bio">
             <AutoLinkText>{profile.bio || t("No bio yet.")}</AutoLinkText>
           </p>
 
@@ -183,9 +180,13 @@ export function PublicProfile() {
         </div>
       </header>
 
-      <section aria-label={t("Recently played")}>
+      <section className="profile-page__activity" aria-label={t("Recently played")}>
+        <div className="profile-section__head profile-page__section-head">
+          <h2>{t("Recently played")}</h2>
+          <span>{games.length}</span>
+        </div>
         {games.length ? (
-          <div className="game-grid">
+          <div className="profile-page__games">
             {games.map((game) => {
               const purchase = safeItchUrl(game.purchaseUrl);
               const screenshots = (
@@ -197,15 +198,14 @@ export function PublicProfile() {
               const gamePath = `/games/${encodeURIComponent(game.slug)}`;
 
               return (
-                <article className="game-card" key={game.id}>
+                <article className="profile-page__game" key={game.id}>
                   <Link
                     to={gamePath}
-                    className="game-card__image-wrap"
-                    style={{ display: "block" }}
+                    className="profile-page__game-image"
                     aria-label={`${t("View game")}: ${game.title}`}
                   >
                     <img
-                      className="game-card__image"
+                      className="profile-page__game-cover"
                       src={
                         safeImageUrl(storeCovers[String(game.id ?? game.slug)]) ||
                         safeImageUrl(game.coverImage || game.cover_image) ||
@@ -214,35 +214,16 @@ export function PublicProfile() {
                       }
                       alt=""
                       loading="lazy"
-                      style={{ display: "block" }}
                     />
                   </Link>
 
-                  <h3
-                    className="game-card__title"
-                    style={{
-                      fontSize: 28,
-                      lineHeight: "28px",
-                      margin: "0 0 12px",
-                      overflowWrap: "anywhere",
-                    }}
-                  >
+                  <div className="profile-page__game-copy">
+                  <h3 className="profile-page__game-title">
                     <Link to={gamePath}>{game.title}</Link>
                   </h3>
 
                   {game.totalMs != null && game.sessions != null && (
-                    <p
-                      className="game-card__meta"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        flexWrap: "wrap",
-                        gap: 6,
-                        margin: 0,
-                        fontSize: 16,
-                        lineHeight: "16px",
-                      }}
-                    >
+                    <p className="profile-page__game-meta">
                       <Clock size={14} weight="bold" />
                       <span>
                         {duration(game.totalMs)} · {game.sessions}
@@ -252,7 +233,7 @@ export function PublicProfile() {
                   )}
 
                   {(purchase || screenshots.length > 0) && (
-                    <div className="profile-game-actions" style={{ marginTop: 20 }}>
+                    <div className="profile-game-actions">
                       {purchase && (
                         <a
                           href={purchase}
@@ -283,6 +264,7 @@ export function PublicProfile() {
                       )}
                     </div>
                   )}
+                  </div>
                 </article>
               );
             })}
