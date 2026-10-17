@@ -1,0 +1,51 @@
+name: Vendor Comic Neue web fonts
+
+on:
+  push:
+    paths:
+      - ".github/workflows/vendor-comic-neue.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor-fonts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Download licensed web fonts and license
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/fonts
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/crozynski/comicneue/master/Fonts/WebFonts/ComicNeue-Regular.woff2 \
+            --output public/fonts/ComicNeue-Regular.woff2
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/crozynski/comicneue/master/Fonts/WebFonts/ComicNeue-Bold.woff2 \
+            --output public/fonts/ComicNeue-Bold.woff2
+          curl --fail --location --silent --show-error \
+            https://raw.githubusercontent.com/crozynski/comicneue/master/OFL.txt \
+            --output public/fonts/ComicNeue-OFL.txt
+          test -s public/fonts/ComicNeue-Regular.woff2
+          test -s public/fonts/ComicNeue-Bold.woff2
+          test -s public/fonts/ComicNeue-OFL.txt
+
+      - name: Commit font files to the repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/fonts/ComicNeue-Regular.woff2 public/fonts/ComicNeue-Bold.woff2 public/fonts/ComicNeue-OFL.txt
+          if git diff --cached --quiet; then
+            echo "Font assets are already up to date."
+            exit 0
+          fi
+          git commit -m "Vendor Comic Neue font files for self-hosted profile typography"
+          git push
