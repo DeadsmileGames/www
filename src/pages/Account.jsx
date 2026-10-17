@@ -1,5 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  useEffect,
+  useRef,
+  useState } from "react";
+import { Link,
+  useLocation,
+  useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   User,
@@ -749,10 +754,7 @@ export function Account() {
 
   return (
     <div className="account-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <h1>{t("Account")}</h1>
 
