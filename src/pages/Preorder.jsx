@@ -493,26 +493,30 @@ export function PreorderReward() {
     return undefined;
   }, [token, t]);
 
-  if (loading) return <main className="page-shell"><LoadingSpinner /></main>;
-  if (error || !reward) return <main className="page-shell"><ErrorState message={error || t("This reward link has already been used or is invalid.")} /></main>;
+  if (loading) return <main className="page-shell preorder-page container"><LoadingSpinner /></main>;
+  if (error || !reward) return <main className="page-shell preorder-page container"><ErrorState message={error || t("This reward link has already been used or is invalid.")} /></main>;
   const downloadHref = reward.downloadUrl
-    ? `${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}`
+    ? `${API_BASE_URL.replace(/\\/api\\/?$/, "")}${reward.downloadUrl}`
     : null;
   return (
-    <main className="page-shell">
-      <section className="account-block" aria-labelledby="preorder-reward-title">
-        <div className="account-block__head">
-          <h1 id="preorder-reward-title">{t("Your pre-order reward")} — {reward.title}</h1>
+    <main className="page-shell preorder-page container">
+      <section className="preorder-workspace__state support-card support-faq-panel" aria-labelledby="preorder-reward-title">
+        <div className="preorder-workspace__stage-heading">
+          <h2 id="preorder-reward-title">{t("Your pre-order reward")} — {reward.title}</h2>
           <p>{reward.description || t("You have successfully redeemed your reward.")}</p>
         </div>
+        {reward.rewardType === "wallpapers" && Array.isArray(reward.wallpapers) && (
+          <div className="admin-modal__row">
+            {reward.wallpapers.map((url, index) => <figure key={url}><img src={url} alt={t("Reward wallpaper") + " " + (index + 1)} loading="lazy" /><figcaption>{t("Wallpaper")} {index + 1}</figcaption></figure>)}
+          </div>
+        )}
         <div className="account-panel">
-          {reward.rewardType === "wallpapers" && Array.isArray(reward.wallpapers) && (
-            <div className="admin-modal__row">
-              {reward.wallpapers.map((url, index) => <figure key={url}><img src={url} alt={t("Reward wallpaper") + " " + (index + 1)} loading="lazy" /><figcaption>{t("Wallpaper")} {index + 1}</figcaption></figure>)}
-            </div>
-          )}
           <p>{t("You redeemed your rewards. Click below to download them.")}</p>
-          {downloadHref ? <a className="btn btn--primary" href={downloadHref}>{t("Download reward ZIP")}</a> : <p>{t("No downloadable file is attached to this reward.")}</p>}
+          {downloadHref ? (
+            <div className="preorder-form__actions">
+              <a className="btn btn--primary" href={downloadHref}>{t("Download reward ZIP")}</a>
+            </div>
+          ) : <p>{t("No downloadable file is attached to this reward.")}</p>}
         </div>
       </section>
     </main>
