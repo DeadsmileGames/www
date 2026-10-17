@@ -36,12 +36,13 @@ export function Login() {
       : "login";
 
   const fromLocation = location.state?.from;
+  const returnToParam = new URLSearchParams(location.search).get("returnTo");
   const candidate =
     typeof fromLocation === "string"
       ? fromLocation
       : fromLocation?.pathname
         ? `${fromLocation.pathname}${fromLocation.search || ""}${fromLocation.hash || ""}`
-        : "/account";
+        : returnToParam || "/account";
 
   const from =
     candidate.startsWith("/") &&
@@ -50,6 +51,15 @@ export function Login() {
     !/[\u0000-\u001f]/.test(candidate)
       ? candidate
       : "/account";
+
+  function finishLogin() {
+    try {
+      window.localStorage.removeItem("deadsmile:auth:returnTo");
+    } catch {
+      // Local storage is optional; the in-memory redirect still works.
+    }
+    finishLogin();
+  }
 
   function handleRecaptchaChange(token) {
     setRecaptchaToken(token);
@@ -316,7 +326,7 @@ export function Login() {
             </p>
 
             <p className="auth-page__footer">
-              {t("auth.newTo")} <Link to="/register">{t("auth.create")}</Link>
+              {t("auth.newTo")} <Link to={`/register?returnTo=${encodeURIComponent(from)}`} state={{ from: { pathname: from } }}>{t("auth.create")}</Link>
             </p>
 
             {recaptchaSiteKey && (
