@@ -86,7 +86,6 @@ export function GameDetails() {
   const [launcherMissing, setLauncherMissing] = useState(false);
   const [download, setDownload] = useState({ busy: false, error: "" });
   const [releaseNow, setReleaseNow] = useState(Date.now());
-  const [preorderConfirmedLocally, setPreorderConfirmedLocally] = useState(false);
   const releaseRefreshRequested = useRef(false);
 
   const game = state.game;
@@ -110,23 +109,6 @@ export function GameDetails() {
 
   useEffect(() => {
     releaseRefreshRequested.current = false;
-  }, [slug]);
-
-  useEffect(() => {
-    const key = `deadsmile:preorder:${slug}`;
-    const refreshLocalPreorder = () => {
-      try {
-        setPreorderConfirmedLocally(window.localStorage.getItem(key) === "confirmed");
-      } catch {
-        setPreorderConfirmedLocally(false);
-      }
-    };
-    const onStorage = (event) => {
-      if (event.key === key || event.key === null) refreshLocalPreorder();
-    };
-    refreshLocalPreorder();
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
   }, [slug]);
 
   useEffect(() => {
@@ -168,7 +150,7 @@ export function GameDetails() {
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
   const libraryReady =
     authStatus === "authenticated" && libraryMatches && library.status === "success";
-  const hasConfirmedPreorder = preorderConfirmedLocally || (libraryReady && library.preorderRegistered);
+  const hasConfirmedPreorder = libraryReady && library.preorderRegistered;
   const preorderPath = "/games/" + encodeURIComponent(game?.slug || slug) + "/preorder";
   const preorderWindowOpen = Boolean(game?.preorderEnabled && game?.isFree && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt));
   const owned = libraryReady && library.owned;
@@ -280,6 +262,49 @@ export function GameDetails() {
       active = false;
     };
   }, [authStatus, user?.id, gameId, libraryRevision, revision]);
+
+  useEffect(() => {
+    if (authStatus !== "authenticated" || !gameId || !user?.id) return undefined;
+    let active = true;
+    let inFlight = false;
+    const refreshAccountLibrary = async () => {
+      if (!active || inFlight || document.visibilityState === "hidden") return;
+      inFlight = true;
+      try {
+        const data = await api.get("/library/catalog");
+        if (!active || !Array.isArray(data?.items)) return;
+        const item = data.items.find((entry) => String(entry.id) === String(gameId));
+        setLibrary((current) => {
+          if (current.gameId !== gameId || current.userId !== user.id) return current;
+          return {
+            ...current,
+            status: "success",
+            inLibrary: Boolean(item?.inLibrary),
+            owned: Boolean(item?.owned),
+            preorderRegistered: Boolean(item?.preorderRegistered),
+            error: "",
+          };
+        });
+      } catch {
+        // Keep the last known library state if a background refresh fails.
+      } finally {
+        inFlight = false;
+      }
+    };
+    const onFocus = () => { void refreshAccountLibrary(); };
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") void refreshAccountLibrary();
+    };
+    const timer = window.setInterval(() => { void refreshAccountLibrary(); }, 10000);
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [authStatus, user?.id, gameId]);
 
   useEffect(() => {
     const update = (event) => {
