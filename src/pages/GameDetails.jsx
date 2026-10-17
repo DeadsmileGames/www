@@ -92,20 +92,13 @@ export function GameDetails() {
   const releaseTimestamp = getReleaseTimestamp(releaseDateValue);
   useEffect(() => {
     setReleaseNow(Date.now());
-    if (
-      game?.status !== "in_development" ||
-      !Number.isFinite(releaseTimestamp) ||
-      releaseTimestamp <= Date.now()
-    ) {
-      return undefined;
-    }
-    const timer = window.setInterval(() => {
-      const now = Date.now();
-      setReleaseNow(now);
-      if (now >= releaseTimestamp) window.clearInterval(timer);
-    }, 1000);
+    const preorderEnd = Date.parse(game?.preorderEndsAt || "");
+    const needsPreorderClock = Boolean(game?.preorderEnabled && Number.isFinite(preorderEnd) && preorderEnd > Date.now());
+    const needsReleaseClock = game?.status === "in_development" && Number.isFinite(releaseTimestamp) && releaseTimestamp > Date.now();
+    if (!needsPreorderClock && !needsReleaseClock) return undefined;
+    const timer = window.setInterval(() => setReleaseNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
-  }, [game?.status, game?.releaseDate, releaseTimestamp]);
+  }, [game?.status, game?.releaseDate, game?.preorderEnabled, game?.preorderEndsAt, releaseTimestamp]);
 
   useEffect(() => {
     releaseRefreshRequested.current = false;
@@ -568,31 +561,10 @@ export function GameDetails() {
           </button>
         )}
 
-        {showWishlist && (
-          <button
-            type="button"
-            className="btn btn--secondary game-details__btn"
-            aria-pressed={inWishlist}
-            disabled={wishlistLoading}
-            onClick={toggle}
-          >
-            {wishlistLoading ? (
-              <>
-                <LoadingSpinner />
-                <span>{t("Saving…")}</span>
-              </>
-            ) : inWishlist ? (
-              <>
-                <HeartStraight weight="bold" />
-                <span>{t("Wishlisted")}</span>
-              </>
-            ) : (
-              <>
-                <Heart weight="bold" />
-                <span>{t("Wishlist")}</span>
-              </>
-            )}
-          </button>
+        {game.preorderEnabled && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt) && (
+          <Link to={`/games/${encodeURIComponent(game.slug)}/preorder`} className="btn btn--primary game-details__btn">
+            {t("Pre-order")}
+          </Link>
         )}
 
         {game.status === "in_development" &&
@@ -687,6 +659,33 @@ export function GameDetails() {
               })()}
             </button>
           )}
+        {showWishlist && (
+          <button
+            type="button"
+            className="btn btn--secondary game-details__btn"
+            aria-pressed={inWishlist}
+            disabled={wishlistLoading}
+            onClick={toggle}
+          >
+            {wishlistLoading ? (
+              <>
+                <LoadingSpinner />
+                <span>{t("Saving…")}</span>
+              </>
+            ) : inWishlist ? (
+              <>
+                <HeartStraight weight="bold" />
+                <span>{t("Wishlisted")}</span>
+              </>
+            ) : (
+              <>
+                <Heart weight="bold" />
+                <span>{t("Wishlist")}</span>
+              </>
+            )}
+          </button>
+        )}
+
       </ProductHero>
 
       <div className="container game-details__body">

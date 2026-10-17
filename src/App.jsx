@@ -9,6 +9,8 @@ const Home = page(() => import("./pages/Home"), "Home");
 const Launcher = page(() => import("./pages/Launcher"), "Launcher");
 const Games = page(() => import("./pages/Games"), "Games");
 const GameDetails = page(() => import("./pages/GameDetails"), "GameDetails");
+const Preorder = page(() => import("./pages/Preorder"), "Preorder");
+const PreorderReward = page(() => import("./pages/Preorder"), "PreorderReward");
 const GameLatest = page(() => import("./pages/GameLatest"), "GameLatest");
 const Search = page(() => import("./pages/Search"), "Search");
 const Login = page(() => import("./pages/Login"), "Login");
@@ -51,6 +53,8 @@ export default function App() {
         <Route path="/presskit" element={<PressKit />} />
         <Route path="/games" element={<Games />} />
         <Route path="/games/:slug/latest" element={<GameLatest />} />
+        <Route path="/games/:slug/preorder/reward/:token" element={<PreorderReward />} />
+        <Route path="/games/:slug/preorder" element={<Preorder />} />
         <Route path="/launcher" element={<Launcher />} />
         <Route path="/videos" element={<Videos />} />
         <Route path="/soundtracks" element={<Soundtracks />} />

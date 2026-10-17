@@ -104,6 +104,10 @@ export function Account() {
 
   const [itch, setItch] = useState({ loading: true, connected: false });
   const [itchBusy, setItchBusy] = useState(false);
+  const [redeemOpen, setRedeemOpen] = useState(false);
+  const [redeemCode, setRedeemCode] = useState("");
+  const [redeemError, setRedeemError] = useState("");
+  const [redeemBusy, setRedeemBusy] = useState(false);
   const [itchMessage, setItchMessage] = useState("");
 
   const [avatarDraft, setAvatarDraft] = useState(null);
@@ -791,10 +795,10 @@ export function Account() {
 
           <span className="account-nav-title">{t("Related")}</span>
 
-          <Link to="/wishlist" className="account-nav-item account-page__wishlist">
+          <button type="button" className="account-nav-item account-page__wishlist" onClick={() => { setRedeemOpen(true); setRedeemError(""); setRedeemCode(""); }}>
             <Heart weight="bold" />
-            <span>{t("Wishlist")}</span>
-          </Link>
+            <span>{t("Redeem code")}</span>
+          </button>
         </nav>
 
         <div className="account-page__content">
@@ -1426,7 +1430,26 @@ export function Account() {
                         ? new Date(session.createdAt)
                         : null;
 
-                      return (
+                      async function submitPreorderCode(event) {
+    event.preventDefault();
+    if (!/^\d{6}$/.test(redeemCode.trim())) {
+      setRedeemError(t("Enter a valid six-digit code."));
+      return;
+    }
+    setRedeemBusy(true);
+    setRedeemError("");
+    try {
+      const result = await api.post("/preorders/redeem", { code: redeemCode.trim() });
+      setRedeemOpen(false);
+      navigate(result.rewardUrl);
+    } catch (error) {
+      setRedeemError(t("Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
+    } finally {
+      setRedeemBusy(false);
+    }
+  }
+
+  return (
                         <div
                           key={session.id}
                           className="account-row account-row--inline connection-row"
@@ -1678,6 +1701,27 @@ export function Account() {
                 {t("Apply")}
               </Button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {redeemOpen && (
+        <div className="account-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="redeem-code-title">
+          <div className="modal-card" role="document">
+            <button type="button" className="modal-close" onClick={() => setRedeemOpen(false)} aria-label={t("Close")}><X weight="bold" /></button>
+            <h2 id="redeem-code-title">{t("Redeem code")}</h2>
+            <p>{t("Enter your six-digit pre-order reward code.")}</p>
+            <form className="account-panel" onSubmit={submitPreorderCode} aria-busy={redeemBusy}>
+              <label className="admin-field">
+                <span>{t("Redeem code")}</span>
+                <input value={redeemCode} onChange={(event) => setRedeemCode(event.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" minLength={6} maxLength={6} required />
+              </label>
+              {redeemError && <p className="account-page__error" role="alert">{redeemError}</p>}
+              <div className="modal-card__foot">
+                <Button type="button" variant="secondary" onClick={() => setRedeemOpen(false)}>{t("Cancel")}</Button>
+                <Button type="submit" variant="primary" disabled={redeemBusy}>{redeemBusy ? t("Saving…") : t("Redeem")}</Button>
+              </div>
+            </form>
           </div>
         </div>
       )}

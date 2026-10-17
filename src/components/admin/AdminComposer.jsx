@@ -48,6 +48,17 @@ const initial = {
   purchaseUrl: "",
   itchGameId: "",
   downloadUrl: "",
+  preorderEnabled: false,
+  preorderStartsAt: "",
+  preorderEndsAt: "",
+  preorderAgeEn: 13,
+  preorderAgePtBr: 13,
+  preorderAgeEs: 13,
+  preorderRewardType: "package",
+  preorderRewardDescription: "",
+  preorderRewardZipBase64: "",
+  preorderRewardZipExisting: false,
+  preorderRewardWallpapers: "",
 };
 
 function normalizeList(response) {
@@ -287,6 +298,17 @@ export function AdminComposer() {
           purchaseUrl: detail.purchaseUrl || "",
           itchGameId: detail.itchGameId ?? "",
           downloadUrl: detail.downloadUrl || "",
+          preorderEnabled: Boolean(detail.preorderEnabled),
+          preorderStartsAt: detail.preorderStartsAt ? new Date(new Date(detail.preorderStartsAt).getTime() - new Date(detail.preorderStartsAt).getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "",
+          preorderEndsAt: detail.preorderEndsAt ? new Date(new Date(detail.preorderEndsAt).getTime() - new Date(detail.preorderEndsAt).getTimezoneOffset() * 60000).toISOString().slice(0, 16) : "",
+          preorderAgeEn: detail.preorderAgeRatings?.en ?? 13,
+          preorderAgePtBr: detail.preorderAgeRatings?.["pt-BR"] ?? 13,
+          preorderAgeEs: detail.preorderAgeRatings?.es ?? 13,
+          preorderRewardType: detail.preorderRewardType || "package",
+          preorderRewardDescription: detail.preorderRewardDescription || "",
+          preorderRewardZipBase64: "",
+          preorderRewardZipExisting: Boolean(detail.preorderRewardZipExisting),
+          preorderRewardWallpapers: (detail.preorderRewardWallpapers || []).join("\n"),
         };
       } else {
         return;
@@ -367,6 +389,15 @@ export function AdminComposer() {
           purchaseUrl: form.purchaseUrl || null,
           itchGameId: form.itchGameId ? Number(form.itchGameId) : null,
           downloadUrl: form.downloadUrl || null,
+          preorderEnabled: Boolean(form.preorderEnabled),
+          preorderStartsAt: form.preorderStartsAt ? new Date(form.preorderStartsAt).toISOString() : null,
+          preorderEndsAt: form.preorderEndsAt ? new Date(form.preorderEndsAt).toISOString() : null,
+          preorderAgeRatings: { en: Number(form.preorderAgeEn), "pt-BR": Number(form.preorderAgePtBr), es: Number(form.preorderAgeEs) },
+          preorderRewardType: form.preorderEnabled ? form.preorderRewardType : null,
+          preorderRewardDescription: form.preorderRewardDescription,
+          preorderRewardZipBase64: form.preorderRewardZipBase64 || null,
+          preorderRewardZipExisting: Boolean(form.preorderRewardZipExisting),
+          preorderRewardWallpapers: form.preorderRewardWallpapers.split("\n").map((v) => v.trim()).filter(Boolean),
           genres: form.genres
             .split(",")
             .map((v) => v.trim())
@@ -880,6 +911,60 @@ export function AdminComposer() {
                           name="trailerUrl"
                           error={fieldErrors.trailerUrl}
                       />
+                    </section>
+
+                    <section className="account-block" role="group" aria-labelledby="admin-game-preorder">
+                      <div className="account-block__head">
+                        <h3 id="admin-game-preorder">{t("Pre-order and reward")}</h3>
+                        <p>{t("Enable a timed pre-order and configure its unique reward code and downloadable ZIP.")}</p>
+                      </div>
+                      <label className="admin-field">
+                        <span>{t("Enable pre-order")}</span>
+                        <input type="checkbox" checked={Boolean(form.preorderEnabled)} onChange={set("preorderEnabled")} />
+                      </label>
+                      {form.preorderEnabled && (
+                        <>
+                          <div className="admin-modal__row">
+                            <Field label={t("Pre-order starts at")} type="datetime-local" value={form.preorderStartsAt} onChange={set("preorderStartsAt")} name="preorderStartsAt" error={fieldErrors.preorderStartsAt} required />
+                            <Field label={t("Pre-order ends at")} type="datetime-local" value={form.preorderEndsAt} onChange={set("preorderEndsAt")} name="preorderEndsAt" error={fieldErrors.preorderEndsAt} required />
+                          </div>
+                          <div className="admin-modal__row">
+                            <Field label={t("Minimum age (English)")} type="number" min="0" max="21" value={form.preorderAgeEn} onChange={set("preorderAgeEn")} name="preorderAgeEn" required />
+                            <Field label={t("Minimum age (Portuguese)")} type="number" min="0" max="21" value={form.preorderAgePtBr} onChange={set("preorderAgePtBr")} name="preorderAgePtBr" required />
+                            <Field label={t("Minimum age (Spanish)")} type="number" min="0" max="21" value={form.preorderAgeEs} onChange={set("preorderAgeEs")} name="preorderAgeEs" required />
+                          </div>
+                          <label className="admin-field">
+                            <span>{t("Reward type")}</span>
+                            <select value={form.preorderRewardType} onChange={set("preorderRewardType")} name="preorderRewardType">
+                              <option value="video">{t("Special video")}</option>
+                              <option value="wallpapers">{t("Wallpapers")}</option>
+                              <option value="package">{t("Reward package")}</option>
+                              <option value="other">{t("Other reward")}</option>
+                            </select>
+                          </label>
+                          <Text label={t("Reward description")} value={form.preorderRewardDescription} onChange={set("preorderRewardDescription")} name="preorderRewardDescription" maxLength={2000} />
+                          <label className="admin-field">
+                            <span>{t("Reward ZIP file (max 1.3 MB)")}</span>
+                            <input type="file" accept=".zip,application/zip" onChange={(event) => {
+                              const file = event.target.files?.[0];
+                              if (!file) return;
+                              if (!file.name.toLowerCase().endsWith(".zip") || file.size > 1_300_000) {
+                                updateField("preorderRewardZipBase64", "");
+                                setError(t("Choose a ZIP file smaller than 1.3 MB."));
+                                return;
+                              }
+                              const reader = new FileReader();
+                              reader.onload = () => updateField("preorderRewardZipBase64", String(reader.result || "").split(",")[1] || "");
+                              reader.onerror = () => setError(t("The reward ZIP could not be read."));
+                              reader.readAsDataURL(file);
+                            }} />
+                            {form.preorderRewardZipExisting && !form.preorderRewardZipBase64 && <small>{t("An existing reward ZIP will be kept unless you upload a replacement.")}</small>}
+                            {form.preorderRewardZipBase64 && <small>{t("New reward ZIP ready to save.")}</small>}
+                            {fieldErrors.preorderRewardZipBase64 && <small className="admin-modal__error" role="alert">{fieldErrors.preorderRewardZipBase64}</small>}
+                          </label>
+                          <Text label={t("Wallpaper preview URLs (one per line)") } value={form.preorderRewardWallpapers} onChange={set("preorderRewardWallpapers")} name="preorderRewardWallpapers" maxLength={20000} />
+                        </>
+                      )}
                     </section>
 
                     <section className="account-block" role="group" aria-labelledby="admin-game-store">
