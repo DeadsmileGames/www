@@ -44,6 +44,11 @@ function LegacyNews() {
   );
 }
 
+function PreorderRegisterRedirect() {
+  const { slug } = useParams();
+  return <Navigate replace to={`/games/${encodeURIComponent(slug)}/preorder`} />;
+}
+
 export default function App() {
   return (
     <Routes>
@@ -71,6 +76,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/games/:slug/preorder/register" element={<PreorderRegisterRedirect />} />
         <Route path="/games/:slug/preorder" element={<Preorder />} />
         <Route path="/launcher" element={<Launcher />} />
         <Route path="/videos" element={<Videos />} />
