@@ -496,7 +496,7 @@ export function PreorderReward() {
   if (loading) return <main className="page-shell preorder-page container"><LoadingSpinner /></main>;
   if (error || !reward) return <main className="page-shell preorder-page container"><ErrorState message={error || t("This reward link has already been used or is invalid.")} /></main>;
   const downloadHref = reward.downloadUrl
-    ? `${API_BASE_URL.replace(/\\/api\\/?$/, "")}${reward.downloadUrl}`
+    ? `${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}`
     : null;
   return (
     <main className="page-shell preorder-page container">
