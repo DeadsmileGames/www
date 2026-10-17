@@ -514,7 +514,7 @@ export function PreorderReward() {
   );
   const downloadHref = reward.downloadUrl
     ? reward.downloadUrl.startsWith("/api/")
-      ? ${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}
+      ? `${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}`
       : `${API_BASE_URL}${reward.downloadUrl.startsWith("/") ? "" : "/"}${reward.downloadUrl}`
     : null;
 
