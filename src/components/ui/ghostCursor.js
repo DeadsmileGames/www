@@ -31,7 +31,7 @@ export function ghostCursor(options) {
   );
   let isInitialized = false;
 
-  // Re-initialise or destroy the cursor when the reduced-motion preference changes.
+  
   const onMotionPreferenceChange = () => {
     if (prefersReducedMotion.matches) {
       destroyCanvas();
@@ -42,7 +42,7 @@ export function ghostCursor(options) {
   prefersReducedMotion.addEventListener("change", onMotionPreferenceChange);
 
   function init() {
-    // Don't show the cursor trail if the user has prefers-reduced-motion enabled
+    
     if (prefersReducedMotion.matches) {
       console.log(
         "This browser has prefers reduced motion turned on, so the cursor did not init"
@@ -74,7 +74,7 @@ export function ghostCursor(options) {
     loop();
   }
 
-  // Bind events that are needed
+  
   function bindEvents() {
     element.addEventListener("mousemove", onMouseMove);
     element.addEventListener("touchmove", onTouchMove, { passive: true });
@@ -137,12 +137,12 @@ export function ghostCursor(options) {
     
     context.clearRect(0, 0, width, height);
 
-    // Update
+    
     for (let i = 0; i < particles.length; i++) {
       particles[i].update(context);
     }
 
-    // Remove dead particles
+    
     for (let i = particles.length - 1; i >= 0; i--) {
       if (particles[i].lifeSpan < 0) {
         particles.splice(i, 1);
@@ -175,13 +175,13 @@ export function ghostCursor(options) {
     prefersReducedMotion.removeEventListener("change", onMotionPreferenceChange);
   }
 
-  /**
-   * Particles
-   */
+     
+              
+     
 
   function Particle(x, y, image) {
-    this.initialLifeSpan = lifeSpan; //ms
-    this.lifeSpan = lifeSpan; //ms
+    this.initialLifeSpan = lifeSpan; 
+    this.lifeSpan = lifeSpan; 
     this.position = { x: x, y: y };
 
     this.image = image;
@@ -193,8 +193,8 @@ export function ghostCursor(options) {
       context.globalAlpha = opacity;
       context.drawImage(
         this.image,
-        this.position.x, // - (this.canv.width / 2) * scale,
-        this.position.y //- this.canv.height / 2,
+        this.position.x, 
+        this.position.y 
       );
     };
   }

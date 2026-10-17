@@ -22,10 +22,10 @@ const messages = {
 
 const preorderStorageKey = (slug) => `deadsmile:preorder:${slug}`;
 function saveConfirmedPreorder(slug) {
-  try { window.localStorage.setItem(preorderStorageKey(slug), "confirmed"); } catch { /* optional UI preference */ }
+  try { window.localStorage.setItem(preorderStorageKey(slug), "confirmed"); } catch {   }
 }
 function clearConfirmedPreorder(slug) {
-  try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional UI preference */ }
+  try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch {   }
 }
 
 export function Preorder() {
@@ -146,7 +146,7 @@ export function Preorder() {
     return () => { active = false; };
   }, [slug, locale, t, authStatus, user?.id, navigate]);
 
-  // Keep the current page synchronized when the confirmation link is opened on another device.
+  
   useEffect(() => {
     if (!["pending-confirmation", "already-confirmed"].includes(status) || authStatus !== "authenticated") return undefined;
     let active = true;
@@ -547,7 +547,7 @@ export function PreorderReward() {
         try {
           const payload = await response.clone().json();
           code = payload?.error?.code || code;
-        } catch { /* The endpoint may return a non-JSON error. */ }
+        } catch {   }
         setDownloadError(friendlyErrorMessage({ code, status: response.status }));
         return;
       }

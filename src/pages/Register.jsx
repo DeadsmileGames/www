@@ -123,7 +123,7 @@ export function Register() {
           window.localStorage.removeItem("deadsmile:auth:returnTo");
         }
       } catch {
-        // Local storage is optional; route state and query parameters remain available.
+        
       }
 
       navigate(result?.verificationRequired ? "/verify-email" : returnTo, {

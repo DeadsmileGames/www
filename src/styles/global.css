@@ -5440,7 +5440,7 @@ html[dir="rtl"] .site-header__actions {
 
 
 
-/* Pre-order pages follow the same spacing and typography as the rest of the site. */
+ 
 .preorder-page.container {
   min-height: 65vh;
   padding: 130px 0 90px;
@@ -5707,7 +5707,7 @@ html[dir="rtl"] .site-header__actions {
 }
 
 
-/* Keep the pre-order status and management actions visually separated. */
+ 
 .game-details__preorder-actions {
   display: flex;
   flex-wrap: wrap;
@@ -5719,7 +5719,7 @@ html[dir="rtl"] .site-header__actions {
   margin: 0;
 }
 
-/* Links rendered as buttons must never inherit text-link underlines. */
+ 
 a.btn,
 a.btn:hover,
 a.btn:focus-visible,
@@ -5729,7 +5729,7 @@ a.btn:focus-visible,
 }
 
 
-/* Use the site's icon library instead of the browser's native search-clear glyph. */
+ 
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-results-button,
@@ -5804,7 +5804,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 
 
-/* Public profile: restrained hierarchy, shared surfaces, and responsive activity cards. */
+ 
 .profile-page {
   width: min(100% - 2rem, 1180px);
   padding-top: clamp(104px, 12vw, 136px);
@@ -5977,7 +5977,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 
-/* Profiles stay border-free: do not add framed cards or outlines. */
+ 
 .profile-page__banner,
 .profile-page__avatar,
 .profile-page__section-head,
@@ -5993,7 +5993,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .profile-page .profile-achievements article,
 .profile-page .profile-empty { box-shadow: none !important; }
 
-/* Public profile hierarchy: make the identity feel as important as the banner. */
+ 
 .profile-page__banner {
   height: clamp(150px, 20vw, 230px);
   margin-bottom: 28px;
@@ -6045,7 +6045,7 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 0 !important;
   box-shadow: none !important;
 }
-/* Self-hosted Comic Sans MS font used only by the retro Luxjson and Special Thanks screens. */
+ 
 @font-face {
   font-family: "Comic Sans MS Local";
   src: url("/fonts/ComicSansMS.ttf") format("truetype");
@@ -6062,7 +6062,7 @@ input[type="search"]::-webkit-search-results-decoration {
   font-display: swap;
 }
 
-/* @luxjson only: retro theme inside the existing profile and main content area. */
+ 
 main:has(.profile-page--luxjson) {
   background-color: #000;
   background-image: url("https://i.imgur.com/SHZe50s.gif");
@@ -6076,8 +6076,8 @@ main:has(.profile-page--luxjson) {
   font-family: "Comic Sans MS Local", "Comic Sans MS", cursive !important;
 }
 
-/* Force the reference typeface throughout this profile on desktop and mobile,
-   without touching the site's header, premiere banner, footer, or other pages. */
+                                                                              
+                                                                                  
 .profile-page--luxjson,
 .profile-page--luxjson *,
 .profile-page--luxjson *::before,
@@ -6103,8 +6103,8 @@ main:has(.profile-page--luxjson) {
   color: #fff600;
 }
 
-/* Keep the existing banner, hero, avatar, game grid and section geometry.
-   Only switch their surface styling to the supplied retro look. */
+                                                                          
+                                                                   
 .profile-page--luxjson .profile-page__banner {
   border: 2px solid #000 !important;
   border-radius: 0 !important;
@@ -6241,8 +6241,8 @@ main:has(.profile-page--luxjson) {
   100% { background-position: 0% 50%; }
 }
 
-/* Repeat the font rule at the mobile breakpoint so device-specific styles
-   cannot swap the profile back to the site's regular typeface. */
+                                                                          
+                                                                  
 @media (max-width: 760px) {
   .profile-page--luxjson,
   .profile-page--luxjson *,
@@ -6261,7 +6261,7 @@ main:has(.profile-page--luxjson) {
 }
 
 
-/* Special Thanks uses the supplied retro page aesthetic only inside its own route content. */
+ 
 main:has(.special-thanks-page) {
   background-color: #000;
   background-image: url("https://i.imgur.com/SHZe50s.gif");
@@ -6388,7 +6388,7 @@ main:has(.special-thanks-page) {
 }
 
 
-/* Final responsive polish for all public profiles. The image is always fully visible. */
+ 
 .profile-page__banner {
   display: flex;
   align-items: center;
@@ -6531,7 +6531,7 @@ main:has(.special-thanks-page) {
   }
 }
 
-/* Special Thanks is a standalone retro page with no shared site chrome. */
+ 
 main:has(.special-thanks-page) {
   min-height: 100vh;
 }
@@ -6560,7 +6560,7 @@ main:has(.special-thanks-page) {
 }
 
 
-/* Standalone Special Thanks controls reuse the site's button and language-menu classes. */
+ 
 .special-thanks-page__toolbar {
   display: flex;
   align-items: center;
@@ -6681,7 +6681,7 @@ main:has(.special-thanks-page) {
   }
 }
 
-/* Account avatar alignment fix (desktop + mobile). */
+ 
 .account-page .profile-page__hero {
   display: flex;
   flex-direction: row;

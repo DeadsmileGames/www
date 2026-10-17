@@ -56,7 +56,7 @@ export function Login() {
     try {
       window.localStorage.removeItem("deadsmile:auth:returnTo");
     } catch {
-      // Local storage is optional; the in-memory redirect still works.
+      
     }
     navigate(from, { replace: true });
   }

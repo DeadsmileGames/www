@@ -274,7 +274,7 @@ export function GameDetails() {
           };
         });
       } catch {
-        // Keep the last known library state if a background refresh fails.
+        
       } finally {
         inFlight = false;
       }
