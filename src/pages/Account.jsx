@@ -6,7 +6,7 @@ import {
   GearSix,
   GameController,
   ShieldCheck,
-  Heart,
+  Gift,
   Eye,
   PencilSimple,
   ArrowCounterClockwise,
@@ -796,7 +796,7 @@ export function Account() {
           <span className="account-nav-title">{t("Related")}</span>
 
           <button type="button" className="account-nav-item account-page__wishlist" onClick={() => { setRedeemOpen(true); setRedeemError(""); setRedeemCode(""); }}>
-            <Heart weight="bold" />
+            <Gift weight="bold" />
             <span>{t("Redeem code")}</span>
           </button>
         </nav>
