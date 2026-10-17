@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, API_BASE_URL, friendlyErrorMessage } from "../services/api";
 import { useLanguage } from "../context/LanguageContext";
+import { useAuth } from "../hooks/useAuth";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 import { ErrorState } from "../components/ui/ErrorState";
 
@@ -24,6 +25,7 @@ function saveConfirmedPreorder(slug) {
 export function Preorder() {
   const { slug } = useParams();
   const { t, language } = useLanguage();
+  const { user, status: authStatus } = useAuth();
   const locale = localeKey(language);
   const [game, setGame] = useState(null);
   const [form, setForm] = useState({ firstName: "", lastName: "", age: "", email: "" });
@@ -34,21 +36,35 @@ export function Preorder() {
     let active = true;
     setStatus("loading");
     setError("");
-    api.get(`/preorders/${encodeURIComponent(slug)}`)
-      .then((data) => {
+    async function load() {
+      try {
+        const data = await api.get(`/preorders/${encodeURIComponent(slug)}`);
         if (!active) return;
         setGame(data);
         let confirmed = false;
         try { confirmed = window.localStorage.getItem(preorderStorageKey(slug)) === "confirmed"; } catch { /* storage is optional */ }
+        if (!confirmed && authStatus === "authenticated" && user?.id) {
+          try {
+            const library = await api.get("/library/catalog");
+            confirmed = Array.isArray(library?.items) && library.items.some(
+              (item) => item.slug === slug && item.preorderRegistered === true,
+            );
+          } catch {
+            // Preserve the public sign-up flow if the optional account lookup fails.
+          }
+        }
+        if (!active) return;
+        if (confirmed) saveConfirmedPreorder(slug);
         setStatus(confirmed ? "already-confirmed" : "ready");
-      })
-      .catch((err) => {
+      } catch (err) {
         if (!active) return;
         setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
         setStatus("error");
-      });
+      }
+    }
+    void load();
     return () => { active = false; };
-  }, [slug, locale, t]);
+  }, [slug, locale, t, authStatus, user?.id]);
 
   const update = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
   async function submit(event) {
