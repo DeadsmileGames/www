@@ -51,23 +51,20 @@ export function ItchOAuthCallback() {
         throw { code: "INVALID_RESPONSE" };
       }
 
-      if (active) {
-        setState({ status: "success", message: translateRef.current("Your itch.io account is connected.") });
-        redirectTimer = window.setTimeout(() => {
-          window.location.replace(target.pathname + target.search + target.hash);
-        }, 900);
-      }
+      return target;
     }
 
     if (!completionRef.current) completionRef.current = complete();
-    completionRef.current.catch(() => {});
     completionRef.current
-      .then(() => {
-        if (active) {
-          const params = new URLSearchParams(window.location.hash.slice(1));
-          const expected = params.get("state") || "";
-          if (!expected) return;
-        }
+      .then((target) => {
+        if (!active) return;
+        setState({
+          status: "success",
+          message: translateRef.current("Your itch.io account is connected."),
+        });
+        redirectTimer = window.setTimeout(() => {
+          window.location.replace(target.pathname + target.search + target.hash);
+        }, 900);
       })
       .catch((error) => {
         if (active) setState({ status: "error", message: friendlyErrorMessage(error) });
