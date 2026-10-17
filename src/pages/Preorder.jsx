@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api, API_BASE_URL, friendlyErrorMessage } from "../services/api";
 import { useLanguage } from "../context/LanguageContext";
@@ -98,13 +98,15 @@ export function PreorderReward() {
   const [reward, setReward] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const consumedRequest = useRef(false);
   useEffect(() => {
-    let active = true;
+    if (consumedRequest.current) return undefined;
+    consumedRequest.current = true;
     api.get(`/preorders/reward/${encodeURIComponent(token)}`)
-      .then((data) => { if (active) setReward(data); })
-      .catch((err) => { if (active) setError(messages[err?.code] ? t(messages[err.code]) : t("This reward link has already been used or is invalid.")); })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
+      .then((data) => setReward(data))
+      .catch((err) => setError(messages[err?.code] ? t(messages[err.code]) : t("This reward link has already been used or is invalid.")))
+      .finally(() => setLoading(false));
+    return undefined;
   }, [token, t]);
 
   if (loading) return <main className="page-shell"><LoadingSpinner /></main>;
