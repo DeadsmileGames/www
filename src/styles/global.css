@@ -5790,57 +5790,29 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 
-/* Professional, self-contained GitHub release badge. */
-.launcher-page__github-badge {
+/* Use the externally maintained Shields.io SVG badge for GitHub releases. */
+.launcher-page__github-link {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: max-content;
   max-width: 100%;
-  min-height: 62px;
-  padding: 8px 17px;
-  border: 1px solid #484848;
-  border-radius: 8px;
-  background: #101010;
-  color: #fff;
+  border-radius: 4px;
+  line-height: 0;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
-  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
-.launcher-page__github-badge:hover {
-  border-color: #858585;
-  background: #202020;
-  color: #fff;
-  transform: translateY(-1px);
-}
-.launcher-page__github-badge:focus-visible {
+.launcher-page__github-link:focus-visible {
   outline: 2px solid #a4caff;
   outline-offset: 4px;
 }
-.launcher-page__github-badge > svg {
-  flex: 0 0 auto;
+.launcher-page__github-badge {
+  display: block;
+  width: auto;
+  height: 40px;
+  max-width: 100%;
+  object-fit: contain;
+  transition: opacity 160ms ease;
 }
-.launcher-page__github-badge-copy {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.05;
-  white-space: nowrap;
-}
-.launcher-page__github-badge-copy > span {
-  margin-bottom: 4px;
-  color: #c7c7c7;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.13em;
-}
-.launcher-page__github-badge-copy > strong {
-  color: #fff;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+.launcher-page__github-link:hover .launcher-page__github-badge {
+  opacity: 0.86;
 }
 @media (prefers-reduced-motion: reduce) {
   .launcher-page__github-badge {
