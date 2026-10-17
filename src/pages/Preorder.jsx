@@ -269,7 +269,7 @@ export function Preorder() {
     }
   }
 
-  if (status === "loading") return <main className="page-shell preorder-page container"><LoadingSpinner /></main>;
+  if (status === "loading") return <main className="page-shell preorder-page container"><div className="page-loading-state" role="status" aria-label={t("Loading")}><LoadingSpinner /></div></main>;
   if (status === "error") return (
     <main className="page-shell preorder-page container">
       <div className="preorder-workspace__error">
@@ -503,7 +503,7 @@ export function PreorderReward() {
     return () => { active = false; };
   }, [slug, token, t]);
 
-  if (loading) return <main className="page-shell preorder-page container"><LoadingSpinner /></main>;
+  if (loading) return <main className="page-shell preorder-page container"><div className="page-loading-state" role="status" aria-label={t("Loading")}><LoadingSpinner /></div></main>;
   if (error || !reward) return (
     <main className="page-shell preorder-page container">
       <section className="preorder-workspace__state support-card support-faq-panel" role="alert">
