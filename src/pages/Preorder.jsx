@@ -275,17 +275,17 @@ export function Preorder() {
 
   return (
     <main className="page-shell preorder-page container">
-      <header className="preorder-workspace__header">
+      <header className="news-detail__header preorder-workspace__header">
         {game?.coverImage && <img className="preorder-workspace__cover" src={game.coverImage} alt="" loading="eager" />}
         <div className="preorder-workspace__heading">
           <p className="news-detail__eyebrow">{t("Pre-order")}</p>
           <h1>{game?.title || t("Pre-order")}</h1>
-          <p>{t("Confirm your email to get your reward code. It will appear here and become redeemable when the pre-order ends.")}</p>
+          <p className="news-detail__lead">{t("Confirm your email to get your reward code. It will appear here and become redeemable when the pre-order ends.")}</p>
         </div>
       </header>
 
       <div className="preorder-workspace">
-        <aside className="preorder-workspace__sidebar" aria-label={t("Pre-order steps")}>
+        <aside className="preorder-workspace__sidebar support-card support-faq-panel" aria-label={t("Pre-order steps")}>
           <p className="preorder-workspace__steps-title">{t("Pre-order steps")}</p>
           <ol className="preorder-steps">
             {stages.map((stage) => {
@@ -302,10 +302,11 @@ export function Preorder() {
           <p className="preorder-workspace__quota">{t("You have {remaining} sign-up attempt(s) left today.", { remaining: attemptsRemaining })}</p>
         </aside>
 
-        <section className="preorder-workspace__main" aria-live="polite">
+        <section className="preorder-workspace__main news-detail__content" aria-live="polite">
+          <div className="news-detail__body support-card support-contact-panel">
           {status === "details" && (
             <>
-              <div className="preorder-workspace__stage-heading">
+              <div className="news-detail__header preorder-workspace__stage-heading">
                 <h2>{t("Your details")}</h2>
                 <p>{t("Enter your details to join this free game's pre-order.")}</p>
               </div>
@@ -319,7 +320,7 @@ export function Preorder() {
                   <label className="admin-field"><span>{t("Email address")}</span><input required type="email" maxLength={254} autoComplete="email" value={form.email} onChange={update("email")} /></label>
                 </div>
                 {error && <p className="account-page__error" role="alert">{error}</p>}
-                <p className="preorder-workspace__hint">{t("We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.")}</p>
+                <p className="preorder-workspace__hint support-card support-faq-panel">{t("We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.")}</p>
                 <div className="preorder-form__actions">
                   <button className="btn btn--primary" type="submit">{t("Continue")}</button>
                   <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Cancel")}</Link>
@@ -330,7 +331,7 @@ export function Preorder() {
 
           {status === "review" && (
             <>
-              <div className="preorder-workspace__stage-heading">
+              <div className="news-detail__header preorder-workspace__stage-heading">
                 <h2>{t("Review your pre-order")}</h2>
                 <p>{t("Check that the information below is correct.")}</p>
               </div>
@@ -341,7 +342,7 @@ export function Preorder() {
                 <div><dt>{t("Email address")}</dt><dd>{form.email}</dd></div>
               </dl>
               {error && <p className="account-page__error" role="alert">{error}</p>}
-              <p className="preorder-workspace__hint">{t("After confirming your email, your reward code will appear here. It becomes redeemable when the pre-order ends; we will not email the code.")}</p>
+              <p className="preorder-workspace__hint support-card support-faq-panel">{t("After confirming your email, your reward code will appear here. It becomes redeemable when the pre-order ends; we will not email the code.")}</p>
               <div className="preorder-form__actions">
                 <button className="btn btn--secondary" type="button" onClick={backToDetails}>{t("Back")}</button>
                 <button className="btn btn--primary" type="button" onClick={savePreorder} disabled={saving || attemptsRemaining <= 0} aria-busy={saving}>
@@ -370,13 +371,13 @@ export function Preorder() {
               <h2>{t("Your pre-order is confirmed.")}</h2>
               <p>{t("Your pre-order is now linked to your account and will appear in your library, locked until the release countdown ends.")}</p>
               {rewardRedeemable && rewardCode ? (
-                <div className="preorder-workspace__hint">
+                <div className="preorder-workspace__hint support-card support-faq-panel">
                   <p><strong>{t("Your reward code")}</strong></p>
                   <p><code style={{ fontSize: "1.4rem", letterSpacing: "0.25em", fontWeight: 700 }}>{rewardCode}</code></p>
                   <p>{t("The pre-order has ended. You can redeem this code from your account.")}</p>
                 </div>
               ) : (
-                <p className="preorder-workspace__hint">{t("Your reward code will appear here when the pre-order ends.")}</p>
+                <p className="preorder-workspace__hint support-card support-faq-panel">{t("Your reward code will appear here when the pre-order ends.")}</p>
               )}
               <button className="btn btn--primary" type="button" disabled>{t("Already in pre-order")}</button>
               <div className="preorder-form__actions">
@@ -411,6 +412,7 @@ export function Preorder() {
               <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
             </div>
           )}
+          </div>
         </section>
       </div>
     </main>
