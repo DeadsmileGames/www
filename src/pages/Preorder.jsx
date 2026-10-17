@@ -279,7 +279,7 @@ export function Preorder() {
               );
             })}
           </ol>
-          <p className="preorder-workspace__quota">{t("You have {{remaining}} sign-up attempt(s) left today.", { remaining: attemptsRemaining })}</p>
+          <p className="preorder-workspace__quota">{t("You have {remaining} sign-up attempt(s) left today.", { remaining: attemptsRemaining })}</p>
         </aside>
 
         <section className="preorder-workspace__main" aria-live="polite">
