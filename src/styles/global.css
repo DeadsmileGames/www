@@ -6372,33 +6372,6 @@ main:has(.special-thanks-page) {
   color: #000;
 }
 
-.cursor-trail {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  overflow: hidden;
-  pointer-events: none !important;
-  opacity: 0;
-  transition: opacity 140ms ease-out;
-}
-
-.cursor-trail__ghost {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 22px;
-  height: 28px;
-  pointer-events: none !important;
-  will-change: transform, opacity;
-}
-
-.cursor-trail__ghost svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
 @media (max-width: 760px) {
   .special-thanks-page {
     width: calc(100% - 24px);
@@ -6407,20 +6380,10 @@ main:has(.special-thanks-page) {
   }
 }
 
-@media (pointer: coarse) {
-  .cursor-trail {
-    display: none !important;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .special-thanks-page__title,
   .special-thanks-page__list li {
     animation: none;
-  }
-  .cursor-trail {
-    display: none !important;
-    transition: none;
   }
 }
 
