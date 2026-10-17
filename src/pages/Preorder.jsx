@@ -138,14 +138,16 @@ export function PreorderConfirm() {
   const { t } = useLanguage();
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
-  const requestStarted = useRef(false);
+  const requestStarted = useRef("");
 
   useEffect(() => {
-    if (requestStarted.current) return;
-    requestStarted.current = true;
+    if (requestStarted.current === token) return;
+    requestStarted.current = token;
+    setStatus("loading");
+    setError("");
     api.post(`/preorders/confirm/${encodeURIComponent(token)}`, {})
-      .then(() => {
-        saveConfirmedPreorder(slug);
+      .then((data) => {
+        saveConfirmedPreorder(data?.slug || slug);
         setStatus("success");
       })
       .catch((err) => {
