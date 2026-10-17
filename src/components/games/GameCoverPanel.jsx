@@ -9,11 +9,14 @@ export function GameCoverPanel({ game, cover, children }) {
   const { t } = useLanguage();
   const [clockNow, setClockNow] = useState(Date.now());
   const releaseTimestamp = getReleaseTimestamp(game.releaseDate || game.release_date || "");
+  const releaseReached = Number.isFinite(releaseTimestamp) && releaseTimestamp <= clockNow;
   const preorderLocked = Boolean(
     game.preorderLocked &&
-    (!Number.isFinite(releaseTimestamp) || releaseTimestamp > clockNow)
+    game.status !== "released" &&
+    !(game.status === "in_development" && releaseReached)
   );
-  const releaseCountdownAvailable = preorderLocked && Number.isFinite(releaseTimestamp);
+  const releaseCountdownAvailable =
+    preorderLocked && Number.isFinite(releaseTimestamp) && releaseTimestamp > clockNow;
   useEffect(() => {
     if (!game.preorderLocked || !Number.isFinite(releaseTimestamp) || releaseTimestamp <= Date.now()) return undefined;
     const timer = window.setInterval(() => {
