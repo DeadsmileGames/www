@@ -140,6 +140,11 @@ export function PublicProfile() {
                 <SealCheck size={23} weight="fill" aria-hidden="true" />
               </span>
             )}
+            {isLuxjsonProfile && (
+              <span className="profile-page__dev-tag" title="Developer account" aria-label="Developer account">
+                DEV
+              </span>
+            )}
           </h1>
           <p className="profile-page__bio">
             <AutoLinkText>{profile.bio || t("No bio yet.")}</AutoLinkText>
