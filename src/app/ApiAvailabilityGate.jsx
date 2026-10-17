@@ -10,6 +10,17 @@ const OFFLINE_RETRY_INTERVAL = 12_000;
 const QUICK_RETRY_DELAY = 1_200;
 const INITIAL_RETRY_INTERVAL = 5_000;
 const HEALTH_TIMEOUT = 4_500;
+const PUBLIC_API_PROBE_INTERVAL = 60_000;
+const PUBLIC_API_PROBE_PATHS = [
+  "/games?limit=1",
+  "/news?limit=1",
+  "/videos?limit=1",
+  "/downloads",
+  "/products",
+  "/soundtracks",
+  "/special-thanks",
+  "/platform/status",
+];
 
 function MaintenanceScreen() {
   const { t } = useLanguage();
@@ -76,6 +87,7 @@ export function ApiAvailabilityGate({ children }) {
     let active = true;
     let timer = null;
     let failures = 0;
+    let nextPublicApiProbeAt = 0;
 
     const schedule = (delay) => {
       if (active) timer = window.setTimeout(probe, delay);
@@ -102,6 +114,30 @@ export function ApiAvailabilityGate({ children }) {
         if (result?.status !== "ok" || result?.service !== "Deadsmile Games API") {
           throw new Error("API health contract did not match");
         }
+
+        if (Date.now() >= nextPublicApiProbeAt) {
+          await Promise.all(
+            PUBLIC_API_PROBE_PATHS.map(async (path) => {
+              const probeResponse = await fetch(`${API_BASE_URL}${path}`, {
+                method: "GET",
+                cache: "no-store",
+                credentials: "include",
+                headers: { Accept: "application/json" },
+                signal: controller.signal,
+              });
+              if (!probeResponse.ok) throw new Error("Public API route failed");
+              if (!probeResponse.headers.get("content-type")?.toLowerCase().includes("application/json")) {
+                throw new Error("Public API route returned a non-JSON response");
+              }
+              const probeResult = await probeResponse.json();
+              if (probeResult?.success !== true || !Object.prototype.hasOwnProperty.call(probeResult, "data")) {
+                throw new Error("Public API route contract did not match");
+              }
+            }),
+          );
+          nextPublicApiProbeAt = Date.now() + PUBLIC_API_PROBE_INTERVAL;
+        }
+
         if (!active) return;
 
         failures = 0;
