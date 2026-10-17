@@ -5975,3 +5975,197 @@ input[type="search"]::-webkit-search-results-decoration {
   .profile-page__game, .profile-page__game-image img { transition: none; }
   .profile-page__game:hover { transform: none; }
 }
+
+
+/* Profiles stay border-free: do not add framed cards or outlines. */
+.profile-page__banner,
+.profile-page__avatar,
+.profile-page__section-head,
+.profile-page__game,
+.profile-page .profile-achievements article,
+.profile-page .profile-empty,
+.account-page__banner-preview {
+  border: 0 !important;
+}
+.profile-page__avatar { box-shadow: none !important; }
+.profile-page__section-head { border-bottom: 0 !important; }
+.profile-page__banner,
+.profile-page__game,
+.profile-page .profile-achievements article,
+.profile-page .profile-empty,
+.account-page__banner-preview { box-shadow: none !important; }
+
+/* 95CSS-inspired Windows 95 theme; deliberately isolated to @luxjson's public profile. */
+.profile-page--luxjson {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(104px, 12vw, 136px) max(18px, calc((100% - 1180px) / 2)) 64px;
+  background: #008080;
+  color: #111;
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  border: 0 !important;
+}
+.profile-page--luxjson .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 6px 10px;
+  color: #111;
+  background: #c0c0c0;
+  text-decoration: none;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.profile-page--luxjson .profile-page__retro-titlebar {
+  display: flex;
+  align-items: center;
+  min-height: 30px;
+  margin: 0 0 14px;
+  padding: 6px 10px;
+  background: #000080;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.profile-page--luxjson .profile-page__banner {
+  height: clamp(145px, 24vw, 280px);
+  margin: 0 0 14px;
+  overflow: hidden;
+  background: #c0c0c0;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.profile-page--luxjson .profile-page__hero,
+.profile-page--luxjson .profile-page__activity,
+.profile-page--luxjson .profile-section,
+.profile-page--luxjson .profile-page__game,
+.profile-page--luxjson .profile-achievements article,
+.profile-page--luxjson .profile-empty {
+  color: #111;
+  background: #c0c0c0;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.profile-page--luxjson .profile-page__hero {
+  grid-template-columns: 90px minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  margin: 0 0 18px;
+  padding: 14px;
+}
+.profile-page--luxjson .profile-page__avatar {
+  width: 90px;
+  height: 90px;
+  color: #111;
+  background: #c0c0c0;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.profile-page--luxjson .profile-page__name {
+  color: #111;
+  font-family: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.profile-page--luxjson .profile-page__verified { color: #000080; }
+.profile-page--luxjson .profile-page__bio,
+.profile-page--luxjson .profile-page__facts,
+.profile-page--luxjson .profile-page__game-meta,
+.profile-page--luxjson .profile-page__section-head > span,
+.profile-page--luxjson .profile-achievements span,
+.profile-page--luxjson .profile-empty {
+  color: #222;
+}
+.profile-page--luxjson .profile-page__activity,
+.profile-page--luxjson .profile-section {
+  margin: 0 0 18px;
+  padding: 12px;
+}
+.profile-page--luxjson .profile-page__section-head,
+.profile-page--luxjson .profile-section__head {
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 7px 9px;
+  color: #fff;
+  background: #000080;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.profile-page--luxjson .profile-page__section-head h2,
+.profile-page--luxjson .profile-section__head h2,
+.profile-page--luxjson .profile-section__head h2 svg {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.profile-page--luxjson .profile-page__section-head > span,
+.profile-page--luxjson .profile-section__head > span {
+  color: #fff;
+}
+.profile-page--luxjson .profile-page__games { gap: 12px; }
+.profile-page--luxjson .profile-page__game {
+  overflow: hidden;
+  transition: none;
+}
+.profile-page--luxjson .profile-page__game:hover {
+  transform: none;
+  background: #d6d6d6;
+}
+.profile-page--luxjson .profile-page__game-image,
+.profile-page--luxjson .profile-page__game-copy { border: 0 !important; border-radius: 0 !important; }
+.profile-page--luxjson .profile-page__game-title { font-size: 15px; font-weight: 700; }
+.profile-page--luxjson .profile-page__game-title a,
+.profile-page--luxjson .profile-page__facts a {
+  color: #000080;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.profile-page--luxjson .profile-page__game .btn,
+.profile-page--luxjson .back-link {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: #c0c0c0;
+  color: #111;
+  text-decoration: none;
+}
+.profile-page--luxjson .profile-page__game .btn:hover,
+.profile-page--luxjson .back-link:hover { background: #dedede; }
+.profile-page--luxjson .profile-achievements {
+  gap: 12px;
+}
+.profile-page--luxjson .profile-achievements article { padding: 14px; }
+.profile-page--luxjson .profile-achievements article > svg { color: #000080; }
+.profile-page--luxjson .profile-page__game,
+.profile-page--luxjson .profile-achievements article,
+.profile-page--luxjson .profile-empty { border: 0 !important; }
+@media (max-width: 600px) {
+  .profile-page--luxjson {
+    padding: 104px 12px 42px;
+  }
+  .profile-page--luxjson .profile-page__hero {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+  .profile-page--luxjson .profile-page__avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 23px;
+  }
+  .profile-page--luxjson .profile-page__banner { height: 150px; }
+}
