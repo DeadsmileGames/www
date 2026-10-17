@@ -317,7 +317,7 @@ export function Account() {
 
   async function submitPreorderCode(event) {
     event.preventDefault();
-    if (!/^\\d{6}$/.test(redeemCode.trim())) {
+    if (!/^\d{6}$/.test(redeemCode.trim())) {
       setRedeemError(t("Enter a valid six-digit code."));
       return;
     }

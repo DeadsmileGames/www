@@ -5680,7 +5680,6 @@ html[dir="rtl"] .site-header__actions {
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin-top: 12px;
 }
 
 .game-details__preorder-actions .game-details__btn {

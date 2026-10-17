@@ -787,7 +787,14 @@
     "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Seu código de recompensa está pronto. Abra a página de gerenciamento da pré-venda para vê-lo; o resgate será liberado quando ela terminar.",
     "Your reward code will appear here when the pre-order ends.": "Seu código de recompensa aparecerá aqui quando a pré-venda terminar.",
     "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Seu e-mail está confirmado. O código de recompensa aparecerá na página de gerenciamento quando a pré-venda terminar.",
-    "This pre-order has not ended yet. Your code becomes redeemable after it ends.": "Esta pré-venda ainda não terminou. O código poderá ser resgatado depois que ela terminar."
+    "This pre-order has not ended yet. Your code becomes redeemable after it ends.": "Esta pré-venda ainda não terminou. O código poderá ser resgatado depois que ela terminar.",
+    "Pre-order reserved": "Pré-venda reservada",
+    "Download unlocks in": "Download liberado em",
+    "Start typing to search games, news, and videos.": "Comece a digitar para pesquisar jogos, notícias e vídeos.",
+    "View {0}": "Ver {0}",
+    "We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.": "Primeiro, enviaremos um link de confirmação por e-mail. A pré-venda só será confirmada depois que você abrir esse link.",
+    "Reward already redeemed": "Recompensa já resgatada",
+    "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Sua recompensa foi resgatada. O código da pré-venda e seus dados pessoais foram excluídos."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1576,7 +1583,15 @@
     "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Tu código de recompensa está listo. Abre la página de gestión de la reserva para verlo; podrás canjearlo cuando termine.",
     "Your reward code will appear here when the pre-order ends.": "Tu código de recompensa aparecerá aquí cuando termine la reserva.",
     "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Tu correo está confirmado. El código aparecerá en la página de gestión cuando termine la reserva.",
-    "This pre-order has not ended yet. Your code becomes redeemable after it ends.": "Esta reserva aún no ha terminado. Podrás canjear el código cuando termine."
+    "This pre-order has not ended yet. Your code becomes redeemable after it ends.": "Esta reserva aún no ha terminado. Podrás canjear el código cuando termine.",
+    "Pre-order reserved": "Reserva confirmada",
+    "Download unlocks in": "La descarga se desbloquea en",
+    "Start typing to search games, news, and videos.": "Empieza a escribir para buscar juegos, noticias y vídeos.",
+    "View {0}": "Ver {0}",
+    "We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.": "Primero te enviaremos un enlace de confirmación por correo electrónico. La reserva solo se confirmará cuando abras ese enlace.",
+    "Reward already redeemed": "Recompensa ya canjeada",
+    "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Tu recompensa ya se canjeó. Se eliminaron el código de la reserva y tus datos personales.",
+    "Your pre-order registration is confirmed.": "Tu inscripción a la reserva está confirmada."
   },
   "en": {
     "Retomar": "Resume",
@@ -1705,6 +1720,13 @@
     "Waiting for email confirmation": "Waiting for email confirmation",
     "SIGN-UP LIMIT": "SIGN-UP LIMIT",
     "Save changes": "Save changes",
-    "We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update.": "We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update."
+    "We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update.": "We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update.",
+    "Pre-order reserved": "Pre-order reserved",
+    "Download unlocks in": "Download unlocks in",
+    "Start typing to search games, news, and videos.": "Start typing to search games, news, and videos.",
+    "View {0}": "View {0}",
+    "We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.": "We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.",
+    "Reward already redeemed": "Reward already redeemed",
+    "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Your reward has been redeemed. Your pre-order code and personal details have been deleted."
   }
 }

@@ -23,6 +23,9 @@ const preorderStorageKey = (slug) => `deadsmile:preorder:${slug}`;
 function saveConfirmedPreorder(slug) {
   try { window.localStorage.setItem(preorderStorageKey(slug), "confirmed"); } catch { /* optional UI preference */ }
 }
+function clearConfirmedPreorder(slug) {
+  try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional UI preference */ }
+}
 
 export function Preorder() {
   const { slug } = useParams();
@@ -52,7 +55,7 @@ export function Preorder() {
     Date.now() < Date.parse(game.endsAt)
   );
   const currentStep = status === "review" ? 2 :
-    ["pending-confirmation", "already-confirmed", "daily-limit", "closed-record", "closed"].includes(status) ? 3 : 1;
+    ["pending-confirmation", "already-confirmed", "redeemed", "daily-limit", "closed-record", "closed"].includes(status) ? 3 : 1;
 
   const redirectToLogin = () => navigate("/login", {
     replace: true,
@@ -100,8 +103,13 @@ export function Preorder() {
         setRewardCode(typeof mine.rewardCode === "string" ? mine.rewardCode : "");
         setRewardRedeemable(Boolean(mine.rewardRedeemable));
         if (mine.preorderStatus === "confirmed") {
-          saveConfirmedPreorder(slug);
-          setStatus("already-confirmed");
+          if (mine.rewardRedeemed) {
+            clearConfirmedPreorder(slug);
+            setStatus("redeemed");
+          } else {
+            saveConfirmedPreorder(slug);
+            setStatus("already-confirmed");
+          }
         } else if (mine.preorderStatus === "pending") {
           setStatus("pending-confirmation");
         } else {
@@ -146,11 +154,15 @@ export function Preorder() {
         setRewardCode(typeof mine.rewardCode === "string" ? mine.rewardCode : "");
         setRewardRedeemable(Boolean(mine.rewardRedeemable));
         if (mine.preorderStatus === "confirmed") {
-          saveConfirmedPreorder(slug);
-          setStatus("already-confirmed");
+          if (mine.rewardRedeemed) {
+            clearConfirmedPreorder(slug);
+            setStatus("redeemed");
+          } else {
+            saveConfirmedPreorder(slug);
+            setStatus("already-confirmed");
+          }
           setError("");
         } else if (!mine.hasPreorderRecord) {
-          try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional preference */ }
           setStatus(Number(mine.attemptsRemaining ?? 2) > 0 ? "details" : "daily-limit");
         }
       } catch (err) {
@@ -237,7 +249,7 @@ export function Preorder() {
     setError("");
     try {
       const result = await api.delete("/preorders/" + encodeURIComponent(slug));
-      try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional preference */ }
+      clearConfirmedPreorder(slug);
       setForm({ firstName: "", lastName: "", age: "", email: "" });
       setHasPreorderRecord(false);
       setRewardCode("");
@@ -289,7 +301,7 @@ export function Preorder() {
           <p className="preorder-workspace__steps-title">{t("Pre-order steps")}</p>
           <ol className="preorder-steps">
             {stages.map((stage) => {
-              const complete = stage.number < currentStep || (stage.number === 3 && status === "already-confirmed");
+              const complete = stage.number < currentStep || (stage.number === 3 && ["already-confirmed", "redeemed"].includes(status));
               const active = stage.number === currentStep;
               return (
                 <li key={stage.number} className={`preorder-steps__item${active ? " is-active" : ""}${complete ? " is-complete" : ""}`}>
@@ -383,6 +395,17 @@ export function Preorder() {
               <div className="preorder-form__actions">
                 <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>
                 <Link className="btn btn--secondary" to="/library">{t("Open library")}</Link>
+              </div>
+            </div>
+          )}
+
+          {status === "redeemed" && (
+            <div className="preorder-workspace__state" role="status">
+              <h2>{t("Reward already redeemed")}</h2>
+              <p>{t("Your reward has been redeemed. Your pre-order code and personal details have been deleted.")}</p>
+              <div className="preorder-form__actions">
+                <Link className="btn btn--primary" to="/library">{t("Open library")}</Link>
+                <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
               </div>
             </div>
           )}
