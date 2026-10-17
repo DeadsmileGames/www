@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
-  ArrowLeft,
   ArrowUpRight,
   Clock,
   Images,
@@ -87,10 +86,6 @@ export function PublicProfile() {
       <div className="profile-page container">
         <ErrorState message={error} onRetry={() => setRevision((value) => value + 1)} />
 
-        <Link to="/" className="back-link" style={{ marginTop: 32 }}>
-          <ArrowLeft weight="bold" />
-          <span>{t("Back")}</span>
-        </Link>
       </div>
     );
   }
@@ -123,15 +118,6 @@ export function PublicProfile() {
 
   return (
     <div className={profilePageClassName}>
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
-      {isLuxjsonProfile && (
-        <div className="profile-page__retro-titlebar">
-          <span>Profile — @luxjson</span>
-        </div>
-      )}
       {profile.isVerified && profile.bannerUrl && !bannerFailed && (
         <div className="profile-page__banner">
           <img src={safeImageUrl(profile.bannerUrl)} alt="" loading="eager" onError={() => setBannerFailed(true)} />
