@@ -168,6 +168,9 @@ export function GameDetails() {
   const libraryMatches = library.gameId === gameId && library.userId === user?.id;
   const libraryReady =
     authStatus === "authenticated" && libraryMatches && library.status === "success";
+  const hasConfirmedPreorder = preorderConfirmedLocally || (libraryReady && library.preorderRegistered);
+  const preorderPath = "/games/" + encodeURIComponent(game?.slug || slug) + "/preorder";
+  const preorderWindowOpen = Boolean(game?.preorderEnabled && game?.isFree && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt));
   const owned = libraryReady && library.owned;
   const showWishlist = libraryReady && isValidGameId && !library.inLibrary;
 
@@ -589,13 +592,22 @@ export function GameDetails() {
           </button>
         )}
 
-        {game.preorderEnabled && game.isFree && Number.isFinite(Date.parse(game.preorderStartsAt)) && Number.isFinite(Date.parse(game.preorderEndsAt)) && releaseNow >= Date.parse(game.preorderStartsAt) && releaseNow < Date.parse(game.preorderEndsAt) && (
-          (preorderConfirmedLocally || (libraryReady && library.preorderRegistered)) ? (
-            <button type="button" className="btn btn--primary game-details__btn" disabled aria-disabled="true">
-              {t("Already in pre-order")}
-            </button>
+        {game.isFree && (preorderWindowOpen || hasConfirmedPreorder) && (
+          hasConfirmedPreorder ? (
+            <div className="game-details__preorder-actions">
+              <button type="button" className="btn btn--primary game-details__btn" disabled aria-disabled="true">
+                {t("Already in pre-order")}
+              </button>
+              <Link to={preorderPath} className="btn btn--secondary game-details__btn">
+                {t("Manage pre-order")}
+              </Link>
+            </div>
           ) : (
-            <Link to={`/games/${encodeURIComponent(game.slug)}/preorder`} className="btn btn--primary game-details__btn">
+            <Link
+              to={authStatus === "authenticated" ? preorderPath : "/login"}
+              state={authStatus === "authenticated" ? undefined : { from: { pathname: preorderPath } }}
+              className="btn btn--primary game-details__btn"
+            >
               {t("Pre-order")}
             </Link>
           )
