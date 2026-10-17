@@ -793,7 +793,11 @@
     "View {0}": "Ver {0}",
     "We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.": "Primeiro, enviaremos um link de confirmação por e-mail. O pré-registro só será confirmado depois que você abrir esse link.",
     "Reward already redeemed": "Recompensa já resgatada",
-    "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Sua recompensa foi resgatada. O código do pré-registro e seus dados pessoais foram excluídos."
+    "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Sua recompensa foi resgatada. O código do pré-registro e seus dados pessoais foram excluídos.",
+    "Verified studio account": "Conta oficial verificada",
+    "Profile banner image URL": "URL da imagem do banner do perfil",
+    "Use a direct HTTPS image URL. Only this official profile can show a banner.": "Use uma URL HTTPS direta da imagem. Apenas este perfil oficial pode exibir um banner.",
+    "Syncing official time…": "Sincronizando horário oficial…"
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -1589,7 +1593,11 @@
     "We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.": "Primero te enviaremos un enlace de confirmación por correo electrónico. Tu pre-registro solo se confirmará cuando abras ese enlace.",
     "Reward already redeemed": "Recompensa ya canjeada",
     "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Tu recompensa ya se canjeó. Se eliminaron el código del pre-registro y tus datos personales.",
-    "Your pre-order registration is confirmed.": "Tu pre-registro está confirmado."
+    "Your pre-order registration is confirmed.": "Tu pre-registro está confirmado.",
+    "Verified studio account": "Cuenta oficial verificada",
+    "Profile banner image URL": "URL de imagen del banner del perfil",
+    "Use a direct HTTPS image URL. Only this official profile can show a banner.": "Usa una URL HTTPS directa de la imagen. Solo este perfil oficial puede mostrar un banner.",
+    "Syncing official time…": "Sincronizando la hora oficial…"
   },
   "en": {
     "Retomar": "Resume",
@@ -1732,6 +1740,10 @@
     "This code has been generated and is only redeemable when the pre-order ends.": "This code has been generated and can only be redeemed when registration closes.",
     "Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.": "Your reward code is ready. Open the pre-registration management page to view it; redemption is enabled when registration closes.",
     "Your reward code will appear here when the pre-order ends.": "Your reward code will appear here when registration closes.",
-    "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Your email is confirmed. The reward code will appear on the management page when registration closes."
+    "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Your email is confirmed. The reward code will appear on the management page when registration closes.",
+    "Verified studio account": "Verified studio account",
+    "Profile banner image URL": "Profile banner image URL",
+    "Use a direct HTTPS image URL. Only this official profile can show a banner.": "Use a direct HTTPS image URL. Only this official profile can show a banner.",
+    "Syncing official time…": "Syncing official time…"
   }
 }
