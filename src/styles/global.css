@@ -6045,20 +6045,12 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 0 !important;
   box-shadow: none !important;
 }
-/* Bundled comic-style font. No external font CDN and no reliance on device-installed fonts. */
+/* Self-hosted Comic Sans MS font used only by the retro Luxjson and Special Thanks screens. */
 @font-face {
-  font-family: "Comic Neue Local";
-  src: url("/fonts/ComicNeue-Regular.woff2") format("woff2");
+  font-family: "Comic Sans MS Local";
+  src: url("/fonts/ComicSansMS.ttf") format("truetype");
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Comic Neue Local";
-  src: url("/fonts/ComicNeue-Bold.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 700;
   font-display: swap;
 }
 
@@ -6073,7 +6065,7 @@ main:has(.profile-page--luxjson) {
 .profile-page--luxjson {
   background: transparent !important;
   color: #ffff00;
-  font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
+  font-family: "Comic Sans MS Local", "Comic Sans MS", cursive !important;
 }
 
 /* Force the reference typeface throughout this profile on desktop and mobile,
@@ -6082,7 +6074,7 @@ main:has(.profile-page--luxjson) {
 .profile-page--luxjson *,
 .profile-page--luxjson *::before,
 .profile-page--luxjson *::after {
-  font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
+  font-family: "Comic Sans MS Local", "Comic Sans MS", cursive !important;
   letter-spacing: normal;
 }
 
@@ -6248,7 +6240,7 @@ main:has(.profile-page--luxjson) {
   .profile-page--luxjson *,
   .profile-page--luxjson *::before,
   .profile-page--luxjson *::after {
-    font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
+    font-family: "Comic Sans MS Local", "Comic Sans MS", cursive !important;
   }
 }
 
@@ -6275,7 +6267,7 @@ main:has(.special-thanks-page) {
   margin: 0 auto;
   padding: clamp(116px, 13vw, 148px) 0 76px;
   color: #ffff00;
-  font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
+  font-family: "Comic Sans MS Local", "Comic Sans MS", cursive !important;
   text-align: center;
   line-height: 1.5;
   background: transparent;
@@ -6285,7 +6277,7 @@ main:has(.special-thanks-page) {
 .special-thanks-page *,
 .special-thanks-page *::before,
 .special-thanks-page *::after {
-  font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
+  font-family: "Comic Sans MS Local", "Comic Sans MS", cursive !important;
   letter-spacing: normal;
 }
 
