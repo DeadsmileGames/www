@@ -1,7 +1,10 @@
-import { useLanguage } from "../context/LanguageContext";
-import { useOptionalContent, setOptionalContent } from "../utils/consent";
+import {
+  useLanguage } from "../context/LanguageContext";
+import { useOptionalContent,
+  setOptionalContent } from "../utils/consent";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft,
+} from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 
 export function Privacy() {
@@ -10,10 +13,7 @@ export function Privacy() {
 
   return (
     <div className="privacy-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <Reveal>
         <h1>{t("Privacy Policy")}</h1>
