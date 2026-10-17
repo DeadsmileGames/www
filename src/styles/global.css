@@ -6045,6 +6045,23 @@ input[type="search"]::-webkit-search-results-decoration {
   border: 0 !important;
   box-shadow: none !important;
 }
+/* Bundled comic-style font. No external font CDN and no reliance on device-installed fonts. */
+@font-face {
+  font-family: "Comic Neue Local";
+  src: url("/fonts/ComicNeue-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Comic Neue Local";
+  src: url("/fonts/ComicNeue-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 /* @luxjson only: retro theme inside the existing profile and main content area. */
 main:has(.profile-page--luxjson) {
   background-color: #000;
@@ -6057,7 +6074,7 @@ main:has(.profile-page--luxjson) {
   background: transparent !important;
   color: #ffff00;
   cursor: url("https://i.imgur.com/RUE567I.gif"), auto;
-  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+  font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
 }
 
 /* Force the reference typeface throughout this profile on desktop and mobile,
@@ -6066,7 +6083,7 @@ main:has(.profile-page--luxjson) {
 .profile-page--luxjson *,
 .profile-page--luxjson *::before,
 .profile-page--luxjson *::after {
-  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+  font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
   letter-spacing: normal;
 }
 
@@ -6232,7 +6249,7 @@ main:has(.profile-page--luxjson) {
   .profile-page--luxjson *,
   .profile-page--luxjson *::before,
   .profile-page--luxjson *::after {
-    font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+    font-family: "Comic Neue Local", "Comic Sans MS", cursive !important;
   }
 }
 
