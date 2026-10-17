@@ -6680,3 +6680,333 @@ main:has(.special-thanks-page) {
     min-width: 185px;
   }
 }
+
+
+/* Windows 95 appearance mode is activated only for routes under /1995. */
+.app-layout-shell,
+.windows95-app {
+  display: contents;
+}
+
+html.windows95-mode {
+  color-scheme: light;
+  background: #008080 !important;
+  scroll-behavior: auto;
+}
+
+html.windows95-mode body {
+  background: #008080 !important;
+  color: #222 !important;
+  font-family: "Pixelated MS Sans Serif", "MS Sans Serif", Arial, sans-serif !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  animation: none !important;
+}
+
+html.windows95-mode body *,
+html.windows95-mode body *::before,
+html.windows95-mode body *::after {
+  font-family: "Pixelated MS Sans Serif", "MS Sans Serif", Arial, sans-serif !important;
+  border-radius: 0 !important;
+  letter-spacing: normal !important;
+}
+
+html.windows95-mode h1,
+html.windows95-mode h2,
+html.windows95-mode h3,
+html.windows95-mode h4,
+html.windows95-mode p,
+html.windows95-mode span,
+html.windows95-mode label,
+html.windows95-mode li,
+html.windows95-mode strong,
+html.windows95-mode small,
+html.windows95-mode dt,
+html.windows95-mode dd {
+  color: #222 !important;
+  background-image: none !important;
+  -webkit-text-fill-color: currentColor !important;
+  animation: none !important;
+  text-shadow: none !important;
+}
+
+html.windows95-mode a {
+  color: #0000ee !important;
+  text-decoration: underline !important;
+}
+
+html.windows95-mode a:hover {
+  color: #000080 !important;
+}
+
+html.windows95-mode main {
+  background: transparent !important;
+  color: #222 !important;
+  min-height: 75vh;
+}
+
+html.windows95-mode main > .page-transition {
+  width: calc(100% - 24px) !important;
+  max-width: 1440px;
+  min-height: 72vh !important;
+  margin: 12px auto 20px;
+  padding: 10px !important;
+  background: #c0c0c0 !important;
+  color: #222 !important;
+  border: 2px outset #dfdfdf !important;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf !important;
+}
+
+html.windows95-mode .skip-link {
+  background: silver !important;
+  color: #222 !important;
+  border: 2px outset #dfdfdf !important;
+}
+
+html.windows95-mode .premiere-shell,
+html.windows95-mode .site-header,
+html.windows95-mode .studio-footer,
+html.windows95-mode .newsletter,
+html.windows95-mode .auth-page__card,
+html.windows95-mode .search-overlay,
+html.windows95-mode .mobile-menu__panel,
+html.windows95-mode .site-header__dropdown,
+html.windows95-mode .modal-panel,
+html.windows95-mode .modal-card {
+  background: #c0c0c0 !important;
+  color: #222 !important;
+  border: 2px outset #dfdfdf !important;
+  border-radius: 0 !important;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf !important;
+}
+
+html.windows95-mode .site-header {
+  position: relative !important;
+  inset: auto !important;
+  height: auto !important;
+}
+
+html.windows95-mode .site-header__inner {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 58px;
+  padding: 10px !important;
+  gap: 12px !important;
+  flex-wrap: wrap;
+  transform: none !important;
+  will-change: auto !important;
+  background: #c0c0c0 !important;
+  color: #222 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+html.windows95-mode .site-header__inner--hidden {
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+html.windows95-mode .site-header__link,
+html.windows95-mode .site-header__search,
+html.windows95-mode .site-header__actions,
+html.windows95-mode .site-header__account-pill,
+html.windows95-mode .footer-links,
+html.windows95-mode .copyright,
+html.windows95-mode .studio-footer small,
+html.windows95-mode .studio-footer p {
+  color: #222 !important;
+}
+
+html.windows95-mode .site-header__nav {
+  gap: 10px !important;
+  flex-wrap: wrap;
+}
+
+html.windows95-mode .site-header__actions {
+  gap: 6px !important;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+html.windows95-mode .site-header__brand {
+  flex-shrink: 0;
+}
+
+html.windows95-mode .site-header__mark {
+  filter: none !important;
+}
+
+html.windows95-mode .site-header__dropdown {
+  z-index: 1500;
+}
+
+html.windows95-mode .page-transition [class*="card"],
+html.windows95-mode .page-transition [class*="panel"],
+html.windows95-mode .page-transition [class*="tile"],
+html.windows95-mode .page-transition [class*="section"],
+html.windows95-mode .page-transition [class*="game-meta"],
+html.windows95-mode .page-transition [class*="empty"],
+html.windows95-mode .page-transition [class*="page__hero"],
+html.windows95-mode .page-transition [class*="page__content"],
+html.windows95-mode .page-transition [class*="block"] {
+  background-color: #c0c0c0 !important;
+  color: #222 !important;
+  border-color: #808080 !important;
+  border-radius: 0 !important;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html.windows95-mode .page-transition .btn,
+html.windows95-mode .page-transition button,
+html.windows95-mode .page-transition input[type="button"],
+html.windows95-mode .page-transition input[type="submit"],
+html.windows95-mode .page-transition input[type="reset"],
+html.windows95-mode .site-header button,
+html.windows95-mode .studio-footer button,
+html.windows95-mode .search-overlay button,
+html.windows95-mode .mobile-menu button {
+  min-height: 23px !important;
+  min-width: 75px;
+  padding: 3px 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: silver !important;
+  color: #222 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  text-align: center;
+  text-shadow: 0 0 #222 !important;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf !important;
+  backdrop-filter: none !important;
+}
+
+html.windows95-mode .page-transition button:not(:disabled):active,
+html.windows95-mode .page-transition .btn:not(:disabled):active,
+html.windows95-mode .site-header button:not(:disabled):active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey !important;
+}
+
+html.windows95-mode input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+html.windows95-mode textarea,
+html.windows95-mode select {
+  min-height: 22px !important;
+  padding: 3px 5px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #222 !important;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a !important;
+}
+
+html.windows95-mode input[type="checkbox"] {
+  accent-color: navy;
+}
+
+html.windows95-mode img {
+  border-radius: 0 !important;
+  filter: none;
+}
+
+.windows95-action-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.windows95-action-dialog {
+  width: min(420px, 100%);
+  background: silver;
+  color: #222;
+  border: 2px outset #dfdfdf;
+  border-radius: 0;
+  padding: 3px;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
+  font-family: "Pixelated MS Sans Serif", "MS Sans Serif", Arial, sans-serif;
+}
+
+.windows95-action-dialog .title-bar {
+  display: flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 3px 6px;
+  background: linear-gradient(90deg, navy, #1084d0);
+  color: #fff;
+}
+
+.windows95-action-dialog .title-bar-text {
+  color: #fff !important;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.windows95-action-dialog .window-body {
+  display: grid;
+  gap: 10px;
+  padding: 12px 10px 10px;
+  margin: 0;
+}
+
+.windows95-action-dialog p {
+  margin: 0;
+  color: #222 !important;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.windows95-redirect-progress {
+  width: 100%;
+  height: 22px;
+  padding: 3px;
+  background: silver;
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset -1px -1px #dfdfdf, inset 1px 1px grey;
+}
+
+.windows95-redirect-progress > .progress-indicator-bar {
+  width: 0;
+  height: 100%;
+  background: navy;
+  animation: windows95-progress-fill 5s linear forwards;
+}
+
+@keyframes windows95-progress-fill {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@media (max-width: 760px) {
+  html.windows95-mode main > .page-transition {
+    width: calc(100% - 12px) !important;
+    margin: 6px auto 12px;
+    padding: 6px !important;
+  }
+
+  html.windows95-mode .site-header__inner {
+    align-items: flex-start;
+    gap: 8px !important;
+  }
+
+  html.windows95-mode .site-header__nav {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.windows95-mode *,
+  html.windows95-mode *::before,
+  html.windows95-mode *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
