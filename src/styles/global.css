@@ -5665,7 +5665,7 @@ html[dir="rtl"] .site-header__actions {
     margin-bottom: 16px;
   }
   .preorder-steps {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
   }
   .preorder-steps__item {
