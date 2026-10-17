@@ -1,14 +1,10 @@
-import {
-  useRef,
-  useState } from "react";
+import { useRef, useState } from "react";
 import { useSearch } from "../hooks/useSearch";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonSearch } from "../components/ui/Skeleton";
 import { SearchResults } from "../components/search/SearchResults";
-import {
-  X,
-} from "@phosphor-icons/react";
+import { X } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 
 export function Search() {
