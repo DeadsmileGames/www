@@ -330,7 +330,9 @@ export function Account() {
     } catch (error) {
       setRedeemError(t(error?.code === "PREORDER_NOT_ENDED"
         ? "This pre-order has not ended yet. Your code becomes redeemable after it ends."
-        : "Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
+        : error?.code === "PREORDER_CODE_ALREADY_REDEEMED"
+          ? "Reward already redeemed"
+          : "Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
     } finally {
       setRedeemBusy(false);
     }
