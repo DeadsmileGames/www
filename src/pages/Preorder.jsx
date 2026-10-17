@@ -77,7 +77,7 @@ export function Preorder() {
         try {
           info = await api.get("/preorders/" + encodeURIComponent(slug));
         } catch (err) {
-          if (!mine.hasPreorderRecord || !["PREORDER_NOT_OPEN", "PREORDER_NOT_FOUND"].includes(err?.code)) throw err;
+          if (!["PREORDER_NOT_OPEN", "PREORDER_NOT_FOUND"].includes(err?.code)) throw err;
           info = mine.game;
         }
         if (!active) return;
