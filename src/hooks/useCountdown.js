@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
+import { useServerClock } from "./useServerClock";
 
-const secondsLeft = (target) =>
-  Number.isFinite(target) ? Math.max(0, Math.floor((target - Date.now()) / 1000)) : 0;
+const secondsLeft = (target, serverNow) => {
+  if (!Number.isFinite(target)) return 0;
+  if (!Number.isFinite(serverNow)) return null;
+  return Math.max(0, Math.floor((target - serverNow) / 1000));
+};
 
 export function useCountdown(target) {
-  const [seconds, setSeconds] = useState(() => secondsLeft(target));
-  useEffect(() => {
-    setSeconds(secondsLeft(target));
-    if (!Number.isFinite(target)) return undefined;
-    const timer = setInterval(() => setSeconds(secondsLeft(target)), 1000);
-    return () => clearInterval(timer);
-  }, [target]);
+  const serverNow = useServerClock();
+  const [seconds, setSeconds] = useState(() => secondsLeft(target, serverNow));
+  useEffect(() => setSeconds(secondsLeft(target, serverNow)), [target, serverNow]);
   return seconds;
 }
 
