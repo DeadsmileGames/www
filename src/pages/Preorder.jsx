@@ -296,7 +296,7 @@ export function Preorder() {
           {status === "details" && (
             <>
               <div className="preorder-workspace__stage-heading">
-                <span>01 / 03</span><h2>{t("Your details")}</h2>
+                <h2>{t("Your details")}</h2>
                 <p>{t("Enter your details to join this free game's pre-order.")}</p>
               </div>
               <form className="preorder-form" onSubmit={reviewDetails}>
@@ -321,7 +321,7 @@ export function Preorder() {
           {status === "review" && (
             <>
               <div className="preorder-workspace__stage-heading">
-                <span>02 / 03</span><h2>{t("Review your pre-order")}</h2>
+                <h2>{t("Review your pre-order")}</h2>
                 <p>{t("Check that the information below is correct.")}</p>
               </div>
               <dl className="preorder-review">
