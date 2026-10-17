@@ -56,6 +56,14 @@ export default function App() {
         <Route path="/games/:slug/latest" element={<GameLatest />} />
         <Route path="/games/:slug/preorder/confirm/:token" element={<PreorderConfirm />} />
         <Route path="/games/:slug/preorder/reward/:token" element={<PreorderReward />} />
+        <Route
+          path="/games/:slug/preorder/reward"
+          element={
+            <ProtectedRoute>
+              <PreorderReward />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/games/:slug/preorder" element={<Preorder />} />
         <Route path="/launcher" element={<Launcher />} />
         <Route path="/videos" element={<Videos />} />
