@@ -58,6 +58,20 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
             aria-label={t("Site search")}
             maxLength={80}
           />
+          {query && (
+            <button
+              type="button"
+              className="search-overlay__clear"
+              onClick={() => {
+                setQuery("");
+                inputRef.current?.focus();
+              }}
+              aria-label={t("Clear search")}
+              title={t("Clear search")}
+            >
+              <X size={18} weight="bold" aria-hidden="true" />
+            </button>
+          )}
         </div>
         <button
           type="button"
