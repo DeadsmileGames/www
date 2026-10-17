@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle, EnvelopeSimple, WarningCircle } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
@@ -7,6 +7,9 @@ import { consumeExpectedItchOAuthState } from "../utils/itchOAuth";
 
 export function ItchOAuthCallback() {
   const { t } = useLanguage();
+  const translateRef = useRef(t);
+  translateRef.current = t;
+  const completionRef = useRef(null);
   const [state, setState] = useState({ status: "loading", message: "" });
 
   useEffect(() => {
@@ -49,22 +52,32 @@ export function ItchOAuthCallback() {
       }
 
       if (active) {
-        setState({ status: "success", message: t("Your itch.io account is connected.") });
+        setState({ status: "success", message: translateRef.current("Your itch.io account is connected.") });
         redirectTimer = window.setTimeout(() => {
           window.location.replace(target.pathname + target.search + target.hash);
         }, 900);
       }
     }
 
-    complete().catch((error) => {
-      if (active) setState({ status: "error", message: friendlyErrorMessage(error) });
-    });
+    if (!completionRef.current) completionRef.current = complete();
+    completionRef.current.catch(() => {});
+    completionRef.current
+      .then(() => {
+        if (active) {
+          const params = new URLSearchParams(window.location.hash.slice(1));
+          const expected = params.get("state") || "";
+          if (!expected) return;
+        }
+      })
+      .catch((error) => {
+        if (active) setState({ status: "error", message: friendlyErrorMessage(error) });
+      });
 
     return () => {
       active = false;
       if (redirectTimer) window.clearTimeout(redirectTimer);
     };
-  }, [t]);
+  }, []);
 
   const Icon =
     state.status === "success"
