@@ -5672,3 +5672,17 @@ html[dir="rtl"] .site-header__actions {
     gap: 12px;
   }
 }
+
+
+/* Keep the pre-order status and management actions visually separated. */
+.game-details__preorder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.game-details__preorder-actions .game-details__btn {
+  margin: 0;
+}
