@@ -19,7 +19,7 @@ export function VerifyEmail() {
   try {
     storedReturnTo = window.localStorage.getItem("deadsmile:auth:returnTo") || "";
   } catch {
-    
+
   }
   const returnToCandidate = stateCandidate || storedReturnTo;
   const returnTo =

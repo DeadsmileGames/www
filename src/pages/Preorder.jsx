@@ -146,7 +146,7 @@ export function Preorder() {
     return () => { active = false; };
   }, [slug, locale, t, authStatus, user?.id, navigate]);
 
-  
+
   useEffect(() => {
     if (!["pending-confirmation", "already-confirmed"].includes(status) || authStatus !== "authenticated") return undefined;
     let active = true;
@@ -374,7 +374,7 @@ export function Preorder() {
 
           {status === "pending-confirmation" && (
             <div className="preorder-workspace__state" role="status">
-              
+
               <h2>{t("Check your email to confirm")}</h2>
               <p>{t("We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update.")}</p>
               <div className="preorder-live-indicator"><span />{t("Waiting for email confirmation")}</div>

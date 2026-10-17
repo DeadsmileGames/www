@@ -94,7 +94,7 @@ async function loadPaginatedContent(path) {
   };
 
   if (!isGames) {
-    
+
     for (let offset = 0; offset <= 10_000; offset += limit) {
       const response = await api.get(path, { offset, limit });
       const pageItems = normalizeList(response);

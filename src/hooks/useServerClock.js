@@ -33,7 +33,7 @@ export async function syncServerClock() {
       const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (typeof detectedTimeZone === "string" && detectedTimeZone.length <= 100) timeZone = detectedTimeZone;
     } catch {
-      
+
     }
     try {
       const result = await api.get(`/time?timeZone=${encodeURIComponent(timeZone)}`);
@@ -46,7 +46,7 @@ export async function syncServerClock() {
       publishTime();
       return readServerNow();
     } catch {
-      
+
       return readServerNow();
     }
   })().finally(() => {

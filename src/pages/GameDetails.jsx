@@ -274,7 +274,7 @@ export function GameDetails() {
           };
         });
       } catch {
-        
+
       } finally {
         inFlight = false;
       }
@@ -565,7 +565,7 @@ export function GameDetails() {
   if (state.status === "error") {
     return (
       <div className="container game-details__notfound">
-        
+
         <ErrorState
           message={state.error}
           onRetry={() => setRevision((value) => value + 1)}

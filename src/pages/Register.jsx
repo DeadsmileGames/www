@@ -123,7 +123,7 @@ export function Register() {
           window.localStorage.removeItem("deadsmile:auth:returnTo");
         }
       } catch {
-        
+
       }
 
       navigate(result?.verificationRequired ? "/verify-email" : returnTo, {

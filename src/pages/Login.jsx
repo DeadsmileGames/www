@@ -56,7 +56,7 @@ export function Login() {
     try {
       window.localStorage.removeItem("deadsmile:auth:returnTo");
     } catch {
-      
+
     }
     navigate(from, { replace: true });
   }
