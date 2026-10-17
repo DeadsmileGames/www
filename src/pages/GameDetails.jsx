@@ -24,6 +24,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
 import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
+import { rememberItchOAuthState } from "../utils/itchOAuth";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
 import { getReleaseTimestamp } from "../utils/releaseDate";
 import { useServerClock, syncServerClock } from "../hooks/useServerClock";
@@ -436,6 +437,7 @@ export function GameDetails() {
 
       const authorizeUrl = safeOAuthItchUrl(result.authorizeUrl);
       if (!authorizeUrl) throw { code: "INVALID_RESPONSE" };
+      if (!rememberItchOAuthState(authorizeUrl)) throw { code: "ITCH_LINK_EXPIRED" };
 
       window.location.assign(authorizeUrl);
     } catch (error) {

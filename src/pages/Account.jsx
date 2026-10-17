@@ -10,6 +10,7 @@ import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonRows } from "../components/ui/Skeleton";
 import { CloudSaves } from "../components/account/CloudSaves";
 import { safeImageUrl, safeOAuthItchUrl } from "../utils/urls";
+import { rememberItchOAuthState } from "../utils/itchOAuth";
 import { FOCUSABLE_SELECTOR, lockBodyScroll } from "../utils/dom";
 
 const TABS = [
@@ -672,6 +673,7 @@ export function Account() {
 
       const authorizeUrl = safeOAuthItchUrl(result.authorizeUrl);
       if (!authorizeUrl) throw { code: "INVALID_RESPONSE" };
+      if (!rememberItchOAuthState(authorizeUrl)) throw { code: "ITCH_LINK_EXPIRED" };
 
       window.location.assign(authorizeUrl);
     } catch (error) {
