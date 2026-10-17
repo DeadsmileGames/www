@@ -1,15 +1,22 @@
-import { sanitizeNewswire } from "../utils/contentHtml";
+import {
+  sanitizeNewswire } from "../utils/contentHtml";
 import { SkeletonNews } from "../components/ui/Skeleton";
-import { useEffect, useRef } from "react";
+import { useEffect,
+  useRef } from "react";
 import { EmptyState } from "../components/ui/EmptyState";
 import { useState } from "react";
 import { ErrorState } from "../components/ui/ErrorState";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link,
+  useNavigate,
+  useParams } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { useAuth } from "../hooks/useAuth";
 import { Reveal } from "../components/ui/Reveal";
-import { ArrowLeft, ArrowUpRight, Trash } from "@phosphor-icons/react";
+import { ArrowLeft,
+  ArrowUpRight,
+  Trash,
+} from "@phosphor-icons/react";
 import { api, friendlyErrorMessage } from "../services/api";
 import { safeImageUrl } from "../utils/urls";
 import { getExternalPageTitle } from "../utils/linkTitles";
@@ -110,9 +117,7 @@ export function News() {
     if (detail.status === "error")
       return (
         <div className="news-detail container">
-          <Link to="/newswire" className="back-link">
-            <ArrowLeft weight="bold" /> <span>{t("Back")}</span>
-          </Link>
+          
           <ErrorState message={detail.error} onRetry={detail.retry} />
         </div>
       );
@@ -120,9 +125,7 @@ export function News() {
     const item = detail.data;
     return (
       <article className="news-detail container">
-        <Link to="/newswire" className="back-link">
-          <ArrowLeft weight="bold" /> <span>{t("Back")}</span>
-        </Link>
+        
         <Reveal>
           <header className="news-detail__header">
             <div className="news-detail__eyebrow">
@@ -210,10 +213,7 @@ export function News() {
 
   return (
     <div className="news-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <Reveal>
         <div className="news-page__heading">
