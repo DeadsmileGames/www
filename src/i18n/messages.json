@@ -745,7 +745,20 @@
     "Your pre-order has been confirmed. Return to the game page to see your status.": "Sua participação foi confirmada. Volte à página do jogo para ver seu status.",
     "This confirmation link is invalid or has expired.": "Este link de confirmação é inválido ou expirou.",
     "Pre-order confirmation": "Confirmação da pré-venda",
-    "Only free games can have an on-site pre-order.": "A pré-venda dentro do site só está disponível para jogos gratuitos."
+    "Only free games can have an on-site pre-order.": "A pré-venda dentro do site só está disponível para jogos gratuitos.",
+    "Cancel pre-order": "Cancelar pré-venda",
+    "Manage pre-order": "Gerenciar pré-venda",
+    "Are you sure you want to cancel this pre-order? Your personal details and reward code will be deleted. You can sign up again, but only twice per game each day.": "Tem certeza de que deseja cancelar esta pré-venda? Seus dados pessoais e códigos de recompensa serão apagados. Você pode se inscrever novamente, mas só duas vezes por jogo ao dia.",
+    "You have used both pre-order sign-up attempts for this game today.": "Você já usou as duas tentativas de inscrição neste jogo hoje.",
+    "You can sign up for this pre-order again tomorrow.": "Você poderá se inscrever nesta pré-venda novamente amanhã.",
+    "This pre-order is no longer open.": "Esta pré-venda não está mais aberta.",
+    "You can still cancel the existing registration and delete its personal details.": "Você ainda pode cancelar a inscrição existente e apagar seus dados pessoais.",
+    "Your personal details have been deleted. You can return when a pre-order is open again.": "Seus dados pessoais foram apagados. Você poderá voltar quando uma pré-venda estiver aberta.",
+    "You have {{remaining}} sign-up attempt(s) left today.": "Você ainda tem {{remaining}} tentativa(s) de inscrição hoje.",
+    "Sign in to continue to pre-order.": "Entre na sua conta para continuar com a pré-venda.",
+    "PREORDER_DAILY_LIMIT": "Você já usou as duas tentativas de inscrição neste jogo hoje.",
+    "PREORDER_AWAITING_CONFIRMATION": "Esta pré-venda está aguardando confirmação por e-mail. Confira sua caixa de entrada ou cancele a inscrição atual.",
+    "PREORDER_EMAIL_IN_USE": "Esse e-mail já está associado a uma pré-venda deste jogo."
   },
   "es": {
     "We build strange places, sharp stories and games that stay with you.": "Creamos lugares singulares, historias intensas y juegos que se quedan contigo.",
@@ -1492,7 +1505,20 @@
     "Your pre-order has been confirmed. Return to the game page to see your status.": "Tu participación ha sido confirmada. Vuelve a la página del juego para ver tu estado.",
     "This confirmation link is invalid or has expired.": "Este enlace de confirmación no es válido o ha caducado.",
     "Pre-order confirmation": "Confirmación de reserva",
-    "Only free games can have an on-site pre-order.": "La reserva dentro del sitio solo está disponible para juegos gratuitos."
+    "Only free games can have an on-site pre-order.": "La reserva dentro del sitio solo está disponible para juegos gratuitos.",
+    "Cancel pre-order": "Cancelar reserva",
+    "Manage pre-order": "Gestionar reserva",
+    "Are you sure you want to cancel this pre-order? Your personal details and reward code will be deleted. You can sign up again, but only twice per game each day.": "¿Seguro que quieres cancelar esta reserva? Se eliminarán tus datos personales y códigos de recompensa. Puedes volver a inscribirte, pero solo dos veces por juego al día.",
+    "You have used both pre-order sign-up attempts for this game today.": "Ya has utilizado los dos intentos de inscripción para este juego hoy.",
+    "You can sign up for this pre-order again tomorrow.": "Podrás inscribirte de nuevo en esta reserva mañana.",
+    "This pre-order is no longer open.": "Esta reserva ya no está abierta.",
+    "You can still cancel the existing registration and delete its personal details.": "Aún puedes cancelar la inscripción existente y eliminar tus datos personales.",
+    "Your personal details have been deleted. You can return when a pre-order is open again.": "Tus datos personales se han eliminado. Podrás volver cuando haya una reserva abierta.",
+    "You have {{remaining}} sign-up attempt(s) left today.": "Te quedan {{remaining}} intento(s) de inscripción hoy.",
+    "Sign in to continue to pre-order.": "Inicia sesión para continuar con la reserva.",
+    "PREORDER_DAILY_LIMIT": "Ya has utilizado los dos intentos de inscripción para este juego hoy.",
+    "PREORDER_AWAITING_CONFIRMATION": "Esta reserva está pendiente de confirmación por correo. Revisa tu bandeja de entrada o cancela la inscripción actual.",
+    "PREORDER_EMAIL_IN_USE": "Ese correo ya está asociado a una reserva de este juego."
   },
   "en": {
     "Retomar": "Resume",
@@ -1587,6 +1613,19 @@
     "Your pre-order has been confirmed. Return to the game page to see your status.": "Your pre-order has been confirmed. Return to the game page to see your status.",
     "This confirmation link is invalid or has expired.": "This confirmation link is invalid or has expired.",
     "Pre-order confirmation": "Pre-order confirmation",
-    "Only free games can have an on-site pre-order.": "Only free games can have an on-site pre-order."
+    "Only free games can have an on-site pre-order.": "Only free games can have an on-site pre-order.",
+    "Cancel pre-order": "Cancel pre-order",
+    "Manage pre-order": "Manage pre-order",
+    "Are you sure you want to cancel this pre-order? Your personal details and reward code will be deleted. You can sign up again, but only twice per game each day.": "Are you sure you want to cancel this pre-order? Your personal details and reward code will be deleted. You can sign up again, but only twice per game each day.",
+    "You have used both pre-order sign-up attempts for this game today.": "You have used both pre-order sign-up attempts for this game today.",
+    "You can sign up for this pre-order again tomorrow.": "You can sign up for this pre-order again tomorrow.",
+    "This pre-order is no longer open.": "This pre-order is no longer open.",
+    "You can still cancel the existing registration and delete its personal details.": "You can still cancel the existing registration and delete its personal details.",
+    "Your personal details have been deleted. You can return when a pre-order is open again.": "Your personal details have been deleted. You can return when a pre-order is open again.",
+    "You have {{remaining}} sign-up attempt(s) left today.": "You have {{remaining}} sign-up attempt(s) left today.",
+    "Sign in to continue to pre-order.": "Sign in to continue to pre-order.",
+    "PREORDER_DAILY_LIMIT": "You have used both pre-order sign-up attempts for this game today.",
+    "PREORDER_AWAITING_CONFIRMATION": "This pre-order is waiting for email confirmation. Check your inbox or cancel it first.",
+    "PREORDER_EMAIL_IN_USE": "That email is already associated with a pre-order for this game."
   }
 }
