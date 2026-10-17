@@ -315,6 +315,25 @@ export function Account() {
   const set = (key) => (event) =>
     setForm((current) => ({ ...current, [key]: event.target.value }));
 
+  async function submitPreorderCode(event) {
+    event.preventDefault();
+    if (!/^\\d{6}$/.test(redeemCode.trim())) {
+      setRedeemError(t("Enter a valid six-digit code."));
+      return;
+    }
+    setRedeemBusy(true);
+    setRedeemError("");
+    try {
+      const result = await api.post("/preorders/redeem", { code: redeemCode.trim() });
+      setRedeemOpen(false);
+      navigate(result.rewardUrl);
+    } catch (error) {
+      setRedeemError(t("Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
+    } finally {
+      setRedeemBusy(false);
+    }
+  }
+
   async function refreshSessions() {
     if (sessionsLoading || revokingSessionId) return;
 
@@ -1430,24 +1449,6 @@ export function Account() {
                         ? new Date(session.createdAt)
                         : null;
 
-                      async function submitPreorderCode(event) {
-    event.preventDefault();
-    if (!/^\d{6}$/.test(redeemCode.trim())) {
-      setRedeemError(t("Enter a valid six-digit code."));
-      return;
-    }
-    setRedeemBusy(true);
-    setRedeemError("");
-    try {
-      const result = await api.post("/preorders/redeem", { code: redeemCode.trim() });
-      setRedeemOpen(false);
-      navigate(result.rewardUrl);
-    } catch (error) {
-      setRedeemError(t("Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
-    } finally {
-      setRedeemBusy(false);
-    }
-  }
 
   return (
                         <div
