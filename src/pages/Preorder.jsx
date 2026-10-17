@@ -26,62 +26,168 @@ export function Preorder() {
   const { slug } = useParams();
   const { t, language } = useLanguage();
   const { user, status: authStatus } = useAuth();
+  const navigate = useNavigate();
   const locale = localeKey(language);
   const [game, setGame] = useState(null);
   const [form, setForm] = useState({ firstName: "", lastName: "", age: "", email: "" });
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState("");
+  const [attemptsRemaining, setAttemptsRemaining] = useState(2);
+  const [hasPreorderRecord, setHasPreorderRecord] = useState(false);
+  const [canceling, setCanceling] = useState(false);
+
+  const windowOpen = Boolean(
+    game &&
+    game.isFree !== false &&
+    game.preorderEnabled !== false &&
+    Number.isFinite(Date.parse(game.startsAt || "")) &&
+    Number.isFinite(Date.parse(game.endsAt || "")) &&
+    Date.now() >= Date.parse(game.startsAt) &&
+    Date.now() < Date.parse(game.endsAt)
+  );
 
   useEffect(() => {
     let active = true;
     setStatus("loading");
     setError("");
+    if (authStatus === "loading") return () => { active = false; };
+    if (authStatus === "guest") {
+      navigate("/login", {
+        replace: true,
+        state: { from: { pathname: "/games/" + encodeURIComponent(slug) + "/preorder" } },
+      });
+      return () => { active = false; };
+    }
+    if (authStatus !== "authenticated" || !user?.id) {
+      setError(t("Sign in to continue to pre-order."));
+      setStatus("error");
+      return () => { active = false; };
+    }
+
     async function load() {
       try {
-        const data = await api.get(`/preorders/${encodeURIComponent(slug)}`);
-        if (!active) return;
-        setGame(data);
-        let confirmed = false;
-        try { confirmed = window.localStorage.getItem(preorderStorageKey(slug)) === "confirmed"; } catch { /* storage is optional */ }
-        if (!confirmed && authStatus === "authenticated" && user?.id) {
-          try {
-            const library = await api.get("/library/catalog");
-            confirmed = Array.isArray(library?.items) && library.items.some(
-              (item) => item.slug === slug && item.preorderRegistered === true,
-            );
-          } catch {
-            // Preserve the public sign-up flow if the optional account lookup fails.
-          }
+        const mine = await api.get("/preorders/" + encodeURIComponent(slug) + "/status");
+        let gameInfo;
+        try {
+          gameInfo = await api.get("/preorders/" + encodeURIComponent(slug));
+        } catch (err) {
+          const canStillManage = mine.hasPreorderRecord &&
+            ["PREORDER_NOT_OPEN", "PREORDER_NOT_FOUND"].includes(err?.code);
+          if (!canStillManage) throw err;
+          gameInfo = mine.game;
         }
         if (!active) return;
-        if (confirmed) saveConfirmedPreorder(slug);
-        setStatus(confirmed ? "already-confirmed" : "ready");
+        setGame(gameInfo);
+        setAttemptsRemaining(Number(mine.attemptsRemaining ?? 2));
+        setHasPreorderRecord(Boolean(mine.hasPreorderRecord));
+        if (mine.preorderStatus === "confirmed") {
+          saveConfirmedPreorder(slug);
+          setStatus("already-confirmed");
+        } else if (mine.preorderStatus === "pending") {
+          setStatus("pending-confirmation");
+        } else {
+          try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional UI preference */ }
+          const canRegister = gameInfo.isFree !== false &&
+            gameInfo.preorderEnabled !== false &&
+            Number.isFinite(Date.parse(gameInfo.startsAt || "")) &&
+            Number.isFinite(Date.parse(gameInfo.endsAt || "")) &&
+            Date.now() >= Date.parse(gameInfo.startsAt) &&
+            Date.now() < Date.parse(gameInfo.endsAt);
+          if (mine.preorderStatus === "expired" && !canRegister) setStatus("closed-record");
+          else if (Number(mine.attemptsRemaining ?? 2) <= 0) setStatus("daily-limit");
+          else setStatus("ready");
+        }
       } catch (err) {
         if (!active) return;
+        if (err?.status === 401 || err?.code === "UNAUTHENTICATED") {
+          navigate("/login", {
+            replace: true,
+            state: { from: { pathname: "/games/" + encodeURIComponent(slug) + "/preorder" } },
+          });
+          return;
+        }
         setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
         setStatus("error");
       }
     }
     void load();
     return () => { active = false; };
-  }, [slug, locale, t, authStatus, user?.id]);
+  }, [slug, locale, t, authStatus, user?.id, navigate]);
 
   const update = (key) => (event) => setForm((current) => ({ ...current, [key]: event.target.value }));
+
   async function submit(event) {
     event.preventDefault();
+    if (status !== "ready" || attemptsRemaining <= 0) return;
     setError("");
     setStatus("submitting");
     try {
-      await api.post(`/preorders/${encodeURIComponent(slug)}`, { ...form, age: Number(form.age), locale });
+      const result = await api.post("/preorders/" + encodeURIComponent(slug), {
+        ...form,
+        age: Number(form.age),
+        locale,
+      });
+      setAttemptsRemaining(Number(result?.attemptsRemaining ?? Math.max(0, attemptsRemaining - 1)));
+      setHasPreorderRecord(true);
       setStatus("pending-confirmation");
     } catch (err) {
+      if (err?.status === 401 || err?.code === "UNAUTHENTICATED") {
+        navigate("/login", {
+          replace: true,
+          state: { from: { pathname: "/games/" + encodeURIComponent(slug) + "/preorder" } },
+        });
+        return;
+      }
       if (err?.code === "PREORDER_ALREADY_REGISTERED") {
         saveConfirmedPreorder(slug);
+        setHasPreorderRecord(true);
         setStatus("already-confirmed");
         return;
       }
+      if (err?.code === "PREORDER_AWAITING_CONFIRMATION") {
+        setHasPreorderRecord(true);
+        setStatus("pending-confirmation");
+        return;
+      }
+      if (err?.code === "PREORDER_DAILY_LIMIT") {
+        setAttemptsRemaining(0);
+        setStatus("daily-limit");
+      } else {
+        setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
+        setStatus("ready");
+      }
+    }
+  }
+
+  async function cancelPreorder() {
+    if (canceling) return;
+    if (!window.confirm(t("Are you sure you want to cancel this pre-order? Your personal details and reward code will be deleted. You can sign up again, but only twice per game each day."))) return;
+    setCanceling(true);
+    setError("");
+    try {
+      const result = await api.delete("/preorders/" + encodeURIComponent(slug));
+      try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional UI preference */ }
+      setForm({ firstName: "", lastName: "", age: "", email: "" });
+      setHasPreorderRecord(false);
+      setAttemptsRemaining(Number(result?.attemptsRemaining ?? attemptsRemaining));
+      if (Number(result?.attemptsRemaining ?? attemptsRemaining) <= 0) {
+        setStatus("daily-limit");
+      } else if (windowOpen) {
+        setStatus("ready");
+      } else {
+        setStatus("closed");
+      }
+    } catch (err) {
+      if (err?.status === 401 || err?.code === "UNAUTHENTICATED") {
+        navigate("/login", {
+          replace: true,
+          state: { from: { pathname: "/games/" + encodeURIComponent(slug) + "/preorder" } },
+        });
+        return;
+      }
       setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
-      setStatus("ready");
+    } finally {
+      setCanceling(false);
     }
   }
 
@@ -90,7 +196,7 @@ export function Preorder() {
     <main className="page-shell preorder-page">
       <section className="preorder-card preorder-card--message">
         <ErrorState message={error} />
-        <Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link>
+        <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
       </section>
     </main>
   );
@@ -112,7 +218,13 @@ export function Preorder() {
             <div className="preorder-notice" role="status">
               <h2>{t("Check your email to confirm")}</h2>
               <p>{t("We sent a confirmation link. Open it to confirm this pre-order; your spot is reserved only after confirmation.")}</p>
-              <Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link>
+              {error && <p className="account-page__error" role="alert">{error}</p>}
+              <div className="preorder-form__actions">
+                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>
+                  {canceling ? <LoadingSpinner /> : t("Cancel pre-order")}
+                </button>
+                <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
+              </div>
             </div>
           )}
           {status === "already-confirmed" && (
@@ -120,7 +232,42 @@ export function Preorder() {
               <h2>{t("You're already signed up for this pre-order.")}</h2>
               <p>{t("Your pre-order is confirmed. You don't need to register again.")}</p>
               <button className="btn btn--primary" type="button" disabled>{t("Already in pre-order")}</button>
-              <Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link>
+              {error && <p className="account-page__error" role="alert">{error}</p>}
+              <div className="preorder-form__actions">
+                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>
+                  {canceling ? <LoadingSpinner /> : t("Cancel pre-order")}
+                </button>
+                <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
+              </div>
+            </div>
+          )}
+          {status === "daily-limit" && (
+            <div className="preorder-notice" role="status">
+              <h2>{t("You have used both pre-order sign-up attempts for this game today.")}</h2>
+              <p>{t("You can sign up for this pre-order again tomorrow.")}</p>
+              {error && <p className="account-page__error" role="alert">{error}</p>}
+              <div className="preorder-form__actions">
+                {hasPreorderRecord && <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>}
+                <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
+              </div>
+            </div>
+          )}
+          {status === "closed-record" && (
+            <div className="preorder-notice" role="status">
+              <h2>{t("This pre-order is no longer open.")}</h2>
+              <p>{t("You can still cancel the existing registration and delete its personal details.")}</p>
+              {error && <p className="account-page__error" role="alert">{error}</p>}
+              <div className="preorder-form__actions">
+                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>
+                <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
+              </div>
+            </div>
+          )}
+          {status === "closed" && (
+            <div className="preorder-notice" role="status">
+              <h2>{t("This pre-order is no longer open.")}</h2>
+              <p>{t("Your personal details have been deleted. You can return when a pre-order is open again.")}</p>
+              <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
             </div>
           )}
           {(status === "ready" || status === "submitting") && (
@@ -135,11 +282,13 @@ export function Preorder() {
               </div>
               {error && <p className="account-page__error" role="alert">{error}</p>}
               <p className="preorder-form__privacy">{t("We will email you a confirmation link first. You are only registered after opening that link.")}</p>
+              <p className="preorder-form__privacy">{t("You have {{remaining}} sign-up attempt(s) left today.", { remaining: attemptsRemaining })}</p>
               <div className="preorder-form__actions">
-                <button className="btn btn--primary" type="submit" disabled={status === "submitting"}>
+                <button className="btn btn--primary" type="submit" disabled={status === "submitting" || attemptsRemaining <= 0}>
                   {status === "submitting" ? <LoadingSpinner /> : t("Join pre-order")}
                 </button>
-                <Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Cancel")}</Link>
+                {hasPreorderRecord && <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>}
+                <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Cancel")}</Link>
               </div>
             </form>
           )}
