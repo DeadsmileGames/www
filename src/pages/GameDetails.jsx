@@ -107,11 +107,20 @@ export function GameDetails() {
   }, [slug]);
 
   useEffect(() => {
-    try {
-      setPreorderConfirmedLocally(window.localStorage.getItem(`deadsmile:preorder:${slug}`) === "confirmed");
-    } catch {
-      setPreorderConfirmedLocally(false);
-    }
+    const key = `deadsmile:preorder:${slug}`;
+    const refreshLocalPreorder = () => {
+      try {
+        setPreorderConfirmedLocally(window.localStorage.getItem(key) === "confirmed");
+      } catch {
+        setPreorderConfirmedLocally(false);
+      }
+    };
+    const onStorage = (event) => {
+      if (event.key === key || event.key === null) refreshLocalPreorder();
+    };
+    refreshLocalPreorder();
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, [slug]);
 
   useEffect(() => {
