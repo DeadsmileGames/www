@@ -1,13 +1,7 @@
-import {
-  useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/LanguageContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  ArrowUpRight,
-  CaretDown,
-  Envelope,
-  GameController,
-} from "@phosphor-icons/react";
+import { ArrowUpRight, CaretDown, Envelope, GameController } from "@phosphor-icons/react";
 import { api, friendlyErrorMessage } from "../services/api";
 import { useToast } from "../components/ui/Toast";
 
