@@ -3,7 +3,7 @@ import {
 import { Skeleton,
   SkeletonLines } from "../components/ui/Skeleton";
 import { useState } from "react";
-import { ArrowLeft,
+import {
   Download,
   GameController,
 } from "@phosphor-icons/react";
