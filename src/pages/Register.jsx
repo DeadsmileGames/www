@@ -1,6 +1,6 @@
 import { friendlyErrorMessage } from "../services/api";
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SecurityCaptcha as ReCAPTCHA } from "../components/ui/SecurityCaptcha";
 import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/Button";
@@ -12,6 +12,7 @@ export function Register() {
   const { register } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const recaptchaRef = useRef(null);
   const submitLock = useRef(false);
@@ -28,6 +29,23 @@ export function Register() {
   const [submitting, setSubmitting] = useState(false);
 
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+  const fromLocation = location.state?.from;
+  const returnToParam = new URLSearchParams(location.search).get("returnTo");
+  const candidate =
+    typeof fromLocation === "string"
+      ? fromLocation
+      : fromLocation?.pathname
+        ? `${fromLocation.pathname}${fromLocation.search || ""}${fromLocation.hash || ""}`
+        : returnToParam || "/account";
+  const returnTo =
+    candidate.startsWith("/") &&
+    !candidate.startsWith("//") &&
+    !candidate.includes("\\") &&
+    !/[\u0000-\u001f]/.test(candidate)
+      ? candidate
+      : "/account";
+  const loginPath = `/login?returnTo=${encodeURIComponent(returnTo)}`;
 
   function update(field) {
     return (e) => {
@@ -98,10 +116,21 @@ export function Register() {
         recaptchaToken,
       });
 
-      navigate(result?.verificationRequired ? "/verify-email" : "/account", {
+      try {
+        if (result?.verificationRequired && returnTo !== "/account") {
+          window.localStorage.setItem("deadsmile:auth:returnTo", returnTo);
+        } else {
+          window.localStorage.removeItem("deadsmile:auth:returnTo");
+        }
+      } catch {
+        // Local storage is optional; route state and query parameters remain available.
+      }
+
+      navigate(result?.verificationRequired ? "/verify-email" : returnTo, {
         replace: true,
         state: {
           registered: true,
+          from: returnTo,
         },
       });
     } catch (err) {
@@ -117,7 +146,7 @@ export function Register() {
   return (
     <div className="auth-page">
       <div className="auth-page__card">
-        <Link to="/login" className="back-link">
+        <Link to={loginPath} state={{ from: returnTo }} className="back-link">
           <ArrowLeft weight="bold" />
           <span>{t("Back")}</span>
         </Link>
@@ -221,7 +250,7 @@ export function Register() {
         </form>
 
         <p className="auth-page__footer">
-          {t("auth.existing")} <Link to="/login">{t("auth.login")}</Link>
+          {t("auth.existing")} <Link to={loginPath} state={{ from: returnTo }}>{t("auth.login")}</Link>
         </p>
       </div>
     </div>
