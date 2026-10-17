@@ -6,7 +6,7 @@ import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonSearch } from "../components/ui/Skeleton";
 import { SearchResults } from "../components/search/SearchResults";
-import { ArrowLeft,
+import {
   X,
 } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
