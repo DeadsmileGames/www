@@ -565,10 +565,7 @@ export function GameDetails() {
   if (state.status === "error") {
     return (
       <div className="container game-details__notfound">
-        <Link to="/games" className="back-link">
-          <ArrowLeft weight="bold" />
-          <span>{t("Back")}</span>
-        </Link>
+        
         <ErrorState
           message={state.error}
           onRetry={() => setRevision((value) => value + 1)}
