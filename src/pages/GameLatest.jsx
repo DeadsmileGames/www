@@ -18,10 +18,7 @@ export function GameLatest() {
   if (game.status === "error") {
     return (
       <div className="game-latest-page container">
-        <Link to="/games" className="back-link">
-          <ArrowLeft weight="bold" />
-          <span>{t("Back to games")}</span>
-        </Link>
+        
         <ErrorState message={game.error} onRetry={game.retry} />
       </div>
     );
