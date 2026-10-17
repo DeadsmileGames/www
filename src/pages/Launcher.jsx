@@ -8,7 +8,6 @@ import { SkeletonDetail } from "../components/ui/Skeleton";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Lightbox } from "../components/ui/Lightbox";
 import { safeImageUrl } from "../utils/urls";
-import { GithubLogo } from "@phosphor-icons/react";
 
 const STORE_URL = "https://apps.microsoft.com/detail/9p6p8284v337?hl=pt-BR&gl=BR";
 const ABBY_SCREENSHOTS = [1, 2, 3, 4, 5, 6].map(
@@ -92,17 +91,20 @@ export function Launcher() {
                 {t("Take your games on the go with the Deadsmile companion app for Android.")}
               </p>
               <a
-                className="launcher-page__github-badge"
+                className="launcher-page__github-link"
                 href="https://github.com/DeadsmileGames/mobile-app/releases/latest"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={t("Get it on GitHub")}
               >
-                <GithubLogo size={32} weight="fill" aria-hidden="true" />
-                <span className="launcher-page__github-badge-copy" aria-hidden="true">
-                  <span>GET IT ON</span>
-                  <strong>GitHub</strong>
-                </span>
+                <img
+                  className="launcher-page__github-badge"
+                  src="https://img.shields.io/badge/-GitHub-181717?style=for-the-badge&logo=github&logoColor=white"
+                  alt=""
+                  width="132"
+                  height="40"
+                  loading="lazy"
+                />
               </a>
             </section>
           </aside>
