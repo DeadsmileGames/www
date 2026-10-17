@@ -2,8 +2,6 @@ import {
   useLanguage } from "../context/LanguageContext";
 import { useOptionalContent,
   setOptionalContent } from "../utils/consent";
-import { ArrowLeft,
-} from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 
 export function Privacy() {
