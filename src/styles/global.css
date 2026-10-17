@@ -5790,32 +5790,4 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 
-/* Use the externally maintained Shields.io SVG badge for GitHub releases. */
-.launcher-page__github-link {
-  display: inline-flex;
-  align-items: center;
-  max-width: 100%;
-  border-radius: 4px;
-  line-height: 0;
-  text-decoration: none;
-}
-.launcher-page__github-link:focus-visible {
-  outline: 2px solid #a4caff;
-  outline-offset: 4px;
-}
-.launcher-page__github-badge {
-  display: block;
-  width: auto;
-  height: 40px;
-  max-width: 100%;
-  object-fit: contain;
-  transition: opacity 160ms ease;
-}
-.launcher-page__github-link:hover .launcher-page__github-badge {
-  opacity: 0.86;
-}
-@media (prefers-reduced-motion: reduce) {
-  .launcher-page__github-badge {
-    transition: none;
-  }
-}
+
