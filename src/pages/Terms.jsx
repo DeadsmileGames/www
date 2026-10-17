@@ -1,16 +1,15 @@
-import { useLanguage } from "../context/LanguageContext";
+import {
+  useLanguage } from "../context/LanguageContext";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft,
+} from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 
 export function Terms() {
   const { t } = useLanguage();
   return (
     <div className="terms-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <Reveal>
         <h1>{t("Terms of Service")}</h1>
