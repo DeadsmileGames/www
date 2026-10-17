@@ -5802,3 +5802,176 @@ input[type="search"]::-webkit-search-results-decoration {
 
 
 
+
+
+/* Public profile: restrained hierarchy, shared surfaces, and responsive activity cards. */
+.profile-page {
+  width: min(100% - 2rem, 1180px);
+  padding-top: clamp(104px, 12vw, 136px);
+  padding-bottom: clamp(56px, 7vw, 88px);
+}
+.profile-page__banner {
+  width: 100%;
+  height: clamp(145px, 24vw, 280px);
+  margin: 0 0 28px;
+  overflow: hidden;
+  border: 1px solid var(--color-border, rgba(255,255,255,.1));
+  border-radius: 14px;
+  background: var(--color-background-alt, #202020);
+}
+.profile-page__banner img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.profile-page__hero {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 3vw, 30px);
+  margin: 0 0 42px;
+  padding: 0;
+}
+.profile-page__hero--official { margin-bottom: 46px; }
+.profile-page__avatar {
+  width: 112px;
+  height: 112px;
+  border: 3px solid var(--color-background, #151515);
+  box-shadow: 0 0 0 1px var(--color-border, rgba(255,255,255,.16));
+  background: var(--color-background-alt, #282828);
+  color: var(--color-text, #fff);
+  font-size: 36px;
+  font-weight: 700;
+}
+.profile-page__identity { min-width: 0; }
+.profile-page__name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin: 0 0 12px;
+  font-size: clamp(25px, 3.4vw, 36px);
+  line-height: 1.12;
+  letter-spacing: -.025em;
+  overflow-wrap: anywhere;
+}
+.profile-page__verified { display: inline-flex; align-items: center; color: var(--color-accent, #63a5ff); flex: 0 0 auto; }
+.profile-page__bio {
+  max-width: 760px;
+  margin: 0 0 16px;
+  color: var(--color-text-secondary, #bbb);
+  font-size: 15px;
+  line-height: 1.65;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+.profile-page__facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  color: var(--color-text-secondary, #aaa);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.profile-page__facts > span, .profile-page__facts > a { display: inline-flex; align-items: center; }
+.profile-page__activity { margin: 0 0 48px; }
+.profile-page__section-head {
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--color-border, rgba(255,255,255,.12));
+}
+.profile-page__section-head h2 { margin: 0; font-size: clamp(21px, 2.5vw, 28px); letter-spacing: -.02em; }
+.profile-page__section-head > span {
+  color: var(--color-text-secondary, #aaa);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.profile-page__games { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.profile-page__game {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border, rgba(255,255,255,.1));
+  border-radius: 12px;
+  background: var(--color-background-alt, #202020);
+  transition: border-color .18s ease, transform .18s ease;
+}
+.profile-page__game:hover { border-color: var(--color-border-strong, rgba(255,255,255,.26)); transform: translateY(-2px); }
+.profile-page__game-image { display: block; overflow: hidden; aspect-ratio: 16 / 9; background: #171717; }
+.profile-page__game-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .25s ease;
+}
+.profile-page__game:hover .profile-page__game-image img { transform: scale(1.025); }
+.profile-page__game-copy { min-width: 0; padding: 17px; }
+.profile-page__game-title { margin: 0 0 10px; font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; }
+.profile-page__game-title a { color: inherit; text-decoration: none; }
+.profile-page__game-title a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.profile-page__game-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--color-text-secondary, #aaa);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.profile-page__game-meta svg { flex: 0 0 auto; }
+.profile-page__game .profile-game-actions { gap: 9px; margin-top: 16px; }
+.profile-page .profile-section { margin: 0 0 44px; }
+.profile-page .profile-section__head h2 { font-size: clamp(21px, 2.5vw, 28px); }
+.profile-page .profile-achievements { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.profile-page .profile-achievements article {
+  min-width: 0;
+  padding: 18px;
+  gap: 13px;
+  border: 1px solid var(--color-border, rgba(255,255,255,.1));
+  border-radius: 12px;
+  background: var(--color-background-alt, #202020);
+}
+.profile-page .profile-achievements article > svg { color: var(--color-text-secondary, #bbb); }
+.profile-page .profile-achievements strong { display: block; margin-bottom: 5px; line-height: 1.35; overflow-wrap: anywhere; }
+.profile-page .profile-achievements span { color: var(--color-text-secondary, #aaa); line-height: 1.5; }
+.profile-page .profile-empty {
+  padding: 24px;
+  border: 1px solid var(--color-border, rgba(255,255,255,.1));
+  border-radius: 12px;
+  color: var(--color-text-secondary, #aaa);
+  background: var(--color-background-alt, #202020);
+}
+.account-page__field-help { margin: 5px 0 0; color: var(--color-text-secondary, #aaa); font-size: 13px; line-height: 1.5; }
+.account-page__banner-preview {
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid var(--color-border, rgba(255,255,255,.1));
+  border-radius: 9px;
+  aspect-ratio: 16 / 5;
+  background: var(--color-background-alt, #202020);
+}
+.account-page__banner-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 900px) {
+  .profile-page__games { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .profile-page { width: min(100% - 1.25rem, 1180px); padding-top: 104px; }
+  .profile-page__banner { height: 150px; margin-bottom: 22px; border-radius: 10px; }
+  .profile-page__hero { grid-template-columns: 72px minmax(0, 1fr); align-items: start; gap: 15px; margin-bottom: 32px; }
+  .profile-page__avatar { width: 72px; height: 72px; font-size: 26px; }
+  .profile-page__name { font-size: 24px; margin-bottom: 8px; }
+  .profile-page__bio { font-size: 14px; line-height: 1.55; margin-bottom: 11px; }
+  .profile-page__facts { gap: 6px 12px; font-size: 12px; }
+  .profile-page__games { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .profile-page__game { display: grid; grid-template-columns: minmax(100px, 36%) minmax(0, 1fr); }
+  .profile-page__game-image { height: 100%; min-height: 122px; aspect-ratio: auto; }
+  .profile-page__game-copy { padding: 13px; }
+  .profile-page__game-title { font-size: 16px; }
+  .profile-page .profile-achievements { grid-template-columns: minmax(0, 1fr); }
+  .profile-page .profile-achievements article { padding: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .profile-page__game, .profile-page__game-image img { transition: none; }
+  .profile-page__game:hover { transform: none; }
+}
