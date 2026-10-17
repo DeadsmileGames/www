@@ -1,7 +1,6 @@
 import {
   useRef,
   useState } from "react";
-import { Link } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
