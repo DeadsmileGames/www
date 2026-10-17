@@ -13,7 +13,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { useContent } from "../hooks/useContent";
 import { useAuth } from "../hooks/useAuth";
 import { Reveal } from "../components/ui/Reveal";
-import { ArrowLeft,
+import {
   ArrowUpRight,
   Trash,
 } from "@phosphor-icons/react";
