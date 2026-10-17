@@ -44,12 +44,8 @@ export function SpecialThanks() {
     <div className="special-thanks-page container" aria-busy={loading}>
       <CursorTrail />
       <header className="special-thanks-page__header">
-        <p className="special-thanks-page__eyebrow">Deadsmile Games</p>
         <h1 className="special-thanks-page__title">{t("Thank you!")}</h1>
         <h2 className="special-thanks-page__subtitle">{t("Special thanks to")}</h2>
-        <p className="special-thanks-page__intro">
-          {t("A big thank-you to the people who have supported and inspired us.")}
-        </p>
       </header>
 
       {loading ? (
@@ -78,6 +74,10 @@ export function SpecialThanks() {
           {t("The list is waiting for its first names.")}
         </p>
       )}
+
+      <p className="special-thanks-page__intro">
+        {t("A big thank-you to the people who have supported and inspired us.")}
+      </p>
     </div>
   );
 }

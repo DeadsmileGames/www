@@ -127,6 +127,7 @@ export function AppLayout() {
       : premiere;
 
   const location = useLocation();
+  const isSpecialThanksPage = location.pathname === "/specialthanks";
   const outlet = useOutlet();
   const reducedMotion = useReducedMotion();
 
@@ -168,21 +169,25 @@ export function AppLayout() {
 
   return (
     <>
-      <a href="#main-content" className="skip-link">
-        {t("Skip to content")}
-      </a>
+      {!isSpecialThanksPage && (
+        <a href="#main-content" className="skip-link">
+          {t("Skip to content")}
+        </a>
+      )}
 
-      <div className={`premiere-shell ${bannerContent && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
-        {bannerContent && !isAuthPage && (
-          <PremiereBanner
-            premiere={bannerContent}
-            onOpen={() => {
-              if (bannerContent.kind !== "game") setPremiereOpen(true);
-            }}
-          />
-        )}
-        {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} searchOpen={searchOpen} />}
-      </div>
+      {!isSpecialThanksPage && (
+        <div className={`premiere-shell ${bannerContent && !isAuthPage ? "premiere-shell--with-banner" : ""}`}>
+          {bannerContent && !isAuthPage && (
+            <PremiereBanner
+              premiere={bannerContent}
+              onOpen={() => {
+                if (bannerContent.kind !== "game") setPremiereOpen(true);
+              }}
+            />
+          )}
+          {!isAuthPage && <Header onOpenSearch={() => setSearchOpen(true)} searchOpen={searchOpen} />}
+        </div>
+      )}
 
       <main id="main-content">
         <Suspense fallback={<SkeletonPage path={location.pathname} />}>
@@ -208,12 +213,12 @@ export function AppLayout() {
         </Suspense>
       </main>
 
-      {!isAuthPage && <Footer />}
+      {!isAuthPage && !isSpecialThanksPage && <Footer />}
 
       <SearchOverlay
         open={searchOpen}
         onClose={() => setSearchOpen(false)}
-        hasPremiere={Boolean(bannerContent && !isAuthPage)}
+        hasPremiere={Boolean(bannerContent && !isAuthPage && !isSpecialThanksPage)}
       />
 
       <VideoOverlay

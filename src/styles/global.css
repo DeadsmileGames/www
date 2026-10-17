@@ -6423,3 +6423,175 @@ main:has(.special-thanks-page) {
     transition: none;
   }
 }
+
+
+/* Final responsive polish for all public profiles. The image is always fully visible. */
+.profile-page__banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(130px, 20vw, 230px);
+  min-height: 0;
+  background: #080808;
+}
+
+.profile-page__banner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center;
+}
+
+.account-page__banner-preview img {
+  object-fit: contain !important;
+}
+
+.profile-page__identity {
+  min-width: 0;
+  width: 100%;
+}
+
+.profile-page__name {
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  letter-spacing: normal;
+}
+
+.profile-page__name > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.profile-page__bio,
+.profile-page__facts {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .profile-page {
+    width: min(calc(100% - 24px), 1180px);
+    padding-top: 94px;
+    padding-bottom: 52px;
+  }
+
+  .profile-page__banner {
+    height: clamp(92px, 30vw, 145px);
+    margin-bottom: 18px;
+  }
+
+  .profile-page__hero,
+  .profile-page__hero--official {
+    grid-template-columns: 64px minmax(0, 1fr) !important;
+    align-items: start;
+    gap: 12px !important;
+    margin-bottom: 30px;
+  }
+
+  .profile-page__avatar {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 22px !important;
+    border-radius: 12px !important;
+  }
+
+  .profile-page__name {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 7px;
+    font-size: clamp(18px, 5.2vw, 24px) !important;
+    line-height: 1.2;
+  }
+
+  .profile-page__name > span:first-child {
+    white-space: normal;
+  }
+
+  .profile-page__verified svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .profile-page__dev-tag {
+    min-width: 39px;
+    padding: 4px 5px;
+    font-size: 11px;
+  }
+
+  .profile-page__bio {
+    margin-bottom: 9px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .profile-page__facts {
+    gap: 5px 10px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .profile-page__section-head h2,
+  .profile-page .profile-section__head h2 {
+    font-size: 21px;
+    line-height: 1.2;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile-page__hero,
+  .profile-page__hero--official {
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .profile-page__avatar {
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 20px !important;
+  }
+
+  .profile-page__name {
+    font-size: 18px !important;
+    gap: 4px;
+  }
+
+  .profile-page__dev-tag {
+    min-width: 35px;
+    padding: 3px 4px;
+    font-size: 10px;
+  }
+}
+
+/* Special Thanks is a standalone retro page with no shared site chrome. */
+main:has(.special-thanks-page) {
+  min-height: 100vh;
+}
+
+.special-thanks-page.container {
+  width: min(calc(100% - 32px), 860px);
+  max-width: 860px;
+  padding-top: 38px;
+  padding-bottom: 68px;
+}
+
+.special-thanks-page__intro {
+  margin: 34px auto 0;
+}
+
+@media (max-width: 760px) {
+  .special-thanks-page.container {
+    width: calc(100% - 24px);
+    padding-top: 30px;
+    padding-bottom: 48px;
+  }
+
+  .special-thanks-page__intro {
+    margin-top: 28px;
+  }
+}
