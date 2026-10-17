@@ -6,7 +6,7 @@ import { useGames } from "../hooks/useGames";
 import { useContent } from "../hooks/useContent";
 import { safeImageUrl, safeHttpsUrl, safeYoutubeEmbedUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
-import { Play } from "@phosphor-icons/react";
+import { ArrowRight, Play } from "@phosphor-icons/react";
 import { AutoLinkText } from "../components/ui/AutoLinkText";
 
 function ContentState({ resource, empty, children, skeleton }) {
@@ -123,7 +123,8 @@ export function Home() {
               style={{ marginTop: "1rem" }}
               to="/newswire"
             >
-              {t("All news \u2192")}
+              {t("All news")}
+              <ArrowRight size={18} weight="bold" aria-hidden="true" />
             </Link>
           </header>
           <ContentState
@@ -146,7 +147,8 @@ export function Home() {
                     </h3>
                     <p><AutoLinkText>{item.excerpt}</AutoLinkText></p>
                     <Link to={`/newswire/${item.slug}`} className="btn btn--primary">
-                      {t("Read story \u2192")}
+                      {t("Read story")}
+                      <ArrowRight size={18} weight="bold" aria-hidden="true" />
                     </Link>
                   </article>
                 ))}
@@ -172,7 +174,8 @@ export function Home() {
               {t("Every challenge is better with you in it.")}
             </p>
             <Link to="/about" className="btn btn--primary">
-              {t("Meet Deadsmile Games \u2192")}
+              {t("Meet Deadsmile Games")}
+              <ArrowRight size={18} weight="bold" aria-hidden="true" />
             </Link>
           </div>
         </div>
