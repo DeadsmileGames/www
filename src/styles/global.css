@@ -2738,7 +2738,7 @@ input[type="file"]::file-selector-button {
     .terms-page__content
   )
   a,
-.news-detail__body a:not(:has(img)) {
+.news-detail__body a:not(:has(img)):not(.btn) {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -5423,6 +5423,7 @@ html[dir="rtl"] .site-header__actions {
   flex: 0 0 auto;
   width: clamp(112px, 16vw, 190px);
   aspect-ratio: 3 / 4;
+  border-radius: 10px;
   object-fit: cover;
 }
 .preorder-workspace__heading {
@@ -5684,4 +5685,13 @@ html[dir="rtl"] .site-header__actions {
 
 .game-details__preorder-actions .game-details__btn {
   margin: 0;
+}
+
+/* Links rendered as buttons must never inherit text-link underlines. */
+a.btn,
+a.btn:hover,
+a.btn:focus-visible,
+.news-detail__body a.btn:not(:has(img)),
+.game-details__launcher-hint a.btn {
+  text-decoration: none;
 }
