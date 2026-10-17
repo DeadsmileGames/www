@@ -1,5 +1,4 @@
-import {
-  useLanguage } from "../context/LanguageContext";
+import { useLanguage } from "../context/LanguageContext";
 import { Reveal } from "../components/ui/Reveal";
 
 export function Terms() {
