@@ -1,7 +1,5 @@
 import {
   useLanguage } from "../context/LanguageContext";
-import { ArrowLeft,
-} from "@phosphor-icons/react";
 import { Reveal } from "../components/ui/Reveal";
 
 export function Terms() {
