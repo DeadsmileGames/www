@@ -1,4 +1,5 @@
-import { useLanguage } from "../context/LanguageContext";
+import {
+  useLanguage } from "../context/LanguageContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -53,10 +54,7 @@ export function Support() {
   }
   return (
     <div className="support-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
       <header className="support-hero">
         <div>
           <h1>{t("How can we help?")}</h1>
