@@ -5,6 +5,7 @@ import { AnimatePresence, useReducedMotion } from "motion/react";
 import * as m from "motion/react-m";
 import { CheckCircle, Play, X, YoutubeLogo } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
+import { getServerNow, useServerClock } from "../../hooks/useServerClock";
 import { useContent } from "../../hooks/useContent";
 import { LiveChatPanel } from "./LiveChatPanel";
 import { LoadingSpinner } from "../ui/LoadingSpinner";
@@ -18,6 +19,8 @@ const fallbackImage = "/assets/placeholders/game-cover.svg";
 
 function Panel({ videoId, onClose, onSelect }) {
   const { t, language } = useLanguage();
+  const serverNow = useServerClock();
+  const serverTimeReady = serverNow !== null;
   const allowed = useOptionalContent();
   const reducedMotion = useReducedMotion();
   const panelRef = useRef(null);
@@ -64,9 +67,10 @@ function Panel({ videoId, onClose, onSelect }) {
     const endedAt = Date.parse(video?.youtube?.actualEndedAt || "");
     if (!Number.isFinite(endedAt)) return undefined;
 
+    if (!serverTimeReady) return undefined;
     const expiresAt = endedAt + 10_000;
-    const now = Date.now();
-    if (expiresAt <= now) return undefined;
+    const now = getServerNow();
+    if (now === null || expiresAt <= now) return undefined;
 
     const showTimer = window.setTimeout(
       () => setPremiereEnded(true),
@@ -80,7 +84,7 @@ function Panel({ videoId, onClose, onSelect }) {
       window.clearTimeout(showTimer);
       window.clearTimeout(hideTimer);
     };
-  }, [video?.id, video?.youtube?.actualEndedAt]);
+  }, [video?.id, video?.youtube?.actualEndedAt, serverTimeReady]);
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed) return null;
