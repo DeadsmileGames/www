@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Check } from "@phosphor-icons/react";
 import { api, API_BASE_URL, friendlyErrorMessage } from "../services/api";
 import { useLanguage } from "../context/LanguageContext";
 import { useAuth } from "../hooks/useAuth";
@@ -293,7 +294,7 @@ export function Preorder() {
               const active = stage.number === currentStep;
               return (
                 <li key={stage.number} className={`preorder-steps__item${active ? " is-active" : ""}${complete ? " is-complete" : ""}`}>
-                  <span className="preorder-steps__number">{complete ? "✓" : String(stage.number).padStart(2, "0")}</span>
+                  <span className="preorder-steps__number">{complete ? <Check size={15} weight="bold" aria-hidden="true" /> : String(stage.number).padStart(2, "0")}</span>
                   <span className="preorder-steps__copy"><strong>{stage.title}</strong></span>
                 </li>
               );
