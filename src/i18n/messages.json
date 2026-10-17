@@ -795,8 +795,9 @@
     "Reward already redeemed": "Recompensa já resgatada",
     "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Sua recompensa foi resgatada. O código do pré-registro e seus dados pessoais foram excluídos.",
     "Verified studio account": "Conta oficial verificada",
+    "Verified account": "Conta verificada",
     "Profile banner image URL": "URL da imagem do banner do perfil",
-    "Use a direct HTTPS image URL. Only this official profile can show a banner.": "Use uma URL HTTPS direta da imagem. Apenas este perfil oficial pode exibir um banner.",
+    "Use a direct HTTPS image URL. Only verified profiles can show a banner.": "Use uma URL HTTPS direta da imagem. Perfis verificados podem exibir um banner.",
     "Syncing official time…": "Sincronizando horário oficial…"
   },
   "es": {
@@ -1595,8 +1596,9 @@
     "Your reward has been redeemed. Your pre-order code and personal details have been deleted.": "Tu recompensa ya se canjeó. Se eliminaron el código del pre-registro y tus datos personales.",
     "Your pre-order registration is confirmed.": "Tu pre-registro está confirmado.",
     "Verified studio account": "Cuenta oficial verificada",
+    "Verified account": "Cuenta verificada",
     "Profile banner image URL": "URL de imagen del banner del perfil",
-    "Use a direct HTTPS image URL. Only this official profile can show a banner.": "Usa una URL HTTPS directa de la imagen. Solo este perfil oficial puede mostrar un banner.",
+    "Use a direct HTTPS image URL. Only verified profiles can show a banner.": "Usa una URL HTTPS directa de la imagen. Los perfiles verificados pueden mostrar un banner.",
     "Syncing official time…": "Sincronizando la hora oficial…"
   },
   "en": {
@@ -1742,8 +1744,9 @@
     "Your reward code will appear here when the pre-order ends.": "Your reward code will appear here when registration closes.",
     "Your email is confirmed. The reward code will appear on the management page when the pre-order ends.": "Your email is confirmed. The reward code will appear on the management page when registration closes.",
     "Verified studio account": "Verified studio account",
+    "Verified account": "Verified account",
     "Profile banner image URL": "Profile banner image URL",
-    "Use a direct HTTPS image URL. Only this official profile can show a banner.": "Use a direct HTTPS image URL. Only this official profile can show a banner.",
+    "Use a direct HTTPS image URL. Only verified profiles can show a banner.": "Use a direct HTTPS image URL. Only verified profiles can show a banner.",
     "Syncing official time…": "Syncing official time…"
   }
 }
