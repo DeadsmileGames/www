@@ -485,6 +485,9 @@ export function PreorderReward() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     let active = true;
+    setLoading(true);
+    setReward(null);
+    setError("");
     const path = token
       ? `/preorders/reward/${encodeURIComponent(token)}`
       : `/preorders/${encodeURIComponent(slug)}/reward`;
@@ -508,7 +511,7 @@ export function PreorderReward() {
   );
   const downloadHref = reward.downloadUrl
     ? reward.downloadUrl.startsWith("/api/")
-      ? `${API_BASE_URL.replace(/\\/api\\/?$/, "")}${reward.downloadUrl}`
+      ? `${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}`
       : `${API_BASE_URL}${reward.downloadUrl.startsWith("/") ? "" : "/"}${reward.downloadUrl}`
     : null;
   return (
