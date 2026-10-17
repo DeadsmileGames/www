@@ -132,7 +132,7 @@ export function Preorder() {
 
   // Keep the current page synchronized when the confirmation link is opened on another device.
   useEffect(() => {
-    if (status !== "pending-confirmation" || authStatus !== "authenticated") return undefined;
+    if (!["pending-confirmation", "already-confirmed"].includes(status) || authStatus !== "authenticated") return undefined;
     let active = true;
     let pending = false;
     const refresh = async () => {
@@ -369,14 +369,14 @@ export function Preorder() {
             <div className="preorder-workspace__state" role="status">
               <h2>{t("Your pre-order is confirmed.")}</h2>
               <p>{t("Your pre-order is now linked to your account and will appear in your library, locked until the release countdown ends.")}</p>
-              {rewardCode && (
+              {rewardRedeemable && rewardCode ? (
                 <div className="preorder-workspace__hint">
                   <p><strong>{t("Your reward code")}</strong></p>
                   <p><code style={{ fontSize: "1.4rem", letterSpacing: "0.25em", fontWeight: 700 }}>{rewardCode}</code></p>
-                  <p>{rewardRedeemable
-                    ? t("The pre-order has ended. You can redeem this code from your account.")
-                    : t("This code has been generated and is only redeemable when the pre-order ends.")}</p>
+                  <p>{t("The pre-order has ended. You can redeem this code from your account.")}</p>
                 </div>
+              ) : (
+                <p className="preorder-workspace__hint">{t("Your reward code will appear here when the pre-order ends.")}</p>
               )}
               <button className="btn btn--primary" type="button" disabled>{t("Already in pre-order")}</button>
               <div className="preorder-form__actions">
@@ -444,7 +444,7 @@ export function PreorderConfirm() {
     <main className="page-shell preorder-page container">
       <section className="preorder-workspace__state" aria-labelledby="preorder-confirm-title" role={status === "error" ? "alert" : "status"}>
         {status === "loading" && <><h1 id="preorder-confirm-title">{t("Confirming your pre-order...")}</h1><LoadingSpinner /></>}
-        {status === "success" && <><h1 id="preorder-confirm-title">{t("Your pre-order is confirmed.")}</h1><p>{t("Your reward code is ready. Open the pre-order management page to view it; redemption is enabled when the pre-order ends.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}/preorder`}>{t("Manage pre-order")}</Link><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
+        {status === "success" && <><h1 id="preorder-confirm-title">{t("Your pre-order is confirmed.")}</h1><p>{t("Your email is confirmed. The reward code will appear on the management page when the pre-order ends.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}/preorder`}>{t("Manage pre-order")}</Link><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
         {status === "error" && <><h1 id="preorder-confirm-title">{t("Pre-order confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
       </section>
     </main>
