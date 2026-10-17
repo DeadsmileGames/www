@@ -27,6 +27,7 @@ export async function syncServerClock() {
   if (syncInFlight) return syncInFlight;
   syncInFlight = (async () => {
     const requestStartedAt = performance.now();
+    lastSyncPerformanceAt = requestStartedAt;
     let timeZone = "UTC";
     try {
       const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
