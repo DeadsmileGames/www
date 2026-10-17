@@ -6,7 +6,6 @@ import { SkeletonGameGrid } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Button } from "../components/ui/Button";
-import { Link } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { ArrowLeft,
 } from "@phosphor-icons/react";
