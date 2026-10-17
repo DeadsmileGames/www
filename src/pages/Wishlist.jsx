@@ -13,8 +13,6 @@ import { GameCoverPanel } from "../components/games/GameCoverPanel";
 import { safeImageUrl } from "../utils/urls";
 import { ErrorState } from "../components/ui/ErrorState";
 import { EmptyState } from "../components/ui/EmptyState";
-import { ArrowLeft,
-} from "@phosphor-icons/react";
 import { useMicrosoftStoreCovers } from "../hooks/useMicrosoftStoreCovers";
 
 export function Wishlist() {
