@@ -1,11 +1,15 @@
-import { useRef, useState } from "react";
+import {
+  useRef,
+  useState } from "react";
 import { Link } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ErrorState } from "../components/ui/ErrorState";
 import { SkeletonSearch } from "../components/ui/Skeleton";
 import { SearchResults } from "../components/search/SearchResults";
-import { ArrowLeft, X } from "@phosphor-icons/react";
+import { ArrowLeft,
+  X,
+} from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 
 export function Search() {
@@ -16,10 +20,7 @@ export function Search() {
 
   return (
     <div className="search-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <h1>{t("nav.search")}</h1>
 
