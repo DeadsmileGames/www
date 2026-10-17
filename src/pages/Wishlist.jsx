@@ -1,13 +1,8 @@
-import {
-  useLanguage } from "../context/LanguageContext";
-import { useCallback,
-  useEffect,
-  useRef,
-  useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { api,
-  friendlyErrorMessage } from "../services/api";
+import { api, friendlyErrorMessage } from "../services/api";
 import { SkeletonGameGrid } from "../components/ui/Skeleton";
 import { GameCoverPanel } from "../components/games/GameCoverPanel";
 import { safeImageUrl } from "../utils/urls";
