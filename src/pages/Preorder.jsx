@@ -105,7 +105,6 @@ export function Preorder() {
         } else if (mine.preorderStatus === "pending") {
           setStatus("pending-confirmation");
         } else {
-          try { window.localStorage.removeItem(preorderStorageKey(slug)); } catch { /* optional preference */ }
           const canRegister = info.isFree !== false &&
             info.preorderEnabled !== false &&
             Number.isFinite(Date.parse(info.startsAt || "")) &&
