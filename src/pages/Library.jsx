@@ -1,6 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, X } from "@phosphor-icons/react";
+import { ArrowLeft,
+  X,
+} from "@phosphor-icons/react";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../context/LanguageContext";
 import { api, friendlyErrorMessage } from "../services/api";
@@ -79,10 +85,7 @@ export function Library() {
 
   return (
     <div className="library-page container">
-      <Link to="/" className="back-link">
-        <ArrowLeft weight="bold" />
-        <span>{t("Back")}</span>
-      </Link>
+      
 
       <header className="library-page__header">
         <div>
