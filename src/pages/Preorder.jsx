@@ -58,8 +58,9 @@ export function Preorder() {
   );
   useEffect(() => {
     if (!hasPreorderRecord && status === "closed" && windowOpen) setStatus("details");
+    else if (status === "closed-record" && windowOpen && attemptsRemaining > 0) setStatus("details");
     else if (!hasPreorderRecord && status === "details" && !windowOpen && serverNow !== null) setStatus("closed");
-  }, [hasPreorderRecord, status, windowOpen, serverNow]);
+  }, [hasPreorderRecord, status, windowOpen, serverNow, attemptsRemaining]);
 
   const currentStep = status === "review" ? 2 :
     ["pending-confirmation", "already-confirmed", "redeemed", "daily-limit", "closed-record", "closed"].includes(status) ? 3 : 1;
