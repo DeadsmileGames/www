@@ -17,6 +17,7 @@ import { SkeletonProfile } from "../components/ui/Skeleton";
 import { ErrorState } from "../components/ui/ErrorState";
 import { Modal } from "../components/ui/Modal";
 import { Lightbox } from "../components/ui/Lightbox";
+import { CursorTrail } from "../components/ui/CursorTrail";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl } from "../utils/urls";
 
 const PLACEHOLDER = "/assets/placeholders/game-cover.svg";
@@ -118,6 +119,7 @@ export function PublicProfile() {
 
   return (
     <div className={profilePageClassName}>
+      {isLuxjsonProfile && <CursorTrail />}
       {profile.isVerified && profile.bannerUrl && !bannerFailed && (
         <div className="profile-page__banner">
           <img src={safeImageUrl(profile.bannerUrl)} alt="" loading="eager" onError={() => setBannerFailed(true)} />

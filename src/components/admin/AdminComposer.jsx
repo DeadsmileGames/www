@@ -16,6 +16,7 @@ import {
   CheckCircle,
   WarningCircle,
   PencilSimple,
+  UsersThree,
 } from "@phosphor-icons/react";
 
 const initial = {
@@ -165,6 +166,13 @@ export function AdminComposer() {
   const [loadingItems, setLoadingItems] = useState(false);
   const [itemsLoaded, setItemsLoaded] = useState(false);
   const [deleting, setDeleting] = useState(null);
+  const [specialThanks, setSpecialThanks] = useState([]);
+  const [specialThanksName, setSpecialThanksName] = useState("");
+  const [specialThanksLoading, setSpecialThanksLoading] = useState(false);
+  const [specialThanksSaving, setSpecialThanksSaving] = useState(false);
+  const [specialThanksError, setSpecialThanksError] = useState("");
+  const [specialThanksMessage, setSpecialThanksMessage] = useState("");
+  const [specialThanksRevision, setSpecialThanksRevision] = useState(0);
 
   const updateField = (key, value) => {
     setForm((current) => ({ ...current, [key]: value }));
@@ -465,8 +473,85 @@ export function AdminComposer() {
     void loadManageItems();
   }, [loadManageItems, user?.role]);
 
+  useEffect(() => {
+    if (user?.role !== "admin" || activeSection !== "specialThanks") return undefined;
+
+    let active = true;
+    setSpecialThanksLoading(true);
+    setSpecialThanksError("");
+    setSpecialThanksMessage("");
+
+    api.get("/special-thanks")
+      .then((response) => {
+        if (active) setSpecialThanks(normalizeList(response));
+      })
+      .catch((err) => {
+        if (active) setSpecialThanksError(friendlyErrorMessage(err));
+      })
+      .finally(() => {
+        if (active) setSpecialThanksLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [activeSection, specialThanksRevision, user?.role]);
+
+  async function addSpecialThanks(event) {
+    event.preventDefault();
+    const name = specialThanksName.trim();
+    if (!name || specialThanksSaving) return;
+
+    setSpecialThanksSaving(true);
+    setSpecialThanksError("");
+    setSpecialThanksMessage("");
+    try {
+      const created = await authedRequest(() =>
+        api.post("/admin/special-thanks", { name }),
+      );
+      setSpecialThanks((current) => [...current, created]);
+      setSpecialThanksName("");
+      setSpecialThanksMessage(t("Name added to the list."));
+    } catch (err) {
+      setSpecialThanksError(
+        err?.status === 409
+          ? t("That name is already on the list.")
+          : friendlyErrorMessage(err),
+      );
+    } finally {
+      setSpecialThanksSaving(false);
+    }
+  }
+
+  async function removeSpecialThanks(item) {
+    const deleteKey = "specialThanks:" + item.id;
+    if (confirmingDelete !== deleteKey) {
+      setConfirmingDelete(deleteKey);
+      return;
+    }
+
+    setDeleting(deleteKey);
+    setSpecialThanksError("");
+    setSpecialThanksMessage("");
+    try {
+      await authedRequest(() =>
+        api.delete(`/admin/special-thanks/${encodeURIComponent(item.id)}`),
+      );
+      setSpecialThanks((current) => current.filter((person) => person.id !== item.id));
+      setConfirmingDelete(null);
+      setSpecialThanksMessage(t("Name removed from the list."));
+    } catch (err) {
+      setSpecialThanksError(friendlyErrorMessage(err));
+    } finally {
+      setDeleting(null);
+    }
+  }
+
   async function openManage() {
     await loadManageItems();
+    if (activeSection === "specialThanks") {
+      setSpecialThanksRevision((value) => value + 1);
+    }
   }
 
   const deleteEndpointMap = {
@@ -587,6 +672,16 @@ export function AdminComposer() {
               {label}
             </button>
           ))}
+          <div className="account-nav-title">{t("Site pages")}</div>
+          <button
+            type="button"
+            className={activeSection === "specialThanks" ? "account-nav-item is-active" : "account-nav-item"}
+            onClick={() => selectSection("specialThanks")}
+            aria-current={activeSection === "specialThanks" ? "page" : undefined}
+          >
+            <UsersThree weight="bold" />
+            {t("Special Thanks")}
+          </button>
         </nav>
 
         <div className="account-page__content">
@@ -1177,7 +1272,118 @@ export function AdminComposer() {
             </>
           )}
 
-          {activeSection !== "overview" && (
+          {!type && activeSection === "specialThanks" && (
+            <section className="support-card support-faq-panel account-block" aria-labelledby="admin-special-thanks-title">
+              <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 20 }}>
+                <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>
+                  <h2 id="admin-special-thanks-title">{t("Special Thanks")}</h2>
+                  <p>{t("Manage the names shown on the public Special Thanks page. Names only; no images are used.")}</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setSpecialThanksRevision((value) => value + 1)}
+                  disabled={specialThanksLoading || specialThanksSaving}
+                >
+                  <ArrowClockwise weight="bold" />
+                  {t("Refresh list")}
+                </Button>
+              </header>
+
+              <form onSubmit={addSpecialThanks} className="admin-special-thanks__form">
+                <label className="admin-field" htmlFor="admin-special-thanks-name">
+                  <span>{t("Person's name")}</span>
+                  <input
+                    id="admin-special-thanks-name"
+                    name="specialThanksName"
+                    type="text"
+                    autoComplete="off"
+                    maxLength={100}
+                    required
+                    value={specialThanksName}
+                    onChange={(event) => setSpecialThanksName(event.target.value)}
+                  />
+                </label>
+                <Button type="submit" variant="primary" disabled={specialThanksSaving || !specialThanksName.trim()} loading={specialThanksSaving}>
+                  <UsersThree weight="bold" />
+                  {t("Add name")}
+                </Button>
+              </form>
+
+              {specialThanksError && (
+                <p className="admin-modal__error" role="alert">
+                  <WarningCircle weight="bold" />
+                  <span>{specialThanksError}</span>
+                </p>
+              )}
+              {specialThanksMessage && (
+                <p className="admin-modal__saved" role="status" aria-live="polite">
+                  <CheckCircle weight="bold" />
+                  <span>{specialThanksMessage}</span>
+                </p>
+              )}
+
+              {specialThanksLoading ? (
+                <SkeletonRows count={3} />
+              ) : specialThanks.length === 0 ? (
+                <p className="admin-manage__empty">{t("No names have been added yet.")}</p>
+              ) : (
+                <div className="admin-manage">
+                  <section className="admin-manage__section" aria-label={t("Special thanks names")}>
+                    {specialThanks.map((person) => {
+                      const deleteKey = "specialThanks:" + person.id;
+                      const isDeleting = deleting === deleteKey;
+                      return (
+                        <article className="admin-manage__item" key={person.id}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <strong>{person.name}</strong>
+                          </div>
+                          {confirmingDelete === deleteKey ? (
+                            <div className="admin-manage__item-actions">
+                              <span>{t("Delete this name?")}</span>
+                              <Button
+                                type="button"
+                                variant="danger"
+                                onClick={() => removeSpecialThanks(person)}
+                                loading={isDeleting}
+                                disabled={isDeleting}
+                              >
+                                <Trash weight="bold" />
+                                {t("Delete")}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => setConfirmingDelete(null)}
+                                disabled={isDeleting}
+                              >
+                                {t("Cancel")}
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className="admin-manage__item-actions">
+                              <button
+                                type="button"
+                                className="btn btn--danger"
+                                onClick={() => removeSpecialThanks(person)}
+                                disabled={Boolean(deleting)}
+                                aria-label={t("Delete {0}", { 0: person.name })}
+                              >
+                                <Trash weight="bold" />
+                                {t("Delete")}
+                              </button>
+                            </div>
+                          )}
+                        </article>
+                      );
+                    })}
+                  </section>
+                </div>
+              )}
+            </section>
+          )}
+
+          {activeSection !== "overview" && activeSection !== "specialThanks" && (
             <section className="support-card support-faq-panel account-block" aria-labelledby="admin-manage-title">
               <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 20 }}>
                 <div className="account-block__head" style={{ flex: 1, minWidth: 0 }}>

@@ -31,6 +31,7 @@ const Support = page(() => import("./pages/Support"), "Support");
 const PressKit = page(() => import("./pages/PressKit"), "PressKit");
 const NotFound = page(() => import("./pages/NotFound"), "NotFound");
 const PublicProfile = page(() => import("./pages/PublicProfile"), "PublicProfile");
+const SpecialThanks = page(() => import("./pages/SpecialThanks"), "SpecialThanks");
 const ForgotPassword = page(() => import("./pages/ForgotPassword"), "ForgotPassword");
 const ResetPassword = page(() => import("./pages/ResetPassword"), "ResetPassword");
 const NewsletterAction = page(
@@ -104,6 +105,7 @@ export default function App() {
         <Route path="/newswire/:slug" element={<News />} />
         <Route path="/support" element={<Support />} />
         <Route path="/about" element={<About />} />
+        <Route path="/specialthanks" element={<SpecialThanks />} />
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

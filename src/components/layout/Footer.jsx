@@ -93,6 +93,7 @@ export function Footer() {
           <Link to="/launcher">{t("Launcher")}</Link>
           <Link to="/newswire">{t("News")}</Link>
           <Link to="/about">{t("About")}</Link>
+          <Link to="/specialthanks">{t("Special Thanks")}</Link>
           <Link to="/support">{t("Support")}</Link>
           <Link to="/presskit">{t("Press Kit")}</Link>
           <Link to="/privacy">{t("Privacy")}</Link>
