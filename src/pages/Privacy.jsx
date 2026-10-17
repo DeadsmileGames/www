@@ -1,7 +1,5 @@
-import {
-  useLanguage } from "../context/LanguageContext";
-import { useOptionalContent,
-  setOptionalContent } from "../utils/consent";
+import { useLanguage } from "../context/LanguageContext";
+import { useOptionalContent, setOptionalContent } from "../utils/consent";
 import { Reveal } from "../components/ui/Reveal";
 
 export function Privacy() {
