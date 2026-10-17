@@ -480,8 +480,11 @@ export function PreorderConfirm() {
 export function PreorderReward() {
   const { slug, token } = useParams();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [reward, setReward] = useState(null);
   const [error, setError] = useState("");
+  const [downloadError, setDownloadError] = useState("");
+  const [downloadBusy, setDownloadBusy] = useState(false);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     let active = true;
@@ -511,9 +514,56 @@ export function PreorderReward() {
   );
   const downloadHref = reward.downloadUrl
     ? reward.downloadUrl.startsWith("/api/")
-      ? `${API_BASE_URL.replace(/\/api\/?$/, "")}${reward.downloadUrl}`
+      ? `${API_BASE_URL.replace(/\\/api\\/?$/, "")}${reward.downloadUrl}`
       : `${API_BASE_URL}${reward.downloadUrl.startsWith("/") ? "" : "/"}${reward.downloadUrl}`
     : null;
+
+  async function downloadReward() {
+    if (!downloadHref || downloadBusy) return;
+    setDownloadBusy(true);
+    setDownloadError("");
+    try {
+      const response = await fetch(downloadHref, {
+        method: "GET",
+        credentials: "include",
+        headers: { Accept: "application/zip, application/json" },
+      });
+      if (response.status === 401) {
+        navigate("/login", {
+          state: { from: { pathname: window.location.pathname } },
+        });
+        return;
+      }
+      if (!response.ok) {
+        let code = "UNKNOWN_ERROR";
+        try {
+          const payload = await response.clone().json();
+          code = payload?.error?.code || code;
+        } catch { /* The endpoint may return a non-JSON error. */ }
+        setDownloadError(friendlyErrorMessage({ code, status: response.status }));
+        return;
+      }
+      const blob = await response.blob();
+      if (!blob.size) {
+        setDownloadError(t("The download failed. Please try again."));
+        return;
+      }
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = "deadsmile-preorder-reward.zip";
+      anchor.style.display = "none";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    } catch {
+      setDownloadError(t("The download failed. Please try again."));
+    } finally {
+      setDownloadBusy(false);
+    }
+  }
+
   return (
     <main className="page-shell preorder-page container">
       <section className="preorder-workspace__state support-card support-faq-panel" aria-labelledby="preorder-reward-title">
@@ -530,9 +580,12 @@ export function PreorderReward() {
           <p>{t("You redeemed your rewards. Click below to download them.")}</p>
           {downloadHref ? (
             <div className="preorder-form__actions">
-              <a className="btn btn--primary" href={downloadHref}>{t("Download reward ZIP")}</a>
+              <button className="btn btn--primary" type="button" onClick={downloadReward} disabled={downloadBusy}>
+                {downloadBusy ? <LoadingSpinner /> : t("Download reward ZIP")}
+              </button>
             </div>
           ) : <p>{t("No downloadable file is attached to this reward.")}</p>}
+          {downloadError && <p className="account-page__error" role="alert">{downloadError}</p>}
         </div>
       </section>
     </main>
