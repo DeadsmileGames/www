@@ -6595,3 +6595,100 @@ main:has(.special-thanks-page) {
     margin-top: 28px;
   }
 }
+
+
+/* Standalone Special Thanks controls reuse the site's button and language-menu classes. */
+.special-thanks-page__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 clamp(42px, 7vh, 68px);
+}
+
+.special-thanks-page__back {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.special-thanks-page__language-trigger {
+  min-height: 38px;
+  padding: 7px 12px;
+  border: 2px outset #dfdfdf !important;
+  border-radius: 0 !important;
+  background: #c0c0c0 !important;
+  color: #111 !important;
+  box-shadow: none !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.special-thanks-page__language-trigger:hover {
+  background: #dedede !important;
+  color: #000 !important;
+}
+
+.special-thanks-page__language-menu {
+  min-width: 215px;
+  padding: 4px;
+  border: 2px outset #dfdfdf;
+  border-radius: 0;
+  background: #c0c0c0;
+  box-shadow: none;
+}
+
+.special-thanks-page .special-thanks-page__language-menu button {
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 0;
+  background: #c0c0c0;
+  color: #111;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.special-thanks-page .special-thanks-page__language-menu button:hover,
+.special-thanks-page .special-thanks-page__language-menu button[aria-checked="true"] {
+  background: #000080;
+  color: #fff;
+}
+
+.special-thanks-page {
+  padding-top: clamp(24px, 5vw, 48px);
+}
+
+@media (max-width: 760px) {
+  .special-thanks-page {
+    padding-top: 24px;
+  }
+
+  .special-thanks-page__toolbar {
+    align-items: flex-start;
+    margin-bottom: 42px;
+  }
+
+  .special-thanks-page__back {
+    gap: 6px;
+    min-height: 38px;
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  .special-thanks-page__language-trigger {
+    gap: 6px;
+    min-height: 38px;
+    padding: 7px 9px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .special-thanks-page__language-trigger span {
+    display: none;
+  }
+
+  .special-thanks-page__language-menu {
+    min-width: 185px;
+  }
+}

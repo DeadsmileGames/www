@@ -31,7 +31,8 @@ export function CursorTrail() {
         point.y += dy * ease;
         if (Math.abs(dx) + Math.abs(dy) > 0.35) unsettled = true;
 
-        nodes[index].style.transform = `translate3d(${point.x}px, ${point.y}px, 0)`;
+        // Align the arrow tip with the real pointer, not the SVG's top-left corner.
+        nodes[index].style.transform = `translate3d(${point.x - 2}px, ${point.y - 1.5}px, 0)`;
         nodes[index].style.opacity = String(Math.max(0.12, 0.76 - index * 0.085));
       }
 
@@ -53,16 +54,17 @@ export function CursorTrail() {
       if (!frame) frame = window.requestAnimationFrame(animate);
     }
 
-    function onPointerLeave() {
-      container.style.opacity = "0";
+    function onPointerExit(event) {
+      // No related target means the pointer left the browser viewport.
+      if (event.relatedTarget == null) container.style.opacity = "0";
     }
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("mouseout", onPointerExit);
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("mouseout", onPointerExit);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);

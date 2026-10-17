@@ -1,14 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, Globe } from "@phosphor-icons/react";
 import { useLanguage } from "../context/LanguageContext";
 import { api, friendlyErrorMessage } from "../services/api";
 import { CursorTrail } from "../components/ui/CursorTrail";
 
 export function SpecialThanks() {
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [people, setPeople] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [revision, setRevision] = useState(0);
+  const [languageOpen, setLanguageOpen] = useState(false);
+  const languageRef = useRef(null);
 
   useEffect(() => {
     let active = true;
@@ -40,9 +44,75 @@ export function SpecialThanks() {
     };
   }, [revision]);
 
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!languageRef.current?.contains(event.target)) setLanguageOpen(false);
+    };
+    const handleKeyDown = (event) => {
+      if (event.key !== "Escape" || !languageOpen) return;
+      setLanguageOpen(false);
+      languageRef.current?.querySelector("button")?.focus();
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [languageOpen]);
+
   return (
     <div className="special-thanks-page container" aria-busy={loading}>
       <CursorTrail />
+
+      <nav className="special-thanks-page__toolbar" aria-label={t("Page controls")}>
+        <Link to="/" className="btn btn--secondary special-thanks-page__back">
+          <ArrowLeft size={18} weight="bold" aria-hidden="true" />
+          {t("Back to home")}
+        </Link>
+
+        <div className="site-header__account-wrap" ref={languageRef}>
+          <button
+            type="button"
+            className="site-header__account-pill special-thanks-page__language-trigger"
+            onClick={() => setLanguageOpen((open) => !open)}
+            aria-expanded={languageOpen}
+            aria-label={t("Change language")}
+          >
+            <Globe size={21} weight="bold" aria-hidden="true" />
+            <span>{t("Language")}</span>
+          </button>
+          {languageOpen && (
+            <div
+              className="site-header__dropdown special-thanks-page__language-menu"
+              role="menu"
+              aria-label={t("Language")}
+            >
+              {[
+                ["en", "English"],
+                ["es", "Español"],
+                ["pt-BR", "Português (Brasil)"],
+              ].map(([value, label]) => (
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={language === value}
+                  key={value}
+                  dir="ltr"
+                  onClick={() => {
+                    setLanguage(value);
+                    setLanguageOpen(false);
+                  }}
+                >
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </nav>
+
       <header className="special-thanks-page__header">
         <h1 className="special-thanks-page__title">{t("Thank you!")}</h1>
         <h2 className="special-thanks-page__subtitle">{t("Special thanks to")}</h2>

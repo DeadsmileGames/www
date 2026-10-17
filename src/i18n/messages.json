@@ -814,7 +814,8 @@
     "That name is already on the list.": "Esse nome já está na lista.",
     "Name removed from the list.": "Nome removido da lista.",
     "No names have been added yet.": "Nenhum nome foi adicionado ainda.",
-    "Delete this name?": "Excluir este nome?"
+    "Delete this name?": "Excluir este nome?",
+    "Back to home": "Voltar para a página inicial"
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -1631,7 +1632,8 @@
     "That name is already on the list.": "Ese nombre ya está en la lista.",
     "Name removed from the list.": "Nombre eliminado de la lista.",
     "No names have been added yet.": "Todavía no se ha añadido ningún nombre.",
-    "Delete this name?": "¿Eliminar este nombre?"
+    "Delete this name?": "¿Eliminar este nombre?",
+    "Back to home": "Volver al inicio"
   },
   "en": {
     "Retomar": "Resume",
@@ -1795,6 +1797,7 @@
     "That name is already on the list.": "That name is already on the list.",
     "Name removed from the list.": "Name removed from the list.",
     "No names have been added yet.": "No names have been added yet.",
-    "Delete this name?": "Delete this name?"
+    "Delete this name?": "Delete this name?",
+    "Back to home": "Back to home"
   }
 }
