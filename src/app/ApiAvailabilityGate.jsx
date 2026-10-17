@@ -10,7 +10,7 @@ const OFFLINE_RETRY_INTERVAL = 12_000;
 const QUICK_RETRY_DELAY = 1_200;
 const INITIAL_RETRY_INTERVAL = 5_000;
 const HEALTH_TIMEOUT = 4_500;
-const PUBLIC_API_PROBE_INTERVAL = 60_000;
+const PUBLIC_API_PROBE_INTERVAL = 5 * 60_000;
 const PUBLIC_API_PROBE_PATHS = [
   "/games?limit=1",
   "/news?limit=1",
@@ -92,7 +92,7 @@ export function ApiAvailabilityGate({ children }) {
     let active = true;
     let timer = null;
     let failures = 0;
-    let nextPublicApiProbeAt = 0;
+    let nextPublicApiProbeAt = Date.now() + 30_000 + Math.floor(Math.random() * PUBLIC_API_PROBE_INTERVAL);
 
     const schedule = (delay) => {
       if (active) timer = window.setTimeout(probe, delay);
