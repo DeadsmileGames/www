@@ -169,7 +169,8 @@
     "FIELD_CATEGORY": "Category: enter between 1 and 80 characters.",
     "GAME_UNINSTALL_FAILED": "The game could not be uninstalled. Close it and check your folder permissions before trying again.",
     "GAME_DOWNLOAD_IN_PROGRESS": "A download or update is already in progress for this game.",
-    "UPDATE_START_FAILED": "The updater could not start. Try again or use the official installer."
+    "UPDATE_START_FAILED": "The updater could not start. Try again or use the official installer.",
+    "PREORDER_CODE_ALREADY_REDEEMED": "This reward code has already been redeemed by another account."
   },
   "pt-BR": {
     "INTERNAL_ERROR": "Algo deu errado. Tente novamente mais tarde.",
@@ -341,7 +342,8 @@
     "FIELD_CATEGORY": "Categoria: use entre 1 e 80 caracteres.",
     "GAME_UNINSTALL_FAILED": "Não foi possível desinstalar o jogo. Feche-o e verifique as permissões da pasta antes de tentar novamente.",
     "GAME_DOWNLOAD_IN_PROGRESS": "Um download ou atualização deste jogo já está em andamento.",
-    "UPDATE_START_FAILED": "Não foi possível iniciar o atualizador. Tente novamente ou use o instalador oficial."
+    "UPDATE_START_FAILED": "Não foi possível iniciar o atualizador. Tente novamente ou use o instalador oficial.",
+    "PREORDER_CODE_ALREADY_REDEEMED": "Este código de recompensa já foi resgatado por outra conta."
   },
   "es": {
     "INTERNAL_ERROR": "Algo salió mal. Inténtalo más tarde.",
@@ -513,6 +515,7 @@
     "FIELD_CATEGORY": "Categoría: usa entre 1 y 80 caracteres.",
     "GAME_UNINSTALL_FAILED": "No se pudo desinstalar el juego. Ciérralo y comprueba los permisos de la carpeta antes de volver a intentarlo.",
     "GAME_DOWNLOAD_IN_PROGRESS": "Ya hay una descarga o actualización de este juego en curso.",
-    "UPDATE_START_FAILED": "No se pudo iniciar el actualizador. Inténtalo de nuevo o usa el instalador oficial."
+    "UPDATE_START_FAILED": "No se pudo iniciar el actualizador. Inténtalo de nuevo o usa el instalador oficial.",
+    "PREORDER_CODE_ALREADY_REDEEMED": "Otra cuenta ya ha canjeado este código de recompensa."
   }
 }
