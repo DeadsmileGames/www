@@ -4598,6 +4598,17 @@ input[type="file"]::file-selector-button {
   border-width: 2px;
 }
 
+.page-loading-state {
+  display: grid;
+  width: 100%;
+  min-height: 65vh;
+  place-items: center;
+}
+
+.page-loading-state .loading-spinner {
+  margin: 0;
+}
+
 .maintenance-screen {
   position: fixed;
   z-index: 10000;
