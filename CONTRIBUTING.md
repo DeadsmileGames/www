@@ -5,7 +5,7 @@
 - Use Node.js 24 or newer.
 - Run `npm ci` to install the versions recorded in `package-lock.json`.
 - Run `npm run dev` for local development.
-- Run `npm test` to execute the Node.js test suite.
+- Run `npm run build` before `npm test`. The test suite covers URL/date utilities and smoke-tests the built SPA routes through Vite Preview.
 - Run `npm run build` and `npm audit --audit-level=high` before proposing dependency changes.
 
 ## Pull requests
