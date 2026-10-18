@@ -16,17 +16,6 @@ on:
       - ".github/workflows/vendor-comic-neue.yml"
   pull_request:
     branches: [main]
-    paths:
-      - "src/**"
-      - "test/**"
-      - "package.json"
-      - "package-lock.json"
-      - "index.html"
-      - "vite.config.js"
-      - "vercel.json"
-      - "render.yaml"
-      - ".github/workflows/website-verification.yml"
-      - ".github/workflows/vendor-comic-neue.yml"
 
 permissions:
   contents: read
