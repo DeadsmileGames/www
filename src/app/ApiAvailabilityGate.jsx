@@ -106,7 +106,7 @@ export function ApiAvailabilityGate({ children }) {
         const response = await fetch(`${API_BASE_URL}/health`, {
           method: "GET",
           cache: "no-store",
-          credentials: "include",
+          credentials: "omit",
           headers: { Accept: "application/json" },
           signal: controller.signal,
         });
@@ -125,7 +125,7 @@ export function ApiAvailabilityGate({ children }) {
               const probeResponse = await fetch(`${API_BASE_URL}${path}`, {
                 method: "GET",
                 cache: "no-store",
-                credentials: "include",
+                credentials: "omit",
                 headers: { Accept: "application/json" },
                 signal: controller.signal,
               });
