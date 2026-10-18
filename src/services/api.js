@@ -1,6 +1,8 @@
 import { friendlyErrorMessage, errorLocale } from "../utils/friendlyErrors";
 
-const DEFAULT_API_URL = `${window.location.origin}/api`;
+const DEFAULT_API_URL = import.meta.env.PROD
+  ? "https://api-ust8.onrender.com/api"
+  : `${window.location.origin}/api`;
 const REQUEST_TIMEOUT_MS = 20_000;
 
 function normalizeBaseUrl(value) {
