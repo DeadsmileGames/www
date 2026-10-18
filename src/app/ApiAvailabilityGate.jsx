@@ -22,7 +22,6 @@ const PUBLIC_API_PROBE_PATHS = [
   "/products",
   "/soundtracks",
   "/special-thanks",
-  "/preorders",
   "/search?q=deadsmile&limit=1",
   "/platform/status",
   "/platform/events?after=0&limit=1",
@@ -94,6 +93,7 @@ export function ApiAvailabilityGate({ children }) {
     let timer = null;
     let failures = 0;
     let nextPublicApiProbeAt = Date.now();
+    let previousPreordersCapability = null;
 
     const schedule = (delay) => {
       if (active) timer = window.setTimeout(probe, delay);
@@ -121,6 +121,15 @@ export function ApiAvailabilityGate({ children }) {
           throw new Error("API health contract did not match");
         }
 
+        const supportsPreorders = result?.features?.preorders === true;
+        if (supportsPreorders !== previousPreordersCapability) {
+          previousPreordersCapability = supportsPreorders;
+          nextPublicApiProbeAt = Date.now();
+        }
+        const publicApiProbePaths = supportsPreorders
+          ? [...PUBLIC_API_PROBE_PATHS, "/preorders"]
+          : PUBLIC_API_PROBE_PATHS;
+
         window.clearTimeout(timeout);
 
         if (Date.now() >= nextPublicApiProbeAt) {
@@ -131,7 +140,7 @@ export function ApiAvailabilityGate({ children }) {
           );
           try {
             await Promise.all(
-              PUBLIC_API_PROBE_PATHS.map(async (path) => {
+              publicApiProbePaths.map(async (path) => {
                 const probeResponse = await fetch(`${API_BASE_URL}${path}`, {
                   method: "GET",
                   cache: "no-store",
