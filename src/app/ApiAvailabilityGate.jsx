@@ -22,7 +22,6 @@ const PUBLIC_API_PROBE_PATHS = [
   "/soundtracks",
   "/special-thanks",
   "/search?q=deadsmile&limit=1",
-  "/preorders",
   "/platform/status",
   "/platform/events?after=0&limit=1",
 ];
