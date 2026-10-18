@@ -124,7 +124,7 @@ async function executeRequest(path, { method = "GET", body, params, retryCsrf = 
   validatePath(path);
   const authMutation =
     method === "POST" &&
-    /^\/auth\/(?:login|mobile-login|verify-2fa|register|mobile-register|logout)$/.test(
+    /^\/auth\/(?:login|verify-2fa|register|logout)$/.test(
       path,
     );
   const generation = authMutation ? ++authGeneration : authGeneration;
