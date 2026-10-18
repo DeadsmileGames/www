@@ -38,6 +38,7 @@ const NewsletterAction = page(
   () => import("./pages/NewsletterAction"),
   "NewsletterAction",
 );
+const ItchCallback = page(() => import("./pages/ItchCallback"), "ItchCallback");
 function LegacyNews() {
   const { slug } = useParams();
   return (
@@ -53,6 +54,7 @@ function PreorderRegisterRedirect() {
 export default function App() {
   return (
     <Routes>
+      <Route path="/itch-callback" element={<ItchCallback />} />
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/privacy" element={<Privacy />} />
