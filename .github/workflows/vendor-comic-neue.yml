@@ -24,13 +24,13 @@ jobs:
           set -euo pipefail
           mkdir -p public/fonts
           curl --fail --location --silent --show-error \
-            https://raw.githubusercontent.com/crozynski/comicneue/master/Fonts/WebFonts/ComicNeue-Regular.woff2 \
+            https://raw.githubusercontent.com/crozynski/comicneue/ef5be72411141d01f0b865df8edb47e552c11c3c/Fonts/WebFonts/ComicNeue-Regular.woff2 \
             --output public/fonts/ComicNeue-Regular.woff2
           curl --fail --location --silent --show-error \
-            https://raw.githubusercontent.com/crozynski/comicneue/master/Fonts/WebFonts/ComicNeue-Bold.woff2 \
+            https://raw.githubusercontent.com/crozynski/comicneue/ef5be72411141d01f0b865df8edb47e552c11c3c/Fonts/WebFonts/ComicNeue-Bold.woff2 \
             --output public/fonts/ComicNeue-Bold.woff2
           curl --fail --location --silent --show-error \
-            https://raw.githubusercontent.com/crozynski/comicneue/master/OFL.txt \
+            https://raw.githubusercontent.com/crozynski/comicneue/ef5be72411141d01f0b865df8edb47e552c11c3c/OFL.txt \
             --output public/fonts/ComicNeue-OFL.txt
           test -s public/fonts/ComicNeue-Regular.woff2
           test -s public/fonts/ComicNeue-Bold.woff2
