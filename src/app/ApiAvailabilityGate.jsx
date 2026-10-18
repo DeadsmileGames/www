@@ -5,11 +5,12 @@ import { useLanguage } from "../context/LanguageContext";
 import { API_BASE_URL } from "../services/api";
 import { LoadingSpinner } from "../components/ui/LoadingSpinner";
 
-const HEALTH_CHECK_INTERVAL = 15_000;
+const HEALTH_CHECK_INTERVAL = 60_000;
 const OFFLINE_RETRY_INTERVAL = 12_000;
 const QUICK_RETRY_DELAY = 1_200;
 const INITIAL_RETRY_INTERVAL = 5_000;
-const HEALTH_TIMEOUT = 4_500;
+const HEALTH_TIMEOUT = 8_000;
+const PUBLIC_API_PROBE_TIMEOUT = 12_000;
 const PUBLIC_API_PROBE_INTERVAL = 5 * 60_000;
 const PUBLIC_API_PROBE_PATHS = [
   "/games?limit=1",
@@ -21,6 +22,7 @@ const PUBLIC_API_PROBE_PATHS = [
   "/products",
   "/soundtracks",
   "/special-thanks",
+  "/preorders",
   "/search?q=deadsmile&limit=1",
   "/platform/status",
   "/platform/events?after=0&limit=1",
@@ -91,7 +93,7 @@ export function ApiAvailabilityGate({ children }) {
     let active = true;
     let timer = null;
     let failures = 0;
-    let nextPublicApiProbeAt = Date.now() + 30_000 + Math.floor(Math.random() * PUBLIC_API_PROBE_INTERVAL);
+    let nextPublicApiProbeAt = Date.now();
 
     const schedule = (delay) => {
       if (active) timer = window.setTimeout(probe, delay);
@@ -119,27 +121,41 @@ export function ApiAvailabilityGate({ children }) {
           throw new Error("API health contract did not match");
         }
 
+        window.clearTimeout(timeout);
+
         if (Date.now() >= nextPublicApiProbeAt) {
-          await Promise.all(
-            PUBLIC_API_PROBE_PATHS.map(async (path) => {
-              const probeResponse = await fetch(`${API_BASE_URL}${path}`, {
-                method: "GET",
-                cache: "no-store",
-                credentials: "omit",
-                headers: { Accept: "application/json" },
-                signal: controller.signal,
-              });
-              if (!probeResponse.ok) throw new Error("Public API route failed");
-              if (!probeResponse.headers.get("content-type")?.toLowerCase().includes("application/json")) {
-                throw new Error("Public API route returned a non-JSON response");
-              }
-              const probeResult = await probeResponse.json();
-              if (probeResult?.success !== true || !Object.prototype.hasOwnProperty.call(probeResult, "data")) {
-                throw new Error("Public API route contract did not match");
-              }
-            }),
+          const probeController = new AbortController();
+          const probeTimeout = window.setTimeout(
+            () => probeController.abort(),
+            PUBLIC_API_PROBE_TIMEOUT,
           );
-          nextPublicApiProbeAt = Date.now() + PUBLIC_API_PROBE_INTERVAL;
+          try {
+            await Promise.all(
+              PUBLIC_API_PROBE_PATHS.map(async (path) => {
+                const probeResponse = await fetch(`${API_BASE_URL}${path}`, {
+                  method: "GET",
+                  cache: "no-store",
+                  credentials: "omit",
+                  headers: { Accept: "application/json" },
+                  signal: probeController.signal,
+                });
+                if (!probeResponse.ok) throw new Error("Public API route failed");
+                if (!probeResponse.headers.get("content-type")?.toLowerCase().includes("application/json")) {
+                  throw new Error("Public API route returned a non-JSON response");
+                }
+                const probeResult = await probeResponse.json();
+                if (probeResult?.success !== true || !Object.prototype.hasOwnProperty.call(probeResult, "data")) {
+                  throw new Error("Public API route contract did not match");
+                }
+              }),
+            );
+            nextPublicApiProbeAt = Date.now() + PUBLIC_API_PROBE_INTERVAL;
+          } catch (error) {
+            probeController.abort();
+            throw error;
+          } finally {
+            window.clearTimeout(probeTimeout);
+          }
         }
 
         if (!active) return;
