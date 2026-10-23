@@ -29,6 +29,9 @@ export function Privacy() {
             {t("Depending on the features you use, we may process your username, email address, password hash, email-verification status, account and session identifiers, security and access records, two-factor authentication settings, and requests to recover or change an account.")}
           </p>
           <p>
+            {t("When you register, we record the Terms of Service version you accepted, the Privacy Policy version you acknowledged, the interface language, and the server-recorded time. This record is linked to your account to document the agreement and notice; it is removed with the account under the current deletion flow.")}
+          </p>
+          <p>
             {t("If you choose to use profile, gaming, or connected-account features, we may process your biography, website, location, avatar and banner URLs, linked itch.io account and related entitlement information, game activity, playtime, sessions, achievements, cloud saves, and telemetry for supported games. Public profile fields and sharing of game activity, playtime, and achievements are subject to the settings and choices described below.")}
           </p>
           <p>
