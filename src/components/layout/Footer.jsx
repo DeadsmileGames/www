@@ -11,6 +11,7 @@ export function Footer() {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
 
   async function subscribe(event) {
     event.preventDefault();
@@ -21,6 +22,7 @@ export function Footer() {
       await api.post("/newsletter", { email: email.trim() });
       setMessage(t("Request received. Check your inbox to confirm your subscription."));
       setEmail("");
+      setNewsletterConsent(false);
     } catch (error) {
       setMessage(friendlyErrorMessage(error));
     } finally {
@@ -48,8 +50,18 @@ export function Footer() {
                 onChange={(event) => setEmail(event.target.value)}
               />
 
-              <button disabled={busy}>{busy ? t("Sending\u2026") : t("Join us")}</button>
+              <button disabled={busy || !newsletterConsent}>{busy ? t("Sending\u2026") : t("Join us")}</button>
             </div>
+            <label className="newsletter-consent">
+              <input
+                type="checkbox"
+                required
+                checked={newsletterConsent}
+                onChange={(event) => setNewsletterConsent(event.target.checked)}
+                disabled={busy}
+              />
+              <span>{t("I agree to receive email updates from Deadsmile Games. I can unsubscribe at any time.")}</span>
+            </label>
             <p role="status">{t(message)}</p>
             <small>
               {t("Confirm by email. Unsubscribe whenever you want.")}{" "}
