@@ -16,7 +16,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("1. Acceptance and scope")}</h2>
           <p>
-            {t("By accessing or using the website, you agree to these terms. If you do not agree, do not create an account or use account-only features. Mandatory rights under consumer-protection, privacy and other applicable laws are not waived by these terms.")}
+            {t("By creating an account or using features that require an account, you agree to these terms. If you do not agree, do not create an account or use account-only features. Mandatory rights under consumer-protection, privacy and other applicable laws are not waived by these terms.")}
           </p>
         </div>
 
