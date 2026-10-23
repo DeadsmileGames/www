@@ -79,7 +79,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("10. Changes and contact")}</h2>
           <p>
-            {t("We may update these terms as the service or law changes. The current version and revision date will appear here. Material changes will be communicated where required; continued use does not remove any right you have under mandatory law. For questions about these terms, contact deadsmilegames@gmail.com.")}
+            {t("We may update these terms as the service or law changes. The current version and revision date will appear here. Material changes will be communicated where required; continued use does not remove any right you have under mandatory law. For questions about these terms, contact somiarigames@gmail.com.")}
           </p>
         </div>
 
