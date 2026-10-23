@@ -38,6 +38,16 @@ export function Footer() {
           <p>{t("New games, studio news and the occasional surprise.")}</p>
           <form onSubmit={subscribe}>
             <label htmlFor="newsletter-email">{t("Your email address")}</label>
+            <label className="newsletter-consent">
+              <input
+                type="checkbox"
+                required
+                checked={newsletterConsent}
+                onChange={(event) => setNewsletterConsent(event.target.checked)}
+                disabled={busy}
+              />
+              <span>{t("I agree to receive email updates from Deadsmile Games. I can unsubscribe at any time.")}</span>
+            </label>
             <div className="newsletter-input">
               <input
                 id="newsletter-email"
@@ -52,16 +62,6 @@ export function Footer() {
 
               <button disabled={busy || !newsletterConsent}>{busy ? t("Sending\u2026") : t("Join us")}</button>
             </div>
-            <label className="newsletter-consent">
-              <input
-                type="checkbox"
-                required
-                checked={newsletterConsent}
-                onChange={(event) => setNewsletterConsent(event.target.checked)}
-                disabled={busy}
-              />
-              <span>{t("I agree to receive email updates from Deadsmile Games. I can unsubscribe at any time.")}</span>
-            </label>
             <p role="status">{t(message)}</p>
             <small>
               {t("Confirm by email. Unsubscribe whenever you want.")}{" "}
