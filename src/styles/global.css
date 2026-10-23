@@ -6772,3 +6772,38 @@ main:has(.special-thanks-page) {
   }
 }
 
+@media (max-width: 600px) {
+  .auth-page {
+    padding: 24px 12px;
+  }
+  .auth-page__card {
+    width: min(100%, 400px);
+    padding: 16px;
+  }
+  .auth-page h1 {
+    font-size: clamp(27px, 7vw, 34px);
+    margin-bottom: 22px;
+  }
+  .auth-page .back-link {
+    margin-bottom: 20px;
+  }
+  .auth-page form {
+    gap: 14px;
+  }
+  .auth-page input:not([type="checkbox"]):not([type="range"]):not([type="file"]),
+  .auth-page textarea,
+  .auth-page select {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 16px;
+  }
+  .auth-page button[type="submit"],
+  .auth-page .btn {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+  .auth-page__footer,
+  .auth-page__recaptcha-footer {
+    margin-top: 20px;
+  }
+}
