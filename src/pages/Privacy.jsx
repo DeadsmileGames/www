@@ -19,7 +19,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("1. Who is responsible for your data?")}</h2>
           <p>
-            {t("The controller is Lucas Eduardo Duarte Pereira, an individual operating under the name Deadsmile Games, based in São Paulo, São Paulo, Brazil. For privacy requests or questions about personal data, contact somiarigames@gmail.com. No separate data protection officer has been appointed at this time; the operator is assessing whether the small-agent exemption applies. This email is the direct channel for privacy requests and communications.")}
+            {t("The controller is Lucas Eduardo Duarte Pereira, an individual operating under the name Deadsmile Games, based in São Paulo, São Paulo, Brazil. For privacy requests or questions about personal data, contact somiarigames@gmail.com. No separate data protection officer has been appointed at this time. The operator is assessing whether the Brazilian small-agent exemption applies; this does not imply an exemption from any duties that may apply under other jurisdictions. This email is the direct channel for privacy requests and communications.")}
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("5. Service providers and sharing")}</h2>
           <p>
-            {t("We do not sell personal data. We may share the minimum data needed with service providers that host the website and API (Vercel and Render), provide the database (Neon), deliver email (Brevo and Resend), protect forms against abuse (Google reCAPTCHA), measure audience (Google Analytics, if enabled for the relevant deployment), or provide content you choose to load (YouTube) and connected-account features (itch.io). The exact data and providers involved depend on the feature and production configuration. Providers may act as processors or independent controllers depending on the service and processing activity; their own privacy terms also apply where they act as independent controllers.")}
+            {t("We do not sell personal data. We may share the minimum data needed with service providers that host the website and API (Vercel and Render), provide the database (Neon), deliver email (Brevo and Resend), protect forms against abuse (Google reCAPTCHA), or provide content you choose to load (YouTube) and connected-account features (itch.io). Google Analytics is not currently used in the reviewed website codebase. The exact providers and processing activities in production must be checked against the live configuration. Providers may act as processors or independent controllers depending on the service and processing activity; their own privacy terms also apply where they act as independent controllers.")}
           </p>
           <p>
             {t("Some providers may process data outside Brazil. Where an international transfer occurs, the controller must use a transfer mechanism permitted by the LGPD and applicable ANPD rules. Data may also be disclosed where required by law or necessary to protect rights and security. The operator should confirm the providers, countries, contracts and transfer mechanisms actually used by production.")}
@@ -106,14 +106,26 @@ export function Privacy() {
         </div>
 
         <div className="privacy-block">
-          <h2>{t("10. Security and incidents")}</h2>
+          <h2>{t("10. Age declarations and safeguards")}</h2>
+          <p>{t("The pre-order form asks you to enter your age as a number. This is a self-declaration, not an independent age-verification method. Account registration asks users to confirm that they are at least 13. Deadsmile Games does not currently use CPF checks, selfie-based estimation or a paid third-party age-verification service for these flows. A declaration must not be treated as proof of age where applicable law requires a more reliable mechanism, parental authorization or an age-based restriction. The operator must assess which features and users require additional safeguards and restrict the relevant feature until those safeguards are implemented.")}</p>
+        </div>
+
+        <div className="privacy-block">
+          <h2>{t("11. Regional privacy information")}</h2>
+          <p>{t("Brazil: Depending on the service and its audience, the Digital Child and Adolescent Statute may require age assurance, parental supervision or other protections for services directed to or likely accessed by children and teenagers. A self-declared age alone does not establish compliance. You may contact the ANPD if you believe your rights have not been respected.")}</p>
+          <p>{t("United States: COPPA can apply to child-directed websites and online services and to general-audience services with actual knowledge that they collect personal information from children under 13. Where it applies, parental notice, verifiable parental consent and processes for parental rights must be supported. Additional state privacy laws may apply depending on the user's residence, the service's activities and statutory thresholds.")}</p>
+          <p>{t("Spain and the European Economic Area: Where the GDPR applies, you may exercise its applicable data-protection rights and lodge a complaint with a competent supervisory authority; in Spain, this may include the Spanish Data Protection Agency (AEPD). In Spain, consent-based processing of a child's personal data generally requires parental authorization for children under 14, subject to applicable legal exceptions. Other lawful bases and contract eligibility must be assessed separately.")}</p>
+        </div>
+
+        <div className="privacy-block">
+          <h2>{t("12. Security and incidents")}</h2>
           <p>
             {t("We use technical and organizational safeguards intended to protect data, including access controls and security measures for accounts and requests. No internet service can guarantee absolute security. If a confirmed incident creates relevant risk or harm, the controller will assess and make the communications required by law to affected people and the competent authority.")}
           </p>
         </div>
 
         <div className="privacy-block">
-          <h2>{t("11. Changes to this policy")}</h2>
+          <h2>{t("13. Changes to this policy")}</h2>
           <p>
             {t("We may revise this policy when the service or applicable requirements change. The current version and its revision date will be published on this page. Where required, we will provide additional notice or seek a new choice before a materially different use of data.")}
           </p>
