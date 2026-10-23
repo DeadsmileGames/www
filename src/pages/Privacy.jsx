@@ -135,7 +135,7 @@ export function Privacy() {
         </div>
 
         <p className="privacy-page__date">
-          <small>{t("Last updated: October 2026")}</small>
+          <small>{t("Last updated: October 23, 2026")}</small>
         </p>
       </section>
     </div>
