@@ -19,7 +19,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("1. Who is responsible for your data?")}</h2>
           <p>
-            {t("Deadsmile Games is the name used for this website and its related account services. For privacy requests or questions about personal data, contact somiarigames@gmail.com. The controller's formal legal identity and postal contact details should be confirmed with the service operator; this policy does not replace that identification requirement.")}
+            {t("The controller is Lucas Eduardo Duarte Pereira, an individual operating under the name Deadsmile Games, based in São Paulo, São Paulo, Brazil. For privacy requests or questions about personal data, contact somiarigames@gmail.com. No separate data protection officer has been appointed at this time; the operator is assessing whether the small-agent exemption applies. This email is the direct channel for privacy requests and communications.")}
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("5. Service providers and sharing")}</h2>
           <p>
-            {t("We do not sell personal data. We may share the minimum data needed with service providers that host the website, API and database, deliver email, protect forms against abuse, or provide content you choose to load. These services include the hosting and database providers configured for the site, Brevo and/or Resend for email, Google reCAPTCHA, YouTube, and itch.io when you choose to connect that account or use its services. Their own privacy terms apply to processing they perform as independent controllers.")}
+            {t("We do not sell personal data. We may share the minimum data needed with service providers that host the website and API (Vercel and Render), provide the database (Neon), deliver email (Brevo and Resend), protect forms against abuse (Google reCAPTCHA), measure audience (Google Analytics, if enabled for the relevant deployment), or provide content you choose to load (YouTube) and connected-account features (itch.io). The exact data and providers involved depend on the feature and production configuration. Providers may act as processors or independent controllers depending on the service and processing activity; their own privacy terms also apply where they act as independent controllers.")}
           </p>
           <p>
             {t("Some providers may process data outside Brazil. Where an international transfer occurs, the controller must use a transfer mechanism permitted by the LGPD and applicable ANPD rules. Data may also be disclosed where required by law or necessary to protect rights and security. The operator should confirm the providers, countries, contracts and transfer mechanisms actually used by production.")}
@@ -66,10 +66,10 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("6. Retention and account deletion")}</h2>
           <p>
-            {t("We aim to retain personal data only for as long as needed for the purpose for which it was collected, while an account or subscription remains active, or for applicable legal, security, accounting or dispute-resolution requirements. Newsletter recipients can unsubscribe using the link provided in subscription messages.")}
+            {t("We aim to retain personal data only for as long as needed for the purpose for which it was collected, or for applicable legal, security, accounting or dispute-resolution requirements. Fixed retention periods have not yet been established for every data category and provider; we are reviewing them and will update this policy when the schedule is confirmed. Newsletter recipients can unsubscribe using the link provided in subscription messages, and account deletion is intended to cancel the newsletter subscription associated with the same email address.")}
           </p>
           <p>
-            {t("You can request account deletion in account settings. The service is designed to delete the account and associated telemetry, but limited records may need to be retained where the law permits or requires it, to protect the service, or to document a request to stop sending messages. Copies in backups, operational logs or third-party systems may follow the relevant provider's retention cycle. A precise retention schedule should be confirmed and published by the operator.")}
+            {t("You can request account deletion in account settings. The service is designed to delete the account and associated telemetry. Account deletion should also unsubscribe the same email address from the newsletter; a minimal suppression record may be retained to honor that choice and prevent accidental re-subscription, until a separate confirmed subscription is requested. Other limited records may need to be retained where the law permits or requires it, to protect the service, or to document a request. Copies in backups, operational logs, support tickets, pre-order records or third-party systems may follow different retention periods. Those periods have not yet been fully verified and must be documented before this policy is treated as final.")}
           </p>
         </div>
 
