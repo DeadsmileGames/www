@@ -55,11 +55,11 @@ export function Support() {
         </div>
       </header>
       <section className="support-quick-grid">
-        <a href="mailto:deadsmilegames@gmail.com">
+        <a href="mailto:somiarigames@gmail.com">
           <Envelope size={25} weight="bold" />
           <div>
             <strong>{t("Email support")}</strong>
-            <span>deadsmilegames@gmail.com</span>
+            <span>somiarigames@gmail.com</span>
           </div>
           <ArrowUpRight size={18} weight="bold" />
         </a>
