@@ -79,7 +79,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("10. Changes and contact")}</h2>
           <p>
-            {t("We may update these terms as the service or law changes. The current version and revision date will appear here. Material changes will be communicated where required; continued use does not remove any right you have under mandatory law. For questions about these terms, contact somiarigames@gmail.com.")}
+            {t("The website and related account services are operated by Lucas Eduardo Duarte Pereira, an individual operating under the name Deadsmile Games, based in São Paulo, São Paulo, Brazil. For questions about these terms or privacy matters, contact somiarigames@gmail.com. We may update these terms as the service or law changes. The current version and revision date will appear here. Material changes will be communicated where required; continued use does not remove any right you have under mandatory law.")}
           </p>
         </div>
 
