@@ -1230,6 +1230,46 @@ fieldset {
   display: grid;
   gap: 8px;
 }
+.auth-page__legal {
+  display: grid;
+  gap: 8px;
+  color: #b8b8b8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.auth-page__legal label,
+.newsletter-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  text-transform: none;
+}
+.auth-page__legal input[type="checkbox"],
+.newsletter-consent input[type="checkbox"] {
+  width: auto;
+  flex: 0 0 auto;
+  margin-top: 3px;
+}
+.auth-page__legal p {
+  margin: 0;
+}
+.auth-page__legal a,
+.support-privacy-note a {
+  color: #fff;
+  text-decoration: underline;
+}
+.newsletter-consent,
+.support-privacy-note {
+  color: #b8b8b8;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.newsletter-consent {
+  margin-top: 8px;
+}
+.support-privacy-note {
+  margin: 10px 0;
+}
 .auth-page__submit {
   width: 100%;
 }
