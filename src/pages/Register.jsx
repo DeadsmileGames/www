@@ -115,6 +115,10 @@ export function Register() {
         email: form.email.trim(),
         password: form.password,
         recaptchaToken,
+        termsAccepted: acceptedTerms,
+        privacyAcknowledged: acceptedTerms,
+        termsVersion: "2026-10",
+        privacyVersion: "2026-10",
       });
 
       try {
