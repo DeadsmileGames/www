@@ -97,8 +97,8 @@ export function Footer() {
           </a>
         </div>
 
-        <a className="footer-email" href="mailto:deadsmilegames@gmail.com">
-          deadsmilegames@gmail.com
+        <a className="footer-email" href="mailto:somiarigames@gmail.com">
+          somiarigames@gmail.com
         </a>
         <nav className="footer-links" aria-label={t("Footer")}>
           <Link to="/games">{t("Games")}</Link>
