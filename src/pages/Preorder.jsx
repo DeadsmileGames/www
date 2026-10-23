@@ -341,6 +341,7 @@ export function Preorder() {
                 </div>
                 {error && <p className="account-page__error" role="alert">{error}</p>}
                 <p className="preorder-workspace__hint support-card support-faq-panel">{t("We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.")}</p>
+                <p className="support-privacy-note">{t("We use these details to manage your pre-order and verify eligibility. See the")}{" "}<Link to="/privacy">{t("Privacy Policy")}</Link>.</p>
                 <div className="preorder-form__actions">
                   <button className="btn btn--primary" type="submit">{t("Continue")}</button>
                   <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Cancel")}</Link>
