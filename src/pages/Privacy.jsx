@@ -19,7 +19,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("1. Who is responsible for your data?")}</h2>
           <p>
-            {t("Deadsmile Games is the name used for this website and its related account services. For privacy requests or questions about personal data, contact deadsmilegames@gmail.com. The controller's formal legal identity and postal contact details should be confirmed with the service operator; this policy does not replace that identification requirement.")}
+            {t("Deadsmile Games is the name used for this website and its related account services. For privacy requests or questions about personal data, contact somiarigames@gmail.com. The controller's formal legal identity and postal contact details should be confirmed with the service operator; this policy does not replace that identification requirement.")}
           </p>
         </div>
 
@@ -94,14 +94,14 @@ export function Privacy() {
             {t("Subject to the conditions and exceptions in applicable law, you may request confirmation of processing, access to your data, correction of incomplete or inaccurate data, anonymization, blocking or deletion of unnecessary or unlawfully processed data, portability where applicable, information about sharing, information about the consequences of refusing consent, and revocation of consent. You may also request deletion of data processed on the basis of consent, subject to legal retention exceptions.")}
           </p>
           <p>
-            {t("To make a request, email deadsmilegames@gmail.com from an address that lets us verify and respond to your request. We may ask for proportionate information to verify your identity and protect your account. Requests are handled without charge and within the applicable legal deadlines. You may contact the Brazilian National Data Protection Authority (ANPD) if you believe your rights have not been respected.")}
+            {t("To make a request, email somiarigames@gmail.com from an address that lets us verify and respond to your request. We may ask for proportionate information to verify your identity and protect your account. Requests are handled without charge and within the applicable legal deadlines. You may contact the Brazilian National Data Protection Authority (ANPD) if you believe your rights have not been respected.")}
           </p>
         </div>
 
         <div className="privacy-block">
           <h2>{t("9. Children and teenagers")}</h2>
           <p>
-            {t("The Terms set a minimum age of 13 to create an account. Because games and online services may be accessed by children and teenagers, we aim to use privacy-protective defaults, including keeping game activity, playtime and achievements private unless sharing is enabled. Parents or legal guardians who have a concern about a minor's data may contact us at deadsmilegames@gmail.com. The operator must separately assess and implement any age-assurance, parental-supervision, content-rating and other safeguards required by the LGPD, the Digital Child and Adolescent Statute and applicable rules; a minimum-age statement alone does not satisfy those duties.")}
+            {t("The Terms set a minimum age of 13 to create an account. Because games and online services may be accessed by children and teenagers, we aim to use privacy-protective defaults, including keeping game activity, playtime and achievements private unless sharing is enabled. Parents or legal guardians who have a concern about a minor's data may contact us at somiarigames@gmail.com. The operator must separately assess and implement any age-assurance, parental-supervision, content-rating and other safeguards required by the LGPD, the Digital Child and Adolescent Statute and applicable rules; a minimum-age statement alone does not satisfy those duties.")}
           </p>
         </div>
 
