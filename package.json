@@ -16,7 +16,7 @@
     "@fortawesome/react-fontawesome": "^3.5.0",
     "@phosphor-icons/react": "^2.1.10",
     "dompurify": "^3.4.17",
-    "motion": "^14.2.0",
+    "motion": "^14.4.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-google-recaptcha": "^3.1.0",
