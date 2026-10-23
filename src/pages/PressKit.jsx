@@ -47,7 +47,7 @@ export function PressKit() {
             )}
           </p>
           <div className="press-kit__contact">
-            <a href="mailto:deadsmilegames@gmail.com">deadsmilegames@gmail.com</a>
+            <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>
           </div>
         </header>
       </Reveal>
@@ -191,7 +191,7 @@ export function PressKit() {
             </li>
             <li>
               {t("For commercial use outside editorial coverage, please contact ")}
-              <a href="mailto:deadsmilegames@gmail.com">deadsmilegames@gmail.com</a>.
+              <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>.
             </li>
           </ul>
         </Reveal>
