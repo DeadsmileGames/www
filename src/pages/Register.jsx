@@ -27,6 +27,7 @@ export function Register() {
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
@@ -114,6 +115,10 @@ export function Register() {
         email: form.email.trim(),
         password: form.password,
         recaptchaToken,
+        termsAccepted: acceptedTerms,
+        privacyAcknowledged: acceptedTerms,
+        termsVersion: "terms-v2026-10-24",
+        privacyVersion: "privacy-v2026-10-24",
       });
 
       try {
@@ -223,6 +228,24 @@ export function Register() {
             />
           </div>
 
+          <div className="auth-page__legal">
+            <label>
+              <input
+                type="checkbox"
+                required
+                checked={acceptedTerms}
+                onChange={(event) => setAcceptedTerms(event.target.checked)}
+                disabled={submitting}
+              />
+              <span>{t("I confirm that I am at least 13 years old, agree to the Terms of Service and acknowledge the Privacy Policy.")}</span>
+            </label>
+            <p>
+              <Link to="/terms">{t("Terms of Service")}</Link>
+              {" · "}
+              <Link to="/privacy">{t("Privacy Policy")}</Link>
+            </p>
+          </div>
+
           <div className="auth-page__recaptcha">
             {recaptchaSiteKey ? (
               <ReCAPTCHA
@@ -243,7 +266,7 @@ export function Register() {
           <Button
             type="submit"
             className="auth-page__submit"
-            disabled={submitting || !recaptchaToken}
+            disabled={submitting || !recaptchaToken || !acceptedTerms}
           >
             {submitting ? <><LoadingSpinner />{t("auth.creating")}</> : t("auth.create")}
           </Button>
