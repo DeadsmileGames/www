@@ -56,6 +56,17 @@ export function Terms() {
           <p>
             {t("The Privacy Policy explains how personal data is processed and how to exercise your rights. Optional embedded content and security verification may involve third-party providers. If you connect an external account or follow a store link, that provider's terms and privacy policy also apply to its service. The website does not currently sell paid games or collect checkout payments. If a game links to an external store, that store handles the checkout and payment, identifies the seller for that transaction, and applies its own refund process. For payment, delivery or refund complaints, contact the store that processed the purchase; contact Deadsmile Games for game-related support. Nothing in these terms waives mandatory consumer rights.")}
           </p>
+          <p>
+            {t("Official external-store policies:")}{" "}
+            <a href="https://itch.io/docs/legal/terms#refunds" target="_blank" rel="noopener noreferrer">
+              {t("itch.io Terms of Service — refunds")}
+            </a>
+            {" · "}
+            <a href="https://support.microsoft.com/en-us/accounts-billing/subscriptions/get-a-refund-for-apps-and-games-purchased-from-microsoft-store" target="_blank" rel="noopener noreferrer">
+              {t("Microsoft Store refund guidance")}
+            </a>
+            . {t("Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.")}
+          </p>
         </div>
 
         <div className="terms-block">
