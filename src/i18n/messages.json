@@ -995,7 +995,11 @@
     "Pre-registration closes at": "Encerramento do pré-registro",
     "Minimum eligible age (English)": "Idade mínima de elegibilidade (inglês)",
     "Minimum eligible age (Portuguese)": "Idade mínima de elegibilidade (português)",
-    "Minimum eligible age (Spanish)": "Idade mínima de elegibilidade (espanhol)"
+    "Minimum eligible age (Spanish)": "Idade mínima de elegibilidade (espanhol)",
+    "Official external-store policies:": "Políticas oficiais das lojas externas:",
+    "itch.io Terms of Service — refunds": "Termos de Serviço do itch.io — reembolsos",
+    "Microsoft Store refund guidance": "Orientações de reembolso da Microsoft Store",
+    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Consulte a política da loja que processou sua compra. Os direitos obrigatórios do consumidor permanecem preservados."
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -1993,7 +1997,11 @@
     "Pre-registration closes at": "Cierre del preregistro",
     "Minimum eligible age (English)": "Edad mínima de elegibilidad (inglés)",
     "Minimum eligible age (Portuguese)": "Edad mínima de elegibilidad (portugués)",
-    "Minimum eligible age (Spanish)": "Edad mínima de elegibilidad (español)"
+    "Minimum eligible age (Spanish)": "Edad mínima de elegibilidad (español)",
+    "Official external-store policies:": "Políticas oficiales de las tiendas externas:",
+    "itch.io Terms of Service — refunds": "Términos del servicio de itch.io — reembolsos",
+    "Microsoft Store refund guidance": "Información sobre reembolsos de Microsoft Store",
+    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Consulta la política de la tienda que procesó tu compra. Se mantienen los derechos obligatorios de los consumidores."
   },
   "en": {
     "Retomar": "Resume",
@@ -2264,6 +2272,10 @@
     "Pre-registration closes at": "Pre-registration closes at",
     "Minimum eligible age (English)": "Minimum eligible age (English)",
     "Minimum eligible age (Portuguese)": "Minimum eligible age (Portuguese)",
-    "Minimum eligible age (Spanish)": "Minimum eligible age (Spanish)"
+    "Minimum eligible age (Spanish)": "Minimum eligible age (Spanish)",
+    "Official external-store policies:": "Official external-store policies:",
+    "itch.io Terms of Service — refunds": "itch.io Terms of Service — refunds",
+    "Microsoft Store refund guidance": "Microsoft Store refund guidance",
+    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected."
   }
 }
