@@ -15,10 +15,13 @@ const localizedComponents = [
   "../src/pages/Support.jsx",
   "../src/pages/Account.jsx",
   "../src/pages/Soundtracks.jsx",
+  "../src/components/videos/VideoOverlay.jsx",
+  "../src/components/videos/PremiereBanner.jsx",
+  "../src/components/games/FeaturedHero.jsx",
   "../src/components/admin/AdminComposer.jsx",
 ];
 
-test("legal, cookie and accessibility copy is translated in Portuguese and Spanish", async () => {
+test("legal, consent and accessibility copy is translated in Portuguese and Spanish", async () => {
   const missing = [];
 
   for (const componentPath of localizedComponents) {
