@@ -52,7 +52,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("4. Public profiles and privacy choices")}</h2>
           <p>
-            {t("A public profile can display your username, avatar, biography, website, location and account creation date. Only add information you are comfortable making public. In account privacy settings, game activity, playtime and achievements are private by default and can be shared separately. You can change these choices in your account settings; changes may not remove copies already viewed, saved or cached by other people or services.")}
+            {t("Public profile fields are optional. If you choose to add them, your profile can display your username, avatar, biography, website, location and account creation date. Do not add information you are not comfortable making public. Game activity, playtime and achievements are private by default and can be shared separately in account privacy settings. You can change these choices in your account settings; changes may not remove copies already viewed, saved or cached by other people or services.")}
           </p>
         </div>
 
@@ -116,7 +116,7 @@ export function Privacy() {
 
         <div className="privacy-block">
           <h2>{t("10. Age declarations and safeguards")}</h2>
-          <p>{t("The free-game pre-registration form asks you to enter your age as a number. This is a self-declaration, not an independent age-verification method. Account registration asks users to confirm that they are at least 13. Deadsmile Games does not currently use CPF checks, selfie-based estimation or a paid third-party age-verification service for these flows. A declaration must not be treated as proof of age where applicable law requires a more reliable mechanism, parental authorization or an age-based restriction. The operator must assess which features and users require additional safeguards and restrict the relevant feature until those safeguards are implemented. The minimum age of 13 for pre-orders is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age.")}</p>
+          <p>{t("The free-game pre-registration form asks you to enter your age as a number. This is a self-declaration, not an independent age-verification method. Account registration asks users to confirm that they are at least 13. Deadsmile Games does not currently use CPF checks, selfie-based estimation or a paid third-party age-verification service for these flows. A declaration must not be treated as proof of age where applicable law requires a more reliable mechanism, parental authorization or an age-based restriction. The operator must assess which features and users require additional safeguards and restrict the relevant feature until those safeguards are implemented. The minimum age of 13 for free-game pre-registration is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age.")}</p>
         </div>
 
         <div className="privacy-block">
