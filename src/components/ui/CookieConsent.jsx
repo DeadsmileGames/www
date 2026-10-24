@@ -34,7 +34,7 @@ export function CookieConsent() {
           >
             {t("Reject optional content")}
           </button>
-          <Link to="/privacy" className="cookie-consent__link">
+          <Link to="/cookies" className="cookie-consent__link">
             {t("Manage preferences")}
           </Link>
         </div>
