@@ -51,7 +51,7 @@ export function GameCoverPanel({ game, cover, children }) {
         <p><AutoLinkText>{description}</AutoLinkText></p>
         {preorderLocked && (
           <div role="status" style={{ margin: "12px 0", padding: "12px", border: "1px solid var(--color-border)", borderRadius: "8px", background: "var(--color-background-alt)" }}>
-            <strong>{t("Pre-order reserved")}</strong>
+            <strong>{t("Free registration reserved")}</strong>
             {releaseCountdownAvailable ? (
               <p style={{ margin: "4px 0 0", color: "var(--color-text-secondary)" }}>{t("Download unlocks in")} {countdown[0]}d {String(countdown[1]).padStart(2, "0")}h {String(countdown[2]).padStart(2, "0")}m {String(countdown[3]).padStart(2, "0")}s</p>
             ) : (
