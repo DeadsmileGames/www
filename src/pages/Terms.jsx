@@ -33,7 +33,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("3. Public profiles and user content")}</h2>
           <p>
-            {t("You are responsible for content you add to your profile. Do not publish personal information about another person without a lawful reason or permission. Your username, avatar, biography, website and location may be visible on your public profile. Game activity, playtime and achievements remain private by default and are shared only according to your account privacy settings. You can change those settings, but cannot guarantee removal of copies already made by others.")}
+            {t("Profile fields are optional; you choose whether to add a username, avatar, biography, website or location to your public profile. Any fields you add may be visible to other visitors. Do not publish personal information about another person without a lawful reason or permission. Game activity, playtime and achievements remain private by default and are shared only according to your account privacy settings. You can change those settings, but cannot guarantee removal of copies already made by others.")}
           </p>
         </div>
 
