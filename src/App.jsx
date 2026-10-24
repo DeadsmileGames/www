@@ -21,6 +21,8 @@ const Account = page(() => import("./pages/Account"), "Account");
 const AdminPanel = page(() => import("./components/admin/AdminComposer"), "AdminComposer");
 const Privacy = page(() => import("./pages/Privacy"), "Privacy");
 const Terms = page(() => import("./pages/Terms"), "Terms");
+const Cookies = page(() => import("./pages/Cookies"), "Cookies");
+const Accessibility = page(() => import("./pages/Accessibility"), "Accessibility");
 const About = page(() => import("./pages/About"), "About");
 const News = page(() => import("./pages/News"), "News");
 const Videos = page(() => import("./pages/Videos"), "Videos");
@@ -59,6 +61,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/cookies" element={<Cookies />} />
+        <Route path="/accessibility" element={<Accessibility />} />
         <Route path="/presskit" element={<PressKit />} />
         <Route path="/games" element={<Games />} />
         <Route path="/games/:slug/latest" element={<GameLatest />} />
