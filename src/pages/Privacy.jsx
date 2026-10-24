@@ -32,7 +32,7 @@ export function Privacy() {
             {t("When you register, we record the Terms of Service version you accepted, the Privacy Policy version you acknowledged, the interface language, and the server-recorded time. This record is linked to your account to document the agreement and notice; it is removed with the account under the current deletion flow.")}
           </p>
           <p>
-            {t("If you choose to use profile, gaming, or connected-account features, we may process your biography, website, location, avatar and banner URLs, linked itch.io account and related entitlement information, game activity, playtime, sessions, achievements, cloud saves, and telemetry for supported games. Public profile fields and sharing of game activity, playtime, and achievements are subject to the settings and choices described below.")}
+            {t("A public account profile currently displays the games the account holder plans to play. We may process the account username and the selected games needed to provide that profile. The profile should not be understood as a public display of email address or password. If additional profile fields or game-activity features are introduced, this policy will be updated before those changes take effect.")}
           </p>
           <p>
             {t("If you use other features, we may process your email address for the newsletter, the name, age and email details submitted for free-game pre-registration, and the email address, category and message in a support request. Optional YouTube embeds, Google reCAPTCHA, and service infrastructure may also process technical information such as IP address, browser/device information, request metadata, or cookies when those features are loaded or used.")}
@@ -52,7 +52,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("4. Public profiles and privacy choices")}</h2>
           <p>
-            {t("Public profile fields are optional. If you choose to add them, your profile can display your username, avatar, biography, website, location and account creation date. Do not add information you are not comfortable making public. Game activity, playtime and achievements are private by default and can be shared separately in account privacy settings. You can change these choices in your account settings; changes may not remove copies already viewed, saved or cached by other people or services.")}
+            {t("The public profile displays the games you choose to show as games you plan to play. Do not add or select information you do not want other visitors to see. Your email address and password are not displayed on the public profile. If you change or remove a selected game, copies or screenshots already made by other people may remain outside our control.")}
           </p>
         </div>
 
