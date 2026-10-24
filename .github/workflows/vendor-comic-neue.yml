@@ -1,4 +1,4 @@
-name: Validate vendored Comic Neue fonts
+name: Validate vendored fonts
 
 on:
   push:
@@ -24,11 +24,25 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Validate vendored font files and license
+      - name: Validate Comic Neue and Poppins files and licenses
         run: |
           set -euo pipefail
           test -s public/fonts/ComicNeue-Regular.woff2
           test -s public/fonts/ComicNeue-Bold.woff2
           test -s public/fonts/ComicNeue-OFL.txt
           grep -Fq "SIL OPEN FONT LICENSE Version 1.1" public/fonts/ComicNeue-OFL.txt
-          sha256sum public/fonts/ComicNeue-Regular.woff2 public/fonts/ComicNeue-Bold.woff2
+
+          test -s public/fonts/Poppins-Regular.ttf
+          test -s public/fonts/Poppins-Medium.ttf
+          test -s public/fonts/Poppins-SemiBold.ttf
+          test -s public/fonts/Poppins-Bold.ttf
+          test -s public/fonts/OFL-Poppins.txt
+          grep -Fq "SIL OPEN FONT LICENSE Version 1.1" public/fonts/OFL-Poppins.txt
+
+          sha256sum \
+            public/fonts/ComicNeue-Regular.woff2 \
+            public/fonts/ComicNeue-Bold.woff2 \
+            public/fonts/Poppins-Regular.ttf \
+            public/fonts/Poppins-Medium.ttf \
+            public/fonts/Poppins-SemiBold.ttf \
+            public/fonts/Poppins-Bold.ttf
