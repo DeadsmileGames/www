@@ -87,7 +87,7 @@ export function Terms() {
         </div>
 
         <p className="terms-page__date">
-          <small>{t("Last updated: October 23, 2026")}</small>
+          <small>{t("Last updated: October 24, 2026")}</small>
         </p>
       </section>
     </div>
