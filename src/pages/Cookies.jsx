@@ -37,7 +37,7 @@ export function Cookies() {
         </div>
         <div className="privacy-block">
           <h2>{t("3. External font and provider requests")}</h2>
-          <p>{t("The site currently requests the Poppins typeface from Google Fonts. Those requests may reach Google before you choose optional content. Deadsmile Games intends to self-host the font files, but that change must be verified in the production site before this disclosure is removed.")}</p>
+          <p>{t("The site's Poppins font files are self-hosted. Loading the site's typeface does not require a font request to Google Fonts. The font is distributed under the SIL Open Font License 1.1.")}</p>
           <p>{t("When you load or interact with third-party services, including YouTube, Google reCAPTCHA or a connected itch.io account, those providers may receive technical information such as your IP address, browser metadata and the request you made. Their own privacy notices apply to processing they carry out for their own purposes.")}</p>
         </div>
         <div className="privacy-block">

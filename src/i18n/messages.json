@@ -999,7 +999,8 @@
     "Official external-store policies:": "Políticas oficiais das lojas externas:",
     "itch.io Terms of Service — refunds": "Termos de Serviço do itch.io — reembolsos",
     "Microsoft Store refund guidance": "Orientações de reembolso da Microsoft Store",
-    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Consulte a política da loja que processou sua compra. Os direitos obrigatórios do consumidor permanecem preservados."
+    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Consulte a política da loja que processou sua compra. Os direitos obrigatórios do consumidor permanecem preservados.",
+    "The site's Poppins font files are self-hosted. Loading the site's typeface does not require a font request to Google Fonts. The font is distributed under the SIL Open Font License 1.1.": "Os arquivos da fonte Poppins são hospedados pelo próprio site. Carregar a tipografia do site não exige uma solicitação de fonte ao Google Fonts. A fonte é distribuída sob a SIL Open Font License 1.1."
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -2001,7 +2002,8 @@
     "Official external-store policies:": "Políticas oficiales de las tiendas externas:",
     "itch.io Terms of Service — refunds": "Términos del servicio de itch.io — reembolsos",
     "Microsoft Store refund guidance": "Información sobre reembolsos de Microsoft Store",
-    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Consulta la política de la tienda que procesó tu compra. Se mantienen los derechos obligatorios de los consumidores."
+    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Consulta la política de la tienda que procesó tu compra. Se mantienen los derechos obligatorios de los consumidores.",
+    "The site's Poppins font files are self-hosted. Loading the site's typeface does not require a font request to Google Fonts. The font is distributed under the SIL Open Font License 1.1.": "Los archivos de la fuente Poppins están alojados en el propio sitio. Cargar la tipografía no requiere una solicitud de fuente a Google Fonts. La fuente se distribuye bajo la SIL Open Font License 1.1."
   },
   "en": {
     "Retomar": "Resume",
@@ -2276,6 +2278,7 @@
     "Official external-store policies:": "Official external-store policies:",
     "itch.io Terms of Service — refunds": "itch.io Terms of Service — refunds",
     "Microsoft Store refund guidance": "Microsoft Store refund guidance",
-    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected."
+    "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.": "Check the policy for the store that processed your purchase. Mandatory consumer rights remain unaffected.",
+    "The site's Poppins font files are self-hosted. Loading the site's typeface does not require a font request to Google Fonts. The font is distributed under the SIL Open Font License 1.1.": "The site's Poppins font files are self-hosted. Loading the site's typeface does not require a font request to Google Fonts. The font is distributed under the SIL Open Font License 1.1."
   }
 }
