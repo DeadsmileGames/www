@@ -116,7 +116,7 @@ export function Privacy() {
 
         <div className="privacy-block">
           <h2>{t("10. Age declarations and safeguards")}</h2>
-          <p>{t("The free-game pre-registration form asks you to enter your age as a number. This is a self-declaration, not an independent age-verification method. Account registration asks users to confirm that they are at least 13. Deadsmile Games does not currently use CPF checks, selfie-based estimation or a paid third-party age-verification service for these flows. A declaration must not be treated as proof of age where applicable law requires a more reliable mechanism, parental authorization or an age-based restriction. The operator must assess which features and users require additional safeguards and restrict the relevant feature until those safeguards are implemented. The minimum age of 13 for free-game pre-registration is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age.")}</p>
+          <p>{t("The free-game pre-registration form asks for a self-declared age and applies the configured eligibility rule. This is not independent age verification. The minimum age of 13 for pre-registration is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age. A self-declaration must not be treated as proof of age where applicable law requires a more reliable mechanism or parental authorization. The operator must assess the safeguards required for children who may access the service; this policy does not claim that the assessment is complete.")}</p>
         </div>
 
         <div className="privacy-block">
