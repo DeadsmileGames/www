@@ -18,6 +18,9 @@ export function Terms() {
           <p>
             {t("By creating an account or using features that require an account, you agree to these terms. If you do not agree, do not create an account or use account-only features. Mandatory rights under consumer-protection, privacy and other applicable laws are not waived by these terms.")}
           </p>
+          <p>
+            {t("These terms and the Privacy Policy are written with a compliance scope focused on Brazil, the United States and the European Union. The website may be accessible elsewhere, but we do not represent that all laws in every other jurisdiction have been assessed or that the service is legally available everywhere. Mandatory rights that apply to you are not limited by this statement.")}
+          </p>
         </div>
 
         <div className="terms-block">
