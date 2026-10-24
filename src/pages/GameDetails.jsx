@@ -606,10 +606,10 @@ export function GameDetails() {
           hasConfirmedPreorder ? (
             <div className="game-details__preorder-actions">
               <button type="button" className="btn btn--primary game-details__btn" disabled aria-disabled="true">
-                {t("Already in pre-order")}
+                {t("Registration already active")}
               </button>
               <Link to={preorderPath} className="btn btn--secondary game-details__btn">
-                {t("Manage pre-order")}
+                {t("Manage registration")}
               </Link>
             </div>
           ) : (
@@ -618,7 +618,7 @@ export function GameDetails() {
               state={authStatus === "authenticated" ? undefined : { from: { pathname: preorderPath } }}
               className="btn btn--primary game-details__btn"
             >
-              {t("Pre-order")}
+              {t("Free pre-registration")}
             </Link>
           )
         )}
