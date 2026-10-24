@@ -111,7 +111,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("9. Children and teenagers")}</h2>
           <p>
-            {t("The account flow asks users to declare that they are at least 13, but this is not independent age verification. Children and teenagers may access the website and games. Game activity, playtime and achievements are private by default unless sharing is enabled. Parents or legal guardians can contact somiarigames@gmail.com about a minor's data. The operator must assess and implement age-appropriate privacy defaults, processes for children's rights, parental safeguards and any other protections required by applicable law; stating a minimum age alone does not satisfy those duties.")}
+            {t("The account flow asks users to declare that they are at least 13, but this is not independent age verification. Children and teenagers may access the public website and games. The public profile currently displays the games selected by the account holder; this policy does not claim that separate game-activity, playtime or achievement-sharing controls exist. Parents or legal guardians can contact somiarigames@gmail.com about a minor's data. The operator must assess and implement age-appropriate privacy defaults, processes for children's rights, parental safeguards and any other protections required by applicable law; stating a minimum age alone does not satisfy those duties.")}
           </p>
         </div>
 
