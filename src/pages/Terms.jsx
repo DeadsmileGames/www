@@ -33,7 +33,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("3. Public profiles and user content")}</h2>
           <p>
-            {t("Your public profile displays the games you choose to show as games you plan to play. Your email address and password are not displayed on the public profile. Do not use the profile to publish personal information about another person. If you remove a selected game, copies or screenshots already made by others may remain outside our control.")}
+            {t("Your public profile can show recent game activity and, according to your privacy settings, playtime or session details and achievements. Sharing controls are off by default. Profile fields you provide, such as avatar, bio, website or location, may be visible. Your email address and password are not displayed publicly. Do not use your profile to publish personal information about another person. If you change a privacy setting, copies or screenshots already made by others may remain outside our control.")}
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("6. Privacy and third-party services")}</h2>
           <p>
-            {t("The Privacy Policy explains how personal data is processed and how to exercise your rights. Optional embedded content and security verification may involve third-party providers. If you connect an external account or follow a store link, that provider's terms and privacy policy also apply to its service. Purchases and ownership on third-party stores are handled by the relevant store, not by these terms.")}
+            {t("The Privacy Policy explains how personal data is processed and how to exercise your rights. Optional embedded content and security verification may involve third-party providers. If you connect an external account or follow a store link, that provider's terms and privacy policy also apply to its service. The website does not currently sell paid games or collect checkout payments. If a game links to an external store, that store handles the checkout and payment, identifies the seller for that transaction, and applies its own refund process. For payment, delivery or refund complaints, contact the store that processed the purchase; contact Deadsmile Games for game-related support. Nothing in these terms waives mandatory consumer rights.")}
           </p>
         </div>
 
