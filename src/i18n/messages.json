@@ -984,7 +984,18 @@
     "Confirming your registration...": "Confirmando seu cadastro...",
     "Your email is confirmed. The reward code will appear on the management page when the registration period ends.": "Seu e-mail foi confirmado. O código de recompensa aparecerá na página de gerenciamento quando o período de pré-registro terminar.",
     "Manage registration": "Gerenciar cadastro",
-    "Registration confirmation": "Confirmação do cadastro"
+    "Registration confirmation": "Confirmação do cadastro",
+    "Free registration reserved": "Pré-registro gratuito reservado",
+    "This registration period has not ended yet. Your code becomes redeemable after it ends.": "O período de pré-registro ainda não terminou. Seu código poderá ser resgatado depois que ele terminar.",
+    "Enter your six-digit registration reward code.": "Digite o código de recompensa de cadastro de seis dígitos.",
+    "Free pre-registration and reward": "Pré-registro gratuito e recompensa",
+    "Enable timed free pre-registration and configure its unique reward code and downloadable ZIP.": "Ative o pré-registro gratuito por um período definido e configure seu código de recompensa exclusivo e o ZIP para download.",
+    "Enable free pre-registration": "Ativar pré-registro gratuito",
+    "Pre-registration opens at": "Abertura do pré-registro",
+    "Pre-registration closes at": "Encerramento do pré-registro",
+    "Minimum eligible age (English)": "Idade mínima de elegibilidade (inglês)",
+    "Minimum eligible age (Portuguese)": "Idade mínima de elegibilidade (português)",
+    "Minimum eligible age (Spanish)": "Idade mínima de elegibilidade (espanhol)"
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -1971,7 +1982,18 @@
     "Confirming your registration...": "Confirmando tu registro...",
     "Your email is confirmed. The reward code will appear on the management page when the registration period ends.": "Tu correo está confirmado. El código de recompensa aparecerá en la página de gestión cuando termine el periodo de preregistro.",
     "Manage registration": "Gestionar registro",
-    "Registration confirmation": "Confirmación del registro"
+    "Registration confirmation": "Confirmación del registro",
+    "Free registration reserved": "Prerregistro gratuito reservado",
+    "This registration period has not ended yet. Your code becomes redeemable after it ends.": "El periodo de preregistro aún no ha terminado. Podrás canjear tu código cuando termine.",
+    "Enter your six-digit registration reward code.": "Introduce el código de recompensa de registro de seis dígitos.",
+    "Free pre-registration and reward": "Prerregistro gratuito y recompensa",
+    "Enable timed free pre-registration and configure its unique reward code and downloadable ZIP.": "Activa el preregistro gratuito durante un periodo definido y configura su código de recompensa exclusivo y el ZIP descargable.",
+    "Enable free pre-registration": "Activar preregistro gratuito",
+    "Pre-registration opens at": "Apertura del preregistro",
+    "Pre-registration closes at": "Cierre del preregistro",
+    "Minimum eligible age (English)": "Edad mínima de elegibilidad (inglés)",
+    "Minimum eligible age (Portuguese)": "Edad mínima de elegibilidad (portugués)",
+    "Minimum eligible age (Spanish)": "Edad mínima de elegibilidad (español)"
   },
   "en": {
     "Retomar": "Resume",
@@ -2231,6 +2253,17 @@
     "Your email is confirmed. The reward code will appear on the management page when the registration period ends.": "Your email is confirmed. The reward code will appear on the management page when the registration period ends.",
     "Manage registration": "Manage registration",
     "Registration confirmation": "Registration confirmation",
-    "Your privacy preferences have been saved.": "Your privacy preferences have been saved."
+    "Your privacy preferences have been saved.": "Your privacy preferences have been saved.",
+    "Free registration reserved": "Free registration reserved",
+    "This registration period has not ended yet. Your code becomes redeemable after it ends.": "This registration period has not ended yet. Your code becomes redeemable after it ends.",
+    "Enter your six-digit registration reward code.": "Enter your six-digit registration reward code.",
+    "Free pre-registration and reward": "Free pre-registration and reward",
+    "Enable timed free pre-registration and configure its unique reward code and downloadable ZIP.": "Enable timed free pre-registration and configure its unique reward code and downloadable ZIP.",
+    "Enable free pre-registration": "Enable free pre-registration",
+    "Pre-registration opens at": "Pre-registration opens at",
+    "Pre-registration closes at": "Pre-registration closes at",
+    "Minimum eligible age (English)": "Minimum eligible age (English)",
+    "Minimum eligible age (Portuguese)": "Minimum eligible age (Portuguese)",
+    "Minimum eligible age (Spanish)": "Minimum eligible age (Spanish)"
   }
 }
