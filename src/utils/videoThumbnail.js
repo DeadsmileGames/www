@@ -1,5 +1,5 @@
-import { safeImageUrl } from "./urls";
-import { optionalContentAllowed } from "./consent";
+import { safeImageUrl } from "./urls.js";
+import { optionalContentAllowed } from "./consent.js";
 
 const localizedThumbnailFields = {
   en: "thumbnail_en",
