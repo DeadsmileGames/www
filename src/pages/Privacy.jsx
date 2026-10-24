@@ -19,7 +19,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("1. Who is responsible for your data?")}</h2>
           <p>
-            {t("The controller is Lucas Eduardo Duarte Pereira, an individual operating under the name Deadsmile Games, based in São Paulo, São Paulo, Brazil. For privacy requests or questions about personal data, contact somiarigames@gmail.com. No separate data protection officer has been appointed at this time. The operator is assessing whether the Brazilian small-agent exemption applies; this does not imply an exemption from any duties that may apply under other jurisdictions. This email is the direct channel for privacy requests and communications.")}
+            {t("The controller is Lucas Eduardo Duarte Pereira, an individual operating under the name Deadsmile Games, based in São Paulo, São Paulo, Brazil. No separate data protection officer has been appointed. Based on the operator's confirmation that the operation meets the applicable small-agent size and revenue criteria, is not part of a group exceeding those limits, and does not perform high-risk processing under ANPD Resolution CD/ANPD 2/2022 as amended, the operator intends to rely on the Brazilian small-agent exemption from appointing an encarregado. This is an operator assessment, not a determination by the ANPD, and does not exempt the controller from other LGPD duties or obligations that may apply in other jurisdictions. For privacy requests or questions about personal data, contact somiarigames@gmail.com; this email is the direct channel for privacy requests and communications.")}
           </p>
         </div>
 
