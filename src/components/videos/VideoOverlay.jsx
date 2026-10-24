@@ -224,7 +224,7 @@ function Panel({ videoId, onClose, onSelect }) {
                   <AutoLinkText>{description || t("No description available yet.")}</AutoLinkText>
                 </p>
               </section>
-              {liveChatEnabled && (
+              {liveChatEnabled && allowed && (
                 <LiveChatPanel
                   videoId={video.id}
                   videoState={youtubeState}
