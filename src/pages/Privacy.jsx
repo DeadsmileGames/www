@@ -35,14 +35,14 @@ export function Privacy() {
             {t("If you choose to use profile, gaming, or connected-account features, we may process your biography, website, location, avatar and banner URLs, linked itch.io account and related entitlement information, game activity, playtime, sessions, achievements, cloud saves, and telemetry for supported games. Public profile fields and sharing of game activity, playtime, and achievements are subject to the settings and choices described below.")}
           </p>
           <p>
-            {t("If you use other features, we may process your email address for the newsletter, the name, age and email details submitted for a pre-order, and the email address, category and message in a support request. Optional YouTube embeds, Google reCAPTCHA, and service infrastructure may also process technical information such as IP address, browser/device information, request metadata, or cookies when those features are loaded or used.")}
+            {t("If you use other features, we may process your email address for the newsletter, the name, age and email details submitted for free-game pre-registration, and the email address, category and message in a support request. Optional YouTube embeds, Google reCAPTCHA, and service infrastructure may also process technical information such as IP address, browser/device information, request metadata, or cookies when those features are loaded or used.")}
           </p>
         </div>
 
         <div className="privacy-block">
           <h2>{t("3. Why we use data and legal bases")}</h2>
           <p>
-            {t("We use data to create and maintain accounts; authenticate users; provide profiles, game libraries, achievements, cloud saves and connected-account features; answer support requests; manage pre-orders and newsletter subscriptions; protect the service; prevent abuse; and meet legal obligations or establish, exercise or defend legal claims.")}
+            {t("We use data to create and maintain accounts; authenticate users; provide profiles, game libraries, achievements, cloud saves and connected-account features; answer support requests; manage free-game pre-registration and newsletter subscriptions; protect the service; prevent abuse; and meet legal obligations or establish, exercise or defend legal claims.")}
           </p>
           <p>
             {t("Depending on the specific activity, the legal basis may be performing a contract or steps requested before a contract, consent for newsletter communications or optional embedded content where applicable, legitimate interests in service security and reliability after balancing users' rights, or compliance with a legal obligation. The applicable basis depends on the feature and circumstances; we do not treat consent as the basis for every necessary account function.")}
@@ -116,7 +116,7 @@ export function Privacy() {
 
         <div className="privacy-block">
           <h2>{t("10. Age declarations and safeguards")}</h2>
-          <p>{t("The pre-order form asks you to enter your age as a number. This is a self-declaration, not an independent age-verification method. Account registration asks users to confirm that they are at least 13. Deadsmile Games does not currently use CPF checks, selfie-based estimation or a paid third-party age-verification service for these flows. A declaration must not be treated as proof of age where applicable law requires a more reliable mechanism, parental authorization or an age-based restriction. The operator must assess which features and users require additional safeguards and restrict the relevant feature until those safeguards are implemented. The minimum age of 13 for pre-orders is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age.")}</p>
+          <p>{t("The free-game pre-registration form asks you to enter your age as a number. This is a self-declaration, not an independent age-verification method. Account registration asks users to confirm that they are at least 13. Deadsmile Games does not currently use CPF checks, selfie-based estimation or a paid third-party age-verification service for these flows. A declaration must not be treated as proof of age where applicable law requires a more reliable mechanism, parental authorization or an age-based restriction. The operator must assess which features and users require additional safeguards and restrict the relevant feature until those safeguards are implemented. The minimum age of 13 for pre-orders is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age.")}</p>
         </div>
 
         <div className="privacy-block">
