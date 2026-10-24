@@ -26,7 +26,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("2. Data we process")}</h2>
           <p>
-            {t("Depending on the features you use, we may process your username, email address, password hash, email-verification status, account and session identifiers, security and access records, two-factor authentication settings, and requests to recover or change an account.")}
+            {t("Depending on the features you use, we may process your username, email address, date of birth supplied during account registration, password hash, email-verification status, account and session identifiers, security and access records, two-factor authentication settings, and requests to recover or change an account. The date of birth is used to apply the account's minimum-age eligibility rule, is not displayed on public profiles, and is not independently verified.")}
           </p>
           <p>
             {t("When you register, we record the Terms of Service version you accepted, the Privacy Policy version you acknowledged, the interface language, and the server-recorded time. This record is linked to your account to document the agreement and notice; it is removed with the account under the current deletion flow.")}
@@ -111,13 +111,13 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("9. Children and teenagers")}</h2>
           <p>
-            {t("The account form currently asks users to confirm that they are at least 13. This is a self-declaration, not independent age verification. Children and teenagers may access the website and games. Recent game activity, playtime or session details and achievements can be shown on public profiles only according to the available privacy settings. Parents or legal guardians can contact somiarigames@gmail.com about a minor's data. The service's safeguards for children must be assessed against the applicable laws and actual data flows; a self-declared age by itself does not settle those requirements.")}
+            {t("The account form requires a date of birth, and the server applies the 13-year minimum to that self-reported date before creating an account. A supplied date of birth is not independently verified and does not establish that the person is the age they claim. Children and teenagers may still access the public website and games. Recent game activity, playtime or session details and achievements can be shown on public profiles only according to the available privacy settings. Parents or legal guardians can contact somiarigames@gmail.com about a minor's data. The service's safeguards for children must be assessed against applicable laws and actual data flows; collecting a date of birth alone does not settle those requirements.")}
           </p>
         </div>
 
         <div className="privacy-block">
           <h2>{t("10. Age declarations and safeguards")}</h2>
-          <p>{t("The free-game pre-registration form asks for a first name, last name, email address and self-declared age. The age is compared with the eligibility requirement configured for that game; it is not independent age verification. A self-declaration must not be treated as proof of age where applicable law requires a more reliable mechanism or parental authorization. The account form's separate 13+ confirmation is also a self-declaration. These checks do not by themselves establish that all child-safety requirements have been met.")}</p>
+          <p>{t("The free-game pre-registration form asks for a first name, last name, email address and self-declared age. The age is compared with the eligibility requirement configured for that game; it is not independent age verification. A self-declaration must not be treated as proof of age where applicable law requires a more reliable mechanism or parental authorization. Account registration separately requires a date of birth and applies a 13-year minimum on the server, but the date is self-reported and is not independently verified. These checks do not by themselves establish that all child-safety requirements have been met.")}</p>
         </div>
 
         <div className="privacy-block">
