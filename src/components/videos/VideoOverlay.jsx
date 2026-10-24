@@ -155,7 +155,7 @@ function Panel({ videoId, onClose, onSelect }) {
                     className="btn btn--player"
                     onClick={() => setOptionalContent(true)}
                   >
-                    {t("Allow YouTube")}
+                    {t("Allow optional content")}
                   </button>
                 </div>
               ) : embed ? (
