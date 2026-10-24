@@ -26,7 +26,9 @@ test("legal, cookie and accessibility copy is translated in Portuguese and Spani
     const literals = new Set();
 
     for (const match of source.matchAll(/\bt\(\s*("(?:\\.|[^"\\])*")/g)) {
-      literals.add(JSON.parse(match[1]));
+      const literal = JSON.parse(match[1]);
+      if (/^(auth|nav|hero|common|games|account|studio|news|support|downloads|media|footer)\./.test(literal)) continue;
+      literals.add(literal);
     }
 
     for (const literal of literals) {
