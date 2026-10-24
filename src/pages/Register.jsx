@@ -117,8 +117,8 @@ export function Register() {
         recaptchaToken,
         termsAccepted: acceptedTerms,
         privacyAcknowledged: acceptedTerms,
-        termsVersion: "terms-v2026-10-23",
-        privacyVersion: "privacy-v2026-10-23",
+        termsVersion: "terms-v2026-10-24",
+        privacyVersion: "privacy-v2026-10-24",
       });
 
       try {
