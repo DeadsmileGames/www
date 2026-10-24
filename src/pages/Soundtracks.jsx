@@ -102,7 +102,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                     }}
                   >
                     <YoutubeLogo size={20} weight="fill" />
-                    {t("Allow YouTube")}
+                    {t("Allow optional content")}
                   </button>
                 </div>
               ) : embedSrc ? (
