@@ -26,7 +26,7 @@ export function Terms() {
         <div className="terms-block">
           <h2>{t("2. Eligibility and accounts")}</h2>
           <p>
-            {t("You must be at least 13 years old to create an account. You must provide accurate information, keep your credentials confidential and notify us if you suspect unauthorized use. Do not create an account for someone else without authority. The operator may apply additional age, parental-supervision or content-access safeguards required by applicable law.")}
+            {t("The current account flow asks users to declare that they are at least 13 years old; this is a self-declaration, not independent age verification. Children and teenagers may access the website and games, and the operator must assess safeguards required for that audience under applicable law. You must provide accurate information, keep your credentials confidential and notify us if you suspect unauthorized use. Do not create an account for someone else without authority. The operator may apply additional age, parental-supervision or content-access safeguards required by applicable law.")}
           </p>
         </div>
 
