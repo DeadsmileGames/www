@@ -19,7 +19,11 @@ export function Footer() {
     setBusy(true);
     setMessage("");
     try {
-      await api.post("/newsletter", { email: email.trim() });
+      await api.post("/newsletter", {
+        email: email.trim(),
+        consentAccepted: newsletterConsent,
+        consentTextVersion: "newsletter-consent-v2026-10-24",
+      });
       setMessage(t("Request received. Check your inbox to confirm your subscription."));
       setEmail("");
       setNewsletterConsent(false);
@@ -110,6 +114,8 @@ export function Footer() {
           <Link to="/presskit">{t("Press Kit")}</Link>
           <Link to="/privacy">{t("Privacy")}</Link>
           <Link to="/terms">{t("Terms")}</Link>
+          <Link to="/cookies">{t("Cookie Policy")}</Link>
+          <Link to="/accessibility">{t("Accessibility")}</Link>
         </nav>
         <p className="copyright">© {new Date().getFullYear()} Deadsmile Games</p>
       </div>
