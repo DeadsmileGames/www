@@ -42,7 +42,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("3. Why we use data and legal bases")}</h2>
           <p>
-            {t("We use data to create and maintain accounts; authenticate users; provide profiles, game libraries, achievements, cloud saves and connected-account features; answer support requests; manage free-game pre-registration and newsletter subscriptions; protect the service; prevent abuse; and meet legal obligations or establish, exercise or defend legal claims.")}
+            {t("We use data to create and maintain accounts; authenticate users; display public profiles and the games users select as games they plan to play; provide the website's game-discovery and library features; manage free-game pre-registration and newsletter subscriptions; answer support requests; protect the service and prevent abuse; and meet legal obligations or establish, exercise or defend legal claims. We do not describe game achievements or cloud-save features here because they are not part of the public-profile behavior reviewed for this policy.")}
           </p>
           <p>
             {t("Depending on the specific activity, the legal basis may be performing a contract or steps requested before a contract, consent for newsletter communications or optional embedded content where applicable, legitimate interests in service security and reliability after balancing users' rights, or compliance with a legal obligation. The applicable basis depends on the feature and circumstances; we do not treat consent as the basis for every necessary account function.")}
