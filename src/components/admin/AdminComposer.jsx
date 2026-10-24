@@ -1010,23 +1010,23 @@ export function AdminComposer() {
 
                     <section className="account-block" role="group" aria-labelledby="admin-game-preorder">
                       <div className="account-block__head">
-                        <h3 id="admin-game-preorder">{t("Pre-order and reward")}</h3>
-                        <p>{t("Enable a timed pre-order and configure its unique reward code and downloadable ZIP.")}</p>
+                        <h3 id="admin-game-preorder">{t("Free pre-registration and reward")}</h3>
+                        <p>{t("Enable timed free pre-registration and configure its unique reward code and downloadable ZIP.")}</p>
                       </div>
                       <label className="admin-field">
-                        <span>{t("Enable pre-order")}</span>
+                        <span>{t("Enable free pre-registration")}</span>
                         <input type="checkbox" checked={Boolean(form.preorderEnabled)} onChange={set("preorderEnabled")} />
                       </label>
                       {form.preorderEnabled && (
                         <>
                           <div className="admin-modal__row">
-                            <Field label={t("Pre-order starts at")} type="datetime-local" value={form.preorderStartsAt} onChange={set("preorderStartsAt")} name="preorderStartsAt" error={fieldErrors.preorderStartsAt} required />
-                            <Field label={t("Pre-order ends at")} type="datetime-local" value={form.preorderEndsAt} onChange={set("preorderEndsAt")} name="preorderEndsAt" error={fieldErrors.preorderEndsAt} required />
+                            <Field label={t("Pre-registration opens at")} type="datetime-local" value={form.preorderStartsAt} onChange={set("preorderStartsAt")} name="preorderStartsAt" error={fieldErrors.preorderStartsAt} required />
+                            <Field label={t("Pre-registration closes at")} type="datetime-local" value={form.preorderEndsAt} onChange={set("preorderEndsAt")} name="preorderEndsAt" error={fieldErrors.preorderEndsAt} required />
                           </div>
                           <div className="admin-modal__row">
-                            <Field label={t("Minimum age (English)")} type="number" min="0" max="21" value={form.preorderAgeEn} onChange={set("preorderAgeEn")} name="preorderAgeEn" required />
-                            <Field label={t("Minimum age (Portuguese)")} type="number" min="0" max="21" value={form.preorderAgePtBr} onChange={set("preorderAgePtBr")} name="preorderAgePtBr" required />
-                            <Field label={t("Minimum age (Spanish)")} type="number" min="0" max="21" value={form.preorderAgeEs} onChange={set("preorderAgeEs")} name="preorderAgeEs" required />
+                            <Field label={t("Minimum eligible age (English)")} type="number" min="0" max="21" value={form.preorderAgeEn} onChange={set("preorderAgeEn")} name="preorderAgeEn" required />
+                            <Field label={t("Minimum eligible age (Portuguese)")} type="number" min="0" max="21" value={form.preorderAgePtBr} onChange={set("preorderAgePtBr")} name="preorderAgePtBr" required />
+                            <Field label={t("Minimum eligible age (Spanish)")} type="number" min="0" max="21" value={form.preorderAgeEs} onChange={set("preorderAgeEs")} name="preorderAgeEs" required />
                           </div>
                           <label className="admin-field">
                             <span>{t("Reward type")}</span>
