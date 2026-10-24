@@ -20,6 +20,7 @@ export function Register() {
   const [form, setForm] = useState({
     username: "",
     email: "",
+    dateOfBirth: "",
     password: "",
     confirmPassword: "",
   });
@@ -28,6 +29,7 @@ export function Register() {
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acknowledgedPrivacy, setAcknowledgedPrivacy] = useState(false);
 
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
@@ -113,10 +115,11 @@ export function Register() {
       const result = await register({
         username: form.username.trim(),
         email: form.email.trim(),
+        dateOfBirth: form.dateOfBirth,
         password: form.password,
         recaptchaToken,
         termsAccepted: acceptedTerms,
-        privacyAcknowledged: acceptedTerms,
+        privacyAcknowledged: acknowledgedPrivacy,
         termsVersion: "terms-v2026-10-24",
         privacyVersion: "privacy-v2026-10-24",
       });
@@ -197,6 +200,22 @@ export function Register() {
           </div>
 
           <div className="auth-page__field">
+            <label htmlFor="reg-date-of-birth">{t("Date of birth")}</label>
+            <input
+              id="reg-date-of-birth"
+              type="date"
+              required
+              max={new Date().toISOString().slice(0, 10)}
+              value={form.dateOfBirth}
+              onChange={update("dateOfBirth")}
+              autoComplete="bday"
+              disabled={submitting}
+              aria-describedby="reg-date-of-birth-note"
+            />
+            <small id="reg-date-of-birth-note">{t("Your date of birth is used to check account eligibility, is not shown on your public profile, and is not independently verified.")}</small>
+          </div>
+
+          <div className="auth-page__field">
             <label htmlFor="reg-password">{t("auth.password")}</label>
 
             <input
@@ -237,7 +256,17 @@ export function Register() {
                 onChange={(event) => setAcceptedTerms(event.target.checked)}
                 disabled={submitting}
               />
-              <span>{t("I confirm that I am at least 13 years old, agree to the Terms of Service and acknowledge the Privacy Policy.")}</span>
+              <span>{t("I agree to the Terms of Service.")}</span>
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                required
+                checked={acknowledgedPrivacy}
+                onChange={(event) => setAcknowledgedPrivacy(event.target.checked)}
+                disabled={submitting}
+              />
+              <span>{t("I acknowledge the Privacy Policy.")}</span>
             </label>
             <p>
               <Link to="/terms">{t("Terms of Service")}</Link>
@@ -266,7 +295,7 @@ export function Register() {
           <Button
             type="submit"
             className="auth-page__submit"
-            disabled={submitting || !recaptchaToken || !acceptedTerms}
+            disabled={submitting || !recaptchaToken || !acceptedTerms || !acknowledgedPrivacy || !form.dateOfBirth}
           >
             {submitting ? <><LoadingSpinner />{t("auth.creating")}</> : t("auth.create")}
           </Button>
