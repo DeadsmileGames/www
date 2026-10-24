@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { useMicrosoftStoreCovers } from "../../hooks/useMicrosoftStoreCovers";
 import { getVideoThumbnail } from "../../utils/videoThumbnail";
+import { useOptionalContent } from "../../utils/consent";
 import { safeImageUrl } from "../../utils/urls";
 import { AutoLinkText } from "../ui/AutoLinkText";
 
@@ -20,6 +21,7 @@ function resultTypeLabel(type, t) {
 
 export function SearchResults({ results, variant = "overlay", onResultClick }) {
   const { t, language } = useLanguage();
+  const allowExternalVideoMedia = useOptionalContent();
   const games = useMemo(
     () => results.filter((result) => result.type === "game"),
     [results],
@@ -40,8 +42,7 @@ export function SearchResults({ results, variant = "overlay", onResultClick }) {
               safeImageUrl(item.coverImage || item.image) ||
               "/assets/placeholders/game-cover.svg"
             : item.type === "video"
-              ? getVideoThumbnail(item, language) ||
-                safeImageUrl(item.image) ||
+              ? getVideoThumbnail(item, language, allowExternalVideoMedia) ||
                 "/assets/games/screenshots/light/1.png"
               : safeImageUrl(item.image) ||
                 "/assets/games/screenshots/light/1.png";

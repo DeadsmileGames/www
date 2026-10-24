@@ -28,7 +28,7 @@ export function Cookies() {
         </div>
         <div className="privacy-block">
           <h2>{t("2. Optional videos and security verification")}</h2>
-          <p>{t("The optional-content setting currently controls embedded YouTube players. You can accept or reject optional content below or from the privacy page. Some YouTube thumbnail images or media requests may be separate from the embedded player, so blocking the player does not by itself prove that every YouTube request is blocked before consent; the live network behavior must be checked.")}</p>
+          <p>{t("The optional-content setting controls YouTube embedded players and externally hosted video thumbnails shown on the website. These external video image requests remain blocked until you allow optional content. Local game artwork may still load. Other external requests can be triggered by separate features, so this preference is not a complete manager for every third-party request used by the site.")}</p>
           <p>{t("Google reCAPTCHA is offered separately on protected forms and is loaded only after you choose to load security verification. That choice is separate from the optional YouTube-content setting.")}</p>
           <button type="button" className="btn btn--secondary" onClick={changePreference}>
             {t(optionalAllowed ? "Reject optional content" : "Accept optional content")}
@@ -42,7 +42,7 @@ export function Cookies() {
         </div>
         <div className="privacy-block">
           <h2>{t("4. Scope of this preference")}</h2>
-          <p>{t("This preference control currently covers optional YouTube embedded players; it is not a full preference manager for every storage item or external request used by the site. Essential session functionality remains active when required for sign-in and security. The separate reCAPTCHA choice appears on protected forms.")}</p>
+          <p>{t("This preference control blocks externally hosted video thumbnails and YouTube embedded players until you allow optional content; it is not a full preference manager for every storage item or external request used by the site. Essential session functionality remains active when required for sign-in and security. The separate reCAPTCHA choice appears on protected forms.")}</p>
         </div>
         <div className="privacy-block">
           <h2>{t("5. Contact and related information")}</h2>

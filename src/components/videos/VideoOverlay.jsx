@@ -237,7 +237,7 @@ function Panel({ videoId, onClose, onSelect }) {
               {relatedVideos.length > 0 ? (
                 <div className="video-overlay__related-grid">
                   {relatedVideos.map((related) => {
-                    const thumbnail = getVideoThumbnail(related, language);
+                    const thumbnail = getVideoThumbnail(related, language, allowed);
                     return (
                       <button
                         key={related.id}

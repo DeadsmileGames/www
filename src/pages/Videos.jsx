@@ -8,6 +8,7 @@ import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { useContent } from "../hooks/useContent";
 import { safeImageUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
+import { useOptionalContent } from "../utils/consent";
 import { SkeletonVideos } from "../components/ui/Skeleton";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { YouTubeBroadcastBadge } from "../components/videos/YouTubeBroadcastBadge";
@@ -35,6 +36,7 @@ export function Videos() {
   const reducedMotion = useReducedMotion();
   const [params, setParams] = useSearchParams();
   const videos = useContent("/videos", { limit: 48 });
+  const allowExternalVideoMedia = useOptionalContent();
 
   useEffect(() => {
     const timer = window.setInterval(() => void videos.refresh(), 60_000);
@@ -112,7 +114,7 @@ export function Videos() {
     latest?.description ||
     latest?.excerpt ||
     t("Video highlights from Deadsmile Games.");
-  const thumbnail = getVideoThumbnail(latest, language);
+  const thumbnail = getVideoThumbnail(latest, language, allowExternalVideoMedia);
   const releaseAt = latest?.youtube?.actualStartedAt || latest?.youtube?.startsAt || latest?.youtube?.publishedAt || latest?.published_at || null;
   const releaseDate =
     releaseAt && Number.isFinite(Date.parse(releaseAt))
@@ -225,7 +227,7 @@ export function Videos() {
           {videos.status === "success" && videos.data.length > 0 && (
             <div className="video-grid">
               {videos.data.map((video) => {
-                const image = getVideoThumbnail(video, language);
+                const image = getVideoThumbnail(video, language, allowExternalVideoMedia);
                 return (
                   <button
                     type="button"

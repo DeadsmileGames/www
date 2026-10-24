@@ -25,6 +25,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
+import { useOptionalContent } from "../utils/consent";
 import { getReleaseTimestamp } from "../utils/releaseDate";
 import { useServerClock, syncServerClock } from "../hooks/useServerClock";
 
@@ -55,6 +56,7 @@ function getCalendarDateParts(timestamp) {
 export function GameDetails() {
   const { slug } = useParams();
   const { t, language } = useLanguage();
+  const allowExternalVideoMedia = useOptionalContent();
   const { user, status: authStatus } = useAuth();
   const navigate = useNavigate();
   const launcherCleanup = useRef(() => {});
@@ -824,8 +826,8 @@ export function GameDetails() {
                     className="game-video-card"
                   >
                     <span className="game-video-card__visual">
-                      {getVideoThumbnail(video, language) && (
-                        <img src={getVideoThumbnail(video, language)} alt="" loading="lazy" />
+                      {getVideoThumbnail(video, language, allowExternalVideoMedia) && (
+                        <img src={getVideoThumbnail(video, language, allowExternalVideoMedia)} alt="" loading="lazy" />
                       )}
                       <i>
                         <Play size={20} weight="bold" />
