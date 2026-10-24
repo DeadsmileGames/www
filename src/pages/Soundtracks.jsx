@@ -20,6 +20,7 @@ import { YouTubeBroadcastBadge } from "../components/videos/YouTubeBroadcastBadg
 import { setOptionalContent, useOptionalContent } from "../utils/consent";
 import { trapFocus } from "../utils/dom";
 import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../utils/urls";
+import { getVideoThumbnail } from "../utils/videoThumbnail";
 
 function publishedLabel(value, language) {
   if (!value || !Number.isFinite(Date.parse(value))) return null;
@@ -47,7 +48,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
 
   const embed = safeYoutubeEmbedUrl(track?.watchUrl);
   const external = safeHttpsUrl(track?.watchUrl);
-  const thumbnail = safeImageUrl(track?.thumbnail) || safeImageUrl(game?.coverImage);
+  const thumbnail = getVideoThumbnail(track, language, allowed) || (allowed ? safeImageUrl(game?.coverImage) : "/assets/games/screenshots/light/1.png");
   const playerLanguage = ["en", "es", "pt-BR"].includes(language) ? language : "en";
   const embedSrc = (() => {
     if (!embed || !playing || !allowed) return null;
@@ -178,7 +179,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
                 <h2 id="soundtrack-related-title">{t("More from this game")}</h2>
                 <div className="video-overlay__related-grid">
                   {related.map((item, index) => {
-                    const image = safeImageUrl(item.thumbnail);
+                    const image = getVideoThumbnail(item, language, allowed);
                     return (
                       <m.button
                         key={item.id}
@@ -214,6 +215,7 @@ function SoundtrackPlayerPanel({ track, game, onClose, onSelect }) {
 
 export function Soundtracks() {
   const { t, language } = useLanguage();
+  const allowExternalVideoMedia = useOptionalContent();
   const resource = useContent("/soundtracks", {});
 
   useEffect(() => {
@@ -331,7 +333,7 @@ export function Soundtracks() {
               </header>
               <div className="video-grid">
                 {group.videos.map((track) => {
-                  const image = safeImageUrl(track.thumbnail);
+                  const image = getVideoThumbnail(track, language, allowExternalVideoMedia);
                   const published = publishedLabel(track.publishedAt, language);
                   const selected = String(selectedTrack?.id) === String(track.id);
                   return (
