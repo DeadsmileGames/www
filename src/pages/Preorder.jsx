@@ -11,11 +11,11 @@ import { useServerClock } from "../hooks/useServerClock";
 
 const localeKey = (language) => ["pt-BR", "es", "en"].includes(language) ? language : "en";
 const messages = {
-  PREORDER_NOT_FOUND: "Pre-order not found.",
-  PREORDER_NOT_OPEN: "This pre-order is not open right now.",
+  PREORDER_NOT_FOUND: "Free pre-registration not found.",
+  PREORDER_NOT_OPEN: "Free pre-registration is not open right now.",
   PREORDER_INVALID_FORM: "Check the information you entered.",
   PREORDER_AGE_RESTRICTED: "You do not meet the eligibility requirements for this game.",
-  PREORDER_ALREADY_REGISTERED: "This email is already registered for this pre-order.",
+  PREORDER_ALREADY_REGISTERED: "This email is already registered for this game.",
   PREORDER_CONFIRMATION_INVALID: "This confirmation link is invalid or has expired.",
   PREORDER_REWARD_NOT_FOUND: "This reward link has already been used or is invalid.",
 };
@@ -80,7 +80,7 @@ export function Preorder() {
       return () => { active = false; };
     }
     if (authStatus !== "authenticated" || !user?.id) {
-      setError(t("Sign in to continue to pre-order."));
+      setError(t("Sign in to continue to free pre-registration."));
       setStatus("error");
       return () => { active = false; };
     }
@@ -252,7 +252,7 @@ export function Preorder() {
 
   async function cancelPreorder() {
     if (canceling) return;
-    if (!window.confirm(t("Are you sure you want to cancel this pre-order? Your personal details and reward code will be deleted. You can sign up again, but only twice per game each day."))) return;
+    if (!window.confirm(t("Are you sure you want to cancel this free pre-registration? Your personal details and reward code will be deleted. You can register again, but only twice per game each day."))) return;
     setCanceling(true);
     setError("");
     try {
@@ -298,15 +298,15 @@ export function Preorder() {
       <header className="news-detail__header preorder-workspace__header">
         {game?.coverImage && <img className="preorder-workspace__cover" src={game.coverImage} alt="" loading="eager" />}
         <div className="preorder-workspace__heading">
-          <p className="news-detail__eyebrow">{t("Pre-order")}</p>
-          <h1>{game?.title || t("Pre-order")}</h1>
-          <p className="news-detail__lead">{t("Confirm your email to get your reward code. It will appear here and become redeemable when the pre-order ends.")}</p>
+          <p className="news-detail__eyebrow">{t("Free pre-registration")}</p>
+          <h1>{game?.title || t("Free pre-registration")}</h1>
+          <p className="news-detail__lead">{t("Confirm your email to get your reward code. It will appear here and become redeemable when the registration period ends.")}</p>
         </div>
       </header>
 
       <div className="preorder-workspace">
-        <aside className="preorder-workspace__sidebar support-card support-faq-panel" aria-label={t("Pre-order steps")}>
-          <p className="preorder-workspace__steps-title">{t("Pre-order steps")}</p>
+        <aside className="preorder-workspace__sidebar support-card support-faq-panel" aria-label={t("Pre-registration steps")}>
+          <p className="preorder-workspace__steps-title">{t("Pre-registration steps")}</p>
           <ol className="preorder-steps">
             {stages.map((stage) => {
               const complete = stage.number < currentStep || (stage.number === 3 && ["already-confirmed", "redeemed"].includes(status));
@@ -328,7 +328,7 @@ export function Preorder() {
             <>
               <div className="news-detail__header preorder-workspace__stage-heading">
                 <h2>{t("Your details")}</h2>
-                <p>{t("Enter your details to join this free game's pre-order.")}</p>
+                <p>{t("Enter your details to join this game's free pre-registration.")}</p>
               </div>
               <form className="preorder-form" onSubmit={reviewDetails}>
                 <div className="preorder-form__row">
@@ -340,8 +340,8 @@ export function Preorder() {
                   <label className="admin-field"><span>{t("Email address")}</span><input required type="email" maxLength={254} autoComplete="email" value={form.email} onChange={update("email")} /></label>
                 </div>
                 {error && <p className="account-page__error" role="alert">{error}</p>}
-                <p className="preorder-workspace__hint support-card support-faq-panel">{t("We will email you a confirmation link first. Your pre-order is only confirmed after opening that link.")}</p>
-                <p className="support-privacy-note">{t("We use these details to manage your pre-order and compare the age you enter with the minimum age configured for this pre-order. The age is self-declared and is not independently verified. This is not proof of age where applicable law requires reliable age assurance.")}{" "}{t("The minimum age of 13 for pre-orders is a separate eligibility rule chosen by Deadsmile Games; it is not the game's official content rating and does not independently verify age.")}{" "}{t("See the")}{" "}<Link to="/privacy">{t("Privacy Policy")}</Link>.</p>
+                <p className="preorder-workspace__hint support-card support-faq-panel">{t("We will email you a confirmation link. Your registration is confirmed only after you open it.")}</p>
+                <p className="support-privacy-note">{t("We use these details to manage your free pre-registration and compare your self-declared age with the eligibility age configured for this game. This is not independent age verification and cannot replace stronger age assurance or parental authorization where required by law.")}{" "}{t("The age you provide is separate from the game's official content rating, and it does not independently verify your age.")}{" "}{t("See the")}{" "}<Link to="/privacy">{t("Privacy Policy")}</Link>.</p>
                 <div className="preorder-form__actions">
                   <button className="btn btn--primary" type="submit">{t("Continue")}</button>
                   <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Cancel")}</Link>
@@ -353,7 +353,7 @@ export function Preorder() {
           {status === "review" && (
             <>
               <div className="news-detail__header preorder-workspace__stage-heading">
-                <h2>{t("Review your pre-order")}</h2>
+                <h2>{t("Review your registration")}</h2>
                 <p>{t("Check that the information below is correct.")}</p>
               </div>
               <dl className="preorder-review">
@@ -363,7 +363,7 @@ export function Preorder() {
                 <div><dt>{t("Email address")}</dt><dd>{form.email}</dd></div>
               </dl>
               {error && <p className="account-page__error" role="alert">{error}</p>}
-              <p className="preorder-workspace__hint support-card support-faq-panel">{t("After confirming your email, your reward code will appear here. It becomes redeemable when the pre-order ends; we will not email the code.")}</p>
+              <p className="preorder-workspace__hint support-card support-faq-panel">{t("After confirming your email, your reward code will appear here. It becomes redeemable when the registration period ends; we will not email the code.")}</p>
               <div className="preorder-form__actions">
                 <button className="btn btn--secondary" type="button" onClick={backToDetails}>{t("Back")}</button>
                 <button className="btn btn--primary" type="button" onClick={savePreorder} disabled={saving || attemptsRemaining <= 0} aria-busy={saving}>
@@ -381,7 +381,7 @@ export function Preorder() {
               <div className="preorder-live-indicator"><span />{t("Waiting for email confirmation")}</div>
               {error && <p className="account-page__error" role="alert">{error}</p>}
               <div className="preorder-form__actions">
-                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>
+                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel registration")}</button>
                 <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
               </div>
             </div>
@@ -389,20 +389,20 @@ export function Preorder() {
 
           {status === "already-confirmed" && (
             <div className="preorder-workspace__state" role="status">
-              <h2>{t("Your pre-order is confirmed.")}</h2>
-              <p>{t("Your pre-order is now linked to your account and will appear in your library, locked until the release countdown ends.")}</p>
+              <h2>{t("Your registration is confirmed.")}</h2>
+              <p>{t("Your free registration is linked to your account and will appear in your library, locked until the release countdown ends.")}</p>
               {rewardRedeemable && rewardCode ? (
                 <div className="preorder-workspace__hint support-card support-faq-panel">
                   <p><strong>{t("Your reward code")}</strong></p>
                   <p><code style={{ fontSize: "1.4rem", letterSpacing: "0.25em", fontWeight: 700 }}>{rewardCode}</code></p>
-                  <p>{t("The pre-order has ended. You can redeem this code from your account.")}</p>
+                  <p>{t("The registration period has ended. You can redeem this code from your account.")}</p>
                 </div>
               ) : (
-                <p className="preorder-workspace__hint support-card support-faq-panel">{t("Your reward code will appear here when the pre-order ends.")}</p>
+                <p className="preorder-workspace__hint support-card support-faq-panel">{t("Your reward code will appear here when the registration period ends.")}</p>
               )}
-              <button className="btn btn--primary" type="button" disabled>{t("Already in pre-order")}</button>
+              <button className="btn btn--primary" type="button" disabled>{t("Registration already active")}</button>
               <div className="preorder-form__actions">
-                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>
+                <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel registration")}</button>
                 <Link className="btn btn--secondary" to="/library">{t("Open library")}</Link>
               </div>
             </div>
@@ -411,9 +411,9 @@ export function Preorder() {
           {status === "redeemed" && (
             <div className="preorder-workspace__state" role="status">
               <h2>{t("Reward already redeemed")}</h2>
-              <p>{t("Your reward has been redeemed. Your pre-order code and personal details have been deleted.")}</p>
+              <p>{t("Your reward has been redeemed. Your registration code and personal details have been deleted.")}</p>
               <div className="preorder-form__actions">
-                <Link className="btn btn--primary" to={"/games/" + encodeURIComponent(slug) + "/preorder/reward"}>{t("Your pre-order reward")}</Link>
+                <Link className="btn btn--primary" to={"/games/" + encodeURIComponent(slug) + "/preorder/reward"}>{t("Your registration reward")}</Link>
                 <Link className="btn btn--secondary" to="/library">{t("Open library")}</Link>
                 <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
               </div>
@@ -422,26 +422,26 @@ export function Preorder() {
 
           {status === "daily-limit" && (
             <div className="preorder-workspace__state" role="status">
-              <h2>{t("You have used both pre-order sign-up attempts for this game today.")}</h2>
-              <p>{t("You can sign up for this pre-order again tomorrow.")}</p>
-              {hasPreorderRecord && <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>}
+              <h2>{t("You have used both registration attempts for this game today.")}</h2>
+              <p>{t("You can register for this game again tomorrow.")}</p>
+              {hasPreorderRecord && <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel registration")}</button>}
               <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
             </div>
           )}
 
           {status === "closed-record" && (
             <div className="preorder-workspace__state" role="status">
-              <h2>{t("This pre-order is no longer open.")}</h2>
+              <h2>{t("This registration is no longer open.")}</h2>
               <p>{t("You can still cancel the existing registration and delete its personal details.")}</p>
-              <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel pre-order")}</button>
+              <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel registration")}</button>
               <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
             </div>
           )}
 
           {status === "closed" && (
             <div className="preorder-workspace__state" role="status">
-              <h2>{t("This pre-order is no longer open.")}</h2>
-              <p>{t("Your personal details have been deleted. You can return when a pre-order is open again.")}</p>
+              <h2>{t("This registration is no longer open.")}</h2>
+              <p>{t("Your personal details have been deleted. You can return when registration opens again.")}</p>
               <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
             </div>
           )}
@@ -478,9 +478,9 @@ export function PreorderConfirm() {
   return (
     <main className="page-shell preorder-page container">
       <section className="preorder-workspace__state support-card support-faq-panel" aria-labelledby="preorder-confirm-title" role={status === "error" ? "alert" : "status"}>
-        {status === "loading" && <><h1 id="preorder-confirm-title">{t("Confirming your pre-order...")}</h1><LoadingSpinner /></>}
-        {status === "success" && <><h1 id="preorder-confirm-title">{t("Your pre-order is confirmed.")}</h1><p>{t("Your email is confirmed. The reward code will appear on the management page when the pre-order ends.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}/preorder`}>{t("Manage pre-order")}</Link><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
-        {status === "error" && <><h1 id="preorder-confirm-title">{t("Pre-order confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
+        {status === "loading" && <><h1 id="preorder-confirm-title">{t("Confirming your registration...")}</h1><LoadingSpinner /></>}
+        {status === "success" && <><h1 id="preorder-confirm-title">{t("Your registration is confirmed.")}</h1><p>{t("Your email is confirmed. The reward code will appear on the management page when the registration period ends.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}/preorder`}>{t("Manage registration")}</Link><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
+        {status === "error" && <><h1 id="preorder-confirm-title">{t("Registration confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
       </section>
     </main>
   );
@@ -577,7 +577,7 @@ export function PreorderReward() {
     <main className="page-shell preorder-page container">
       <section className="preorder-workspace__state support-card support-faq-panel" aria-labelledby="preorder-reward-title">
         <div className="preorder-workspace__stage-heading">
-          <h2 id="preorder-reward-title">{t("Your pre-order reward")} — {reward.title}</h2>
+          <h2 id="preorder-reward-title">{t("Your registration reward")} — {reward.title}</h2>
           <p>{reward.description || t("You have successfully redeemed your reward.")}</p>
         </div>
         {reward.rewardType === "wallpapers" && Array.isArray(reward.wallpapers) && (
