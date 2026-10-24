@@ -88,6 +88,7 @@ export function Terms() {
 
         <p className="terms-page__date">
           <small>{t("Last updated: October 24, 2026")}</small>
+          <small>{t("Document version: terms-v2026-10-24")}</small>
         </p>
       </section>
     </div>
