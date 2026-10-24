@@ -10,6 +10,12 @@ const localizedComponents = [
   "../src/pages/Accessibility.jsx",
   "../src/components/layout/Footer.jsx",
   "../src/components/ui/CookieConsent.jsx",
+  "../src/pages/Preorder.jsx",
+  "../src/pages/PressKit.jsx",
+  "../src/pages/Support.jsx",
+  "../src/pages/Account.jsx",
+  "../src/pages/Soundtracks.jsx",
+  "../src/components/admin/AdminComposer.jsx",
 ];
 
 test("legal, cookie and accessibility copy is translated in Portuguese and Spanish", async () => {
