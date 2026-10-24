@@ -16,6 +16,7 @@ const localizedComponents = [
   "../src/pages/Account.jsx",
   "../src/pages/Soundtracks.jsx",
   "../src/components/videos/VideoOverlay.jsx",
+  "../src/components/videos/LiveChatPanel.jsx",
   "../src/components/videos/PremiereBanner.jsx",
   "../src/components/games/FeaturedHero.jsx",
   "../src/components/admin/AdminComposer.jsx",
