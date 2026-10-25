@@ -66,25 +66,30 @@ export function LegalAcceptanceModal() {
           <span>{t("I acknowledge the updated Privacy Policy.")}</span>
         </label>
         {error && <p role="alert">{error}</p>}
-        <div className="account-modal-actions">
+        <p>
           <button
             type="button"
-            className="btn btn--primary"
+            className="btn btn--primary auth-page__submit"
             onClick={submitAcceptance}
             disabled={submitting || !termsAccepted || !privacyAcknowledged}
           >
             {t(submitting ? "Sending…" : "Accept and continue")}
           </button>
+        </p>
+        <p>
           <button
             type="button"
-            className="btn btn--secondary"
+            className="btn btn--secondary auth-page__submit"
             onClick={logout}
             disabled={submitting}
           >
             {t("Sign out")}
           </button>
-        </div>
-        <p>{t("If you do not accept, you can sign out. For privacy requests, contact somiarigames@gmail.com.")}</p>
+        </p>
+        <p>
+          {t("If you do not accept, you can sign out. For privacy requests, contact")}{" "}
+          <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>.
+        </p>
       </div>
     </Modal>
   );
