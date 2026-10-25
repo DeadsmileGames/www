@@ -107,13 +107,9 @@ export function Footer() {
           somiarigames@gmail.com
         </a>
         <nav className="footer-links" aria-label={t("Footer")}>
-          <Link to="/games">{t("Games")}</Link>
-          <Link to="/launcher">{t("Launcher")}</Link>
-          <Link to="/newswire">{t("News")}</Link>
-          <Link to="/about">{t("About")}</Link>
-          <Link to="/specialthanks">{t("Special Thanks")}</Link>
           <Link to="/support">{t("Support")}</Link>
           <Link to="/presskit">{t("Press Kit")}</Link>
+          <Link to="/specialthanks">{t("Special Thanks")}</Link>
           <Link to="/privacy">{t("Privacy")}</Link>
           <Link to="/terms">{t("Terms")}</Link>
           <Link to="/cookies">{t("Cookie Policy")}</Link>
