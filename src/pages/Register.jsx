@@ -1,3 +1,4 @@
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "../constants/legal";
 import { friendlyErrorMessage } from "../services/api";
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -120,8 +121,8 @@ export function Register() {
         recaptchaToken,
         termsAccepted: acceptedTerms,
         privacyAcknowledged: acknowledgedPrivacy,
-        termsVersion: "terms-v2026-10-25",
-        privacyVersion: "privacy-v2026-10-25",
+        termsVersion: CURRENT_TERMS_VERSION,
+        privacyVersion: CURRENT_PRIVACY_VERSION,
       });
 
       try {
