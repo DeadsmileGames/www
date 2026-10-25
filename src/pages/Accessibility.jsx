@@ -14,6 +14,13 @@ export function Accessibility() {
       </Reveal>
       <section className="privacy-page__content">
         <div className="privacy-block">
+          <h2>{t("Accessibility target")}</h2>
+          <p>
+            {t("We use WCAG 2.2 Level AA as the target for accessibility improvements. This is a goal, not a claim that every page conforms or has been independently certified.")}
+          </p>
+        </div>
+        <div className="privacy-block">
+          <h2>{t("Report a barrier")}</h2>
           <p>
             {t("If a page or feature prevents you from accessing information or completing a task, contact")}{" "}
             <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>.
