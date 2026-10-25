@@ -40,7 +40,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("Service providers and transfers")}</h2>
           <p>
-            {t("The providers used for hosting and databases (Render and Neon), email (Brevo and, when configured, Resend), security checks (Google reCAPTCHA), video and live chat (YouTube), and connected itch.io accounts may receive the data needed for those features. Some providers may process data outside Brazil, including in the United States. International transfers must use the legal mechanism and safeguards required by applicable law. External stores handle purchases made through their checkout.")}
+            {t("We do not sell personal data. The providers used for hosting and databases (Render and Neon), email (Brevo and, when configured, Resend), security checks (Google reCAPTCHA), video and live chat (YouTube), and connected itch.io accounts may receive the data needed for those features. Some providers may process data outside Brazil, including in the United States. International transfers must use the legal mechanism and safeguards required by applicable law. External stores handle purchases made through their checkout.")}
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("Your rights")}</h2>
           <p>
-            {t("Subject to applicable law, you can request access, correction, deletion or anonymization of data, information about sharing, portability where available, and withdrawal of consent. Email")}{" "}
+            {t("Subject to applicable law, you can request confirmation of processing, access, correction, anonymization, blocking or deletion of unnecessary or unlawfully processed data, portability where available, information about sharing and the consequences of refusing consent, and withdrawal of consent. Email")}{" "}
             <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>
             {t(" to make a request. We may ask for information needed to verify it. You may also contact the ANPD or the data-protection authority responsible for your location.")}
           </p>
