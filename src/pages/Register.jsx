@@ -120,8 +120,8 @@ export function Register() {
         recaptchaToken,
         termsAccepted: acceptedTerms,
         privacyAcknowledged: acknowledgedPrivacy,
-        termsVersion: "terms-v2026-10-24",
-        privacyVersion: "privacy-v2026-10-24",
+        termsVersion: "terms-v2026-10-25",
+        privacyVersion: "privacy-v2026-10-25",
       });
 
       try {
