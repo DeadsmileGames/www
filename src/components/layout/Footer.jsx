@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faItchIo } from "@fortawesome/free-brands-svg-icons";
 import { faInstagram, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { Wheelchair } from "@phosphor-icons/react";
 import { api, friendlyErrorMessage } from "../../services/api";
 
 export function Footer() {
@@ -116,7 +117,10 @@ export function Footer() {
           <Link to="/privacy">{t("Privacy")}</Link>
           <Link to="/terms">{t("Terms")}</Link>
           <Link to="/cookies">{t("Cookie Policy")}</Link>
-          <Link to="/accessibility">{t("Accessibility")}</Link>
+          <Link to="/accessibility" className="footer-accessibility-link">
+            <Wheelchair size={19} weight="bold" aria-hidden="true" />
+            <span>{t("Accessibility")}</span>
+          </Link>
         </nav>
         <p className="copyright">© {new Date().getFullYear()} Deadsmile Games</p>
       </div>
