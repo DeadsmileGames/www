@@ -55,11 +55,11 @@ export function Support() {
         </div>
       </header>
       <section className="support-quick-grid">
-        <a href="mailto:deadsmilegames@gmail.com">
+        <a href="mailto:somiarigames@gmail.com">
           <Envelope size={25} weight="bold" />
           <div>
             <strong>{t("Email support")}</strong>
-            <span>deadsmilegames@gmail.com</span>
+            <span>somiarigames@gmail.com</span>
           </div>
           <ArrowUpRight size={18} weight="bold" />
         </a>
@@ -119,6 +119,10 @@ export function Support() {
                 placeholder={t("What were you trying to do?")}
               />
             </label>
+            <small className="support-privacy-note">
+              {t("By sending this request, you acknowledge the Privacy Policy.")}{" "}
+              <Link to="/privacy">{t("Privacy Policy")}</Link>
+            </small>
             <button className="btn btn--primary" disabled={sending}>
               <span>{sending ? t("Sending\u2026") : t("Send message")}</span>
               <ArrowUpRight size={18} weight="bold" />

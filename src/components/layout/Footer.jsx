@@ -1,3 +1,4 @@
+import { CURRENT_NEWSLETTER_CONSENT_VERSION } from "../../constants/legal";
 import { useLanguage } from "../../context/LanguageContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -11,6 +12,7 @@ export function Footer() {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
 
   async function subscribe(event) {
     event.preventDefault();
@@ -18,9 +20,14 @@ export function Footer() {
     setBusy(true);
     setMessage("");
     try {
-      await api.post("/newsletter", { email: email.trim() });
+      await api.post("/newsletter", {
+        email: email.trim(),
+        consentAccepted: newsletterConsent,
+        consentTextVersion: CURRENT_NEWSLETTER_CONSENT_VERSION,
+      });
       setMessage(t("Request received. Check your inbox to confirm your subscription."));
       setEmail("");
+      setNewsletterConsent(false);
     } catch (error) {
       setMessage(friendlyErrorMessage(error));
     } finally {
@@ -36,6 +43,16 @@ export function Footer() {
           <p>{t("New games, studio news and the occasional surprise.")}</p>
           <form onSubmit={subscribe}>
             <label htmlFor="newsletter-email">{t("Your email address")}</label>
+            <label className="newsletter-consent">
+              <input
+                type="checkbox"
+                required
+                checked={newsletterConsent}
+                onChange={(event) => setNewsletterConsent(event.target.checked)}
+                disabled={busy}
+              />
+              <span>{t("I agree to receive email updates from Deadsmile Games. I can unsubscribe at any time.")}</span>
+            </label>
             <div className="newsletter-input">
               <input
                 id="newsletter-email"
@@ -48,7 +65,7 @@ export function Footer() {
                 onChange={(event) => setEmail(event.target.value)}
               />
 
-              <button disabled={busy}>{busy ? t("Sending\u2026") : t("Join us")}</button>
+              <button disabled={busy || !newsletterConsent}>{busy ? t("Sending\u2026") : t("Join us")}</button>
             </div>
             <p role="status">{t(message)}</p>
             <small>
@@ -85,8 +102,8 @@ export function Footer() {
           </a>
         </div>
 
-        <a className="footer-email" href="mailto:deadsmilegames@gmail.com">
-          deadsmilegames@gmail.com
+        <a className="footer-email" href="mailto:somiarigames@gmail.com">
+          somiarigames@gmail.com
         </a>
         <nav className="footer-links" aria-label={t("Footer")}>
           <Link to="/games">{t("Games")}</Link>
@@ -98,6 +115,8 @@ export function Footer() {
           <Link to="/presskit">{t("Press Kit")}</Link>
           <Link to="/privacy">{t("Privacy")}</Link>
           <Link to="/terms">{t("Terms")}</Link>
+          <Link to="/cookies">{t("Cookie Policy")}</Link>
+          <Link to="/accessibility">{t("Accessibility")}</Link>
         </nav>
         <p className="copyright">© {new Date().getFullYear()} Deadsmile Games</p>
       </div>

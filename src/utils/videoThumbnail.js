@@ -1,4 +1,5 @@
-import { safeImageUrl } from "./urls";
+import { safeImageUrl } from "./urls.js";
+import { optionalContentAllowed } from "./consent.js";
 
 const localizedThumbnailFields = {
   en: "thumbnail_en",
@@ -6,11 +7,37 @@ const localizedThumbnailFields = {
   es: "thumbnail_es",
 };
 
-export function getVideoThumbnail(video, language = "en") {
+function isExternalMediaUrl(value) {
+  if (typeof value === "string" && value.startsWith("data:image/")) return false;
+  try {
+    const origin = typeof window !== "undefined"
+      ? window.location.origin
+      : "https://deadsmile.invalid";
+    return new URL(value, origin).origin !== origin;
+  } catch {
+    return false;
+  }
+}
+
+export function getVideoThumbnail(
+  video,
+  language = "en",
+  allowExternalMedia = optionalContentAllowed(),
+) {
   const localizedField = localizedThumbnailFields[language];
-  return (
-    (localizedField ? safeImageUrl(video?.[localizedField]) : null) ||
-    safeImageUrl(video?.youtube?.thumbnail) ||
-    safeImageUrl(video?.thumbnail)
-  );
+  const candidates = [
+    localizedField ? video?.[localizedField] : null,
+    video?.youtube?.thumbnail,
+    video?.thumbnail,
+    video?.image,
+  ];
+
+  for (const candidate of candidates) {
+    const image = safeImageUrl(candidate);
+    if (!image) continue;
+    if (!allowExternalMedia && isExternalMediaUrl(image)) continue;
+    return image;
+  }
+
+  return null;
 }

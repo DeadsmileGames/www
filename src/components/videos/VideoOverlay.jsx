@@ -155,7 +155,7 @@ function Panel({ videoId, onClose, onSelect }) {
                     className="btn btn--player"
                     onClick={() => setOptionalContent(true)}
                   >
-                    {t("Allow YouTube")}
+                    {t("Allow optional content")}
                   </button>
                 </div>
               ) : embed ? (
@@ -224,7 +224,7 @@ function Panel({ videoId, onClose, onSelect }) {
                   <AutoLinkText>{description || t("No description available yet.")}</AutoLinkText>
                 </p>
               </section>
-              {liveChatEnabled && (
+              {liveChatEnabled && allowed && (
                 <LiveChatPanel
                   videoId={video.id}
                   videoState={youtubeState}
@@ -237,7 +237,7 @@ function Panel({ videoId, onClose, onSelect }) {
               {relatedVideos.length > 0 ? (
                 <div className="video-overlay__related-grid">
                   {relatedVideos.map((related) => {
-                    const thumbnail = getVideoThumbnail(related, language);
+                    const thumbnail = getVideoThumbnail(related, language, allowed);
                     return (
                       <button
                         key={related.id}

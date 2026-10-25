@@ -6,6 +6,8 @@ import { ArrowUpRight, X } from "@phosphor-icons/react";
 import { useLanguage } from "../../context/LanguageContext";
 import { useCountdown, formatCountdown } from "../../hooks/useCountdown";
 import { safeImageUrl } from "../../utils/urls";
+import { getVideoThumbnail } from "../../utils/videoThumbnail";
+import { useOptionalContent } from "../../utils/consent";
 import { formatReleaseDate, getReleaseTimestamp } from "../../utils/releaseDate";
 import { trapFocus } from "../../utils/dom";
 import { AutoLinkText } from "../ui/AutoLinkText";
@@ -13,6 +15,7 @@ import { AutoLinkText } from "../ui/AutoLinkText";
 export function PremiereBanner({ premiere, onOpen }) {
   const { t, language } = useLanguage();
   const reducedMotion = useReducedMotion();
+  const allowExternalMedia = useOptionalContent();
   const bannerRef = useRef(null);
   const previewRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
@@ -28,7 +31,7 @@ export function PremiereBanner({ premiere, onOpen }) {
   const coverImage =
     safeImageUrl(premiere.game_cover_image) ||
     safeImageUrl(premiere.coverImage) ||
-    safeImageUrl(premiere.thumbnail) ||
+    getVideoThumbnail(premiere, language, allowExternalMedia) ||
     safeImageUrl(premiere.heroImage) ||
     "/assets/placeholders/game-cover.svg";
   const previewBackgroundImage =

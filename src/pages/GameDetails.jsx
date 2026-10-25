@@ -25,6 +25,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { AutoLinkText } from "../components/ui/AutoLinkText";
 import { safeHttpsUrl, safeImageUrl, safeItchUrl, safeOAuthItchUrl } from "../utils/urls";
 import { getVideoThumbnail } from "../utils/videoThumbnail";
+import { useOptionalContent } from "../utils/consent";
 import { getReleaseTimestamp } from "../utils/releaseDate";
 import { useServerClock, syncServerClock } from "../hooks/useServerClock";
 
@@ -55,6 +56,7 @@ function getCalendarDateParts(timestamp) {
 export function GameDetails() {
   const { slug } = useParams();
   const { t, language } = useLanguage();
+  const allowExternalVideoMedia = useOptionalContent();
   const { user, status: authStatus } = useAuth();
   const navigate = useNavigate();
   const launcherCleanup = useRef(() => {});
@@ -606,10 +608,10 @@ export function GameDetails() {
           hasConfirmedPreorder ? (
             <div className="game-details__preorder-actions">
               <button type="button" className="btn btn--primary game-details__btn" disabled aria-disabled="true">
-                {t("Already in pre-order")}
+                {t("Registration already active")}
               </button>
               <Link to={preorderPath} className="btn btn--secondary game-details__btn">
-                {t("Manage pre-order")}
+                {t("Manage registration")}
               </Link>
             </div>
           ) : (
@@ -618,7 +620,7 @@ export function GameDetails() {
               state={authStatus === "authenticated" ? undefined : { from: { pathname: preorderPath } }}
               className="btn btn--primary game-details__btn"
             >
-              {t("Pre-order")}
+              {t("Free pre-registration")}
             </Link>
           )
         )}
@@ -824,8 +826,8 @@ export function GameDetails() {
                     className="game-video-card"
                   >
                     <span className="game-video-card__visual">
-                      {getVideoThumbnail(video, language) && (
-                        <img src={getVideoThumbnail(video, language)} alt="" loading="lazy" />
+                      {getVideoThumbnail(video, language, allowExternalVideoMedia) && (
+                        <img src={getVideoThumbnail(video, language, allowExternalVideoMedia)} alt="" loading="lazy" />
                       )}
                       <i>
                         <Play size={20} weight="bold" />

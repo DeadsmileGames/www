@@ -17,7 +17,7 @@ export function CookieConsent() {
         <div className="cookie-consent__message">
           <h3>{t("Privacy choices")}</h3>
           <p>{t("Essential session and security cookies stay active so the site can work safely.")}</p>
-          <p>{t("Optional YouTube embeds remain blocked unless you allow them. Security verification asks separately before loading.")}</p>
+          <p>{t("Externally hosted video thumbnails, YouTube embedded players and read-only live chat remain unavailable until you allow optional content. Security verification asks separately before loading.")}</p>
         </div>
         <div className="cookie-consent__actions">
           <button
@@ -34,7 +34,7 @@ export function CookieConsent() {
           >
             {t("Reject optional content")}
           </button>
-          <Link to="/privacy" className="cookie-consent__link">
+          <Link to="/cookies" className="cookie-consent__link">
             {t("Manage preferences")}
           </Link>
         </div>

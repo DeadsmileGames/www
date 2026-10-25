@@ -10,6 +10,7 @@ import { Header } from "../components/layout/Header";
 import { Footer } from "../components/layout/Footer";
 import { SearchOverlay } from "../components/search/SearchOverlay";
 import { CookieConsent } from "../components/ui/CookieConsent";
+import { LegalAcceptanceModal } from "../components/ui/LegalAcceptanceModal";
 import { PremiereBanner } from "../components/videos/PremiereBanner";
 import { VideoOverlay } from "../components/videos/VideoOverlay";
 import { usePremiere } from "../hooks/usePremiere";
@@ -227,6 +228,7 @@ export function AppLayout() {
       />
 
       {!isAuthPage && <CookieConsent />}
+      <LegalAcceptanceModal />
     </>
   );
 }

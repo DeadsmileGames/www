@@ -312,7 +312,7 @@ export function Account() {
       navigate(result.rewardUrl);
     } catch (error) {
       setRedeemError(t(error?.code === "PREORDER_NOT_ENDED"
-        ? "This pre-order has not ended yet. Your code becomes redeemable after it ends."
+        ? "This registration period has not ended yet. Your code becomes redeemable after it ends."
         : error?.code === "PREORDER_CODE_ALREADY_REDEEMED"
           ? "Reward already redeemed"
           : "Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
@@ -1720,7 +1720,7 @@ export function Account() {
           <div className="modal-card" role="document">
             <button type="button" className="modal-close" onClick={() => setRedeemOpen(false)} aria-label={t("Close")}><X weight="bold" /></button>
             <h2 id="redeem-code-title">{t("Redeem code")}</h2>
-            <p>{t("Enter your six-digit pre-order reward code.")}</p>
+            <p>{t("Enter your six-digit registration reward code.")}</p>
             <form className="account-panel" onSubmit={submitPreorderCode} aria-busy={redeemBusy}>
               <label className="admin-field">
                 <span>{t("Redeem code")}</span>
