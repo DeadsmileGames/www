@@ -1,3 +1,4 @@
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "../constants/legal";
 import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import { api, friendlyErrorMessage } from "../services/api";
 
@@ -108,6 +109,22 @@ export function AuthProvider({ children }) {
     [authenticate],
   );
 
+  const acceptLegalDocuments = useCallback(async () => {
+    if (authenticating.current) throw { code: "SERVICE_UNAVAILABLE" };
+    const result = await api.post("/auth/accept-legal-documents", {
+      termsAccepted: true,
+      privacyAcknowledged: true,
+      termsVersion: CURRENT_TERMS_VERSION,
+      privacyVersion: CURRENT_PRIVACY_VERSION,
+    });
+    if (!validAccount(result) || result.legalAcceptanceRequired === true) {
+      throw { code: "INVALID_RESPONSE" };
+    }
+    setUser(result);
+    setStatus("authenticated");
+    setError("");
+    return result;
+  }, []);
   const logout = useCallback(async () => {
     if (authenticating.current) return;
     const current = ++sequence.current;
@@ -126,7 +143,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, status, error, login, verifyTwoFactor, register, logout, refresh }}
+      value={{ user, status, error, login, verifyTwoFactor, register, acceptLegalDocuments, logout, refresh }}
     >
       {children}
     </AuthContext.Provider>
