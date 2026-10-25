@@ -6887,7 +6887,7 @@ main:has(.special-thanks-page) {
 
 /* Newswire reading layout: compact body on phones without shrinking text below a comfortable size. */
 .news-article-body {
-  padding: clamp(18px, 2.5vw, 30px);
+  padding: clamp(24px, 3vw, 38px);
   margin: 0 0 24px;
   border-radius: 12px;
   background: #202020;
@@ -6965,7 +6965,7 @@ main:has(.special-thanks-page) {
     margin-bottom: 22px;
   }
   .news-article-body {
-    padding: 15px;
+    padding: 24px;
     margin-bottom: 22px;
     border-radius: 10px;
   }
@@ -6988,7 +6988,7 @@ main:has(.special-thanks-page) {
 }
 @media (max-width: 380px) {
   .news-article-body {
-    padding: 13px;
+    padding: 24px;
   }
   .news-article-body,
   .news-detail__body {
