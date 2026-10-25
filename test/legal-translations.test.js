@@ -8,6 +8,7 @@ const localizedComponents = [
   "../src/pages/Terms.jsx",
   "../src/pages/Cookies.jsx",
   "../src/pages/Accessibility.jsx",
+  "../src/components/ui/LegalAcceptanceModal.jsx",
   "../src/components/layout/Footer.jsx",
   "../src/components/ui/CookieConsent.jsx",
   "../src/pages/Preorder.jsx",
