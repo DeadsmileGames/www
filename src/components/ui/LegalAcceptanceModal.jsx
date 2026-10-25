@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../hooks/useAuth";
 import { Modal } from "./Modal";
 
 export function LegalAcceptanceModal() {
   const { t } = useLanguage();
+  const location = useLocation();
   const { user, status, acceptLegalDocuments, logout } = useAuth();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [privacyAcknowledged, setPrivacyAcknowledged] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const open = status === "authenticated" && user?.legalAcceptanceRequired === true;
+  const legalReviewPage = ["/terms", "/privacy", "/cookies", "/accessibility"].includes(location.pathname);
+  const open = status === "authenticated" && user?.legalAcceptanceRequired === true && !legalReviewPage;
 
   useEffect(() => {
     if (!open) return;
