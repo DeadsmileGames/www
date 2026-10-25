@@ -144,10 +144,7 @@ export function News() {
             </figure>
           )}
           <div className="news-detail__content">
-            <div
-              className="news-detail__body support-card support-contact-panel"
-              style={{ marginBottom: "32px" }}
-            >
+            <div className="news-detail__body news-article-body">
               <div lang="en">
                 <NewswireBody body={item.body} />
               </div>
