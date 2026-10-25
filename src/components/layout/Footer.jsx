@@ -117,11 +117,11 @@ export function Footer() {
           <Link to="/privacy">{t("Privacy")}</Link>
           <Link to="/terms">{t("Terms")}</Link>
           <Link to="/cookies">{t("Cookie Policy")}</Link>
-          <Link to="/accessibility" className="footer-accessibility-link">
-            <Wheelchair size={19} weight="bold" aria-hidden="true" />
-            <span>{t("Accessibility")}</span>
-          </Link>
         </nav>
+        <Link to="/accessibility" className="footer-accessibility-link">
+          <Wheelchair size={19} weight="bold" aria-hidden="true" />
+          <span>{t("Accessibility")}</span>
+        </Link>
         <p className="copyright">© {new Date().getFullYear()} Deadsmile Games</p>
       </div>
     </footer>
