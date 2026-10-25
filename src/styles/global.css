@@ -6884,3 +6884,163 @@ main:has(.special-thanks-page) {
     margin-top: 2px;
   }
 }
+
+/* Newswire reading layout: compact body on phones without shrinking text below a comfortable size. */
+.news-article-body {
+  padding: clamp(18px, 2.5vw, 30px);
+  margin: 0 0 24px;
+  border-radius: 12px;
+  background: #202020;
+  overflow-wrap: anywhere;
+}
+.news-article-body > div {
+  min-width: 0;
+}
+.news-article-body p {
+  margin: 0 0 1em;
+}
+.news-article-body p:last-child {
+  margin-bottom: 0;
+}
+.news-article-body h2 {
+  margin: 1.4em 0 0.55em;
+  font-size: clamp(20px, 2.1vw, 25px);
+  line-height: 1.3;
+}
+.news-article-body h3 {
+  margin: 1.25em 0 0.5em;
+  font-size: clamp(18px, 1.8vw, 21px);
+  line-height: 1.35;
+}
+.news-article-body img,
+.news-article-body video {
+  max-width: 100%;
+  height: auto;
+}
+.news-article-body pre,
+.news-article-body table {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.footer-accessibility-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+}
+.footer-accessibility-link svg {
+  flex: 0 0 auto;
+}
+.footer-accessibility-link:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+@media (max-width: 760px) {
+  .news-detail {
+    padding-top: 100px;
+    padding-bottom: 42px;
+  }
+  .news-detail__header {
+    margin-bottom: 22px;
+  }
+  .news-detail__eyebrow {
+    margin-bottom: 10px;
+  }
+  .news-detail__header h1 {
+    font-size: clamp(28px, 7.2vw, 36px);
+    line-height: 1.15;
+    text-wrap: pretty;
+  }
+  .news-detail__lead {
+    margin-top: 12px;
+    font-size: 17px;
+    line-height: 1.55;
+  }
+  .news-detail__image {
+    margin-bottom: 22px;
+  }
+  .news-article-body {
+    padding: 15px;
+    margin-bottom: 22px;
+    border-radius: 10px;
+  }
+  .news-article-body,
+  .news-detail__body {
+    font-size: 16px;
+    line-height: 1.68;
+  }
+  .news-article-body h2 {
+    margin-top: 1.2em;
+    font-size: 21px;
+  }
+  .news-article-body h3 {
+    margin-top: 1.1em;
+    font-size: 18px;
+  }
+  .news-detail .game-details__related {
+    margin-top: 24px !important;
+  }
+}
+@media (max-width: 380px) {
+  .news-article-body {
+    padding: 13px;
+  }
+  .news-article-body,
+  .news-detail__body {
+    font-size: 15.5px;
+  }
+}
+
+/* Keep the legal pages direct and readable instead of presenting every paragraph as a large block. */
+.privacy-page .privacy-page__content,
+.terms-page .terms-page__content {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.privacy-page .privacy-block,
+.terms-page .terms-block {
+  margin-bottom: 22px;
+}
+.privacy-page .privacy-page__content > section {
+  margin: 22px 0;
+}
+.privacy-page .privacy-block h2,
+.terms-page .terms-block h2 {
+  margin-bottom: 8px;
+  font-size: 21px;
+  line-height: 1.3;
+}
+.privacy-page .privacy-block p,
+.terms-page .terms-block p {
+  margin: 0 0 10px;
+}
+.privacy-page .privacy-block p:last-child,
+.terms-page .terms-block p:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 760px) {
+  .privacy-page,
+  .terms-page {
+    padding-top: 100px;
+    padding-bottom: 42px;
+  }
+  .privacy-page section,
+  .terms-page section {
+    margin: 24px 0;
+  }
+  .privacy-page .privacy-page__content,
+  .terms-page .terms-page__content {
+    font-size: 15.5px;
+    line-height: 1.62;
+  }
+  .privacy-page .privacy-block h2,
+  .terms-page .terms-block h2 {
+    font-size: 19px;
+  }
+}
+
