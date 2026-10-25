@@ -100,8 +100,8 @@ export function Wishlist() {
 
       {games.length === 0 ? (
         <EmptyState
-          title={t("WISHLIST EMPTY")}
-          message={t("Start adding games you're interested in!")}
+          title="WISHLIST EMPTY"
+          message="Start adding games you're interested in!"
           action={
             <Link to="/games" className="btn btn--primary">
               {t("Browse games")}

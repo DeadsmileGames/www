@@ -29,7 +29,7 @@ export function Games() {
       </Reveal>
 
       {status === "loading" && <SkeletonGameGrid count={PAGE_SIZE} />}
-      {status === "error" && <ErrorState message={t(error)} onRetry={retry} />}
+      {status === "error" && <ErrorState message={error} onRetry={retry} />}
       {status === "success" && games.length === 0 && <EmptyState />}
       {status === "success" && games.length > 0 && (
         <>

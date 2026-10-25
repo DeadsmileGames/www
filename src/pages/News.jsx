@@ -235,7 +235,7 @@ export function News() {
           </p>
         )}
         {list.status === "success" && newsItems.length === 0 && (
-          <EmptyState title={t("news.empty")} />
+          <EmptyState title="news.empty" />
         )}
         {newsItems.map((story, i) => (
           <Reveal key={story.id} className="news-card">

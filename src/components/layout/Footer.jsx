@@ -26,7 +26,7 @@ export function Footer() {
         consentAccepted: newsletterConsent,
         consentTextVersion: CURRENT_NEWSLETTER_CONSENT_VERSION,
       });
-      setMessage(t("Request received. Check your inbox to confirm your subscription."));
+      setMessage("Request received. Check your inbox to confirm your subscription.");
       setEmail("");
       setNewsletterConsent(false);
     } catch (error) {

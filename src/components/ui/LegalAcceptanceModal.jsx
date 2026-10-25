@@ -29,7 +29,7 @@ export function LegalAcceptanceModal() {
     try {
       await acceptLegalDocuments();
     } catch {
-      setError(t("Could not save your acceptance. Please try again."));
+      setError("Could not save your acceptance. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -67,7 +67,7 @@ export function LegalAcceptanceModal() {
           />
           <span>{t("I acknowledge the updated Privacy Policy.")}</span>
         </label>
-        {error && <p role="alert">{error}</p>}
+        {error && <p role="alert">{t(error)}</p>}
         <p>
           <button
             type="button"

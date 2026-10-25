@@ -43,11 +43,11 @@ export function Cookies() {
         <div className="privacy-block">
           <h2>{t("External services")}</h2>
           <p>
-            {t("When you load or connect to third-party services, they may receive technical data such as your IP address, browser information and the request made. See the")}{" "}
-            <a href="/privacy">{t("Privacy Policy")}</a>
-            {t(" for details and contact")}{" "}
-            <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>
-            {t(" with questions.")}
+            {t("When you load or connect to third-party services, they may receive technical data such as your IP address, browser information and the request made.")}{" "}
+            {t("For details, see the")}{" "}
+            <a href="/privacy">{t("Privacy Policy")}</a>.
+            {" "}{t("For questions, contact")}{" "}
+            <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>.
           </p>
         </div>
 

@@ -301,7 +301,7 @@ export function Account() {
   async function submitPreorderCode(event) {
     event.preventDefault();
     if (!/^\d{6}$/.test(redeemCode.trim())) {
-      setRedeemError(t("Enter a valid six-digit code."));
+      setRedeemError("Enter a valid six-digit code.");
       return;
     }
     setRedeemBusy(true);
@@ -311,11 +311,11 @@ export function Account() {
       setRedeemOpen(false);
       navigate(result.rewardUrl);
     } catch (error) {
-      setRedeemError(t(error?.code === "PREORDER_NOT_ENDED"
+      setRedeemError(error?.code === "PREORDER_NOT_ENDED"
         ? "This registration period has not ended yet. Your code becomes redeemable after it ends."
         : error?.code === "PREORDER_CODE_ALREADY_REDEEMED"
           ? "Reward already redeemed"
-          : "Reward code could not be redeemed. Check that the code matches your account email and has not been used."));
+          : "Reward code could not be redeemed. Check that the code matches your account email and has not been used.");
     } finally {
       setRedeemBusy(false);
     }
@@ -1726,7 +1726,7 @@ export function Account() {
                 <span>{t("Redeem code")}</span>
                 <input value={redeemCode} onChange={(event) => setRedeemCode(event.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" minLength={6} maxLength={6} required />
               </label>
-              {redeemError && <p className="account-page__error" role="alert">{redeemError}</p>}
+              {redeemError && <p className="account-page__error" role="alert">{t(redeemError)}</p>}
               <div className="modal-card__foot">
                 <Button type="button" variant="secondary" onClick={() => setRedeemOpen(false)}>{t("Cancel")}</Button>
                 <Button type="submit" variant="primary" disabled={redeemBusy}>{redeemBusy ? t("Saving…") : t("Redeem")}</Button>

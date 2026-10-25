@@ -555,7 +555,7 @@ export function GameDetails() {
   if (state.status === "not-found") {
     return (
       <div className="container game-details__notfound">
-        <ErrorState title={t("GAME NOT FOUND")} message={state.error} />
+        <ErrorState title="GAME NOT FOUND" message={state.error} />
         <Link to="/games" className="btn btn--primary">
           <ArrowLeft weight="bold" />
           <span>{t("Browse games")}</span>
