@@ -49,8 +49,8 @@ export function Cookies() {
           <p>{t("For questions about privacy or these technologies, contact")} <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>. {t("See also the Privacy Policy for information about data processing and privacy rights.")}</p>
         </div>
         <p className="terms-page__date">
-          <small>{t("Last updated: October 24, 2026")}</small>
-          <small>{t("Document version: cookies-v2026-10-24")}</small>
+          <small>{t("Last updated: October 25, 2026")}</small>
+          <small>{t("Document version: cookies-v2026-10-25")}</small>
         </p>
       </section>
     </div>
