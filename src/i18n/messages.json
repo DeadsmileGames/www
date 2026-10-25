@@ -1097,7 +1097,12 @@
     "Please include the page address and describe the barrier. Do not send passwords or sensitive personal information.": "Informe o endereço da página e descreva a barreira. Não envie senhas nem informações pessoais sensíveis.",
     "Deadsmile Games is working to make this website accessible to people with disabilities.": "A Deadsmile Games está trabalhando para tornar este site acessível a pessoas com deficiência.",
     "If a page or feature prevents you from accessing information or completing a task, contact": "Se uma página ou recurso impedir seu acesso a informações ou a conclusão de uma tarefa, entre em contato pelo e-mail",
-    " with questions.": " em caso de dúvidas."
+    " with questions.": " em caso de dúvidas.",
+    "Acceptance and changes": "Aceite e alterações",
+    "By creating an account or using account-only features, you agree to these terms. We may update the terms as the service or law changes; the current version and revision date appear below. Mandatory rights are not waived.": "Ao criar uma conta ou usar recursos que exigem conta, você concorda com estes termos. Podemos atualizá-los conforme o serviço ou a legislação mudar; a versão atual e a data de revisão aparecem abaixo. Direitos obrigatórios não são renunciados.",
+    "Accessibility target": "Meta de acessibilidade",
+    "We use WCAG 2.2 Level AA as the target for accessibility improvements. This is a goal, not a claim that every page conforms or has been independently certified.": "Usamos WCAG 2.2 nível AA como meta para melhorias de acessibilidade. Esta é uma meta, não uma afirmação de que todas as páginas estejam em conformidade ou tenham certificação independente.",
+    "Report a barrier": "Relatar uma barreira"
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -2197,7 +2202,12 @@
     "Please include the page address and describe the barrier. Do not send passwords or sensitive personal information.": "Incluye la dirección de la página y describe la barrera. No envíes contraseñas ni información personal sensible.",
     "Deadsmile Games is working to make this website accessible to people with disabilities.": "Deadsmile Games está trabajando para que este sitio sea accesible para personas con discapacidad.",
     "If a page or feature prevents you from accessing information or completing a task, contact": "Si una página o función te impide acceder a la información o completar una tarea, contacta con",
-    " with questions.": " si tienes preguntas."
+    " with questions.": " si tienes preguntas.",
+    "Acceptance and changes": "Aceptación y cambios",
+    "By creating an account or using account-only features, you agree to these terms. We may update the terms as the service or law changes; the current version and revision date appear below. Mandatory rights are not waived.": "Al crear una cuenta o usar funciones que requieren cuenta, aceptas estos términos. Podemos actualizarlos cuando cambie el servicio o la legislación; la versión actual y la fecha de revisión aparecen abajo. No se renuncia a los derechos obligatorios.",
+    "Accessibility target": "Objetivo de accesibilidad",
+    "We use WCAG 2.2 Level AA as the target for accessibility improvements. This is a goal, not a claim that every page conforms or has been independently certified.": "Utilizamos WCAG 2.2 nivel AA como objetivo para mejorar la accesibilidad. Es una meta, no una afirmación de que todas las páginas cumplan ni de que exista una certificación independiente.",
+    "Report a barrier": "Informar de una barrera"
   },
   "en": {
     "Retomar": "Resume",
@@ -2558,6 +2568,11 @@
     "Please include the page address and describe the barrier. Do not send passwords or sensitive personal information.": "Please include the page address and describe the barrier. Do not send passwords or sensitive personal information.",
     "Deadsmile Games is working to make this website accessible to people with disabilities.": "Deadsmile Games is working to make this website accessible to people with disabilities.",
     "If a page or feature prevents you from accessing information or completing a task, contact": "If a page or feature prevents you from accessing information or completing a task, contact",
-    " with questions.": " with questions."
+    " with questions.": " with questions.",
+    "Acceptance and changes": "Acceptance and changes",
+    "By creating an account or using account-only features, you agree to these terms. We may update the terms as the service or law changes; the current version and revision date appear below. Mandatory rights are not waived.": "By creating an account or using account-only features, you agree to these terms. We may update the terms as the service or law changes; the current version and revision date appear below. Mandatory rights are not waived.",
+    "Accessibility target": "Accessibility target",
+    "We use WCAG 2.2 Level AA as the target for accessibility improvements. This is a goal, not a claim that every page conforms or has been independently certified.": "We use WCAG 2.2 Level AA as the target for accessibility improvements. This is a goal, not a claim that every page conforms or has been independently certified.",
+    "Report a barrier": "Report a barrier"
   }
 }
