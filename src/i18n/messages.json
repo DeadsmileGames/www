@@ -1045,7 +1045,13 @@
     "You must accept the updated legal documents to continue.": "Você precisa aceitar os documentos legais atualizados para continuar.",
     "Accept and continue": "Aceitar e continuar",
     "Review Terms of Service": "Ler os Termos de Serviço",
-    "Review Privacy Policy": "Ler a Política de Privacidade"
+    "Review Privacy Policy": "Ler a Política de Privacidade",
+    "Updated legal documents": "Documentos legais atualizados",
+    "I agree to the updated Terms of Service.": "Concordo com os Termos de Serviço atualizados.",
+    "I acknowledge the updated Privacy Policy.": "Declaro que li a Política de Privacidade atualizada.",
+    "Could not save your acceptance. Please try again.": "Não foi possível salvar seu aceite. Tente novamente.",
+    "Sign out": "Sair da conta",
+    "If you do not accept, you can sign out. For privacy requests, contact somiarigames@gmail.com.": "Se não aceitar, você pode sair da conta. Para solicitações de privacidade, entre em contato com somiarigames@gmail.com."
   },
   "es": {
     "Clear search": "Limpiar búsqueda",
@@ -2093,7 +2099,13 @@
     "You must accept the updated legal documents to continue.": "Debes aceptar los documentos legales actualizados para continuar.",
     "Accept and continue": "Aceptar y continuar",
     "Review Terms of Service": "Consultar los Términos del Servicio",
-    "Review Privacy Policy": "Consultar la Política de Privacidad"
+    "Review Privacy Policy": "Consultar la Política de Privacidad",
+    "Updated legal documents": "Documentos legales actualizados",
+    "I agree to the updated Terms of Service.": "Acepto los Términos del Servicio actualizados.",
+    "I acknowledge the updated Privacy Policy.": "Declaro que he leído la Política de Privacidad actualizada.",
+    "Could not save your acceptance. Please try again.": "No se pudo guardar tu aceptación. Inténtalo de nuevo.",
+    "Sign out": "Cerrar sesión",
+    "If you do not accept, you can sign out. For privacy requests, contact somiarigames@gmail.com.": "Si no aceptas, puedes cerrar sesión. Para solicitudes de privacidad, contacta con somiarigames@gmail.com."
   },
   "en": {
     "Retomar": "Resume",
@@ -2402,6 +2414,12 @@
     "You must accept the updated legal documents to continue.": "You must accept the updated legal documents to continue.",
     "Accept and continue": "Accept and continue",
     "Review Terms of Service": "Review Terms of Service",
-    "Review Privacy Policy": "Review Privacy Policy"
+    "Review Privacy Policy": "Review Privacy Policy",
+    "Updated legal documents": "Updated legal documents",
+    "I agree to the updated Terms of Service.": "I agree to the updated Terms of Service.",
+    "I acknowledge the updated Privacy Policy.": "I acknowledge the updated Privacy Policy.",
+    "Could not save your acceptance. Please try again.": "Could not save your acceptance. Please try again.",
+    "Sign out": "Sign out",
+    "If you do not accept, you can sign out. For privacy requests, contact somiarigames@gmail.com.": "If you do not accept, you can sign out. For privacy requests, contact somiarigames@gmail.com."
   }
 }
