@@ -6925,6 +6925,7 @@ main:has(.special-thanks-page) {
 .footer-accessibility-link {
   display: inline-flex;
   align-items: center;
+  margin-bottom: 10px;
   justify-content: center;
   gap: 7px;
   padding: 9px 12px;
