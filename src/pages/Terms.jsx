@@ -15,6 +15,13 @@ export function Terms() {
 
       <section className="terms-page__content">
         <div className="terms-block">
+          <h2>{t("Acceptance and changes")}</h2>
+          <p>
+            {t("By creating an account or using account-only features, you agree to these terms. We may update the terms as the service or law changes; the current version and revision date appear below. Mandatory rights are not waived.")}
+          </p>
+        </div>
+
+        <div className="terms-block">
           <h2>{t("Accounts and eligibility")}</h2>
           <p>
             {t("Provide accurate account information and keep your credentials private. Account creation requires a date of birth indicating age 13 or older. The date is self-reported, not independently verified, and does not replace stronger age checks or parental authorization where required by law.")}
