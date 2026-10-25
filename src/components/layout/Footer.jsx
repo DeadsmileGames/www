@@ -1,3 +1,4 @@
+import { CURRENT_NEWSLETTER_CONSENT_VERSION } from "../../constants/legal";
 import { useLanguage } from "../../context/LanguageContext";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -22,7 +23,7 @@ export function Footer() {
       await api.post("/newsletter", {
         email: email.trim(),
         consentAccepted: newsletterConsent,
-        consentTextVersion: "newsletter-consent-v2026-10-24",
+        consentTextVersion: CURRENT_NEWSLETTER_CONSENT_VERSION,
       });
       setMessage(t("Request received. Check your inbox to confirm your subscription."));
       setEmail("");
