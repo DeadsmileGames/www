@@ -143,7 +143,7 @@ export function PublicProfile() {
               </span>
             )}
             {isLuxjsonProfile && (
-              <span className="profile-page__dev-tag" title="Developer account" aria-label="Developer account">
+              <span className="profile-page__dev-tag" title={t("Developer account")} aria-label={t("Developer account")}>
                 DEV
               </span>
             )}

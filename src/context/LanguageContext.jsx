@@ -140,6 +140,30 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     document.documentElement.lang = language;
     document.documentElement.dir = "ltr";
+
+    const description = translate(
+      "Deadsmile Games — independent games, worlds and stories built without compromise.",
+      language,
+    );
+    const socialDescription = translate("Independent games. Built without compromise.", language);
+    const metadata = [
+      ['meta[name="description"]', description],
+      ['meta[property="og:description"]', socialDescription],
+      ['meta[name="twitter:description"]', socialDescription],
+      ['meta[property="og:image:alt"]', description],
+      ['meta[name="twitter:image:alt"]', description],
+    ];
+
+    for (const [selector, content] of metadata) {
+      document.querySelector(selector)?.setAttribute("content", content);
+    }
+
+    document
+      .querySelector('meta[property="og:locale"]')
+      ?.setAttribute(
+        "content",
+        language === "pt-BR" ? "pt_BR" : language === "es" ? "es_ES" : "en_US",
+      );
   }, [language]);
   const t = useCallback(
     (path, variables) =>

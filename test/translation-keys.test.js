@@ -155,6 +155,40 @@ test("all legacy LanguageContext copy is translated except proper brand names", 
   assert.deepEqual(missing, []);
 });
 
+
+test("developer badge labels and local admin validation errors use translation keys", async () => {
+  const [profileSource, adminSource, preorderSource] = await Promise.all([
+    readFile(new URL("../src/pages/PublicProfile.jsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/admin/AdminComposer.jsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/pages/Preorder.jsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(profileSource, /title=\{t\("Developer account"\)\}/);
+  assert.match(profileSource, /aria-label=\{t\("Developer account"\)\}/);
+  assert.match(adminSource, /setError\(t\("Choose a ZIP file smaller than 1\.3 MB\."\)\)/);
+  assert.match(
+    adminSource,
+    /reader\.onerror\s*=\s*\(\)\s*=>\s*setError\(t\("The reward ZIP could not be read\."\)\)/,
+  );
+});
+
+
+test("SEO and social metadata descriptions are localized with the active language", async () => {
+  const contextSource = await readFile(
+    new URL("../src/context/LanguageContext.jsx", import.meta.url),
+    "utf8",
+  );
+  assert.ok(contextSource.includes("Deadsmile Games — independent games, worlds and stories built without compromise."));
+  assert.ok(contextSource.includes("Independent games. Built without compromise."));
+  assert.match(contextSource, /meta\[name="description"\]/);
+  assert.match(contextSource, /meta\[property="og:description"\]/);
+  assert.match(contextSource, /meta\[name="twitter:description"\]/);
+  assert.match(contextSource, /meta\[property="og:image:alt"\]/);
+  assert.match(contextSource, /meta\[name="twitter:image:alt"\]/);
+  assert.equal(translate("Deadsmile Games — independent games, worlds and stories built without compromise.", "pt-BR"), "Deadsmile Games — jogos independentes, mundos e histórias criados sem concessões.");
+  assert.equal(translate("Deadsmile Games — independent games, worlds and stories built without compromise.", "es"), "Deadsmile Games — juegos independientes, mundos e historias creados sin concesiones.");
+});
+
 test("every English source key has PT-BR and Spanish mappings", () => {
   const missing = Object.keys(messages.en).filter(
     (key) =>

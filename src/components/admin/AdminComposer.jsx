@@ -1045,12 +1045,12 @@ export function AdminComposer() {
                               if (!file) return;
                               if (!file.name.toLowerCase().endsWith(".zip") || file.size > 1_300_000) {
                                 updateField("preorderRewardZipBase64", "");
-                                setError("Choose a ZIP file smaller than 1.3 MB.");
+                                setError(t("Choose a ZIP file smaller than 1.3 MB."));
                                 return;
                               }
                               const reader = new FileReader();
                               reader.onload = () => updateField("preorderRewardZipBase64", String(reader.result || "").split(",")[1] || "");
-                              reader.onerror = () => setError("The reward ZIP could not be read.");
+                              reader.onerror = () => setError(t("The reward ZIP could not be read."));
                               reader.readAsDataURL(file);
                             }} />
                             {form.preorderRewardZipExisting && !form.preorderRewardZipBase64 && <small>{t("An existing reward ZIP will be kept unless you upload a replacement.")}</small>}
