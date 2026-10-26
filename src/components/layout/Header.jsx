@@ -268,7 +268,7 @@ export function Header({ onOpenSearch, searchOpen = false }) {
             <button
               type="button"
               className="site-header__menu-toggle"
-              aria-label={t(mobileOpen ? "Close menu" : "Open menu")}
+              aria-label={t("Open menu")}
               aria-controls="mobile-navigation"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((open) => !open)}
