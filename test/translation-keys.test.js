@@ -225,6 +225,11 @@ test("legal copy stays in the selected locale across English, PT-BR and Spanish"
       "pt-BR": "Termos de reembolso do itch.io",
       es: "Condiciones de reembolso de itch.io",
     },
+    "Use and public profiles": {
+      en: "Use and public profiles",
+      "pt-BR": "Uso e perfis públicos",
+      es: "Uso y perfiles públicos",
+    },
   };
 
   for (const [source, translations] of Object.entries(expectedTranslations)) {
