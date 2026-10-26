@@ -93,13 +93,14 @@ export function SearchOverlay({ open, onClose, hasPremiere = false }) {
         {status === "loading" && <SkeletonSearch />}
 
         {status === "error" && (
-          <ErrorState title={t("SEARCH FAILED")} message={t(error)} onRetry={retry} />
+          <ErrorState title="SEARCH FAILED" message={error} onRetry={retry} />
         )}
 
         {status === "success" && results.length === 0 && (
           <EmptyState
-            title={t("NO RESULTS")}
-            message={t('Nothing matched "{0}".', { 0: query })}
+            title="NO RESULTS"
+            message='Nothing matched "{0}".'
+            messageVariables={{ 0: query }}
           />
         )}
 

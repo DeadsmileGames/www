@@ -80,7 +80,7 @@ export function Preorder() {
       return () => { active = false; };
     }
     if (authStatus !== "authenticated" || !user?.id) {
-      setError(t("Sign in to continue to free pre-registration."));
+      setError("Sign in to continue to free pre-registration.");
       setStatus("error");
       return () => { active = false; };
     }
@@ -138,7 +138,7 @@ export function Preorder() {
           redirectToLogin();
           return;
         }
-        setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
+        setError(messages[err?.code] || friendlyErrorMessage(err));
         setStatus("error");
       }
     }
@@ -242,7 +242,7 @@ export function Preorder() {
         setAttemptsRemaining(0);
         setStatus("daily-limit");
       } else {
-        setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
+        setError(messages[err?.code] || friendlyErrorMessage(err));
         setStatus("review");
       }
     } finally {
@@ -271,7 +271,7 @@ export function Preorder() {
         redirectToLogin();
         return;
       }
-      setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
+      setError(messages[err?.code] || friendlyErrorMessage(err));
     } finally {
       setCanceling(false);
     }
@@ -339,7 +339,7 @@ export function Preorder() {
                   <label className="admin-field"><span>{t("Age")}</span><input required type="number" min={1} max={120} step={1} value={form.age} onChange={update("age")} /></label>
                   <label className="admin-field"><span>{t("Email address")}</span><input required type="email" maxLength={254} autoComplete="email" value={form.email} onChange={update("email")} /></label>
                 </div>
-                {error && <p className="account-page__error" role="alert">{error}</p>}
+                {error && <p className="account-page__error" role="alert">{t(error)}</p>}
                 <p className="preorder-workspace__hint support-card support-faq-panel">{t("We will email you a confirmation link. Your registration is confirmed only after you open it.")}</p>
                 <p className="support-privacy-note">{t("We use these details to manage your free pre-registration and compare your self-declared age with the eligibility age configured for this game. This is not independent age verification and cannot replace stronger age assurance or parental authorization where required by law.")}{" "}{t("The age you provide is separate from the game's official content rating, and it does not independently verify your age.")}{" "}{t("See the")}{" "}<Link to="/privacy">{t("Privacy Policy")}</Link>.</p>
                 <div className="preorder-form__actions">
@@ -362,7 +362,7 @@ export function Preorder() {
                 <div><dt>{t("Age")}</dt><dd>{form.age}</dd></div>
                 <div><dt>{t("Email address")}</dt><dd>{form.email}</dd></div>
               </dl>
-              {error && <p className="account-page__error" role="alert">{error}</p>}
+              {error && <p className="account-page__error" role="alert">{t(error)}</p>}
               <p className="preorder-workspace__hint support-card support-faq-panel">{t("After confirming your email, your reward code will appear here. It becomes redeemable when the registration period ends; we will not email the code.")}</p>
               <div className="preorder-form__actions">
                 <button className="btn btn--secondary" type="button" onClick={backToDetails}>{t("Back")}</button>
@@ -379,7 +379,7 @@ export function Preorder() {
               <h2>{t("Check your email to confirm")}</h2>
               <p>{t("We sent a confirmation link. This page checks for confirmation automatically, so keep it open. If you confirm on another device, this screen will update.")}</p>
               <div className="preorder-live-indicator"><span />{t("Waiting for email confirmation")}</div>
-              {error && <p className="account-page__error" role="alert">{error}</p>}
+              {error && <p className="account-page__error" role="alert">{t(error)}</p>}
               <div className="preorder-form__actions">
                 <button className="btn btn--secondary" type="button" disabled={canceling} onClick={cancelPreorder}>{canceling ? <LoadingSpinner /> : t("Cancel registration")}</button>
                 <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>
@@ -470,7 +470,7 @@ export function PreorderConfirm() {
         setStatus("success");
       })
       .catch((err) => {
-        setError(messages[err?.code] ? t(messages[err.code]) : friendlyErrorMessage(err));
+        setError(messages[err?.code] || friendlyErrorMessage(err));
         setStatus("error");
       });
   }, [slug, token, t]);
@@ -480,7 +480,7 @@ export function PreorderConfirm() {
       <section className="preorder-workspace__state support-card support-faq-panel" aria-labelledby="preorder-confirm-title" role={status === "error" ? "alert" : "status"}>
         {status === "loading" && <><h1 id="preorder-confirm-title">{t("Confirming your registration...")}</h1><LoadingSpinner /></>}
         {status === "success" && <><h1 id="preorder-confirm-title">{t("Your registration is confirmed.")}</h1><p>{t("Your email is confirmed. The reward code will appear on the management page when the registration period ends.")}</p><Link className="btn btn--primary" to={`/games/${encodeURIComponent(slug)}/preorder`}>{t("Manage registration")}</Link><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
-        {status === "error" && <><h1 id="preorder-confirm-title">{t("Registration confirmation")}</h1><p>{error || t("This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
+        {status === "error" && <><h1 id="preorder-confirm-title">{t("Registration confirmation")}</h1><p>{t(error || "This confirmation link is invalid or has expired.")}</p><Link className="btn btn--secondary" to={`/games/${encodeURIComponent(slug)}`}>{t("Back to game")}</Link></>}
       </section>
     </main>
   );
@@ -506,7 +506,7 @@ export function PreorderReward() {
     api.get(path)
       .then((data) => { if (active) setReward(data); })
       .catch((err) => {
-        if (active) setError(messages[err?.code] ? t(messages[err.code]) : t("This reward link has already been used or is invalid."));
+        if (active) setError(messages[err?.code] || "This reward link has already been used or is invalid.");
       })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
@@ -516,7 +516,7 @@ export function PreorderReward() {
   if (error || !reward) return (
     <main className="page-shell preorder-page container">
       <section className="preorder-workspace__state support-card support-faq-panel" role="alert">
-        <ErrorState message={error || t("This reward link has already been used or is invalid.")} />
+        <ErrorState message={error || "This reward link has already been used or is invalid."} />
         {slug && <Link className="btn btn--secondary" to={"/games/" + encodeURIComponent(slug)}>{t("Back to game")}</Link>}
       </section>
     </main>

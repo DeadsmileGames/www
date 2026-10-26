@@ -43,9 +43,7 @@ export function VerifyEmail() {
   const [status, setStatus] = useState(token ? "loading" : "ready");
 
   const [message, setMessage] = useState(
-    token
-      ? t("Confirming your email...")
-      : t("Check your inbox for a confirmation link."),
+    token ? "Confirming your email..." : "Check your inbox for a confirmation link.",
   );
 
   const attempted = useRef(false);
@@ -68,16 +66,10 @@ export function VerifyEmail() {
         setStatus("success");
 
         if (result?.emailChanged) {
-          setMessage(
-            t("Your email has been changed successfully. ") +
-              t("Please sign in again using your new email address."),
-          );
+          setMessage("email-changed");
           await refresh();
         } else {
-          setMessage(
-            t("Your email has been confirmed! ") +
-              t("You can now sign in to your account."),
-          );
+          setMessage("email-confirmed");
         }
       } catch (error) {
         setStatus("error");
@@ -99,7 +91,21 @@ export function VerifyEmail() {
             <div className="save-progress__bar" />
           </div>
         )}
-        <p role="status">{t(message)}</p>
+        <p role="status">
+          {message === "email-changed" ? (
+            <>
+              {t("Your email has been changed successfully. ")}
+              {t("Please sign in again using your new email address.")}
+            </>
+          ) : message === "email-confirmed" ? (
+            <>
+              {t("Your email has been confirmed! ")}
+              {t("You can now sign in to your account.")}
+            </>
+          ) : (
+            t(message)
+          )}
+        </p>
 
         {location.state?.registered && (
           <p>

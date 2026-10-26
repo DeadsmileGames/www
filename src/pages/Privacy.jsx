@@ -71,9 +71,10 @@ export function Privacy() {
         <div className="privacy-block">
           <h2>{t("Your rights")}</h2>
           <p>
-            {t("Subject to applicable law, you can request confirmation of processing, access, correction, anonymization, blocking or deletion of unnecessary or unlawfully processed data, portability where available, information about sharing and the consequences of refusing consent, and withdrawal of consent. Email")}{" "}
-            <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>
-            {t(" to make a request. We may ask for information needed to verify it. You may also contact the ANPD or the data-protection authority responsible for your location.")}
+            {t("Subject to applicable law, you can request confirmation of processing, access, correction, anonymization, blocking or deletion of unnecessary or unlawfully processed data, portability where available, information about sharing and the consequences of refusing consent, and withdrawal of consent.")}{" "}
+            {t("To make a request, email")}{" "}
+            <a href="mailto:somiarigames@gmail.com">somiarigames@gmail.com</a>.{" "}
+            {t("We may ask for information needed to verify it. You may also contact the ANPD or the data-protection authority responsible for your location.")}
           </p>
         </div>
 

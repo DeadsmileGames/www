@@ -103,8 +103,8 @@ export function Library() {
         <SkeletonGameGrid count={6} />
       ) : !error && games.length === 0 ? (
         <EmptyState
-          title={t("No games in your library yet.")}
-          message={t("Add games to your library to keep them handy.")}
+          title="No games in your library yet."
+          message="Add games to your library to keep them handy."
           action={
             <Link to="/games" className="btn btn--primary">
               {t("Browse games")}
