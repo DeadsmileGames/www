@@ -198,6 +198,46 @@ test("every English source key has PT-BR and Spanish mappings", () => {
   assert.deepEqual(missing, []);
 });
 
+test("legal copy stays in the selected locale across English, PT-BR and Spanish", () => {
+  const expectedTranslations = {
+    "Terms of Service": {
+      en: "Terms of Service",
+      "pt-BR": "Termos de serviço",
+      es: "Términos de servicio",
+    },
+    "Privacy Policy": {
+      en: "Privacy Policy",
+      "pt-BR": "Política de privacidade",
+      es: "Política de privacidad",
+    },
+    "Cookie Policy": {
+      en: "Cookie Policy",
+      "pt-BR": "Política de cookies",
+      es: "Política de cookies",
+    },
+    "Terms for using Deadsmile Games accounts and website features.": {
+      en: "Terms for using Deadsmile Games accounts and website features.",
+      "pt-BR": "Termos para usar as contas e os recursos do site da Deadsmile Games.",
+      es: "Términos para utilizar las cuentas y las funciones del sitio de Deadsmile Games.",
+    },
+    "itch.io refund terms": {
+      en: "itch.io refund terms",
+      "pt-BR": "Termos de reembolso do itch.io",
+      es: "Condiciones de reembolso de itch.io",
+    },
+  };
+
+  for (const [source, translations] of Object.entries(expectedTranslations)) {
+    for (const [locale, expected] of Object.entries(translations)) {
+      assert.equal(
+        translate(source, locale),
+        expected,
+        `Unexpected legal translation for ${locale}: ${source}`,
+      );
+    }
+  }
+});
+
 test("direct source keys resolve to the matching locale entry", () => {
   for (const locale of ["en", "pt-BR", "es"]) {
     for (const [key, expected] of Object.entries(messages[locale])) {
