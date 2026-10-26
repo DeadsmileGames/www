@@ -170,7 +170,7 @@ export function Header({ onOpenSearch, searchOpen = false }) {
                   aria-expanded={accountOpen}
                   aria-label={t("Account menu")}
                 >
-                  {avatar && (
+                  {avatar ? (
                     <img
                       src={avatar}
                       alt=""
@@ -178,6 +178,8 @@ export function Header({ onOpenSearch, searchOpen = false }) {
                       width="32"
                       height="32"
                     />
+                  ) : (
+                    <UserCircle size={24} weight="bold" aria-hidden="true" />
                   )}
                   <CaretDown weight="bold" size={13} />
                 </button>
