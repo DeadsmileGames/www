@@ -146,9 +146,15 @@ function Panel({ videoId, onClose, onSelect }) {
         )}
         {video && (
           <>
-            <div className="video-dialog video-overlay__player">
+            <div
+              className={
+                "video-dialog video-overlay__player" +
+                (embed && !allowed ? " soundtrack-overlay__player" : "")
+              }
+            >
               {embed && !allowed ? (
-                <div className="support-card">
+                <div className="soundtrack-overlay__consent">
+                  <YoutubeLogo size={30} weight="fill" aria-hidden="true" />
                   <p>{t("Allow YouTube content to play this video.")}</p>
                   <button
                     type="button"
