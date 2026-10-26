@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useLanguage } from "../../context/LanguageContext";
 import { ArrowUpRight, X } from "@phosphor-icons/react";
 import { trapFocus } from "../../utils/dom";
@@ -35,6 +35,7 @@ export function MobileMenu({ open, onClose }) {
       <div className="mobile-menu__backdrop" onClick={onClose} />
       <div
         className="mobile-menu__panel"
+        id="mobile-navigation"
         role="dialog"
         aria-modal="true"
         aria-label={t("Navigation")}
@@ -52,18 +53,21 @@ export function MobileMenu({ open, onClose }) {
           </button>
         </div>
 
-        <nav className="mobile-menu__nav">
+        <nav className="mobile-menu__nav" aria-label={t("Primary")}>
           {links.map(([to, key], i) => (
-            <Link
+            <NavLink
               key={to}
               to={to}
+              end={to === "/"}
               onClick={onClose}
-              className="mobile-menu__link"
+              className={({ isActive }) =>
+                `mobile-menu__link${isActive ? " is-active" : ""}`
+              }
               style={{ "--menu-delay": `${i * 45}ms` }}
             >
               <span>{t(key)}</span>
               <ArrowUpRight weight="bold" className="mobile-menu__arrow" />
-            </Link>
+            </NavLink>
           ))}
         </nav>
       </div>
