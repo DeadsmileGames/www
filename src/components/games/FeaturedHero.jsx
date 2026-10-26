@@ -15,6 +15,23 @@ export const isAbby = (game) =>
   game?.slug === "abbys-restless-heart" ||
   game?.slug === "abby-s-restless-heart";
 
+function supportsPermissionPolicyFeature(feature) {
+  const policy = document.permissionsPolicy || document.featurePolicy;
+  if (!policy) return false;
+
+  try {
+    const features =
+      typeof policy.features === "function"
+        ? policy.features()
+        : typeof policy.allowedFeatures === "function"
+          ? policy.allowedFeatures()
+          : [];
+    return features.includes(feature);
+  } catch {
+    return false;
+  }
+}
+
 function BackgroundVideo({ paused }) {
   const { t } = useLanguage();
   const frame = useRef(null);
@@ -25,6 +42,9 @@ function BackgroundVideo({ paused }) {
     let alive = true;
     let player;
     let timer;
+    let iframeLoaded = false;
+    let apiReady = Boolean(window.YT?.Player);
+    let playerCreated = false;
     const host = frame.current;
     const iframe = document.createElement("iframe");
     const params = new URLSearchParams({
@@ -44,7 +64,7 @@ function BackgroundVideo({ paused }) {
     iframe.title = t("Abby's Restless Heart background");
     iframe.tabIndex = -1;
     iframe.setAttribute("aria-hidden", "true");
-    iframe.allow = "autoplay; encrypted-media";
+    if (supportsPermissionPolicyFeature("autoplay")) iframe.allow = "autoplay";
     iframe.referrerPolicy = "strict-origin-when-cross-origin";
     Object.assign(iframe.style, {
       width: "100%",
@@ -52,11 +72,20 @@ function BackgroundVideo({ paused }) {
       border: "0",
       pointerEvents: "none",
     });
-    host.appendChild(iframe);
     const script = document.createElement("script");
     const previousReady = window.onYouTubeIframeAPIReady;
     function ready() {
-      if (!alive || !frame.current || !window.YT?.Player) return;
+      if (
+        !alive ||
+        !frame.current ||
+        !apiReady ||
+        !iframeLoaded ||
+        playerCreated ||
+        !window.YT?.Player
+      )
+        return;
+
+      playerCreated = true;
       player = new window.YT.Player(iframe, {
         events: {
           onReady(event) {
@@ -82,11 +111,19 @@ function BackgroundVideo({ paused }) {
         },
       });
     }
-    const onReady = () => {
-      previousReady?.();
+    const onIframeLoad = () => {
+      iframeLoaded = true;
       ready();
     };
-    if (window.YT?.Player) ready();
+    iframe.addEventListener("load", onIframeLoad, { once: true });
+    host.appendChild(iframe);
+
+    const onReady = () => {
+      previousReady?.();
+      apiReady = true;
+      ready();
+    };
+    if (apiReady) ready();
     else {
       window.onYouTubeIframeAPIReady = onReady;
       script.src = "https://www.youtube.com/iframe_api";
@@ -98,6 +135,7 @@ function BackgroundVideo({ paused }) {
       clearInterval(timer);
       playerRef.current = null;
       player?.destroy();
+      iframe.removeEventListener("load", onIframeLoad);
       host.replaceChildren();
       script.remove();
       if (window.onYouTubeIframeAPIReady === onReady)
