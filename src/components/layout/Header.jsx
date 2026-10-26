@@ -269,8 +269,9 @@ export function Header({ onOpenSearch, searchOpen = false }) {
               type="button"
               className="site-header__menu-toggle"
               aria-label={t("Open menu")}
+              aria-controls="mobile-navigation"
               aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen(true)}
+              onClick={() => setMobileOpen((open) => !open)}
             >
               <List weight="bold" />
             </button>
