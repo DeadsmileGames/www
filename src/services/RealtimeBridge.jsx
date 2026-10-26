@@ -1,5 +1,5 @@
 import { useLanguage } from "../context/LanguageContext";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { api, API_BASE_URL } from "./api";
 import { useToast } from "../components/ui/Toast";
@@ -27,6 +27,10 @@ export function RealtimeBridge() {
   const { t } = useLanguage();
   const { status, user } = useAuth();
   const { push } = useToast();
+  const pushRef = useRef(push);
+  const tRef = useRef(t);
+  pushRef.current = push;
+  tRef.current = t;
 
   useEffect(() => {
     if (status === "loading" || typeof WebSocket === "undefined") return undefined;
@@ -51,8 +55,10 @@ export function RealtimeBridge() {
       writeCursor(cursorKey, after);
       emit(event);
       if (event?.event_type?.endsWith(".published")) {
-        push(
-          t("{0} is now available.", { 0: event.payload?.title || "New content" }),
+        pushRef.current(
+          tRef.current("{0} is now available.", {
+            0: event.payload?.title || "New content",
+          }),
           "info",
         );
       }
@@ -120,7 +126,8 @@ export function RealtimeBridge() {
         apiUrl.protocol = apiUrl.protocol === "https:" ? "wss:" : "ws:";
         apiUrl.pathname = `${apiUrl.pathname.replace(/\/$/, "")}/live`;
         apiUrl.search = ticket ? `?ticket=${encodeURIComponent(ticket)}` : "";
-        socket = new WebSocket(apiUrl.toString());
+        const connection = new WebSocket(apiUrl.toString());
+        socket = connection;
       } catch {
         socket = null;
         scheduleReconnect();
@@ -128,22 +135,31 @@ export function RealtimeBridge() {
       } finally {
         connecting = false;
       }
-      socket.onopen = () => {
+      const connection = socket;
+      connection.onopen = () => {
+        if (!active || socket !== connection) {
+          connection.close();
+          return;
+        }
         retryAttempt = 0;
         poll();
       };
-      socket.onmessage = (message) => {
+      connection.onmessage = (message) => {
+        if (!active || socket !== connection) return;
         try {
           const event = JSON.parse(message.data);
           if (event.type !== "connected") consume(event);
         } catch {}
       };
-      socket.onclose = () => {
+      connection.onclose = () => {
+        if (socket !== connection) return;
         socket = null;
         poll();
         scheduleReconnect();
       };
-      socket.onerror = () => socket?.close();
+      connection.onerror = () => {
+        if (socket === connection) connection.close();
+      };
     };
 
     const onOnline = () => {
@@ -171,7 +187,7 @@ export function RealtimeBridge() {
       window.clearTimeout(retryTimer);
       window.clearInterval(pollTimer);
     };
-  }, [push, status, user?.id, t]);
+  }, [status, user?.id]);
 
   return null;
 }
