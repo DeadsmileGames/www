@@ -1217,7 +1217,7 @@ fieldset {
   padding: 70px 24px;
   display: grid;
   place-items: center;
-  background: url("/assets/games/screenshots/abbys-restless-heart/2.png");
+  background: url("https://raw.githubusercontent.com/DeadsmileGames/Gallery/main/back.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
