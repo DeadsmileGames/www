@@ -436,17 +436,20 @@ fieldset {
   position: absolute;
   right: 0;
   top: 0;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   height: 100dvh;
   width: min(100%, 400px);
   padding: 24px;
   background: #0c0c0c;
-  overflow: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
 }
 .mobile-menu__top {
-  text-align: right;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  margin-bottom: 8px;
 }
 .mobile-menu__close {
   padding: 10px;
@@ -465,7 +468,8 @@ fieldset {
 }
 .mobile-menu__link[aria-current="page"] {
   color: #fff;
-  border-bottom-color: #f0f0f0;
+  border-bottom: 2px solid #f0f0f0;
+  font-weight: 600;
 }
 .mobile-menu__footer {
   margin-top: 25px;
@@ -2950,6 +2954,11 @@ input[type="file"]::file-selector-button {
 }
 .mobile-menu__nav {
   display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 .mobile-menu__link span {
   min-width: 0;
