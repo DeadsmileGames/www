@@ -379,7 +379,10 @@ export function GameDetails() {
     setDownload({ busy: true, error: "" });
 
     try {
-      const result = await api.get(`/games/${encodeURIComponent(slug)}/download`);
+      const result =
+        authStatus === "authenticated" && user?.id
+          ? await api.post(`/games/${encodeURIComponent(slug)}/download`)
+          : await api.get(`/games/${encodeURIComponent(slug)}/download`);
       const url = safeHttpsUrl(result.downloadUrl);
       if (!url) throw { code: "INVALID_RESPONSE" };
 
