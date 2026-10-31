@@ -10,7 +10,7 @@ import { Lightbox } from "../components/ui/Lightbox";
 import { safeImageUrl } from "../utils/urls";
 
 const STORE_URL = "https://apps.microsoft.com/detail/9p6p8284v337?hl=pt-BR&gl=BR";
-const ABBY_SCREENSHOTS = [1, 2, 3, 4, 5, 6].map(
+const AVERNA_SCREENSHOTS = [1, 2, 3, 4, 5, 6].map(
   (index) => `/assets/games/screenshots/abbys-restless-heart/${index}.png`,
 );
 
@@ -33,7 +33,7 @@ export function Launcher() {
       <ProductHero
         title="Deadsmile Games Launcher"
         icon={icon}
-        images={ABBY_SCREENSHOTS}
+        images={AVERNA_SCREENSHOTS}
         enabled={resource.status === "success"}
       >
         <a href={STORE_URL} target="_self" aria-label={t("Get it from Microsoft Store")}>

@@ -8,12 +8,13 @@ import { safeImageUrl, safeHttpsUrl } from "../../utils/urls";
 import { useOptionalContent } from "../../utils/consent";
 import { Skeleton, SkeletonLines } from "../ui/Skeleton";
 
-export const ABBY_VIDEO_ID = "7huKuYunpPU";
+export const AVERNA_VIDEO_ID = "7huKuYunpPU";
 export const HERO_CLIP = { startSeconds: 0, endSeconds: 30 };
-export const isAbby = (game) =>
-  /^abby['’]?s restless heart$/i.test(String(game?.title || "").trim()) ||
-  game?.slug === "abbys-restless-heart" ||
-  game?.slug === "abby-s-restless-heart";
+export const isAverna = (game) =>
+  /^averna$/i.test(String(game?.title || "").trim()) ||
+  ["abbyrestlessheart", "abbys-restless-heart", "abby-s-restless-heart"].includes(
+    String(game?.slug || "").toLowerCase(),
+  );
 
 function supportsPermissionPolicyFeature(feature) {
   const policy = document.permissionsPolicy || document.featurePolicy;
@@ -60,8 +61,8 @@ function BackgroundVideo({ paused }) {
       start: String(HERO_CLIP.startSeconds),
       end: String(HERO_CLIP.endSeconds),
     });
-    iframe.src = `https://www.youtube-nocookie.com/embed/${ABBY_VIDEO_ID}?${params}`;
-    iframe.title = t("Abby's Restless Heart background");
+    iframe.src = `https://www.youtube-nocookie.com/embed/${AVERNA_VIDEO_ID}?${params}`;
+    iframe.title = t("Averna background");
     iframe.tabIndex = -1;
     iframe.setAttribute("aria-hidden", "true");
     if (supportsPermissionPolicyFeature("autoplay")) iframe.allow = "autoplay";
@@ -97,14 +98,14 @@ function BackgroundVideo({ paused }) {
             timer = setInterval(() => {
               if (!alive || pausedRef.current) return;
               if (event.target.getCurrentTime() >= HERO_CLIP.endSeconds - 0.1) {
-                event.target.loadVideoById({ videoId: ABBY_VIDEO_ID, ...HERO_CLIP });
+                event.target.loadVideoById({ videoId: AVERNA_VIDEO_ID, ...HERO_CLIP });
                 event.target.mute();
               }
             }, 200);
           },
           onStateChange(event) {
             if (alive && event.data === 0 && !pausedRef.current) {
-              event.target.loadVideoById({ videoId: ABBY_VIDEO_ID, ...HERO_CLIP });
+              event.target.loadVideoById({ videoId: AVERNA_VIDEO_ID, ...HERO_CLIP });
               event.target.mute();
             }
           },
@@ -190,12 +191,12 @@ export function FeaturedHero({
     if (stopped || slides.length < 2) return;
     const timer = setTimeout(
       () => setIndex((selectedIndex + 1) % slides.length),
-      isAbby(game) ? 30000 : 8000,
+      isAverna(game) ? 30000 : 8000,
     );
     return () => clearTimeout(timer);
   }, [selectedIndex, slides.length, stopped, game?.id]);
   const background =
-    isAbby(game) || !game
+    isAverna(game) || !game
       ? "/assets/games/screenshots/abbys-restless-heart/1.png"
       : safeImageUrl(game.coverImage) ||
         safeImageUrl(game.heroImage) ||
@@ -213,7 +214,7 @@ export function FeaturedHero({
         overflow: "hidden",
       }}
     >
-      {allowed && !reducedMotion && isAbby(game) && <BackgroundVideo paused={paused} />}
+      {allowed && !reducedMotion && isAverna(game) && <BackgroundVideo paused={paused} />}
       <div className="rs-hero__overlay" />
       <div
         className="container"
@@ -280,7 +281,7 @@ export function FeaturedHero({
                   <Info size={20} />
                   {t("Learn more")}
                 </Link>
-                {(safeHttpsUrl(item.trailerUrl) || isAbby(item)) && (
+                {(safeHttpsUrl(item.trailerUrl) || isAverna(item)) && (
                   <button
                     className="btn btn--secondary"
                     type="button"

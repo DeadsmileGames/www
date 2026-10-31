@@ -1,5 +1,5 @@
 import { useLanguage } from "../context/LanguageContext";
-import { FeaturedHero, isAbby, ABBY_VIDEO_ID } from "../components/games/FeaturedHero";
+import { FeaturedHero, isAverna, AVERNA_VIDEO_ID } from "../components/games/FeaturedHero";
 import { Skeleton, SkeletonVideos, SkeletonNews } from "../components/ui/Skeleton";
 import { Link, useNavigate } from "react-router-dom";
 import { useGames } from "../hooks/useGames";
@@ -50,7 +50,7 @@ export function Home() {
   function openHeroTrailer(game) {
     const trailerUrl =
       safeHttpsUrl(game.trailerUrl) ||
-      (isAbby(game) ? `https://youtu.be/${ABBY_VIDEO_ID}` : null);
+      (isAverna(game) ? `https://youtu.be/${AVERNA_VIDEO_ID}` : null);
     const trailerEmbed = safeYoutubeEmbedUrl(trailerUrl);
     const matchingVideo =
       videos.data?.find(
