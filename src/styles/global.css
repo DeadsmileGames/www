@@ -489,7 +489,7 @@ fieldset {
   margin: auto;
 }
 .studio-landing.rs-hero {
-  margin: 0px;
+  margin: 0px !important;
 }
 .studio-logo {
   width: min(450px, 65vw);
