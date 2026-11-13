@@ -5262,6 +5262,7 @@ html[dir="rtl"] .site-header__actions {
   width: 100%;
   background: #0f0f0f;
   color: #f0f0f0;
+  padding: 60px;
 }
 .videos-rockstar-hero__layout {
   display: grid;
@@ -5269,6 +5270,9 @@ html[dir="rtl"] .site-header__actions {
   width: 100%;
   height: clamp(300px, 39.4vw, 560px);
   max-height: 560px;
+  padding: 10px;
+  background: #222;
+  border-radius: 30px;
 }
 .videos-rockstar-hero__media {
   position: relative;
@@ -5284,6 +5288,7 @@ html[dir="rtl"] .site-header__actions {
   background: #202020;
   color: #fff;
   text-align: left;
+  border-radius: 20px;
 }
 .videos-rockstar-hero__media > img {
   position: absolute;
@@ -5330,6 +5335,8 @@ html[dir="rtl"] .site-header__actions {
   padding: clamp(22px, 2.5vw, 42px) clamp(20px, 2.5vw, 42px) 22px;
   background: #0f0f0f;
   color: #f8f6f6;
+  margin-left: 10px;
+  border-radius: 20px;
 }
 .videos-rockstar-hero__panel-content {
   display: flex;
@@ -5403,11 +5410,17 @@ html[dir="rtl"] .site-header__actions {
   .videos-page--rockstar-hero {
     padding-top: 76px;
   }
+  .videos-rockstar-hero {
+    padding: 0px;
+  }
   .videos-rockstar-hero__layout {
     display: flex;
     height: auto;
     max-height: none;
     flex-direction: column;
+    border-radius: 0px;
+    gap: 20px;
+    padding: 20px;
   }
   .videos-rockstar-hero__media {
     height: auto;
@@ -5422,6 +5435,7 @@ html[dir="rtl"] .site-header__actions {
     min-height: 215px;
     gap: 24px;
     padding: 22px 20px 20px;
+    margin-left: 0px
   }
   .videos-rockstar-hero__panel-content {
     gap: 9px;
