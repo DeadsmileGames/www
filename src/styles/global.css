@@ -5419,7 +5419,8 @@ html[dir="rtl"] .site-header__actions {
     max-height: none;
     flex-direction: column;
     border-radius: 0px;
-    
+    gap: 20px;
+    padding: 20px;
   }
   .videos-rockstar-hero__media {
     height: auto;
