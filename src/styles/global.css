@@ -459,7 +459,10 @@ fieldset {
 .mobile-menu__link {
   justify-content: space-between;
   align-items: center;
+  border-radius: 20px;
+  padding: 20px;
   gap: 16px;
+  background: #151515;
   font-size: 23px;
   display: flex;
 }
@@ -2977,6 +2980,7 @@ input[type="file"]::file-selector-button {
   overflow-y: auto;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
+  gap: 20px;
 }
 .mobile-menu__link span {
   min-width: 0;
