@@ -2049,7 +2049,8 @@ fieldset {
     border-radius: 0px;
   }
   .game-details__body {
-    border-radius: 0px
+  	border-radius: 0 !important;
+  	width: 100% !important;
   }
 }
 .game-details__body {
