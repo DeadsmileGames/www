@@ -5287,7 +5287,7 @@ html[dir="rtl"] .site-header__actions {
   height: clamp(300px, 39.4vw, 560px);
   max-height: 560px;
   padding: 10px;
-  background: #222;
+  background: #151515;
   border-radius: 30px;
 }
 .videos-rockstar-hero__media {
