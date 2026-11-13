@@ -488,6 +488,9 @@ fieldset {
   text-align: center;
   margin: auto;
 }
+.studio-landing.rs-hero {
+  margin: 0px;
+}
 .studio-logo {
   width: min(450px, 65vw);
   max-height: 37vh;
