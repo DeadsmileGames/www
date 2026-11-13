@@ -2048,12 +2048,19 @@ fieldset {
     margin: 0px;
     border-radius: 0px;
   }
+  .game-details__body {
+    border-radius: 0px
+  }
 }
 .game-details__body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 60px;
   padding: 70px 0;
+  background: #151515;
+  padding: 40px;
+  border-radius: 30px;
+  margin-bottom: 30px;
 }
 .news-page__heading {
   margin-bottom: 45px;
