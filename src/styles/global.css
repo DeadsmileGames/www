@@ -457,19 +457,18 @@ fieldset {
   background: none;
 }
 .mobile-menu__link {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: 16px;
-  min-height: 56px;
-  padding: 16px 0;
-  border-bottom: 1px solid #444;
   font-size: 23px;
+  display: flex;
 }
 .mobile-menu__link[aria-current="page"] {
-  color: #fff;
-  border-bottom: 2px solid #f0f0f0;
+  color: #000;
   font-weight: 600;
+  background: #fff;
+  padding: 20px;
+  border-radius: 20px;
 }
 .mobile-menu__footer {
   margin-top: 25px;
