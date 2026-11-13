@@ -2043,6 +2043,12 @@ fieldset {
   display: flex;
   gap: 15px;
 }
+@media (max-width: 768px) {
+  .rs-hero {
+    margin: 0px;
+    border-radius: 0px;
+  }
+}
 .game-details__body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
