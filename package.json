@@ -16,15 +16,15 @@
     "@fortawesome/react-fontawesome": "^3.5.0",
     "@phosphor-icons/react": "^2.1.10",
     "dompurify": "^3.4.17",
-    "motion": "^14.7.1",
+    "motion": "^14.11.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-google-recaptcha": "^3.1.0",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.5"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.1.2",
-    "vite": "^8.3.5"
+    "@vitejs/plugin-react": "^6.3.0",
+    "vite": "^8.3.7"
   },
   "license": "UNLICENSED",
   "engines": {
