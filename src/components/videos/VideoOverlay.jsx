@@ -15,7 +15,7 @@ import { safeHttpsUrl, safeImageUrl, safeYoutubeEmbedUrl } from "../../utils/url
 import { getVideoThumbnail } from "../../utils/videoThumbnail";
 import { AutoLinkText } from "../ui/AutoLinkText";
 
-const fallbackImage = "/assets/placeholders/game-cover.svg";
+const fallbackImage = "https://raw.githubusercontent.com/DeadsmileGames/Gallery/main/back.png";
 
 function Panel({ videoId, onClose, onSelect }) {
   const { t, language } = useLanguage();
