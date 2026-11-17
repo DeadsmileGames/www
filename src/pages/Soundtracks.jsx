@@ -307,7 +307,6 @@ export function Soundtracks() {
           {resource.status === "success" && groups.length === 0 && (
             <EmptyState
               title="No soundtracks found"
-              message="There are no matching YouTube soundtracks for the games in our catalog right now."
             />
           )}
           {resource.status === "success" && groups.length > 0 && filteredGroups.length === 0 && (
