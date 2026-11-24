@@ -629,7 +629,6 @@ export function AdminComposer() {
     <div className="account-page container">
       <header className="account-row--inline" style={{ alignItems: "flex-start", marginBottom: 32 }}>
         <div className="account-block__head" style={{ flex: "1 1 460px", minWidth: 0 }}>
-          <p className="news-detail__eyebrow">{t("Studio workspace")}</p>
           <h1 style={{ fontSize: "clamp(34px, 4.3vw, 52px)", marginBottom: 10 }}>
             {t("Admin panel")}
           </h1>
